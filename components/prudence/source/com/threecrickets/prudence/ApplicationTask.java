@@ -14,7 +14,6 @@ package com.threecrickets.prudence;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 
@@ -173,7 +172,7 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 		this.application = application;
 		this.code = code;
 		this.context = context;
-		documentName = getOnTheFlyName( code );
+		documentName = getDocumentName( code );
 		entryPointName = null;
 	}
 
@@ -371,6 +370,11 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 	// Private
 
 	/**
+	 * The document name prefix.
+	 */
+	private static final String DOCUMENT_NAME_PREFIX = "_PRUDENCE_APPLICATION_TASK_";
+
+	/**
 	 * The attributes as configured in the {@link Application} context.
 	 */
 	private final ApplicationTaskAttributes attributes;
@@ -401,20 +405,14 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 	private final String code;
 
 	/**
-	 * Cache for on-the-fly names.
+	 * Calculate a document name based on the code.
+	 * 
+	 * @param code
+	 *        The code
+	 * @return The document name
 	 */
-	private static final ConcurrentHashMap<String, String> onTheFlyNames = new ConcurrentHashMap<String, String>();
-
-	private static String getOnTheFlyName( String code )
+	private static String getDocumentName( String code )
 	{
-		String name = onTheFlyNames.get( code );
-		if( name == null )
-		{
-			name = Executable.createOnTheFlyName();
-			String existing = onTheFlyNames.putIfAbsent( code, name );
-			if( existing != null )
-				name = existing;
-		}
-		return name;
+		return DOCUMENT_NAME_PREFIX + code.hashCode();
 	}
 }
