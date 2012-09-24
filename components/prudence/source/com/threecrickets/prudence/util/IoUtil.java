@@ -57,7 +57,13 @@ public abstract class IoUtil
 	/**
 	 * Constant.
 	 */
-	public static List<Encoding> SUPPORTED_COMPRESSION_ENCODINGS = Arrays.asList( Encoding.DEFLATE, Encoding.GZIP, Encoding.ZIP );
+	public static List<Encoding> SUPPORTED_COMPRESSION_ENCODINGS = Arrays.asList( Encoding.GZIP, Encoding.ZIP );
+
+	// For Restlet 2.1-rc6, DEFLATE is broken. See:
+	// https://github.com/restlet/restlet-framework-java/issues/653
+	//
+	// public static List<Encoding> SUPPORTED_COMPRESSION_ENCODINGS =
+	// Arrays.asList( Encoding.DEFLATE, Encoding.GZIP, Encoding.ZIP );
 
 	//
 	// Static operations

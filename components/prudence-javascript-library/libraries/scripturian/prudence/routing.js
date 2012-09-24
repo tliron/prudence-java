@@ -91,7 +91,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				java.util.concurrent.CopyOnWriteArrayList,
 				java.util.concurrent.CopyOnWriteArraySet,
 				java.io.File)
-				
+					
 			this.component = component
 				
 			// Ensure settings exist
