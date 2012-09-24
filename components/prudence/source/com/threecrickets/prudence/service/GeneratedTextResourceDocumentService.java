@@ -221,7 +221,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * 
 	 * @param documentName
 	 *        The document name
-	 * @param isPassThrough
+	 * @param includeExtraSources
 	 *        Whether to force looking for the document in the extra document
 	 *        sources (otherwise is only allowed for non-initial documents)
 	 * @return A representation of the document's output
@@ -230,7 +230,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
-	public Representation include( String documentName, boolean isPassThrough ) throws ParsingException, ExecutionException, DocumentException, IOException
+	public Representation include( String documentName, boolean includeExtraSources ) throws ParsingException, ExecutionException, DocumentException, IOException
 	{
 		documentName = attributes.validateDocumentName( documentName, attributes.getDefaultIncludedName() );
 
@@ -249,7 +249,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		}
 
 		if( documentDescriptor == null )
-			documentDescriptor = attributes.createDocumentOnce( documentName, true, true, isPassThrough || ( currentDocumentDescriptor != null ), false );
+			documentDescriptor = attributes.createDocumentOnce( documentName, true, true, includeExtraSources || ( currentDocumentDescriptor != null ), false );
 
 		if( currentDocumentDescriptor == null )
 		{
@@ -284,18 +284,18 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * 
 	 * @param documentName
 	 *        The document name
-	 * @param isPassThrough
+	 * @param includeExtraSources
 	 *        Whether to force looking for the document in the extra document
 	 *        sources
 	 * @return The cache entry
 	 * @throws ParsingException
 	 * @throws DocumentException
 	 */
-	public CacheEntry getCacheEntry( String documentName, boolean isPassThrough ) throws ParsingException, DocumentException
+	public CacheEntry getCacheEntry( String documentName, boolean includeExtraSources ) throws ParsingException, DocumentException
 	{
 		documentName = attributes.validateDocumentName( documentName, attributes.getDefaultIncludedName() );
 
-		DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, true, true, isPassThrough, false );
+		DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, true, true, includeExtraSources, false );
 
 		// Cache the document descriptor in the request
 		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();

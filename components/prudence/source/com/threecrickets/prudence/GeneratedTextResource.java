@@ -43,6 +43,7 @@ import com.threecrickets.prudence.service.ApplicationService;
 import com.threecrickets.prudence.service.ConversationStoppedException;
 import com.threecrickets.prudence.service.GeneratedTextResourceConversationService;
 import com.threecrickets.prudence.service.GeneratedTextResourceDocumentService;
+import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.IoUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
@@ -239,10 +240,11 @@ public class GeneratedTextResource extends ServerResource
 		}
 
 		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
 		try
 		{
-			DocumentDescriptor<Executable> documentDescriptor = this.attributes.getDocument( documentName, isPassThrough );
+			DocumentDescriptor<Executable> documentDescriptor = this.attributes.getDocument( documentName, isPassThrough || isCaptured );
 
 			// Media type is chosen according to the document descriptor tag
 			MediaType mediaType = getMetadataService().getMediaType( documentDescriptor.getTag() );
@@ -364,11 +366,12 @@ public class GeneratedTextResource extends ServerResource
 		}
 
 		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
 		GeneratedTextResourceDocumentService documentService = new GeneratedTextResourceDocumentService( this, null, null, variant );
 		try
 		{
-			CacheEntry cacheEntry = documentService.getCacheEntry( documentName, isPassThrough );
+			CacheEntry cacheEntry = documentService.getCacheEntry( documentName, isPassThrough || isCaptured );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 			else
@@ -451,6 +454,7 @@ public class GeneratedTextResource extends ServerResource
 		}
 
 		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
 		try
 		{
@@ -489,7 +493,7 @@ public class GeneratedTextResource extends ServerResource
 			try
 			{
 				// Execute and represent output
-				representation = documentService.include( documentName, isPassThrough );
+				representation = documentService.include( documentName, isPassThrough || isCaptured );
 
 				List<CacheDirective> cacheDirectives = getResponse().getCacheDirectives();
 				switch( this.attributes.getClientCachingMode() )
