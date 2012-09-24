@@ -11,7 +11,6 @@
 
 package com.threecrickets.prudence;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -195,7 +194,7 @@ public class DelegatedStatusService extends StatusService
 	{
 		if( isEnabled() )
 		{
-			Map<String, Object> attributes = request.getAttributes();
+			ConcurrentMap<String, Object> attributes = request.getAttributes();
 
 			if( attributes.containsKey( PASSTHROUGH_ATTRIBUTE ) )
 				// Pass through

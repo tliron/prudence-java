@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Application;
 import org.restlet.Context;
@@ -227,7 +227,7 @@ public class GeneratedTextResource extends ServerResource
 		setAnnotated( false );
 
 		Request request = getRequest();
-		Map<String, Object> attributes = request.getAttributes();
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
 
 		// Check for cached document name in the request
 		String documentName = (String) attributes.get( DOCUMENT_NAME_ATTRIBUTE );
@@ -352,7 +352,7 @@ public class GeneratedTextResource extends ServerResource
 	public RepresentationInfo getInfo( Variant variant ) throws ResourceException
 	{
 		Request request = getRequest();
-		Map<String, Object> attributes = request.getAttributes();
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
 
 		// Check for cached document name in the request
 		String documentName = (String) attributes.get( DOCUMENT_NAME_ATTRIBUTE );
@@ -439,7 +439,7 @@ public class GeneratedTextResource extends ServerResource
 	private Representation generateText( Representation entity, Variant variant ) throws ResourceException
 	{
 		Request request = getRequest();
-		Map<String, Object> attributes = request.getAttributes();
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
 
 		// Check for cached document name in the request
 		String documentName = (String) attributes.get( DOCUMENT_NAME_ATTRIBUTE );

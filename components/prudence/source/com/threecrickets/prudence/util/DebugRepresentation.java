@@ -13,6 +13,7 @@ package com.threecrickets.prudence.util;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Application;
 import org.restlet.Request;
@@ -325,11 +326,12 @@ public class DebugRepresentation extends StringRepresentation
 		}
 		html.append( "</div>" );
 
-		if( !request.getAttributes().isEmpty() )
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
+		if( !attributes.isEmpty() )
 		{
 			html.append( "<h3>Attributes</h3>" );
 			html.append( "<div id=\"attributes\">" );
-			for( Map.Entry<String, Object> attribute : request.getAttributes().entrySet() )
+			for( Map.Entry<String, Object> attribute : attributes.entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )

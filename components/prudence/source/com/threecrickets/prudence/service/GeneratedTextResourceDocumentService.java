@@ -298,7 +298,8 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, true, true, isPassThrough, false );
 
 		// Cache the document descriptor in the request
-		resource.getRequest().getAttributes().put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
+		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
+		attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
 
 		// Set initial media type according to the document's tag
 		if( conversationService.getMediaType() == null )
@@ -311,7 +312,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		String cacheKey = castCacheKey( documentDescriptor );
 		if( cacheKey != null )
 		{
-			Cache cache = attributes.getCache();
+			Cache cache = this.attributes.getCache();
 			if( cache != null )
 			{
 				// Try cache key for encoding first
@@ -327,8 +328,8 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 					if( documentDescriptor.getDocument().getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() )
 					{
 						// Cache the cache entry in the request
-						resource.getRequest().getAttributes().put( CACHE_KEY_ATTRIBUTE, cacheKey );
-						resource.getRequest().getAttributes().put( CACHE_ENTRY_ATTRIBUTE, cacheEntry );
+						attributes.put( CACHE_KEY_ATTRIBUTE, cacheKey );
+						attributes.put( CACHE_ENTRY_ATTRIBUTE, cacheEntry );
 
 						return cacheEntry;
 					}
@@ -382,7 +383,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				executionContext.setWriter( lastWriter );
 
 			String r = captureWriter.toString();
-			Map<String, Object> attributes = resource.getRequest().getAttributes();
+			ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
 			Object existing = attributes.get( captureWriter.name );
 			if( existing != null )
 				r = existing.toString() + r;
@@ -598,7 +599,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	@SuppressWarnings("unchecked")
 	private CopyOnWriteArrayList<Writer> getWriterStack()
 	{
-		Map<String, Object> attributes = resource.getRequest().getAttributes();
+		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
 		CopyOnWriteArrayList<Writer> writerStack = (CopyOnWriteArrayList<Writer>) attributes.get( WRITER_STACK_ATTRIBUTE );
 		if( writerStack == null )
 		{
@@ -848,8 +849,9 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			}
 
 			// See if a valid cache entry has already been cached in the request
-			CacheEntry cacheEntry = (CacheEntry) resource.getRequest().getAttributes().remove( CACHE_ENTRY_ATTRIBUTE );
-			String cacheKey = (String) resource.getRequest().getAttributes().remove( CACHE_KEY_ATTRIBUTE );
+			ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
+			CacheEntry cacheEntry = (CacheEntry) attributes.remove( CACHE_ENTRY_ATTRIBUTE );
+			String cacheKey = (String) attributes.remove( CACHE_KEY_ATTRIBUTE );
 			if( ( cacheEntry != null ) && ( cacheKey != null ) )
 				return represent( cacheEntry, getEncoding( executable ), cacheKey, executable, writer );
 
@@ -857,7 +859,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			cacheKey = castCacheKey( documentDescriptor );
 			if( cacheKey != null )
 			{
-				Cache cache = attributes.getCache();
+				Cache cache = this.attributes.getCache();
 				if( cache != null )
 				{
 					// Try cache key for encoding first

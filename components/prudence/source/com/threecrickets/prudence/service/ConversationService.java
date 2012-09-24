@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Request;
 import org.restlet.Response;
@@ -326,7 +327,7 @@ public class ConversationService
 	 */
 	public Form getHeaders()
 	{
-		Map<String, Object> attributes = getResponse().getAttributes();
+		ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
 		Form headers = (Form) attributes.get( HEADERS_ATTRIBUTES );
 		if( headers == null )
 		{
@@ -341,7 +342,7 @@ public class ConversationService
 	 * 
 	 * @return The locals
 	 */
-	public Map<String, Object> getLocals()
+	public ConcurrentMap<String, Object> getLocals()
 	{
 		return getRequest().getAttributes();
 	}
