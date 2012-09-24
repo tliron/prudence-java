@@ -413,6 +413,8 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 	 */
 	private static String getDocumentName( String code )
 	{
+		// TODO: this is not guaranteed to be unique!
+
 		return DOCUMENT_NAME_PREFIX + code.hashCode();
 	}
 }
