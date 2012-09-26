@@ -20,9 +20,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * An in-process (heap) memory cache.
+ * An in-process (heap) memory cache. Internally uses {@link ConcurrentHashMap}
+ * instances.
  * <p>
- * Note that this implementation does not check for overall heap consumption or
+ * Note that this implementation does not check for overall heap consumption nor
  * free system memory. Make sure you set the maximum size appropriate for your
  * system!
  * 

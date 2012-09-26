@@ -20,12 +20,8 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +37,9 @@ import org.restlet.data.Form;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Metadata;
+
+import com.threecrickets.prudence.util.InProcessMemoryLockSource;
+import com.threecrickets.prudence.util.LockSource;
 
 /**
  * A SQL-backed cache. Internally uses <a
@@ -68,14 +67,28 @@ public class SqlCache implements Cache
 
 	/**
 	 * Construction with a max entry count of 1000 entries and 10 connections in
-	 * the pool.
+	 * the pool, and an {@link InProcessMemoryLockSource}.
 	 * 
 	 * @param dataSource
 	 *        The data source
 	 */
 	public SqlCache( DataSource dataSource )
 	{
-		this( dataSource, 1000, 10 );
+		this( dataSource, new InProcessMemoryLockSource() );
+	}
+
+	/**
+	 * Construction with a max entry count of 1000 entries and 10 connections in
+	 * the pool.
+	 * 
+	 * @param dataSource
+	 *        The data source
+	 * @param lockSource
+	 *        The lock source
+	 */
+	public SqlCache( DataSource dataSource, LockSource lockSource )
+	{
+		this( dataSource, 1000, 10, lockSource );
 	}
 
 	/**
@@ -87,12 +100,15 @@ public class SqlCache implements Cache
 	 *        The max entry count
 	 * @param poolSize
 	 *        The number of connections in the pool
+	 * @param lockSource
+	 *        The lock source
 	 */
-	public SqlCache( DataSource dataSource, int maxSize, int poolSize )
+	public SqlCache( DataSource dataSource, int maxSize, int poolSize, LockSource lockSource )
 	{
 		this.maxSize = maxSize;
+		this.lockSource = lockSource;
 
-		GenericObjectPool connectionPool = new GenericObjectPool( null, poolSize );
+		GenericObjectPool<Connection> connectionPool = new GenericObjectPool<Connection>( null, poolSize );
 		new PoolableConnectionFactory( new DataSourceConnectionFactory( dataSource ), connectionPool, null, null, false, true );
 		this.dataSource = new PoolingDataSource( connectionPool );
 	}
@@ -192,7 +208,7 @@ public class SqlCache implements Cache
 	{
 		logger.fine( "Store: " + key );
 
-		Lock lock = getLock( key ).writeLock();
+		Lock lock = lockSource.getWriteLock( key );
 		lock.lock();
 		try
 		{
@@ -328,7 +344,7 @@ public class SqlCache implements Cache
 
 	public CacheEntry fetch( String key )
 	{
-		Lock lock = getLock( key ).readLock();
+		Lock lock = lockSource.getReadLock( key );
 		lock.lock();
 		try
 		{
@@ -444,7 +460,7 @@ public class SqlCache implements Cache
 				for( String key : tagged )
 				{
 					sql += "?,";
-					locks.add( getLock( key ).writeLock() );
+					locks.add( lockSource.getWriteLock( key ) );
 				}
 				sql = sql.substring( 0, sql.length() - 1 ) + ")";
 
@@ -467,7 +483,7 @@ public class SqlCache implements Cache
 					}
 
 					for( String key : tagged )
-						discardLock( key );
+						lockSource.discard( key );
 				}
 				finally
 				{
@@ -527,7 +543,7 @@ public class SqlCache implements Cache
 		// This is not atomic, but does it matter?
 
 		validateTables( true );
-		locks.clear();
+		lockSource.discardAll();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -582,12 +598,12 @@ public class SqlCache implements Cache
 	/**
 	 * A pool of read/write locks per key.
 	 */
-	private ConcurrentMap<String, ReadWriteLock> locks = new ConcurrentHashMap<String, ReadWriteLock>();
+	private final LockSource lockSource;
 
 	/**
 	 * Whether the server has last been seen as up.
 	 */
-	private AtomicBoolean up = new AtomicBoolean();
+	private final AtomicBoolean up = new AtomicBoolean();
 
 	/**
 	 * Connect to data source.
@@ -653,7 +669,7 @@ public class SqlCache implements Cache
 	 */
 	private void delete( Connection connection, String key ) throws SQLException
 	{
-		Lock lock = getLock( key ).writeLock();
+		Lock lock = lockSource.getWriteLock( key );
 		lock.lock();
 		try
 		{
@@ -676,7 +692,7 @@ public class SqlCache implements Cache
 		finally
 		{
 			lock.unlock();
-			discardLock( key );
+			lockSource.discard( key );
 		}
 	}
 
@@ -715,37 +731,6 @@ public class SqlCache implements Cache
 		}
 
 		return tagged;
-	}
-
-	/**
-	 * Gets a unique lock for a key.
-	 * 
-	 * @param key
-	 *        The key
-	 * @return The lock
-	 */
-	private ReadWriteLock getLock( String key )
-	{
-		ReadWriteLock lock = locks.get( key );
-		if( lock == null )
-		{
-			lock = new ReentrantReadWriteLock();
-			ReadWriteLock existing = locks.putIfAbsent( key, lock );
-			if( existing != null )
-				lock = existing;
-		}
-		return lock;
-	}
-
-	/**
-	 * Discards the lock for a key.
-	 * 
-	 * @param key
-	 *        The key
-	 */
-	private void discardLock( String key )
-	{
-		locks.remove( key );
 	}
 
 	/**
