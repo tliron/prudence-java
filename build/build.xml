@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <project name="Prudence" default="build" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-	<property file="custom.properties" />
-	<property file="private.properties" />
+	<property name="root" location="${basedir}/.." />
+
+	<property file="${root}/build/private.properties" />
+	<property file="${root}/build/custom.properties" />
 	
-	<property name="root" location=".." />
 	<property name="component.source" location="${root}/components/${component}/source" />
 	<property name="reference" location="${root}/components/reference" />
 	<property name="javascript-library" location="${root}/components/prudence-javascript-library" />
@@ -18,6 +19,7 @@
 	<property name="dependencies" location="${root}/dependencies" />
 
 	<property name="cache" location="${root}/build/cache" />
+	<property name="cache.ivy" location="${cache}/ivy" />
 	<property name="cache.classes" location="${cache}/classes" />
 	<property name="cache.jars" location="${cache}/jars" />
 	<property name="cache.api" location="${cache}/api" />
@@ -49,11 +51,11 @@
 	</macrodef>
 
 	<target name="ivy" description="Settings for Ivy">
-		<ivy:settings file="ivy/settings.xml" />
+		<ivy:settings file="${root}/build/ivy/settings.xml" />
 	</target>
 
 	<target name="dependencies" depends="ivy" description="Resolve dependencies">
-		<ivy:resolve file="ivy/${component}.xml" type="jar" log="download-only" resolveId="${component}" />
+		<ivy:resolve file="${root}/build/ivy/${component}.xml" type="jar" log="download-only" resolveId="${component}" />
 		<ivy:cachepath pathid="dependencies" type="jar" resolveId="${component}" />
 	</target>
 
@@ -174,7 +176,8 @@
 
 	<target name="components" depends="libraries, javadocs, manual, css" description="Assemble components" />
 
-	<target name="distribution" depends="deploy-maven" description="Create Sincerity container">
+	<target name="distribution-overwrite" description="Create Sincerity container" unless="content-present">
+		<antcall target="deploy-maven" />
 		<copy todir="${distribution.content}/configuration/sincerity">
 			<fileset dir="sincerity" />
 			<filterchain>
@@ -183,17 +186,29 @@
 				</replacetokens>
 			</filterchain>
 		</copy>
-		<exec executable="${sincerity.home}/sincerity">
+		<exec executable="${sincerity}">
 			<arg value="container:create" />
 			<arg value="--force" />
 			<arg value="${distribution.content}" />
 			<arg value="${sincerity.template}" />
 			<arg value=":" />
 			<arg value="repositories:attach" />
+			<arg value="public" />
 			<arg value="three-crickets" />
+			<arg value="maven" />
+			<arg value="${dependencies.repo}" />
 			<arg value=":" />
 			<arg value="dependencies:install" />
+			<arg value=":" />
+			<arg value="repositories:detach" />
+			<arg value="public" />
+			<arg value="${component}" />
 		</exec>
+	</target>
+
+	<target name="distribution" description="Create Sincerity container if not present">
+		<available file="${distribution.content}" property="content-present" />
+		<antcall target="distribution-overwrite" />
 	</target>
 
 	<target name="package-zip" depends="distribution" description="Create zip distribution package">
@@ -230,7 +245,7 @@
 
 	<target name="deploy-maven" if="maven" depends="components" description="Deploy to Maven repository">
 		<copy todir="${cache.maven.pom}">
-			<fileset dir="maven" excludes="*~" />
+			<fileset dir="${root}/build/maven" excludes="*~" />
 			<filterchain>
 				<replacetokens>
 					<token key="VERSION" value="${version}" />
@@ -242,7 +257,7 @@
 		</copy>
 		<exec executable="${maven}" dir="${cache.maven.pom}">
 			<arg value="deploy" />
-			<arg value="-DaltDeploymentRepository=${maven.repo}" />
+			<arg value="-DaltDeploymentRepository=default::default::${distribution.repo}" />
 		</exec>
 	</target>
 
