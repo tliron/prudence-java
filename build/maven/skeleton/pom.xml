@@ -51,7 +51,7 @@
 		<dependency>
 			<groupId>com.threecrickets.sincerity.skeleton</groupId>
 			<artifactId>sincerity-restlet</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>@SINCERITY.VERSION@</version>
 		</dependency>
 		<dependency>
 			<groupId>com.threecrickets.prudence</groupId>

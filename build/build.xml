@@ -23,7 +23,7 @@
 	<property name="cache.classes" location="${cache}/classes" />
 	<property name="cache.jars" location="${cache}/jars" />
 	<property name="cache.api" location="${cache}/api" />
-	<property name="cache.manual" location="${cache}/skeleton/reference/manuals/${maven.group}/${maven.artifact}/${version}" />
+	<property name="cache.manual" location="${cache}/skeleton/reference/manuals/${maven.group}/${maven.artifact}/${version}${version.postfix}" />
 	<property name="cache.css" location="${cache}/three-crickets-style/libraries/web/style/three-crickets" />
 	<property name="cache.maven.pom" location="${cache}/maven/pom" />
 	<property name="cache.maven.build" location="${cache}/maven/build" />
@@ -43,9 +43,9 @@
 				<arg value="--project=${component}" />
 				<arg value="--user=${googlecode.username}" />
 				<arg value="--password=${googlecode.password}" />
-				<arg value="--summary=@{description} for version ${version}" />
-				<arg value="--labels=${version.short},@{label}" />
-				<arg value="${distribution}/${component}-${version}@{suffix}" />
+				<arg value="--summary=@{description} for version ${version}${version.postfix}" />
+				<arg value="--labels=${version.short}${version.short.postfix},@{label}" />
+				<arg value="${distribution}/${component}-${version}${version.postfix}@{suffix}" />
 			</exec>
 		</sequential>
 	</macrodef>
@@ -70,7 +70,7 @@
 	<target name="version">
 		<mkdir dir="${cache.classes}" />
 		<propertyfile file="${cache.classes}/com/threecrickets/prudence/version.conf">
-			<entry key="version" value="${version}" />
+			<entry key="version" value="${version}${version.postfix}" />
 			<entry key="built" type="date" value="now" pattern="MMM dd yyyy, HH:mm:ss, 'TZ'Z" />
 		</propertyfile>
 	</target>
@@ -84,7 +84,7 @@
 		<javadoc
 			destdir="${cache.api}" sourcepath="${component.source}" excludepackagenames="**.internal.*"
 			access="protected" source="${compile.version}"
-			windowtitle="${documentation.title} ${version}" doctitle="${documentation.title} ${version}"
+			windowtitle="${documentation.title} ${version}${version.postfix}" doctitle="${documentation.title} ${version}${version.postfix}"
 			author="true" splitindex="true" use="true" version="true" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false">
 
 			<link href="${documentation.jvm}" />
@@ -149,7 +149,7 @@
 			<fileset dir="${reference}/manual" excludes="*~" />
 			<filterchain>
 				<replacetokens>
-					<token key="VERSION" value="${version}" />
+					<token key="VERSION" value="${version}${version.postfix}" />
 				</replacetokens>
 			</filterchain>
 		</copy>
@@ -182,7 +182,8 @@
 			<fileset dir="sincerity" />
 			<filterchain>
 				<replacetokens>
-					<token key="VERSION" value="${version}" />
+					<token key="VERSION" value="${version}${version.postfix}" />
+					<token key="SINCERITY.VERSION" value="${sincerity.version}" />
 				</replacetokens>
 			</filterchain>
 		</copy>
@@ -212,7 +213,7 @@
 	</target>
 
 	<target name="package-zip" depends="distribution" description="Create zip distribution package">
-		<zip destfile="${distribution}/${component}-${version}.zip">
+		<zip destfile="${distribution}/${component}-${version}${version.postfix}.zip">
 			<zipfileset dir="${distribution.content}" excludes="cache/, logs/, sincerity" />
 			<zipfileset dir="${distribution.content}" includes="sincerity" filemode="755" />
 		</zip>
@@ -222,7 +223,7 @@
 		<copy todir="${cache}" file="${root}/build/installbuilder/${component}.xml">
 			<filterchain>
 				<replacetokens>
-					<token key="VERSION" value="${version}" />
+					<token key="VERSION" value="${version}${version.postfix}" />
 				</replacetokens>
 			</filterchain>
 		</copy>
@@ -242,8 +243,8 @@
 			<arg value="--setvars" />
 			<arg value="project.outputDirectory=${cache}" />
 		</exec>
-		<zip destfile="${distribution}/${component}-${version}-osx-installer.zip">
-			<zipfileset dir="${cache}/${component}-${version}-osx-installer.app" prefix="${component}-${version}-osx-installer.app" />
+		<zip destfile="${distribution}/${component}-${version}${version.postfix}-osx-installer.zip">
+			<zipfileset dir="${cache}/${component}-${version}${version.postfix}-osx-installer.app" prefix="${component}-${version}${version.postfix}-osx-installer.app" />
 		</zip>
 		<chmod perm="ugo+rx">
 			<fileset dir="${distribution}" includes="*.run" />
@@ -257,7 +258,8 @@
 			<fileset dir="${root}/build/maven" excludes="*~" />
 			<filterchain>
 				<replacetokens>
-					<token key="VERSION" value="${version}" />
+					<token key="VERSION" value="${version}${version.postfix}" />
+					<token key="SINCERITY.VERSION" value="${sincerity.version}" />
 					<token key="ROOT" value="${root}" />
 					<token key="CACHE" value="${cache.maven.build}" />
 					<token key="JARS" value="${cache.jars}" />
