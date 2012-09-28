@@ -864,8 +864,11 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @returns {org.restlet.util.Series}
 	 */
 	Public.toHeaders = function(dict) {
-		importClass(org.restlet.engine.header.Header)
-		var series = new org.restlet.util.Series()
+		importClass(
+			org.restlet.engine.header.Header,
+			org.restlet.engine.header.Header)
+
+		var series = new Series(Header)
 		for (var d in dict) {
 			var value = dict[d]
 			if (null !== value) {
