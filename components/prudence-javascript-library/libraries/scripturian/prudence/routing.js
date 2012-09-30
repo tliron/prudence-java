@@ -135,7 +135,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.instance.owner = this.settings.description.owner
 			}
 
-			println('Prudence application: "{0}"'.cast(this.instance.name))
+			println('Application: "{0}"'.cast(this.instance.name))
 
 			// Media types
 			for (var extension in this.settings.mediaTypes) {
@@ -223,7 +223,7 @@ Prudence.Routing = Prudence.Routing || function() {
 						library = new File(this.root, library).absoluteFile
 					}
 					
-					println('	Library: "{0}"'.cast(library))
+					println('	Library: "{0}"'.cast(sincerity.container.getRelativePath(library)))
 					var documentSource = this.createDocumentSource(library)
 					this.libraryDocumentSources.add(documentSource)
 					
@@ -244,7 +244,7 @@ Prudence.Routing = Prudence.Routing || function() {
 							fileUploadDirectory: this.settings.uploads.root,
 							fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
 						}
-						println('	Handlers: "{0}"'.cast(library))
+						println('	Handlers: "{0}"'.cast(sincerity.container.getRelativePath(library)))
 
 						// Tasks
 						this.globals['com.threecrickets.prudence.ApplicationTask'] = {
@@ -258,12 +258,12 @@ Prudence.Routing = Prudence.Routing || function() {
 							fileUploadDirectory: this.settings.uploads.root,
 							fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
 						}
-						println('	Tasks: "{0}"'.cast(library))
+						println('	Tasks: "{0}"'.cast(sincerity.container.getRelativePath(library)))
 					}
 				}
 			}
 			
-			println('	Container library: "{0}"'.cast(containerLibraryDocumentSource.basePath))
+			println('	Container library: "{0}"'.cast(sincerity.container.getRelativePath(containerLibraryDocumentSource.basePath)))
 			this.libraryDocumentSources.add(containerLibraryDocumentSource)
 
 			// Sincerity library
@@ -277,7 +277,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 			}
 			if (sincerityLibraryDocumentSource.basePath != containerLibraryDocumentSource.basePath) {
-				println('	Sincerity library: "{0}"'.cast(sincerityLibraryDocumentSource.basePath))
+				println('	Sincerity library: "{0}"'.cast(sincerity.container.getRelativePath(sincerityLibraryDocumentSource.basePath)))
 				this.libraryDocumentSources.add(sincerityLibraryDocumentSource)
 			}
 			
@@ -332,7 +332,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			var crontab = new File(this.root, 'crontab').absoluteFile
 			if (crontab.exists() && !crontab.directory) {
 				println('  Crontab:')
-				println('	"{0}"'.cast(crontab))
+				println('	"{0}"'.cast(sincerity.container.getRelativePath(crontab)))
 				var scheduler = component.context.attributes.get('com.threecrickets.prudence.scheduler')
 				scheduler.addTaskCollector(new ApplicationTaskCollector(crontab, this.instance))
 			}
@@ -601,7 +601,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'd')
 
 			println('	DynamicWeb:')
-			println('	  Library: "{0}"'.cast(this.root))
+			println('	  Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 
 			var generatedTextResource = app.globals['com.threecrickets.prudence.GeneratedTextResource'] = {
 				documentSource: app.createDocumentSource(this.root, this.preExtension, this.defaultDocumentName, this.defaultExtenion),
@@ -622,7 +622,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			// Fragments
 			if (Sincerity.Objects.exists(this.fragmentsRoot)) {
-				println('	  Fragments: "{0}"'.cast(this.fragmentsRoot))
+				println('	  Fragments: "{0}"'.cast(sincerity.container.getRelativePath(this.fragmentsRoot)))
 				generatedTextResource.extraDocumentSources.add(app.createDocumentSource(this.fragmentsRoot, null, this.defaultDocumentName, this.defaultExtenion))
 			}
 
@@ -634,7 +634,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				app.component.context.attributes.put('prudence.fragmentsDocumentSource', commonFragmentsDocumentSource)
 			}
 
-			println('	  Common fragments: "{0}"'.cast(commonFragmentsDocumentSource.basePath))
+			println('	  Common fragments: "{0}"'.cast(sincerity.container.getRelativePath(commonFragmentsDocumentSource.basePath)))
 			generatedTextResource.extraDocumentSources.add(commonFragmentsDocumentSource)
 
 			// Viewable source
@@ -659,7 +659,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			if (Sincerity.Objects.exists(app.settings.scriptletPlugins)) {
 				for (var code in app.settings.scriptletPlugins) {
-					println('	  Scriptlet plugin {0} -> "{1}"'.cast(code, app.settings.scriptletPlugins[code]))
+					println('	  Scriptlet plugin: {0} -> "{1}"'.cast(code, app.settings.scriptletPlugins[code]))
 					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptletPlugins[code])
 				}
 			}
@@ -705,7 +705,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'e')
 
 			println('	Explicit:')
-			println('	  Library: "{0}"'.cast(this.root))
+			println('	  Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 
 			var delegatedResource = app.globals['com.threecrickets.prudence.DelegatedResource'] = {
 				documentSource: app.createDocumentSource(this.root, this.preExtension),
@@ -740,7 +740,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				delegatedResource.passThroughDocuments.add(dispatcher.explicit)
 				var explicit = dispatcherBaseUri + dispatcher.explicit
 				app.instance.inboundRoot.hide(explicit)
-				println('	  Dispatcher "{0}" -> "{1}"'.cast(name, explicit))
+				println('	  Dispatcher: "{0}" -> "{1}"'.cast(name, explicit))
 			}
 
 			// Defrost
@@ -985,7 +985,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					root = new File(app.root, root).absoluteFile
 				}
 				filter.sourceDirectories.add(root)
-				println('	  Directory: "{0}"'.cast(root))
+				println('	  Directory: "{0}"'.cast(sincerity.container.getRelativePath(root)))
 			}
 
 			return filter
@@ -1033,7 +1033,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					root = new File(app.root, root).absoluteFile
 				}
 				filter.sourceDirectories.add(root)
-				println('	  Directory: "{0}"'.cast(root))
+				println('	  Directory: "{0}"'.cast(sincerity.container.getRelativePath(root)))
 			}
 
 			return filter
@@ -1080,14 +1080,14 @@ Prudence.Routing = Prudence.Routing || function() {
 				filter = new ZussFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks)
 			}
 			
-			println('	Zuss: "{0}"'.cast(target))
+			println('	Zuss: "{0}"'.cast(sincerity.container.getRelativePath(target)))
 			for (var r in this.roots) {
 				var root = this.roots[r]
 				if (!(root instanceof File)) {
 					root = new File(app.root, root).absoluteFile
 				}
 				filter.sourceDirectories.add(root)
-				println('	  Directory: "{0}"'.cast(root))
+				println('	  Directory: "{0}"'.cast(sincerity.container.getRelativePath(root)))
 			}
 			
 			return filter
