@@ -41,11 +41,9 @@ function prudence(command) {
 		case 'help':
 			help(command)
 			break
-			
 		case 'version':
 			version(command)
 			break
-			
 		case 'create':
 			create(command)
 			break
@@ -66,10 +64,10 @@ function version(command) {
 
 function create(command) {
 	if (command.arguments.length < 2) {
-		throw new BadArgumentsCommandException(command, 'name', '[template=application]')
+		throw new BadArgumentsCommandException(command, 'name', '[template=default]')
 	}
 	var name = command.arguments[1]
-	var templateName = 'application'
+	var templateName = 'default'
 	if (command.arguments.length > 2) {
 		templateName = command.arguments[2]
 	}
