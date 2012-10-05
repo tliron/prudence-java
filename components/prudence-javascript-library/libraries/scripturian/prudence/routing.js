@@ -118,7 +118,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Create instance
 			this.context = component.context.createChildContext()
 			this.instance = new PrudenceApplication(this.context)
-			
+
+			this.context.attributes.put('prudence.application.root', this.root)
+
 			// Logger
 			this.context.logger = LoggingUtil.getRestletLogger(this.settings.logger)
 			

@@ -11,6 +11,7 @@
 
 package com.threecrickets.prudence.service;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
@@ -220,6 +221,26 @@ public class ApplicationService
 	public Logger getSubLogger( String name )
 	{
 		return LoggingUtil.getSubLogger( getLogger(), name );
+	}
+
+	/**
+	 * The application root directory.
+	 * 
+	 * @return The root directory
+	 */
+	public File getRoot()
+	{
+		return (File) getGlobals().get( "prudence.application.root" );
+	}
+
+	/**
+	 * The container root directory.
+	 * 
+	 * @return The container root directory
+	 */
+	public File getContainerRoot()
+	{
+		return new File( System.getProperty( "sincerity.container" ) );
 	}
 
 	/**

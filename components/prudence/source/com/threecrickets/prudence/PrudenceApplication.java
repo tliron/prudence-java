@@ -69,6 +69,16 @@ public class PrudenceApplication extends Application
 			response.setStatus( Status.CLIENT_ERROR_NOT_FOUND );
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
@@ -79,7 +89,7 @@ public class PrudenceApplication extends Application
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "PrudenceApplication" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A an application that does not route requests when it is stopped" );
 	}
 }
