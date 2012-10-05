@@ -177,7 +177,7 @@ public class CacheControlFilter extends Filter
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ": " + getNext();
+		return getClass().getSimpleName() + " -> " + getNext();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

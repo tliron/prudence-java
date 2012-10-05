@@ -295,7 +295,7 @@ public class ZussFilter extends Filter implements Locator
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ": \"" + targetDirectory + "\", " + getNext();
+		return getClass().getSimpleName() + ": \"" + targetDirectory + "\" -> " + getNext();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

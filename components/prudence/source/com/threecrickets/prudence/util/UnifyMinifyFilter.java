@@ -289,7 +289,7 @@ public abstract class UnifyMinifyFilter extends Filter
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ": \"" + targetDirectory + "\", " + getNext();
+		return getClass().getSimpleName() + ": \"" + targetDirectory + "\" -> " + getNext();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

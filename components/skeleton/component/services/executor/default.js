@@ -8,7 +8,9 @@ initializers.push(function() {
 	if (executorTasks.length > 0) {
 		var futures = []
 		var startTime = java.lang.System.currentTimeMillis()
-		println('Executing ' + executorTasks.length + ' startup tasks...')
+		if (sincerity.verbosity >= 1) {
+			println('Executing ' + executorTasks.length + ' startup tasks...')
+		}
 		for (var t in executorTasks) {
 			futures.push(fixedExecutor.submit(executorTasks[t]))
 		}
@@ -17,7 +19,9 @@ initializers.push(function() {
 				futures[f].get()
 			} catch(x) {}
 		}
-		println('Finished all startup tasks in ' + ((java.lang.System.currentTimeMillis() - startTime) / 1000) + ' seconds.')
+		if (sincerity.verbosity >= 1) {
+			println('Finished all startup tasks in ' + ((java.lang.System.currentTimeMillis() - startTime) / 1000) + ' seconds.')
+		}
 	}
 	
 	/*for (var i = applications.iterator(); i.hasNext(); ) {
