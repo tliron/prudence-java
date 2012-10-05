@@ -1,2 +1,2 @@
 
-println('Yo yo yo!')
+application.logger.info('Example startup task')

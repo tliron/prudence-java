@@ -82,6 +82,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.DelegatedStatusService,
 				com.threecrickets.prudence.util.LoggingUtil,
 				com.threecrickets.prudence.util.PreheatTask,
+				com.threecrickets.prudence.service.ApplicationService,
 				org.restlet.resource.Finder,
 				org.restlet.routing.Router,
 				org.restlet.routing.Template,
@@ -382,6 +383,10 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 			}
 			applications.add(this.instance)
+			
+			// Startup task
+			var applicationService = ApplicationService.create(this.instance)
+			applicationService.executeTask(null, '/startup/', null, 'initial', 0, 0, false)
 
 			return this.instance
 		}
