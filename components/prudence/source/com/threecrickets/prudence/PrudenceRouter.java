@@ -457,7 +457,7 @@ public class PrudenceRouter extends FallbackRouter
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "PrudenceRouter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A router with shortcut methods, inheriting functionality of FallbackRouter, CapturingRouter and ResolvingRouter" );
 	}
 }

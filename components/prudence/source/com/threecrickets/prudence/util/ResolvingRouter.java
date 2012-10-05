@@ -49,6 +49,16 @@ public class ResolvingRouter extends Router
 		describe();
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -71,7 +81,7 @@ public class ResolvingRouter extends Router
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "ResolvingRouter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A router that uses ResolvingTemplate for all routes" );
 	}
 }

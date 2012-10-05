@@ -192,7 +192,7 @@ public class FallbackRouter extends CapturingRouter
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "FallbackRouter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A router that takes care to bunch identical routes under Fallback restlets" );
 	}
 }

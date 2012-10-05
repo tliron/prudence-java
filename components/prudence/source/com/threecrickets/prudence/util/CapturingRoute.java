@@ -92,7 +92,7 @@ public class CapturingRoute extends TemplateRoute
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "CapturingRoute" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A route that always scored 0.0 for captured requests" );
 	}
 }

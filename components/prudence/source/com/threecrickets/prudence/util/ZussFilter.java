@@ -72,8 +72,7 @@ public class ZussFilter extends Filter implements Locator
 	 * @param next
 	 *        The next restlet
 	 * @param targetDirectory
-	 *        The directory into which unified-minified results should be
-	 *        written
+	 *        The directory into which CSS results should be written
 	 * @param minimumTimeBetweenValidityChecks
 	 *        See {@link #getMinimumTimeBetweenValidityChecks()}
 	 */
@@ -90,8 +89,7 @@ public class ZussFilter extends Filter implements Locator
 	 * @param next
 	 *        The next restlet
 	 * @param targetDirectory
-	 *        The directory into which unified-minified results should be
-	 *        written
+	 *        The directory into which CSS results should be written
 	 * @param minimumTimeBetweenValidityChecks
 	 *        See {@link #getMinimumTimeBetweenValidityChecks()}
 	 * @param resolver
@@ -290,6 +288,16 @@ public class ZussFilter extends Filter implements Locator
 		throw new FileNotFoundException( name );
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ": \"" + targetDirectory + "\", " + getNext();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
@@ -304,7 +312,7 @@ public class ZussFilter extends Filter implements Locator
 	private static final String ZUSS_EXTENSION = ".zuss";
 
 	/**
-	 * The directory into which unified-minified results should be written.
+	 * The directory into which CSS results should be written.
 	 */
 	private final File targetDirectory;
 
@@ -338,7 +346,7 @@ public class ZussFilter extends Filter implements Locator
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "ZussFilter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A filter that automatically translates ZUSS source files to CSS" );
 	}
 

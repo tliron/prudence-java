@@ -49,6 +49,16 @@ public class StatusRestlet extends Restlet
 		response.setStatus( status );
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
@@ -64,7 +74,7 @@ public class StatusRestlet extends Restlet
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "StatusRestlet" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A restlet that sets a specific status" );
 	}
 }

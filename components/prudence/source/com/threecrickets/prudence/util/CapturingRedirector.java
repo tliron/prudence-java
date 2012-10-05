@@ -141,7 +141,7 @@ public class CapturingRedirector extends ResolvingRedirector
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "CapturingRedirector" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A redirector that keeps track of the captured reference" );
 	}
 }

@@ -316,11 +316,11 @@ Prudence.Routing = Prudence.Routing || function() {
 						this.instance.inboundRoot.hide(uri)
 					}
 					else if (attachBase) {
-						println('    "{0}*" -> {1}'.cast(uri, restlet['class'].simpleName))
+						println('    "{0}*" -> {1}'.cast(uri, restlet))
 						this.instance.inboundRoot.attachBase(uri, restlet)
 					}
 					else {
-						println('    "{0}" -> {1}'.cast(uri, restlet['class'].simpleName))
+						println('    "{0}" -> {1}'.cast(uri, restlet))
 						this.instance.inboundRoot.attach(uri, restlet).matchingMode = Template.MODE_EQUALS
 					}
 				}

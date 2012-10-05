@@ -51,6 +51,7 @@ public class Injector extends Filter
 	public Injector( Context context, Restlet next )
 	{
 		super( context, next );
+		describe();
 	}
 
 	//
@@ -65,6 +66,16 @@ public class Injector extends Filter
 	public ConcurrentMap<String, Object> getValues()
 	{
 		return values;
+	}
+
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ": " + getNext();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -82,10 +93,21 @@ public class Injector extends Filter
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
-	// Protected
+	// Private
 
 	/**
 	 * The values to be added to the request attributes.
 	 */
 	private ConcurrentMap<String, Object> values = new ConcurrentHashMap<String, Object>();
+
+	/**
+	 * Add description.
+	 */
+	private void describe()
+	{
+		setOwner( "Prudence" );
+		setAuthor( "Three Crickets" );
+		setName( getClass().getSimpleName() );
+		setDescription( "A filter that injects request attributes" );
+	}
 }

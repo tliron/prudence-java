@@ -96,10 +96,7 @@ public class CacheControlFilter extends Filter
 	public CacheControlFilter( Context context, Restlet next, int defaultMaxAge )
 	{
 		super( context, next );
-		setOwner( "Prudence" );
-		setAuthor( "Three Crickets" );
-		setName( "CacheControlFilter" );
-		setDescription( "A Filter that adds cache-control headers to responses" );
+		describe();
 		this.defaultMaxAge = defaultMaxAge;
 	}
 
@@ -169,8 +166,18 @@ public class CacheControlFilter extends Filter
 				cacheDirectives.add( CacheDirective.maxAge( maxAge ) );
 
 			// Set expiration date accordingly
-			response.getEntity().setExpirationDate( new Date(System.currentTimeMillis() + 1000L * maxAge) );
+			response.getEntity().setExpirationDate( new Date( System.currentTimeMillis() + 1000L * maxAge ) );
 		}
+	}
+
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ": " + getNext();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -187,4 +194,15 @@ public class CacheControlFilter extends Filter
 	 * @see #maxAgeForMediaType
 	 */
 	private int defaultMaxAge = -1;
+
+	/**
+	 * Add description.
+	 */
+	private void describe()
+	{
+		setOwner( "Prudence" );
+		setAuthor( "Three Crickets" );
+		setName( getClass().getSimpleName() );
+		setDescription( "A filter that adds cache-control headers to responses" );
+	}
 }

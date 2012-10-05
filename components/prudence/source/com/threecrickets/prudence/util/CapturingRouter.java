@@ -123,7 +123,7 @@ public class CapturingRouter extends ResolvingRouter
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "CapturingRouter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A router that uses CapturingRedirector and CapturingRoute to allow for URI capturing" );
 	}
 }

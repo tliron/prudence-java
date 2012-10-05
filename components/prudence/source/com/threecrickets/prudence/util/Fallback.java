@@ -12,6 +12,7 @@
 package com.threecrickets.prudence.util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -131,7 +132,7 @@ public class Fallback extends Restlet
 	 */
 	public void addTarget( Restlet target )
 	{
-		this.targets.add( target );
+		targets.add( target );
 	}
 
 	/**
@@ -255,6 +256,28 @@ public class Fallback extends Restlet
 			target.stop();
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		StringBuilder r = new StringBuilder();
+		r.append( getClass().getSimpleName() );
+		if( targets != null )
+		{
+			r.append( ": " );
+			for( Iterator<Restlet> i = targets.iterator(); i.hasNext(); )
+			{
+				r.append( i.next() );
+				if( i.hasNext() )
+					r.append( "; " );
+			}
+		}
+		return r.toString();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -318,7 +341,7 @@ public class Fallback extends Restlet
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "Fallback" );
+		setName( getClass().getSimpleName() );
 		setDescription( "Delegates to a series of targets in sequence, stopping at the first target that handles the request" );
 	}
 }

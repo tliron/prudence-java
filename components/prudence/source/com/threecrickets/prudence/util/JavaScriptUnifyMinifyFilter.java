@@ -115,7 +115,7 @@ public class JavaScriptUnifyMinifyFilter extends UnifyMinifyFilter
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "JavaScriptUnifyMinifyFilter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A filter that automatically unifies and/or compresses JavaScript source files" );
 	}
 }

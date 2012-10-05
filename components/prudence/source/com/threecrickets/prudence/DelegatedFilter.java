@@ -130,6 +130,16 @@ public class DelegatedFilter extends Filter
 		this.defaultBeforeAction = defaultBeforeAction;
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ": " + getNext();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -211,7 +221,7 @@ public class DelegatedFilter extends Filter
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "DelegatedFilter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A filter that wraps an underlying DelegatedHandler" );
 	}
 }

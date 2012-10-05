@@ -90,7 +90,7 @@ public class NormalizingRedirector extends ResolvingRedirector
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "NormalizingRedirector" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A redirector that normalized relative paths" );
 	}
 }

@@ -109,7 +109,7 @@ public class CssUnifyMinifyFilter extends UnifyMinifyFilter
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "CssUnifyMinifyFilter" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A filter that automatically unifies and/or compresses CSS source files" );
 	}
 }

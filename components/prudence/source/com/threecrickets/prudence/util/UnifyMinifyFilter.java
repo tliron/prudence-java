@@ -282,6 +282,16 @@ public abstract class UnifyMinifyFilter extends Filter
 		return Filter.CONTINUE;
 	}
 
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ": \"" + targetDirectory + "\", " + getNext();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 

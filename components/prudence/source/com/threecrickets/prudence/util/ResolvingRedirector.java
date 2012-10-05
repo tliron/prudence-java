@@ -58,6 +58,47 @@ public class ResolvingRedirector extends Redirector
 		describe();
 	}
 
+	//
+	// Attributes
+	//
+
+	/**
+	 * The redirection mode as string.
+	 * 
+	 * @return The mode
+	 * @see #getMode()
+	 */
+	public String getModeAsString()
+	{
+		switch( getMode() )
+		{
+			case MODE_CLIENT_FOUND:
+				return "MODE_CLIENT_FOUND";
+			case MODE_CLIENT_PERMANENT:
+				return "MODE_CLIENT_PERMANENT";
+			case MODE_CLIENT_SEE_OTHER:
+				return "MODE_CLIENT_SEE_OTHER";
+			case MODE_CLIENT_TEMPORARY:
+				return "MODE_CLIENT_TEMPORARY";
+			case MODE_SERVER_INBOUND:
+				return "MODE_SERVER_INBOUND";
+			case MODE_SERVER_OUTBOUND:
+				return "MODE_SERVER_OUTBOUND";
+			default:
+				return "" + getMode();
+		}
+	}
+
+	//
+	// Object
+	//
+
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName() + ": \"" + getTargetTemplate() + "\", " + getModeAsString();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -142,7 +183,7 @@ public class ResolvingRedirector extends Redirector
 	{
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
-		setName( "ResolvingRedirector" );
+		setName( getClass().getSimpleName() );
 		setDescription( "A redirector that uses ResolvingTemplate" );
 	}
 }
