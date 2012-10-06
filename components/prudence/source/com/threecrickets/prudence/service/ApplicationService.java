@@ -230,7 +230,7 @@ public class ApplicationService
 	 */
 	public File getRoot()
 	{
-		return (File) getGlobals().get( "prudence.application.root" );
+		return (File) getGlobals().get( InstanceUtil.ROOT_ATTRIBUTE );
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class ApplicationService
 	 */
 	public File getContainerRoot()
 	{
-		return new File( System.getProperty( "sincerity.container" ) );
+		return new File( System.getProperty( "sincerity.container.root" ) );
 	}
 
 	/**

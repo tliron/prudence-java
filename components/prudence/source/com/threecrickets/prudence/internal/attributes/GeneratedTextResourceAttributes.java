@@ -21,11 +21,11 @@ import org.restlet.Context;
 
 import com.threecrickets.prudence.DelegatedScriptletPlugin;
 import com.threecrickets.prudence.GeneratedTextResource;
+import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ParsingContext;
 import com.threecrickets.scripturian.ScriptletPlugin;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
-import com.threecrickets.scripturian.document.DocumentFileSource;
 import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
@@ -65,15 +65,12 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 
 			if( fileUploadDirectory == null )
 			{
-				DocumentSource<Executable> documentSource = getDocumentSource();
-				if( documentSource instanceof DocumentFileSource<?> )
-				{
-					fileUploadDirectory = new File( ( (DocumentFileSource<?>) documentSource ).getBasePath(), "../../uploads/" );
+				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
+				fileUploadDirectory = new File( root, "uploads" );
 
-					File existing = (File) attributes.putIfAbsent( prefix + ".fileUploadDirectory", fileUploadDirectory );
-					if( existing != null )
-						fileUploadDirectory = existing;
-				}
+				File existing = (File) attributes.putIfAbsent( prefix + ".fileUploadDirectory", fileUploadDirectory );
+				if( existing != null )
+					fileUploadDirectory = existing;
 			}
 		}
 

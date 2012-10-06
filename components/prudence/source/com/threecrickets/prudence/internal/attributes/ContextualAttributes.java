@@ -158,10 +158,8 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 	public abstract CharacterSet getDefaultCharacterSet();
 
 	/**
-	 * The directory in which to place uploaded files. If the
-	 * {@link #getDocumentSource()} is a {@link DocumentFileSource}, then this
-	 * will default to the {@link DocumentFileSource#getBasePath()} plus
-	 * "../uploads/".
+	 * The directory in which to place uploaded files. Defaults to "uploads"
+	 * under the application root.
 	 * <p>
 	 * This setting can be configured by setting an attribute named
 	 * <code>fileUploadDirectory</code> in the application's {@link Context}.

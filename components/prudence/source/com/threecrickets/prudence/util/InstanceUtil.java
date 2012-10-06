@@ -35,6 +35,11 @@ public abstract class InstanceUtil
 	public static final String COMPONENT_ATTRIBUTE = "com.threecrickets.prudence.component";
 
 	/**
+	 * Root attribute for an {@link Application} or a {@link GlobalScope}.
+	 */
+	public static final String ROOT_ATTRIBUTE = "com.threecrickets.prudence.root";
+
+	/**
 	 * Applications attribute for a {@link Component}.
 	 */
 	public static final String APPLICATIONS_ATTRIBUTE = "com.threecrickets.prudence.applications";
@@ -50,7 +55,7 @@ public abstract class InstanceUtil
 	public static final String CACHE_ATTRIBUTE = "com.threecrickets.prudence.cache";
 
 	/**
-	 * Prudence version attribute for Prudence version {@link Component}.
+	 * Prudence version attribute for a {@link Component}.
 	 */
 	public static final String PRUDENCE_VERSION_ATTRIBUTE = "com.threecrickets.prudence.version";
 

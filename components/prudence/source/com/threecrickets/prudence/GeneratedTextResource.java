@@ -50,7 +50,6 @@ import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
-import com.threecrickets.scripturian.document.DocumentFileSource;
 import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
@@ -132,15 +131,13 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link ExecutionController}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.fileUploadDirectory:</code>
- * {@link File}. Defaults to the {@link DocumentFileSource#getBasePath()} plus
- * "../uploads/".</li>
+ * {@link File}. Defaults to "uploads" under the application root.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>
  * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.fragmentDirectory:</code>
- * {@link File}. Defaults to the {@link DocumentFileSource#getBasePath()} plus
- * "../fragments/".</li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.extraDocumentSources:</code>
+ * {@link Iterable<DocumentSource<Executable>>}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>

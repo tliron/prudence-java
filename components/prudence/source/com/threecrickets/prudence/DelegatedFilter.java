@@ -137,7 +137,10 @@ public class DelegatedFilter extends Filter
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ": \"" + delegatedHandler.getDocumentName() + "\" -> " + getNext();
+		if( delegatedHandler == null )
+			return getClass().getSimpleName() + " -> " + getNext();
+		else
+			return getClass().getSimpleName() + ": \"" + delegatedHandler.getDocumentName() + "\" -> " + getNext();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

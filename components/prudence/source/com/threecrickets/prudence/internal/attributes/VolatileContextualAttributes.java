@@ -25,7 +25,6 @@ import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
-import com.threecrickets.scripturian.document.DocumentFileSource;
 import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
 
@@ -291,15 +290,12 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 
 			if( fileUploadDirectory == null )
 			{
-				DocumentSource<Executable> documentSource = getDocumentSource();
-				if( documentSource instanceof DocumentFileSource<?> )
-				{
-					fileUploadDirectory = new File( ( (DocumentFileSource<?>) documentSource ).getBasePath(), ".." + File.separatorChar + "uploads" + File.separatorChar );
+				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
+				fileUploadDirectory = new File( root, "uploads" );
 
-					File existing = (File) attributes.putIfAbsent( prefix + ".fileUploadDirectory", fileUploadDirectory );
-					if( existing != null )
-						fileUploadDirectory = existing;
-				}
+				File existing = (File) attributes.putIfAbsent( prefix + ".fileUploadDirectory", fileUploadDirectory );
+				if( existing != null )
+					fileUploadDirectory = existing;
 			}
 		}
 

@@ -35,7 +35,6 @@ import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
-import com.threecrickets.scripturian.document.DocumentFileSource;
 import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
@@ -78,7 +77,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link String}, defaults to "default".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.documentServiceName</code>:
- * Defaults to "document"..</li>
+ * Defaults to "document".</li>
  * <li><code>com.threecrickets.prudence.DelegatedHandler.errorWriter:</code>
  * {@link Writer}, defaults to standard error.</li>
  * <li>
@@ -86,8 +85,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link ConcurrentMap}, default to a new {@link ConcurrentHashMap}.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.fileUploadDirectory:</code>
- * {@link File}. Defaults to the {@link DocumentFileSource#getBasePath()} plus
- * "../uploads/".</li>
+ * {@link File}. Defaults to "uploads" under the application root.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>

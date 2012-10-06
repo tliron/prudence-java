@@ -83,6 +83,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.util.LoggingUtil,
 				com.threecrickets.prudence.util.PreheatTask,
 				com.threecrickets.prudence.service.ApplicationService,
+				com.threecrickets.prudence.util.InstanceUtil,
 				org.restlet.resource.Finder,
 				org.restlet.routing.Router,
 				org.restlet.routing.Template,
@@ -119,7 +120,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.context = component.context.createChildContext()
 			this.instance = new PrudenceApplication(this.context)
 
-			this.context.attributes.put('prudence.application.root', this.root)
+			this.context.attributes.put(InstanceUtil.ROOT_ATTRIBUTE, this.root)
 
 			// Logger
 			this.context.logger = LoggingUtil.getRestletLogger(this.settings.logger)
