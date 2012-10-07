@@ -267,13 +267,14 @@ public class Fallback extends Restlet
 		r.append( getClass().getSimpleName() );
 		if( targets != null )
 		{
-			r.append( " -> " );
+			r.append( " -> [" );
 			for( Iterator<Restlet> i = targets.iterator(); i.hasNext(); )
 			{
 				r.append( i.next() );
 				if( i.hasNext() )
 					r.append( " | " );
 			}
+			r.append( ']' );
 		}
 		return r.toString();
 	}

@@ -140,7 +140,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 
 			if (sincerity.verbosity >= 1) {
-				println('Application: "{0}"'.cast(this.instance.name))
+				println('Setting up application: "{0}"'.cast(this.instance.name))
 			}
 
 			// Media types
@@ -312,7 +312,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			if (sincerity.verbosity >= 2) {
-				println('  Routing:')
+				println('  Routes:')
 			}
 
 			// Source viewer
@@ -561,7 +561,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public.create = function(app, uri) {
 			importClass(
 				org.restlet.resource.Directory,
-				org.restlet.engine.application.Encoder,
+				com.threecrickets.prudence.util.DefaultEncoder,
 				java.io.File)
 			
 			this.root = Sincerity.Objects.ensure(this.root, 'mapped')
@@ -574,7 +574,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			directory.negotiatingContent = Sincerity.Objects.ensure(this.negotiate, true)
 			
 			if (Sincerity.Objects.ensure(this.compress, true)) {
-				var encoder = new Encoder(app.context, false, false, app.instance.encoderService)
+				var encoder = new DefaultEncoder(app.instance)
 				encoder.next = directory
 				directory = encoder
 			}
