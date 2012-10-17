@@ -344,7 +344,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				restlet = this.createRestlet(restlet, uri)
 				if (Sincerity.Objects.exists(restlet)) {
-					if (restlet == 'hidden') {
+					if ((restlet == 'hidden') || (restlet == '!')) {
 						if (sincerity.verbosity >= 2) {
 							println('    "{0}" hidden'.cast(uri))
 						}
@@ -437,7 +437,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				return new Module.Chain({restlets: restlet}).create(this, uri)
 			}
 			else if (Sincerity.Objects.isString(restlet)) {
-				if (restlet == 'hidden') {
+				if ((restlet == 'hidden') || (restlet == '!')) {
 					return restlet
 				}
 				else if (restlet[0] == '/') {
@@ -874,6 +874,11 @@ Prudence.Routing = Prudence.Routing || function() {
 			importClass(
 				com.threecrickets.prudence.util.Injector,
 				com.threecrickets.prudence.util.CapturingRedirector)
+
+			if (this.uri.endsWith('!')) {
+				this.uri = this.uri.substring(0, this.uri.length - 1)
+				this.hidden = true
+			}
 				
 	   		var capture = new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}', false)
 
@@ -889,6 +894,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			if (true == this.hidden) {
 				app.instance.inboundRoot.hide(uri)				
+				if (sincerity.verbosity >= 2) {
+					println('    "{0}" hidden'.cast(uri))
+				}
 			}
    
 			return capture

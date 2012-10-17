@@ -33,8 +33,6 @@ public class H2Cache extends SqlCache
 	 * 
 	 * @param path
 	 *        The H2 database path
-	 * @param lockSource
-	 *        The lock source
 	 */
 	public H2Cache( String path )
 	{
