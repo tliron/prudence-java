@@ -196,7 +196,8 @@ public class DelegatedStatusService extends StatusService
 		{
 			ConcurrentMap<String, Object> attributes = request.getAttributes();
 
-			if( attributes.containsKey( PASSTHROUGH_ATTRIBUTE ) )
+			Object passthrough = attributes.get( PASSTHROUGH_ATTRIBUTE );
+			if( ( passthrough != null ) && (Boolean) passthrough )
 				// Pass through
 				return response.getEntity();
 

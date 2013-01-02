@@ -27,6 +27,7 @@ import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 
+import com.threecrickets.prudence.DelegatedStatusService;
 import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.ConversationCookie;
 import com.threecrickets.prudence.util.FileParameter;
@@ -173,6 +174,35 @@ public class ConversationService
 	public void setStatusCode( int statusCode )
 	{
 		getResponse().setStatus( Status.valueOf( statusCode ) );
+	}
+
+	/**
+	 * When true, the {@link DelegatedStatusService} will not intercept errors.
+	 * <p>
+	 * Note that this will only have an effect if the
+	 * {@link DelegatedStatusService} is installed in the application.
+	 * 
+	 * @return The passthrough status
+	 * @see #setStatusPassthrough(boolean)
+	 */
+	public boolean getStatusPassthrough()
+	{
+		Object passthrough = getRequest().getAttributes().get( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE );
+		return passthrough != null ? (Boolean) passthrough : false;
+	}
+
+	/**
+	 * @param passthrough
+	 *        The passthrough status
+	 * @see #getStatusPassthrough()
+	 */
+	public void setStatusPassthrough( boolean passthrough )
+	{
+		ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
+		if( passthrough )
+			attributes.put( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE, true );
+		else
+			attributes.remove( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE );
 	}
 
 	/**
