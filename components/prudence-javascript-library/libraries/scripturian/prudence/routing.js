@@ -77,7 +77,6 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public.create = function(component) {
 			importClass(
 				com.threecrickets.prudence.PrudenceApplication,
-				com.threecrickets.prudence.PrudenceRouter,
 				com.threecrickets.prudence.ApplicationTaskCollector,
 				com.threecrickets.prudence.DelegatedStatusService,
 				com.threecrickets.prudence.util.LoggingUtil,
@@ -85,7 +84,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.service.ApplicationService,
 				com.threecrickets.prudence.util.InstanceUtil,
 				org.restlet.resource.Finder,
-				org.restlet.routing.Router,
 				org.restlet.routing.Template,
 				org.restlet.routing.Redirector,
 				org.restlet.data.Reference,
@@ -95,7 +93,11 @@ Prudence.Routing = Prudence.Routing || function() {
 				java.io.File)
 					
 			this.component = component
-				
+
+			// Flatten globals
+			this.globals = Sincerity.Objects.flatten(this.globals)
+			this.sharedGlobals = Sincerity.Objects.flatten(this.sharedGlobals)
+
 			// Ensure settings exist
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
@@ -211,10 +213,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.instance.statusService.capture(code, this.internalName, uri, this.context)
 			}
 
-			// Inbound root
-			this.instance.inboundRoot = new PrudenceRouter(this.context)
-			this.instance.inboundRoot.routingMode = Router.MODE_BEST_MATCH
-			
 			// Libraries
 			this.libraryDocumentSources = new CopyOnWriteArrayList()
 			
@@ -255,33 +253,37 @@ Prudence.Routing = Prudence.Routing || function() {
 						extraDocumentSources.add(containerLibraryDocumentSource)
 						
 						// Handlers
-						this.globals['com.threecrickets.prudence.DelegatedHandler'] = {
-							documentSource: documentSource,
-							extraDocumentSources: extraDocumentSources,
-							libraryDocumentSources: this.libraryDocumentSources,
-							defaultName: this.settings.code.defaultDocumentName,
-							defaultLanguageTag: this.settings.code.defaultLanguageTag,
-							languageManager: executable.manager,
-							sourceViewable: this.settings.code.sourceViewable,
-							fileUploadDirectory: this.settings.uploads.root,
-							fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
-						}
+						Sincerity.Objects.merge(this.globals, Sincerity.Objects.flatten({
+							'com.threecrickets.prudence.DelegatedHandler': {
+								documentSource: documentSource,
+								extraDocumentSources: extraDocumentSources,
+								libraryDocumentSources: this.libraryDocumentSources,
+								defaultName: this.settings.code.defaultDocumentName,
+								defaultLanguageTag: this.settings.code.defaultLanguageTag,
+								languageManager: executable.manager,
+								sourceViewable: this.settings.code.sourceViewable,
+								fileUploadDirectory: this.settings.uploads.root,
+								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
+							}
+						}))
 						if (sincerity.verbosity >= 2) {
 							println('    Handlers: "{0}"'.cast(sincerity.container.getRelativePath(library)))
 						}
 
 						// Tasks
-						this.globals['com.threecrickets.prudence.ApplicationTask'] = {
-							documentSource: documentSource,
-							extraDocumentSources: extraDocumentSources,
-							libraryDocumentSources: this.libraryDocumentSources,
-							defaultName: this.settings.code.defaultDocumentName,
-							defaultLanguageTag: this.settings.code.defaultLanguageTag,
-							languageManager: executable.manager,
-							sourceViewable: this.settings.code.sourceViewable,
-							fileUploadDirectory: this.settings.uploads.root,
-							fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
-						}
+						Sincerity.Objects.merge(this.globals, Sincerity.Objects.flatten({
+							'com.threecrickets.prudence.ApplicationTask': {
+								documentSource: documentSource,
+								extraDocumentSources: extraDocumentSources,
+								libraryDocumentSources: this.libraryDocumentSources,
+								defaultName: this.settings.code.defaultDocumentName,
+								defaultLanguageTag: this.settings.code.defaultLanguageTag,
+								languageManager: executable.manager,
+								sourceViewable: this.settings.code.sourceViewable,
+								fileUploadDirectory: this.settings.uploads.root,
+								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
+							}
+						}))
 						if (sincerity.verbosity >= 2) {
 							println('    Tasks: "{0}"'.cast(sincerity.container.getRelativePath(library)))
 						}
@@ -315,56 +317,28 @@ Prudence.Routing = Prudence.Routing || function() {
 				println('  Routes:')
 			}
 
-			// Source viewer
+			// Viewable document sources
 			if (true == this.settings.code.sourceViewable) {
 				this.sourceViewableDocumentSources = new CopyOnWriteArrayList()
 				this.globals['com.threecrickets.prudence.SourceCodeResource.documentSources'] = this.sourceViewableDocumentSources
+			}
+			
+			this.hidden = []
+
+			// Inbound root (a router)
+			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
+			
+			// Hidden
+			for (var uri in this.hidden) {
+				this.instance.inboundRoot.hide(uri)
+			}
+
+			// Source viewer
+			if (true == this.settings.code.sourceViewable) {
 				var sourceViewer = new Finder(this.context, Sincerity.JVM.getClass('com.threecrickets.prudence.SourceCodeResource'))
 				this.instance.inboundRoot.attach('/source/', sourceViewer).matchingMode = Template.MODE_EQUALS
 				if (sincerity.verbosity >= 2) {
 					println('    "/source/" -> "{0}"'.cast(sourceViewer['class'].simpleName))
-				}
-			}
-
-			// Create and attach restlets
-			for (var uri in this.routes) {
-				var restlet = this.routes[uri]
-
-				var attachBase = false
-				var length = uri.length
-				if (length > 1) {
-					var last = uri[length - 1]
-					if (last == '*') {
-						uri = uri.substring(0, length - 1)
-						attachBase = true
-					}
-				}
-				
-				uri = Module.cleanUri(uri)
-
-				restlet = this.createRestlet(restlet, uri)
-				if (Sincerity.Objects.exists(restlet)) {
-					if ((restlet == 'hidden') || (restlet == '!')) {
-						if (sincerity.verbosity >= 2) {
-							println('    "{0}" hidden'.cast(uri))
-						}
-						this.instance.inboundRoot.hide(uri)
-					}
-					else if (attachBase) {
-						if (sincerity.verbosity >= 2) {
-							println('    "{0}*" -> {1}'.cast(uri, restlet))
-						}
-						this.instance.inboundRoot.attachBase(uri, restlet)
-					}
-					else {
-						if (sincerity.verbosity >= 2) {
-							println('    "{0}" -> {1}'.cast(uri, restlet))
-						}
-						this.instance.inboundRoot.attach(uri, restlet).matchingMode = Template.MODE_EQUALS
-					}
-				}
-				else {
-					throw new SincerityException('Unsupported restlet for "{0}"'.cast(uri))
 				}
 			}
 
@@ -392,18 +366,16 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			// Apply globals
-			var globals = Sincerity.Objects.flatten(this.globals)
-			for (var name in globals) {
-				if (null !== globals[name]) {
-					this.context.attributes.put(name, globals[name])
+			for (var name in this.globals) {
+				if (null !== this.globals[name]) {
+					this.context.attributes.put(name, this.globals[name])
 				}
 			}
 
 			// Apply shared globals
-			var sharedGlobals = Sincerity.Objects.flatten(this.sharedGlobals)
-			for (var name in sharedGlobals) {
-				if (null !== sharedGlobals[name]) {
-					component.context.attributes.put(name, sharedGlobals[name])
+			for (var name in this.sharedGlobals) {
+				if (null !== this.sharedGlobals[name]) {
+					component.context.attributes.put(name, this.sharedGlobals[name])
 				}
 			}
 
@@ -601,9 +573,10 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._configure = ['root', 'fragmentsRoot', 'passThroughs', 'preExtension', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode']
 
 		Public.create = function(app, uri) {
-			if (Sincerity.Objects.exists(app.globals['com.threecrickets.prudence.GeneratedTextResource'])) {
+			if (app.hasGeneratedTextResource) {
 				throw new SincerityException('There can be only one DynamicWeb per application')
 			}
+			app.hasGeneratedTextResource = true
 
 			importClass(
 				com.threecrickets.prudence.util.PhpExecutionController,
@@ -651,7 +624,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 			}
 
-			var generatedTextResource = app.globals['com.threecrickets.prudence.GeneratedTextResource'] = {
+			var generatedTextResource = {
 				documentSource: app.createDocumentSource(this.root, this.preExtension, this.defaultDocumentName, this.defaultExtenion),
 				extraDocumentSources: new CopyOnWriteArrayList(),
 				libraryDocumentSources: app.libraryDocumentSources,
@@ -720,6 +693,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			// Defrost
 			app.defrost(generatedTextResource.documentSource)
+
+			// Merge globals
+			Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.GeneratedTextResource': generatedTextResource}))
 			
 			return new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
 		}
@@ -743,9 +719,10 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._configure = ['root', 'passThroughs', 'implicit', 'preExtension']
 
 		Public.create = function(app, uri) {
-			if (Sincerity.Objects.exists(app.globals['com.threecrickets.prudence.DelegatedResource'])) {
+			if (app.hasDelegatedResource) {
 				throw new SincerityException('There can be only one Explicit per application')
 			}
+			app.hasDelegatedResource = true
 
 			importClass(
 				org.restlet.resource.Finder,
@@ -763,7 +740,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 			}
 
-			var delegatedResource = app.globals['com.threecrickets.prudence.DelegatedResource'] = {
+			var delegatedResource = {
 				documentSource: app.createDocumentSource(this.root, this.preExtension),
 				libraryDocumentSources: app.libraryDocumentSources,
 				passThroughDocuments: app.passThroughDocuments,
@@ -797,7 +774,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				var dispatcher = app.getDispatcher(name)
 				delegatedResource.passThroughDocuments.add(dispatcher.explicit)
 				var explicit = dispatcherBaseUri + dispatcher.explicit
-				app.instance.inboundRoot.hide(explicit)
+				app.hidden.push(explicit)
 				if (sincerity.verbosity >= 2) {
 					println('      Dispatcher: "{0}" -> "{1}"'.cast(name, explicit))
 				}
@@ -805,6 +782,9 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			// Defrost
 			app.defrost(delegatedResource.documentSource)
+
+			// Merge globals
+			Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
 
 			return new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
 		}
@@ -832,7 +812,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.util.Injector,
 				com.threecrickets.prudence.util.CapturingRedirector)
 				
-			if (!Sincerity.Objects.exists(app.globals['com.threecrickets.prudence.DelegatedResource'])) {
+			if (!app.hasDelegatedResource) {
 				throw new SincerityException('An Explicit must be attached before an Implicit can be created')
 	   		}
 				
@@ -893,7 +873,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			if (true == this.hidden) {
-				app.instance.inboundRoot.hide(uri)				
+				app.hidden.push(uri)
 				if (sincerity.verbosity >= 2) {
 					println('    "{0}" hidden'.cast(uri))
 				}
@@ -905,6 +885,102 @@ Prudence.Routing = Prudence.Routing || function() {
 		return Public
 	}(Public))
 
+	/**
+	 * @class
+	 * @name Prudence.Routing.Router
+	 * @augments Prudence.Routing.Restlet 
+	 */
+	Public.Router = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Router */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['routes', 'routingMode']
+
+		Public.create = function(app, uri) {
+			importClass(
+				com.threecrickets.prudence.PrudenceRouter,
+				org.restlet.routing.Router)
+			
+			var router = new PrudenceRouter(app.context, app.settings.code.minimumTimeBetweenValidityChecks)
+			
+			if (Sincerity.Objects.isString(this.routingMode)) {
+				if (this.routingMode == 'best') {
+					this.routingMode = Router.MODE_BEST_MATCH					
+				}
+				else if (this.routingMode == 'custom') {
+					this.routingMode = Router.MODE_CUSTOM_MATCH					
+				}
+				else if (this.routingMode == 'first') {
+					this.routingMode = Router.MODE_FIRST_MATCH					
+				}
+				else if (this.routingMode == 'last') {
+					this.routingMode = Router.MODE_LAST_MATCH					
+				}
+				else if (this.routingMode == 'next') {
+					this.routingMode = Router.MODE_NEXT_MATCH					
+				}
+				else if (this.routingMode == 'random') {
+					this.routingMode = Router.MODE_RANDOM_MATCH					
+				}
+			}
+			if (!Sincerity.Objects.exists(this.routingMode)) {
+				this.routingMode = Router.MODE_BEST_MATCH					
+			}
+			
+			router.routingMode = this.routingMode
+			
+			// Create and attach restlets
+			for (var uri in this.routes) {
+				var restlet = this.routes[uri]
+
+				var attachBase = false
+				var length = uri.length
+				if (length > 1) {
+					var last = uri[length - 1]
+					if (last == '*') {
+						uri = uri.substring(0, length - 1)
+						attachBase = true
+					}
+				}
+				
+				uri = Module.cleanUri(uri)
+
+				restlet = app.createRestlet(restlet, uri)
+				if (Sincerity.Objects.exists(restlet)) {
+					if ((restlet == 'hidden') || (restlet == '!')) {
+						if (sincerity.verbosity >= 2) {
+							println('    "{0}" hidden'.cast(uri))
+						}
+						router.hide(uri)
+					}
+					else if (attachBase) {
+						if (sincerity.verbosity >= 2) {
+							println('    "{0}*" -> {1}'.cast(uri, restlet))
+						}
+						router.attachBase(uri, restlet)
+					}
+					else {
+						if (sincerity.verbosity >= 2) {
+							println('    "{0}" -> {1}'.cast(uri, restlet))
+						}
+						router.attach(uri, restlet).matchingMode = Template.MODE_EQUALS
+					}
+				}
+				else {
+					throw new SincerityException('Unsupported restlet for "{0}"'.cast(uri))
+				}
+			}
+
+			return router
+		}
+		
+		return Public
+	}(Public))
+	
 	/**
 	 * @class
 	 * @name Prudence.Routing.Chain
