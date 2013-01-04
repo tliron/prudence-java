@@ -865,7 +865,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 */
 	Public.toHeaders = function(dict) {
 		importClass(
-			org.restlet.engine.header.Header,
+			org.restlet.util.Series,
 			org.restlet.engine.header.Header)
 
 		var series = new Series(Header)
