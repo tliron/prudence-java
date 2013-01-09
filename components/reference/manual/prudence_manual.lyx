@@ -4707,6 +4707,315 @@ scriptlets
  in the same document.
 \end_layout
 
+\begin_layout Subsubsection
+Differences
+\end_layout
+
+\begin_layout Standard
+Explicit resources are in the "/mapped/" directory, and are indeed mapped
+ directly to a URI based on their filename and the directory structure.
+ They are thus quite similar to dynamic resources, which are mapped in the
+ same way.
+ (Though note that the filename extension is ignored for the URI mapping,
+ which is standard in Prudence.)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Dynamic
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Explicit
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.d.* extension
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+.e.* extension
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The language is decided per scriptlet, for example <%python ...
+ %>, and multiple languages can exist in the same file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The single language is chose by the extension, for example .e.js
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The single MIME type is based on the filename extension (.d.html, .d.xml, .d.json,
+ etc.)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+You set up content negotiation in handleInit, allowing you to support several
+ formats
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Really only useful for textual formats
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Can handle binary formats
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Can handle GET and POST, but not meaningful for PUT and DELETE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Can handle all REST verbs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Automatic integration with Prudence caching, which does conditional requests
+ and fetches representations from the cache backend
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+You can implement handleGetInfo for your own version of conditional requests
+ and do your own caching
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, implicit resources are similar in many ways to explicit resources,
+ but the main difference is that they are not in the "/mapped/" directory
+ and are not assigned a URI.
+ Instead, you use your routing.js to manually map a URI to a resource by
+ name.
+ You then use your "/libraries/resources.js" (or "/libraries/resources/default.js"
+) to map the names your code.
+ And, actually, you can do very sophisticated dispatching in resources.js,
+ beyond just mapping a name to a resource.
+ For example, you can provide different resource implementations based on
+ cookies.
+ This might be better handles inside the resource implementation, but sometimes
+ it's cleaner to have entirely separate implementations.
+ Essentially, the difference between explicit and implicit resources is
+ in how you organize your code.
+ They otherwise functional identically.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Explicit
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Implicit
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Each resource implementation must be a single file
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+There is no restriction on file structure
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The REST handlers must be global functions (though you can have them call
+ JavaScript objects)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+The REST handlers are in a JavaScript object (though you can have them call
+ global functions)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+URI mapping is automatic, based on the filename and directory structure
+ (though you can control this with captures and hides in routing.js)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+You must explicitly map URIs or URI patterns to your resource implementations,
+ and you can further control implementation selection in resources.js
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So, here's how to choose what to use:
+\end_layout
+
+\begin_layout Enumerate
+If you need to generate text dynamically for a "page" at a known URI, then
+ definitely use dynamic resources.
+\end_layout
+
+\begin_layout Enumerate
+If you need to handle a fuller RESTful resource at a known URI, then explicit
+ resources are an option.
+ You can also use captures to allow URI patterns to funnel to your known
+ URI, and even hide it so that only the pattern is known.
+\end_layout
+
+\begin_layout Enumerate
+If you have many resources that share a lot of functionality, and can benefit
+ from OOP or other abstractions, then implicit resources allow you allow
+ your codebase to be better organized than when using explicit resources.
+\end_layout
+
 \begin_layout Subsection
 MVC in Prudence
 \end_layout

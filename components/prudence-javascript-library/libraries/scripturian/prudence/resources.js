@@ -1,7 +1,7 @@
 //
 // This file is part of the Prudence Foundation Library
 //
-// Copyright 2011-2012 Three Crickets LLC.
+// Copyright 2009-2013 Three Crickets LLC.
 //
 // The contents of this file are subject to the terms of the LGPL version 3.0:
 // http://www.gnu.org/copyleft/lesser.html
@@ -287,6 +287,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 *        <li>'web': see {@link Prudence.Resources#fromQueryString}</li>
 	 *        <li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
 	 *        </ul>
+	 * @param {String|Object} [params.result.type] As params.result
 	 * @param {Boolean} [params.result.headers] If true, the result will be in the form of {headers:{}, representation:...}
 	 *        where 'headers' is a dict of HTTP responses; params.results.headers defaults to true if params.method is 'head',
 	 *        otherwise it defaults to false

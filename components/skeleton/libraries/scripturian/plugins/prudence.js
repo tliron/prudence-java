@@ -98,7 +98,7 @@ function copy(source, destination, token, value) {
 		destination.parentFile.mkdirs()
 		var content = Sincerity.Files.loadText(source, 'UTF-8')
 		content = String(content).replace(token, value)
-		var output = FileWriter(destination)
+		var output = new FileWriter(destination)
 		try {
 			output.write(content)
 		}
