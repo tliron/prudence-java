@@ -5047,6 +5047,327 @@ model
 Prudence JavaScript Library
 \end_layout
 
+\begin_layout Subsection
+Basic Routing
+\end_layout
+
+\begin_layout Standard
+Restlet has excellent virtual host support, and there is a many-to-many
+ relationship routing between almost anything.
+ So, you can easily have a single Prudence container (running in a single
+ JVM instance) managing several sites at once with several applications.
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of using a single container
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: a single base directory, and all configuration
+ is done by JavaScript inside the container, so it can be fully dynamic.
+\end_layout
+
+\begin_layout Enumerate
+Less memory use.
+\end_layout
+
+\begin_layout Enumerate
+You can use application.sharedGlobals to share state between applications.
+ (Note that if they are running in multiple containers, you can use application.d
+istributedGlobals instead.
+ Will also work on VMs running on separate machines in the cluster.
+ But distributed globals have to be serializable, of course.)
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of using multiple containers
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: several base directories can mean separate
+ code/distribution repositories, and configuration may happen at the reverse-pro
+xy level with your web frontend.
+\end_layout
+
+\begin_layout Enumerate
+Crashes/deadlocks/memory leaks in one VM won't affect others.
+\end_layout
+
+\begin_layout Enumerate
+You can restart the VM for one container without affecting others that are
+ running.
+\end_layout
+
+\begin_layout Standard
+There is no performance advantage in either scenario.
+ Everything is designed around high-concurrency and threading, and threads
+ are managed by the OS globally.
+ (Well, there are some caveats to this: Linux can group threads per running
+ process for purposes of prioritization, but this is only really done for
+ desktop applications.
+ But this could be possibly useful when running several containers, if you
+ want to guarantee high thread priority to one of the containers over the
+ others.
+ Any of this would only effect *very* high concurrency deployments, where
+ CPU usage is often high.)
+\end_layout
+
+\begin_layout Standard
+Here is documentation on managing routing in a single container.
+ Note that the Prudence Administration app shows all of this routing information
+ at runtime:
+\end_layout
+
+\begin_layout Subsubsection
+Servers
+\end_layout
+
+\begin_layout Standard
+Under /component/servers/ you can define as many servers as you want.
+ Just add a new file and assign a port for it.
+ There is actually routing done per server, too, so you can define which
+ IP address you want the server to bind to, in case your machine as several
+ IP addresses.
+ On AWS, this could be useful because machines can indeed have both a public
+ and "internal" IP address.
+\end_layout
+
+\begin_layout Paragraph
+Minimal definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var server = new Server(Protocol.HTTP, 8080)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.name = 'myserver'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.servers.add(server)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Routing
+\end_layout
+
+\begin_layout Standard
+server.address = [string]
+\end_layout
+
+\begin_layout Standard
+Defaults to null (which defaults to localhost), but you can filter on a
+ specific IP address.
+ "*" wildcards are supported.
+\end_layout
+
+\begin_layout Standard
+(This is how you would add a TLS https:// server, too, if you want it managed
+ by Prudence.
+ Though another option is to use a frontend, like Apache/nginx, with a reverse
+ proxy.
+ Which one is better would be another discussion.)
+\end_layout
+
+\begin_layout Subsubsection
+Hosts
+\end_layout
+
+\begin_layout Standard
+Under /component/hosts/ you can add as many virtual hosts as you want.
+ A virtual host signifies the basic domain name and port assignment.
+\end_layout
+
+\begin_layout Paragraph
+Minimal definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = new VirtualHost(component.context)
+\end_layout
+
+\begin_layout Plain Layout
+
+host.name = "privatehost" [used when attaching applications to the host]
+\end_layout
+
+\begin_layout Plain Layout
+
+component.hosts.add(component.defaultHost)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Routing
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+host.serverAddress = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourcePort = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default all of these are null, meaning that all incoming requests are
+ routed, but you can filter on specific incoming requests.
+ For example, you might want the virtual host to only accept a specific
+ port or server IP address.
+ "*" wildcards are supported for all of these.
+\end_layout
+
+\begin_layout Subsubsection
+Applications
+\end_layout
+
+\begin_layout Standard
+In each application's routing.js you have app.hosts by which you assign the
+ application to a base URI on that host.
+ By default we only use a single host, the default one, but you can assign
+ each app to one or more hosts, with different base URIs under each.
+ The app instance only runs *once* in such cases: all app.globals, etc., are
+ single.
+ It's only the routing that changes according to the requests coming in
+ from various servers and virtual hosts.
+ If you'd like the application to behave differently for each host, you
+ can do that in your code.
+\end_layout
+
+\begin_layout Paragraph
+Minimal definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/publicbaseuri/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Custom
+\end_layout
+
+\begin_layout Standard
+Here's an example of "attaching" the app to two different virtual hosts,
+ with different base URIs under each:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/publicbaseuri/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'privatehost': '/privatebaseuri'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 The Prudence Instance
 \begin_inset CommandInset label
