@@ -82,7 +82,7 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( ".name { font-weight: bold; font-style: italic; }\n" );
 		html.append( "</style>\n" );
 		html.append( "</head>\n" );
-		html.append( "<body\n" );
+		html.append( "<body>\n" );
 
 		html.append( "<h2>Prudence Debug Page</h2>" );
 
