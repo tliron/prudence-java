@@ -191,10 +191,20 @@ public class ConversationCookie extends Cookie
 	/**
 	 * Whether the cookie is secure.
 	 * 
+	 * @return Whether the cookie is secure
+	 */
+	public boolean getIsSecure()
+	{
+		return secure;
+	}
+
+	/**
+	 * Whether the cookie is secure.
+	 * 
 	 * @param secure
 	 *        Whether the cookie is secure
 	 */
-	public void seSecure( boolean secure )
+	public void setSecure( boolean secure )
 	{
 		changed = true;
 		this.secure = secure;
@@ -206,6 +216,16 @@ public class ConversationCookie extends Cookie
 	 * @return Whether access is restricted
 	 */
 	public boolean isAccessRestricted()
+	{
+		return accessRestricted;
+	}
+
+	/**
+	 * Whether access is restricted.
+	 * 
+	 * @return Whether access is restricted
+	 */
+	public boolean getIsAccessRestricted()
 	{
 		return accessRestricted;
 	}
