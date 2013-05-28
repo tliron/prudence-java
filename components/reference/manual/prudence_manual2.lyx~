@@ -302,6 +302,186 @@ Manual Resources
 \end_layout
 
 \begin_layout Section
+Programming
+\end_layout
+
+\begin_layout Subsection
+Scripturian
+\end_layout
+
+\begin_layout Subsection
+JavaScript
+\end_layout
+
+\begin_layout Subsection
+Other Languages
+\end_layout
+
+\begin_layout Subsection
+Execution Environments
+\end_layout
+
+\begin_layout Subsubsection
+Bootstrap
+\end_layout
+
+\begin_layout Standard
+Straightforward beginning-to-end script
+\end_layout
+
+\begin_layout Standard
+Except for initialization tasks
+\end_layout
+
+\begin_layout Subsubsection
+Manual Resources and Handlers
+\end_layout
+
+\begin_layout Subsubsection
+Textual Resources
+\end_layout
+
+\begin_layout Subsubsection
+Cron Tasks
+\end_layout
+
+\begin_layout Standard
+Two options!
+\end_layout
+
+\begin_layout Subsection
+APIs
+\end_layout
+
+\begin_layout Subsubsection
+Scripturian API
+\end_layout
+
+\begin_layout Standard
+executable
+\end_layout
+
+\begin_layout Subsubsection
+Resource API
+\end_layout
+
+\begin_layout Standard
+application
+\end_layout
+
+\begin_layout Standard
+document
+\end_layout
+
+\begin_layout Subsubsection
+JavaScript Libraries
+\end_layout
+
+\begin_layout Paragraph
+Sincerity JavaScript Library
+\end_layout
+
+\begin_layout Itemize
+/sincerity/calendar/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/classes/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/cryptography/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/files/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/iterators/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/json/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/jvm/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/localization/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/lucene/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/mail/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/objects/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/rhino/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/templates/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/xml/
+\end_layout
+
+\begin_layout Paragraph
+Prudence JavaScript Library
+\end_layout
+
+\begin_layout Itemize
+/prudence/blocks/
+\end_layout
+
+\begin_layout Itemize
+/prudence/lazy/
+\end_layout
+
+\begin_layout Itemize
+/prudence/logging/
+\end_layout
+
+\begin_layout Itemize
+/prudence/resources/
+\end_layout
+
+\begin_layout Itemize
+/prudence/tasks/
+\end_layout
+
+\begin_layout Paragraph
+Libraries for Bootstrap and Configuration
+\end_layout
+
+\begin_layout Itemize
+/sincerity/annotations/
+\end_layout
+
+\begin_layout Itemize
+/sincerity/container/
+\end_layout
+
+\begin_layout Itemize
+/prudence/routing/
+\end_layout
+
+\begin_layout Itemize
+/prudence/lazy/
+\end_layout
+
+\begin_layout Section
 Managing the URI-space
 \end_layout
 
@@ -574,203 +754,7 @@ Other Restlets
 \end_layout
 
 \begin_layout Section
-Programming
-\end_layout
-
-\begin_layout Subsection
-Scripturian
-\end_layout
-
-\begin_layout Subsection
-JavaScript
-\end_layout
-
-\begin_layout Subsection
-Other Languages
-\end_layout
-
-\begin_layout Subsection
-Execution Environments
-\end_layout
-
-\begin_layout Subsubsection
-Bootstrap
-\end_layout
-
-\begin_layout Standard
-Straightforward beginning-to-end script
-\end_layout
-
-\begin_layout Standard
-Except for initialization tasks
-\end_layout
-
-\begin_layout Subsubsection
-Manual Resources and Handlers
-\end_layout
-
-\begin_layout Subsubsection
-Textual Resources
-\end_layout
-
-\begin_layout Subsubsection
-Cron Tasks
-\end_layout
-
-\begin_layout Standard
-Two options!
-\end_layout
-
-\begin_layout Subsection
-APIs
-\end_layout
-
-\begin_layout Subsubsection
-Scripturian API
-\end_layout
-
-\begin_layout Standard
-executable
-\end_layout
-
-\begin_layout Subsubsection
-Resource API
-\end_layout
-
-\begin_layout Standard
-application
-\end_layout
-
-\begin_layout Standard
-document
-\end_layout
-
-\begin_layout Subsubsection
-JavaScript Libraries
-\end_layout
-
-\begin_layout Paragraph
-Sincerity JavaScript Library
-\end_layout
-
-\begin_layout Itemize
-/sincerity/calendar/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/classes/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/cryptography/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/files/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/iterators/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/json/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/jvm/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/localization/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/lucene/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/mail/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/objects/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/rhino/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/templates/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/xml/
-\end_layout
-
-\begin_layout Paragraph
-Prudence JavaScript Library
-\end_layout
-
-\begin_layout Itemize
-/prudence/blocks/
-\end_layout
-
-\begin_layout Itemize
-/prudence/lazy/
-\end_layout
-
-\begin_layout Itemize
-/prudence/logging/
-\end_layout
-
-\begin_layout Itemize
-/prudence/resources/
-\end_layout
-
-\begin_layout Itemize
-/prudence/tasks/
-\end_layout
-
-\begin_layout Paragraph
-Libraries for Bootstrap and Configuration
-\end_layout
-
-\begin_layout Itemize
-/sincerity/annotations/
-\end_layout
-
-\begin_layout Itemize
-/sincerity/container/
-\end_layout
-
-\begin_layout Itemize
-/prudence/routing/
-\end_layout
-
-\begin_layout Itemize
-/prudence/lazy/
-\end_layout
-
-\begin_layout Section
-Working in a Cluster
-\end_layout
-
-\begin_layout Subsection
-Shared Globals
-\end_layout
-
-\begin_layout Subsection
-Task Farming
-\end_layout
-
-\begin_layout Section
 Accepting Uploads
-\end_layout
-
-\begin_layout Section
-Cookies
 \end_layout
 
 \begin_layout Section
@@ -937,13 +921,12 @@ Configures the component's log service, which is used for logging client
 \end_layout
 
 \begin_layout Subsubsection
-singleton
+prudence
 \end_layout
 
 \begin_layout Standard
-Prudence assumes a single Restlet Component instance.
- If for some reason you have a more complex setup, you can configure Prudence's
- initialization here.
+Prudence-specific initialization.
+ Don't touch this, add your own service.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1004,6 +987,18 @@ See Sincerity Manual
 
 \begin_layout Subsection
 Debug Page
+\end_layout
+
+\begin_layout Section
+Working in a Cluster
+\end_layout
+
+\begin_layout Subsection
+Shared Globals
+\end_layout
+
+\begin_layout Subsection
+Task Farming
 \end_layout
 
 \begin_layout Section

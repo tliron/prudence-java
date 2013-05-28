@@ -440,7 +440,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 				else if (restlet[0] == '#') {
 					restlet = restlet.substring(1)
-					return new Module.Implicit({id: restlet}).create(this, uri)
+					return new Module.Dispatch({id: restlet}).create(this, uri)
 				}
 				else {
 					var type = Module[Sincerity.Objects.capitalize(restlet)]
@@ -448,7 +448,7 @@ Prudence.Routing = Prudence.Routing || function() {
 						return this.createRestlet({type: restlet}, uri)
 					}
 					else {
-						return new Module.Implicit({id: restlet}).create(this, uri)
+						return new Module.Dispatch({id: restlet}).create(this, uri)
 					}
 				}
 			}
@@ -499,8 +499,8 @@ Prudence.Routing = Prudence.Routing || function() {
 			if (!Sincerity.Objects.exists(dispatcher)) {
 				dispatcher = this.dispatchers[name] = {}
 			}
-			if (!Sincerity.Objects.exists(dispatcher.explicit)) {
-				dispatcher.explicit = '/prudence/dispatch/{0}/'.cast(name)
+			if (!Sincerity.Objects.exists(dispatcher.manual)) {
+				dispatcher.manual = '/prudence/dispatch/{0}/'.cast(name)
 			}
 			if (!Sincerity.Objects.exists(dispatcher.library)) {
 				dispatcher.library = '/resources/{0}/'.cast(name)
@@ -516,7 +516,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @class
 	 * @name Prudence.Routing.Restlet
 	 */
-	Public.StaticWeb = Sincerity.Classes.define(function(Module) {
+	Public.Static = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Restlet */
 		var Public = {}
 		
@@ -529,11 +529,11 @@ Prudence.Routing = Prudence.Routing || function() {
 
 	/**
 	 * @class
-	 * @name Prudence.Routing.StaticWeb
+	 * @name Prudence.Routing.Static
 	 * @augments Prudence.Routing.Restlet
 	 */
-	Public.StaticWeb = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.StaticWeb */
+	Public.Static = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Static */
 		var Public = {}
 		
 		/** @ignore */
@@ -571,11 +571,11 @@ Prudence.Routing = Prudence.Routing || function() {
 
 	/**
 	 * @class
-	 * @name Prudence.Routing.DynamicWeb
+	 * @name Prudence.Routing.Textual
 	 * @augments Prudence.Routing.Restlet
 	 */
-	Public.DynamicWeb = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.DynamicWeb */
+	Public.Textual = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Textual */
 		var Public = {}
 		
 		/** @ignore */
@@ -586,7 +586,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 		Public.create = function(app, uri) {
 			if (app.hasGeneratedTextResource) {
-				throw new SincerityException('There can be only one DynamicWeb per application')
+				throw new SincerityException('There can be only one Textual per application')
 			}
 			app.hasGeneratedTextResource = true
 
@@ -632,7 +632,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'd')
 
 			if (sincerity.verbosity >= 2) {
-				println('    DynamicWeb:')
+				println('    Textual:')
 				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 			}
 
@@ -717,11 +717,11 @@ Prudence.Routing = Prudence.Routing || function() {
 
 	/**
 	 * @class
-	 * @name Prudence.Routing.Explicit
+	 * @name Prudence.Routing.Manual
 	 * @augments Prudence.Routing.Restlet
 	 */
-	Public.Explicit = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Explicit */
+	Public.Manual = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Manual */
 		var Public = {}
 		
 		/** @ignore */
@@ -732,7 +732,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 		Public.create = function(app, uri) {
 			if (app.hasDelegatedResource) {
-				throw new SincerityException('There can be only one Explicit per application')
+				throw new SincerityException('There can be only one Manual per application')
 			}
 			app.hasDelegatedResource = true
 
@@ -748,7 +748,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'e')
 
 			if (sincerity.verbosity >= 2) {
-				println('    Explicit:')
+				println('    Manual:')
 				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 			}
 
@@ -784,11 +784,11 @@ Prudence.Routing = Prudence.Routing || function() {
 			var dispatcherBaseUri = Module.cleanBaseUri(uri)
 			for (var name in app.dispatchers) {
 				var dispatcher = app.getDispatcher(name)
-				delegatedResource.passThroughDocuments.add(dispatcher.explicit)
-				var explicit = dispatcherBaseUri + dispatcher.explicit
-				app.hidden.push(explicit)
+				delegatedResource.passThroughDocuments.add(dispatcher.manual)
+				var manual = dispatcherBaseUri + dispatcher.manual
+				app.hidden.push(manual)
 				if (sincerity.verbosity >= 2) {
-					println('      Dispatcher: "{0}" -> "{1}"'.cast(name, explicit))
+					println('      Dispatcher: "{0}" -> "{1}"'.cast(name, manual))
 				}
 			}
 
@@ -806,11 +806,11 @@ Prudence.Routing = Prudence.Routing || function() {
 
 	/**
 	 * @class
-	 * @name Prudence.Routing.Implicit
+	 * @name Prudence.Routing.Dispatch
 	 * @augments Prudence.Routing.Restlet
 	 */
-	Public.Implicit = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Implicit */
+	Public.Dispatch = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Dispatch */
 		var Public = {}
 		
 		/** @ignore */
@@ -825,12 +825,12 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.util.CapturingRedirector)
 				
 			if (!app.hasDelegatedResource) {
-				throw new SincerityException('An Explicit must be attached before an Implicit can be created')
+				throw new SincerityException('A Manual must be attached before a Dispatch can be created')
 	   		}
 				
 			this.dispatcher = Sincerity.Objects.ensure(this.dispatcher, 'javascript')
 			var dispatcher = app.getDispatcher(this.dispatcher)
-	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.explicit + '?{rq}', false)
+	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.manual + '?{rq}', false)
 			var injector = new Injector(app.context, capture)
 			injector.values.put('prudence.id', this.id)
 

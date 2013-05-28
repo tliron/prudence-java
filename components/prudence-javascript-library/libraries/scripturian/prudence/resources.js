@@ -208,7 +208,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * Extracts form parameters, treating them as specific types.
 	 * The form data is submitted by the client as an "application/x-www-form-urlencoded" entity.
 	 * <p>
-	 * See {@link Prudence.Resources.Form} for a more comprehensive solution to handling forms.
+	 * See {@link Diligence.Forms.Form} for a more comprehensive solution to handling forms.
 	 * 
 	 * @param conversation The Prudence conversation
 	 * @param [keys] See {@link Prudence.Resources#fromAttributeMap}
@@ -259,10 +259,12 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * Sends a request to a resource, with support for various types of representation and payload conversions.
 	 * 
 	 * @param params
-	 * @param {String} params.uri
+	 * @param {String} params.uri The URI
+	 * @param {String|java.io.File} [params.file] File path or file objects; if used, will be converted to a file:// URI
 	 * @param [params.query] The query parameters to add to the URI (see {@link Prudence.Resources#buildUri})
 	 * @param {String} [params.method='get'] The HTTP method: 'get', 'post', 'put', 'delete' or 'head'
-	 * @param {Boolean} [params.internal=false] True to use Prudence's document.internal API
+	 * @param {Boolean|String} [params.internal=false] True to use Prudence's document.internal API; a string
+	 *        specifies the internal application name to use
 	 * @param {String} [params.mediaType] Defaults to 'application/java' for internal=true, otherwise 'text/plain'
 	 * @param [params.payload] A dict in the form of {type: 'type', value: object}. Supported payload types:
 	 *        <ul>
@@ -363,9 +365,10 @@ Prudence.Resources = Prudence.Resources || function() {
 
 		var resource
 		
-		while (params.file || params.uri) {
-			if (params.file) {
-				params.uri = new java.io.File(params.file).toURI()
+		while (Sincerity.Objects.exists(params.file) || params.uri) {
+			if (Sincerity.Objects.exists(params.file)) {
+				params.file = Sincerity.Objects.isString(params.file) ? new java.io.File(params.file) : params.file
+				params.uri = params.file.toURI()
 				resource = document.external(params.uri, params.mediaType)
 				if (!params.retry) {
 					resource.retryOnError = false
@@ -380,7 +383,17 @@ Prudence.Resources = Prudence.Resources || function() {
 			}
 			else {
 				params.uri = params.query ? Prudence.Resources.buildUri(params.uri, params.query) : params.uri
-				resource = params.internal ? document.internal(params.uri, params.mediaType) : document.external(params.uri, params.mediaType)
+				if (params.internal) {
+					if (Sincerity.Objects.isString(params.internal)) {
+						resource = document.internalOther(params.internal, params.uri, params.mediaType)
+					}
+					else {
+						resource = document.internal(params.uri, params.mediaType)
+					}
+				}
+				else {
+					resource = document.external(params.uri, params.mediaType)
+				}
 				delete params.uri
 			}
 			

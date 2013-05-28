@@ -74,8 +74,8 @@ Prudence.Tasks = Prudence.Tasks || function() {
 	 *         execution
 	 * @param {Boolean} [params.distributed=false] True to distribute the task
 	 * @param {String} [params.application] Application's full name (defaults to name of current application)
-	 * @param {Boolean} [params.multi=false] True to distribute task to all members of the cluster
 	 * @param [params.where] Where to distribute the task (leave empty to let Hazelcast decide)
+	 * @param {Boolean} [params.multi=false] True to distribute task to all members of the cluster
 	 * @returns {java.util.concurrent.Future}
 	 */
 	Public.task = function(params) {
