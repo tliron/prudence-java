@@ -39,6 +39,7 @@ import com.threecrickets.prudence.util.LoggingUtil;
  * @author Tal Liron
  * @see DelegatedResource
  * @see GeneratedTextResource
+ * @see ApplicationTask
  */
 public class ApplicationService
 {

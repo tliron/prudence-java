@@ -294,18 +294,6 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	}
 
 	/**
-	 * The preferred variant.
-	 * 
-	 * @return The preferred variant
-	 */
-	public Variant getPreferredVariant()
-	{
-		if( preferredVariant == null )
-			preferredVariant = resource.getConnegService().getPreferredVariant( resource.getVariants(), resource.getRequest(), resource.getMetadataService() );
-		return preferredVariant;
-	}
-
-	/**
 	 * The resource.
 	 * 
 	 * @return The resource
@@ -403,4 +391,16 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 * The preferred variant
 	 */
 	private Variant preferredVariant;
+
+	/**
+	 * The preferred variant.
+	 * 
+	 * @return The preferred variant
+	 */
+	private Variant getPreferredVariant()
+	{
+		if( preferredVariant == null )
+			preferredVariant = resource.getConnegService().getPreferredVariant( resource.getVariants(), resource.getRequest(), resource.getMetadataService() );
+		return preferredVariant;
+	}
 }

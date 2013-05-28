@@ -162,7 +162,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 * @return The HTTP-formatted tag or null if not set
 	 * @see #getTag()
 	 */
-	public String getHttpTag()
+	public String getTagHttp()
 	{
 		return tag != null ? tag.format() : null;
 	}
@@ -172,7 +172,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 *        The HTTP-formatted tag or null
 	 * @see #setTag(Tag)
 	 */
-	public void setHttpTag( String tag )
+	public void setTagHttp( String tag )
 	{
 		this.tag = tag != null ? Tag.parse( tag ) : null;
 	}

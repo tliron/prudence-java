@@ -275,7 +275,7 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 *        The preferred media type
 	 * @return The client proxy
 	 */
-	public ClientResource internal( String applicationInternalName, String resourceUri, String mediaTypeName )
+	public ClientResource internalOther( String applicationInternalName, String resourceUri, String mediaTypeName )
 	{
 		if( !resourceUri.startsWith( "/" ) )
 			resourceUri = "/" + resourceUri;
