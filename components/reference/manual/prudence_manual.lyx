@@ -574,11 +574,31 @@ Other Restlets
 \end_layout
 
 \begin_layout Section
+Caching
+\end_layout
+
+\begin_layout Subsection
+Introduction: Integrated Caching
+\end_layout
+
+\begin_layout Subsection
+Server-Side Caching
+\end_layout
+
+\begin_layout Subsection
+Client-Side Caching
+\end_layout
+
+\begin_layout Subsubsection
+Content Negotiation
+\end_layout
+
+\begin_layout Section
 Programming
 \end_layout
 
 \begin_layout Subsection
-Scripturian
+Introduction: Scripturian
 \end_layout
 
 \begin_layout Subsection
@@ -1011,7 +1031,15 @@ Deployment
 \end_layout
 
 \begin_layout Subsection
-The Joys of Configuration-by-Script
+The Joys of Sincerity
+\end_layout
+
+\begin_layout Subsubsection
+Configuration-by-Script
+\end_layout
+
+\begin_layout Subsubsection
+Plugins
 \end_layout
 
 \begin_layout Subsection

@@ -9,6 +9,7 @@ component.context.attributes.put('com.threecrickets.sincerity.version', sincerit
 
 if (sincerity.verbosity >= 1) {
 	println('Prudence {0} (Restlet {1} {2})'.cast(
-		org.restlet.engine.Engine.VERSION,
-		org.restlet.engine.Edition.CURRENT.shortName))
+		version.version,
+		org.restlet.engine.Edition.CURRENT.shortName,
+		org.restlet.engine.Engine.VERSION))
 }
