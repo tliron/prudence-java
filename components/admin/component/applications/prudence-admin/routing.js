@@ -6,11 +6,11 @@ app.hosts = {
 
 app.routes = {
 	'/*': [
-		'explicit',
-		'dynamicWeb',
+		'manual',
+		'textual',
 		{type: 'javaScriptUnifyMinify', next:
 			{type: 'zuss', next: [
-				'staticWeb',
-				{type: 'staticWeb', root: sincerity.container.getLibrariesFile('web')}]}}
+				'static',
+				{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}
 	]
 }

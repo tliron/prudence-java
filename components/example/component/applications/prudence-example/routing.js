@@ -6,29 +6,29 @@ app.hosts = {
 
 app.routes = {
 	'/*': [
-		'explicit',
-		{type: 'filter', library: '/filters/statistics/', next: 'dynamicWeb'},
+		'manual',
+		{type: 'filter', library: '/filters/statistics/', next: 'textual'},
 		{type: 'cacheControl', 'default': 10, mediaTypes: {'text/html': 15}, next:
 			{type: 'javaScriptUnifyMinify', next:
 				{type: 'zuss', next: [
-					'staticWeb',
-					{type: 'staticWeb', root: sincerity.container.getLibrariesFile('web')}]}}}
+					'static',
+					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
 	],
-	'/person/{id}/': {type: 'implicit', id: 'person', dispatcher: 'javascript'},
-	'/pythonperson/{id}/': {type: 'implicit', id: 'person', dispatcher: 'python'},
-	'/groovyperson/{id}/': {type: 'implicit', id: 'person', dispatcher: 'groovy'},
-	'/phpperson/{id}/': {type: 'implicit', id: 'person', dispatcher: 'php'},
-	'/rubyperson/{id}/': {type: 'implicit', id: 'person', dispatcher: 'ruby'},
-	'/clojureperson/{id}/': {type: 'implicit', id: 'person', dispatcher: 'clojure'}
+	'/person/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'javascript'},
+	'/pythonperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'python'},
+	'/groovyperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'groovy'},
+	'/phpperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'php'},
+	'/rubyperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'ruby'},
+	'/clojureperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'clojure'}
 }
 
 app.dispatchers = {
-	javascript: {explicit: '/prudence/dispatch/javascript/', library: '/resources/javascript/'},
-	python: {explicit: '/prudence/dispatch/python/', library: '/resources/python/'},
-	ruby: {explicit: '/prudence/dispatch/ruby/', library: '/resources/ruby/'},
-	groovy: {explicit: '/prudence/dispatch/groovy/', library: '/resources/groovy/'},
-	clojure: {explicit: '/prudence/dispatch/clojure/', library: '/resources/clojure/'},
-	php: {explicit: '/prudence/dispatch/php/', library: '/resources/php/'}
+	javascript: {manual: '/prudence/dispatch/javascript/', library: '/resources/javascript/'},
+	python: {manual: '/prudence/dispatch/python/', library: '/resources/python/'},
+	ruby: {manual: '/prudence/dispatch/ruby/', library: '/resources/ruby/'},
+	groovy: {manual: '/prudence/dispatch/groovy/', library: '/resources/groovy/'},
+	clojure: {manual: '/prudence/dispatch/clojure/', library: '/resources/clojure/'},
+	php: {manual: '/prudence/dispatch/php/', library: '/resources/php/'}
 }
 
 //

@@ -137,7 +137,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link Integer}, defaults to zero.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.extraDocumentSources:</code>
- * {@link Iterable<DocumentSource<Executable>>}.</li>
+ * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
