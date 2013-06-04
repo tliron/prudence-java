@@ -36,35 +36,35 @@ app.dispatchers = {
 //
 
 if (null !== executable.manager.getAdapterByTag('javscript')) {
-	app.preheat.push('/scriptlets/javascript/')
-	app.preheat.push('/explicit/javascript/')
+	app.preheat.push('/textual/javascript/')
+	app.preheat.push('/manual/javascript/')
 	app.preheat.push('/person/1/')
 }
 if (null !== executable.manager.getAdapterByTag('jython')) {
-	app.preheat.push('/scriptlets/python/')
-	app.preheat.push('/explicit/python/')
+	app.preheat.push('/textual/python/')
+	app.preheat.push('/manual/python/')
 	app.preheat.push('/pythonperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('groovy')) {
-	app.preheat.push('/scriptlets/groovy/')
-	app.preheat.push('/explicit/groovy/')
+	app.preheat.push('/textual/groovy/')
+	app.preheat.push('/manual/groovy/')
 	app.preheat.push('/groovyperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('php')) {
-	app.preheat.push('/scriptlets/php/')
-	app.preheat.push('/explicit/php/')
+	app.preheat.push('/textual/php/')
+	app.preheat.push('/manual/php/')
 	app.preheat.push('/phpperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('ruby')) {
-	app.preheat.push('/scriptlets/ruby/')
-	app.preheat.push('/explicit/ruby/')
+	app.preheat.push('/textual/ruby/')
+	app.preheat.push('/manual/ruby/')
 	app.preheat.push('/rubyperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('clojure')) {
-	app.preheat.push('/scriptlets/clojure/')
-	app.preheat.push('/explicit/clojure/')
+	app.preheat.push('/textual/clojure/')
+	app.preheat.push('/manual/clojure/')
 	app.preheat.push('/clojureperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('velocity')) {
-	app.preheat.push('/scriptlets/velocity/')
+	app.preheat.push('/textual/velocity/')
 }

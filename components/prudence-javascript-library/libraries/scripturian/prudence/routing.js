@@ -629,7 +629,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
 			this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
-			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'd')
+			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 't')
 
 			if (sincerity.verbosity >= 2) {
 				println('    Textual:')
@@ -745,7 +745,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.root = new File(app.root, this.root).absoluteFile
 			}
 
-			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'e')
+			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
 
 			if (sincerity.verbosity >= 2) {
 				println('    Manual:')
