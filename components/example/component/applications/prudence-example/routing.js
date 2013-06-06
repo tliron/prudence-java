@@ -7,7 +7,7 @@ app.hosts = {
 app.routes = {
 	'/*': [
 		'manual',
-		{type: 'filter', library: '/filters/statistics/', next: 'textual'},
+		{type: 'filter', library: '/filters/statistics/', next: 'scriptlet'},
 		{type: 'cacheControl', 'default': 10, mediaTypes: {'text/html': 15}, next:
 			{type: 'javaScriptUnifyMinify', next:
 				{type: 'zuss', next: [
@@ -36,35 +36,35 @@ app.dispatchers = {
 //
 
 if (null !== executable.manager.getAdapterByTag('javscript')) {
-	app.preheat.push('/textual/javascript/')
+	app.preheat.push('/scriptlet/javascript/')
 	app.preheat.push('/manual/javascript/')
 	app.preheat.push('/person/1/')
 }
 if (null !== executable.manager.getAdapterByTag('jython')) {
-	app.preheat.push('/textual/python/')
+	app.preheat.push('/scriptlet/python/')
 	app.preheat.push('/manual/python/')
 	app.preheat.push('/pythonperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('groovy')) {
-	app.preheat.push('/textual/groovy/')
+	app.preheat.push('/scriptlet/groovy/')
 	app.preheat.push('/manual/groovy/')
 	app.preheat.push('/groovyperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('php')) {
-	app.preheat.push('/textual/php/')
+	app.preheat.push('/scriptlet/php/')
 	app.preheat.push('/manual/php/')
 	app.preheat.push('/phpperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('ruby')) {
-	app.preheat.push('/textual/ruby/')
+	app.preheat.push('/scriptlet/ruby/')
 	app.preheat.push('/manual/ruby/')
 	app.preheat.push('/rubyperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('clojure')) {
-	app.preheat.push('/textual/clojure/')
+	app.preheat.push('/scriptlet/clojure/')
 	app.preheat.push('/manual/clojure/')
 	app.preheat.push('/clojureperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('velocity')) {
-	app.preheat.push('/textual/velocity/')
+	app.preheat.push('/scriptlet/velocity/')
 }

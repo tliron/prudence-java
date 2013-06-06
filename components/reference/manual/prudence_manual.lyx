@@ -250,7 +250,7 @@ prudence
 \end_layout
 
 \begin_layout Subsubsection
-/mapped/
+/resources/
 \end_layout
 
 \begin_layout Subsubsection
@@ -333,12 +333,54 @@ not found
 \end_inset
 
  error (404).
- Importantly, the URI-space can be potentially 
+\end_layout
+
+\begin_layout Standard
+Importantly, the URI-space can be potentially 
 \emph on
 infinite
 \emph default
 , in that you may support URI templates that match any number of actual
  URIs (within the limitations of maximum URI length).
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ could match 
+\begin_inset Quotes eld
+\end_inset
+
+/service/1/
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+/service/23664/
+\begin_inset Quotes erd
+\end_inset
+
+, etc.
+\end_layout
+
+\begin_layout Standard
+The URI-space is mostly configured in the application's routing.js.
+ However, the resource implementations can add their own special handling.
+ For example, in the above example we can make sure in code that 
+\begin_inset Quotes eld
+\end_inset
+
+{id}
+\begin_inset Quotes erd
+\end_inset
+
+ would always be a decimal integer, this limiting the extent of the URI-space.
 \end_layout
 
 \begin_layout Standard
@@ -365,7 +407,7 @@ Resource Mapping
 \begin_inset Quotes eld
 \end_inset
 
-/mapped/
+/resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -436,6 +478,266 @@ only
 \end_layout
 
 \begin_layout Subsection
+Routes
+\end_layout
+
+\begin_layout Standard
+Routes are configured in your application's routing.js, in the 
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+ dict.
+\end_layout
+
+\begin_layout Standard
+The keys of this dict are 
+\emph on
+URI templates
+\emph default
+, which look like URIs, but support the following two features:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Variables
+\series default
+ are strings wrapped in curly brackets.
+ For example, here is a URI template with two variables: 
+\begin_inset Quotes eld
+\end_inset
+
+/profile/{user}/{service}/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The variables will match [TODO].
+ You can access the string values of there variables in your resource via
+ the conversation.locals API.
+\end_layout
+
+\begin_layout Itemize
+A 
+\series bold
+wildcard
+\series default
+ can be used as the last character in the URI template.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+/archive/*
+\begin_inset Quotes erd
+\end_inset
+
+ will match 
+\emph on
+any
+\emph default
+ URI that begins with 
+\begin_inset Quotes eld
+\end_inset
+
+/archive/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can access the remainder of the URI via the [TODO] API.
+ Note that Prudence will attempt to match 
+\emph on
+non
+\emph default
+-wildcard URI templates first, so a wildcard URI template can be used as
+ a general fallback for when other URI templates do not match.
+\end_layout
+
+\begin_layout Standard
+The possible values of the 
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+ dict are very diverse, and some of them allow nesting of further values.
+\end_layout
+
+\begin_layout Standard
+The standard value is a dict, where the 
+\begin_inset Quotes eld
+\end_inset
+
+type
+\begin_inset Quotes erd
+\end_inset
+
+ key defines the type of the value, and the rest of the keys are defined
+ according to the type.
+ There are also shortcuts and alternate forms for some of the commonly used
+ types.
+\end_layout
+
+\begin_layout Standard
+Almost all of the value types are implemented as classes in the Prudence.Routing
+ API namespace (note that the class names have the first character of the
+ type capitalized).
+ The values set in the dict are sent to the class constructor.
+\end_layout
+
+\begin_layout Standard
+We will summarize their usage briefly here, but please refer to the API
+ documentation for a complete reference.
+\end_layout
+
+\begin_layout Subsubsection
+static
+\end_layout
+
+\begin_layout Itemize
+root (defaults to the 
+\begin_inset Quotes eld
+\end_inset
+
+resources
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory under the application directory)
+\end_layout
+
+\begin_layout Itemize
+listingAllowed (defaults to false)
+\end_layout
+
+\begin_layout Itemize
+negotiate (defaults to true)
+\end_layout
+
+\begin_layout Itemize
+compress (defaults to true)
+\end_layout
+
+\begin_layout Subsubsection
+manual
+\end_layout
+
+\begin_layout Subsubsection
+textual
+\end_layout
+
+\begin_layout Subsubsection
+dispatch
+\end_layout
+
+\begin_layout Standard
+Starting with 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+capture
+\end_layout
+
+\begin_layout Standard
+Just a URI, starting with 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Possibly ending in 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+router
+\end_layout
+
+\begin_layout Subsubsection
+chain
+\end_layout
+
+\begin_layout Standard
+Array
+\end_layout
+
+\begin_layout Subsubsection
+resource
+\end_layout
+
+\begin_layout Subsubsection
+addSlash
+\end_layout
+
+\begin_layout Subsubsection
+filter
+\end_layout
+
+\begin_layout Subsubsection
+javaScriptUnifyMinify
+\end_layout
+
+\begin_layout Subsubsection
+cssUnifyMinify
+\end_layout
+
+\begin_layout Subsubsection
+zuss
+\end_layout
+
+\begin_layout Subsubsection
+chacheControl
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+hidden
+\end_layout
+
+\begin_layout Standard
+Special! Not actually handled by a class.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Resource Dispatching
 \end_layout
 
@@ -455,18 +757,19 @@ Virtual Hosts
 Architecture Tips
 \end_layout
 
-\begin_layout Subsubsection
-RESTful URI-Spaces
-\end_layout
-
 \begin_layout Standard
-REST does not standardize URI-spaces, and indeed does not define them.
+REST does not standardize URI-spaces, and indeed has little to say about
+ URI design.
  However, it does 
 \emph on
 imply
 \emph default
- certain principles, which can help you define well-encapsulated RESTful
- resources.
+ a preference for certain architectural principles.
+\end_layout
+
+\begin_layout Standard
+It's a good idea to think very carefully about your URI-space.
+ A RESTful URI-space can help you define well-encapsulated RESTful resources.
 \end_layout
 
 \begin_layout Subsubsection
@@ -476,18 +779,765 @@ Nouns vs.
 
 \begin_layout Standard
 It's useful to think of URIs as syntactic 
+\emph on
+nouns
+\emph default
+, a grammatical counterpart to HTTP's 
+\emph on
+verbs
+\emph default
+.
+ In other worlds, make sure that you do not include verbs in your URIs.
+ Examples:
+\end_layout
+
+\begin_layout Itemize
+Good: 
 \begin_inset Quotes eld
 \end_inset
 
-nouns,
+/service/{id}/status/
 \begin_inset Quotes erd
 \end_inset
 
- as a counterpart to the HTTP verbs.
+
+\end_layout
+
+\begin_layout Itemize
+Bad: 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/start/
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/stop/
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+What is wrong with verbs in URIs?
+\end_layout
+
+\begin_layout Standard
+One potential problem is clarity.
+ Which HTTP verb should be used on a verb URI? Do you need to POST, PUT
+ or DELETE to 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/stop/
+\begin_inset Quotes erd
+\end_inset
+
+ in order to stop the service? Of course, you can support all and document
+ this, but it won't be immediately obvious to the user.
+\end_layout
+
+\begin_layout Standard
+A second potential problem is that you need to keep increasing the size
+ of your URI-space the more actions of this sort you want to support.
+ [SO?]
+\end_layout
+
+\begin_layout Standard
+A third, more serious potential problem is idempotency.
+ The idempotent verbs PUT and DELETE may be optimized by the HTTP infrastructure
+ (for example, a smart load balancer) such that requests arrive more than
+ once: this is allowed by the very definition of idempotency.
+ However, your operations 
+\emph on
+may
+\emph default
+ not be semantically idempotent.
+ For example, if a 
+\begin_inset Quotes eld
+\end_inset
+
+stop
+\begin_inset Quotes erd
+\end_inset
+
+ is sent to an already-stopped service, it may return an 
+\begin_inset Quotes eld
+\end_inset
+
+already stopped
+\begin_inset Quotes erd
+\end_inset
+
+ 500 error.
+ In this case, if the infrastructure allows for two 
+\begin_inset Quotes eld
+\end_inset
+
+stop
+\begin_inset Quotes erd
+\end_inset
+
+ commands to come through, then the user may get an error even though the
+ operation succeeded for the first 
+\begin_inset Quotes eld
+\end_inset
+
+stop.
+\begin_inset Quotes erd
+\end_inset
+
+ There's an easy way around this: simply allow 
+\emph on
+only
+\emph default
+ POST, the non-idempotent verb, for all such operations.
+ The infrastructure will never allow more than request to come through per
+ POST.
+ However, if you enforce the use of POST, you will lose the ability of the
+ infrastructure to optimize for non-idempotency.
+ POST is the least scalable HTTP verb.
+\end_layout
+
+\begin_layout Standard
+The bottom line is that if you standardize on only using nouns for your
+ URIs, you will avoid many of these semantic entanglements.
+\end_layout
+
+\begin_layout Standard
+Note: Beware of gerunds! A URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/stopping/
+\begin_inset Quotes erd
+\end_inset
+
+ is technically a noun, but allows for some verb-related problems to creep
+ in.
+\end_layout
+
+\begin_layout Subsubsection
+Do You Really Need REST?
+\end_layout
+
+\begin_layout Standard
+In the above section, it was suggested that you prefer nouns to verbs.
+ However, this preference may not make much sense to apply in your application.
+ Your application may be very command-oriented, such that you will end up
+ with a very small set of 
+\begin_inset Quotes eld
+\end_inset
+
+noun
+\begin_inset Quotes erd
+\end_inset
+
+ URIs that need to support a vast amount of commands.
+\end_layout
+
+\begin_layout Standard
+REST shines because it is based on a tiny set of very tightly defined verbs:
+ GET, POST, PUT, DELETE.
+ The entire infrastructure is highly optimized around them: load balancers,
+ caches, browsers, gateways, etc., all should know how best to handle each
+ of these for maximum scalability and reliability.
+ But, it's entirely possible that your needs cannot be easily satisfied
+ by just four verbs.
+\end_layout
+
+\begin_layout Standard
+And that's OK.
+ REST is not always the best solution for APIs.
+\end_layout
+
+\begin_layout Standard
+Instead, take a look at RPC (Remote Procedure Call) mechanisms.
+ The Diligence framework, based on Prudence, provides robust and powerful
+ support for JSON-RPC, XML-RPC and ExtDirect, allowing you to hook a JavaScript
+ function on the server directly to a URI.
+ In terms of HTTP, these protocols all use HTTP POST, and do not leverage
+ the HTTP infrastructure as well as a more fully RESTful API.
+ But, one size does not fit all, an an RPC-based solution may prove a better
+ match for your project.
+\end_layout
+
+\begin_layout Standard
+It's also perfectly possible to allow for both REST and RPC.
+ Use each approach where it is most appropriate.
 \end_layout
 
 \begin_layout Subsubsection
 Hierarchies
+\end_layout
+
+\begin_layout Standard
+It's entirely a matter of convention that the use of 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+ in URIs implies hierarchy.
+ Historically, the convention was likely imported from filesystem paths,
+ where a name before a 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+ signifies a directory rather than a file.
+\end_layout
+
+\begin_layout Standard
+This convention is useful because it's very familiar to users, but additionally
+ it implies semantic properties that can add clarity and power to your resource
+ design.
+ There are two possible semantic principles you may consider:
+\end_layout
+
+\begin_layout Enumerate
+A descendant resource 
+\emph on
+belongs to
+\emph default
+ its ancestor, such that resources have cascading relationships in the hierarchy.
+ This implies two rules:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+may
+\emph default
+ affect descendants.
+ This rule is most obvious when applied to the DELETE verb: for example,
+ if you delete 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+, then it is expected that the resources at 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/profile/
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/preferences/
+\begin_inset Quotes erd
+\end_inset
+
+ also be deleted.
+ A PUT, too, would also affect the descendant resources.
+\end_layout
+
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+should not
+\emph default
+ affect ancestors.
+ In other words, a descendant's state is isolated from its ancestors.
+ For example, if I send a POST to 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/profile/
+\begin_inset Quotes erd
+\end_inset
+
+, the representation at 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ should remain unaltered.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+A descendant resource 
+\emph on
+belongs to
+\emph default
+ its ancestor and also represents 
+\emph on
+an aspect of
+\emph default
+ its ancestor, such that operations on a resource can be fine-tuned to particula
+r aspects of it.
+ This implies three rules:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Descendant representations 
+\emph on
+are included
+\emph default
+ in ancestor representations.
+ For example, a GET on 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ would include information about the status that you would see if you GET
+ on 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/status/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The latter URI makes it easier for the client to direct operations at the
+ status aspect.
+\end_layout
+
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+may
+\emph default
+ affect descendants.
+ See above.
+\end_layout
+
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+will
+\emph default
+ affect ancestors.
+ This is the 
+\emph on
+opposite 
+\emph default
+of the above: the descendant's state is 
+\emph on
+not isolated 
+\emph default
+from its ancestors.
+ For example, a POST to 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/status/
+\begin_inset Quotes erd
+\end_inset
+
+ would surely also affect 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+, which includes the status.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+You can see from the difference between rule 1.b and 2.c.
+ that it's important to carefully define the 
+\emph on
+nature
+\emph default
+ of your hierarchical relationships.
+ Unlike filesystem directory hierarchies, in a URI-space there is no single
+ standard or interpretation of what of a hierarchy means.
+\end_layout
+
+\begin_layout Standard
+Note that a format should not be considered 
+\begin_inset Quotes eld
+\end_inset
+
+an aspect
+\begin_inset Quotes erd
+\end_inset
+
+ in the sense used in principle 2.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/html/
+\begin_inset Quotes erd
+\end_inset
+
+ would not be a good way to support an HTML format for 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The reason is that you would be allowing for more than one URI for the
+ same encapsulated resource, creating confusion for users.
+ For example, it's not immediately clear what would happen if they DELETE
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/html/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Would that just remove the ability to represent the service as HTML? Or
+ delete the service itself?
+\end_layout
+
+\begin_layout Standard
+Supporting multiple formats is best handled with content negotiation, within
+ the REST architecture.
+ If further formatting is required, URI query parameters can be used.
+ For example: 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/?indent=2
+\begin_inset Quotes erd
+\end_inset
+
+ might return a JSON representation with 2-space indentation.
+\end_layout
+
+\begin_layout Subsubsection
+Plural vs.
+ Singular
+\end_layout
+
+\begin_layout Subsubsection
+Documentation
+\end_layout
+
+\begin_layout Standard
+If you create a programming language API, you will surely want to document
+ it in a human language.
+ You will want to define the acceptable types and usages of function arguments,
+ describe return values, possible raises exceptions, add implementation
+ and performance notes, etc.
+ Many programming languages include tools for embedding such documentation
+ as comments in the source code, and generating a reference manual from
+ it.
+\end_layout
+
+\begin_layout Standard
+Consider that documenting your URI-space is just as important.
+ A tool to generate such documentation for you is being considered for a
+ future version of Prudence.
+ Until it is available, consider adopting a resource documentation standard
+ for your project.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/*
+\end_layout
+
+\begin_layout Plain Layout
+
+ * This resource represents a service running on the server.
+ Servers have unique
+\end_layout
+
+\begin_layout Plain Layout
+
+ * IDs defined by integers.
+ A service can be either active or inactive.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Use POST to change the name or status of an existing service.
+ You may
+\end_layout
+
+\begin_layout Plain Layout
+
+ * not use it change the ID of an existing service.
+ PUT will create a new
+\end_layout
+
+\begin_layout Plain Layout
+
+ * service, and DELETE will stop and remove it.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Implementation note: if you PUT a service with an ID that already exists,
+ then
+\end_layout
+
+\begin_layout Plain Layout
+
+ * it will only stop and restart the service rather than removing/recreate
+ it,
+\end_layout
+
+\begin_layout Plain Layout
+
+ * which would be too resource intensive.
+ Use DELETE if you absolutely need the
+\end_layout
+
+\begin_layout Plain Layout
+
+ * service to be removed first, or set the "clean" query param to "true"
+ to
+\end_layout
+
+\begin_layout Plain Layout
+
+ * force removal.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * URI: /service/{id:decimal}/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Aspects: /service/{id:decimal}/status/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Verbs: GET, POST, PUT, DELETE
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Media types: application/json, application/xml, text/plain (as JSON)
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Query params:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  indent: decimal - if non-zero will return a human-readable indented
+ version
+\end_layout
+
+\begin_layout Plain Layout
+
+ *          of the representation with lines indented by the integer value
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  clean: boolean - if "true" or "yes" or "1" wil force removal of an existing
+\end_layout
+
+\begin_layout Plain Layout
+
+ *         service during a PUT operation on an existing service
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Representation as application/json:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  {
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "id": number,
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "name": string (the service name),
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "status": string:"active"|"inactive"
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  }
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * POST/PUT payload as application/json:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  {
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "name": ...
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "status": ...
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  }
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+/*
+\end_layout
+
+\begin_layout Plain Layout
+
+ * This resource represents the status of a service.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * DELETE on this resource is identical to PUT or POST with "inactive".
+\end_layout
+
+\begin_layout Plain Layout
+
+ * PUT and POST are handled identically.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * URI: /service/{id:decimal}/status/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Aspect of: /service/{id:decimal}/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Verbs: GET, POST, PUT, DELETE
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Media types: text/plain
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Representation as text/plain:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "active"|"inactive"
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -495,7 +1545,7 @@ Implementing Resources
 \end_layout
 
 \begin_layout Subsection
-Comparison
+Comparison Table
 \end_layout
 
 \begin_layout Standard
@@ -520,6 +1570,8 @@ Comparison
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 Manual
 \end_layout
 
@@ -529,7 +1581,9 @@ Manual
 \begin_inset Text
 
 \begin_layout Plain Layout
-Textual
+
+\series bold
+Scriptlet
 \end_layout
 
 \end_inset
@@ -538,6 +1592,8 @@ Textual
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 Static
 \end_layout
 
@@ -549,6 +1605,8 @@ Static
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Supports URI Mapping
 \end_layout
 
@@ -587,6 +1645,8 @@ Yes
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Supports URI Dispatching
 \end_layout
 
@@ -625,6 +1685,8 @@ No
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Filename Extension
 \end_layout
 
@@ -663,6 +1725,8 @@ Determines MIME type
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Filename Pre-extension
 \end_layout
 
@@ -681,7 +1745,7 @@ Filename Pre-extension
 \begin_inset Text
 
 \begin_layout Plain Layout
-*.t.*
+*.s.*
 \end_layout
 
 \end_inset
@@ -701,6 +1765,8 @@ n/a
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Programming Languages
 \end_layout
 
@@ -719,8 +1785,7 @@ Determined by filename extension
 \begin_inset Text
 
 \begin_layout Plain Layout
-Determined by scriptlet tags (defaults to JavaScript; multiple languages
- possible per resource)
+Determined by scriptlet tags (multiple languages possible per resource)
 \end_layout
 
 \end_inset
@@ -740,6 +1805,8 @@ n/a
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Content Negotiation
 \end_layout
 
@@ -749,7 +1816,7 @@ Content Negotiation
 \begin_inset Text
 
 \begin_layout Plain Layout
-Manually and dynamically determined in handleInit, multiple formats possible
+Manually determined in handleInit; multiple MIME types possible
 \end_layout
 
 \end_inset
@@ -758,8 +1825,8 @@ Manually and dynamically determined in handleInit, multiple formats possible
 \begin_inset Text
 
 \begin_layout Plain Layout
-Single format determined by filename extension; multiple encodings automatically
- supported
+Single MIME type determined by filename extension; multiple encodings automatica
+lly supported and cached
 \end_layout
 
 \end_inset
@@ -768,8 +1835,8 @@ Single format determined by filename extension; multiple encodings automatically
 \begin_inset Text
 
 \begin_layout Plain Layout
-Single format determined by filename extension; multiple encodings automatically
- supported
+Single MIME type determined by filename extension; multiple encodings automatica
+lly supported
 \end_layout
 
 \end_inset
@@ -780,6 +1847,8 @@ Single format determined by filename extension; multiple encodings automatically
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Server-Side Caching
 \end_layout
 
@@ -789,7 +1858,7 @@ Server-Side Caching
 \begin_inset Text
 
 \begin_layout Plain Layout
-Manual (up to you)
+Manual (via API)
 \end_layout
 
 \end_inset
@@ -818,6 +1887,8 @@ n/a
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Client-Side Caching
 \end_layout
 
@@ -827,7 +1898,7 @@ Client-Side Caching
 \begin_inset Text
 
 \begin_layout Plain Layout
-Manual (up to you)
+Manual (via API)
 \end_layout
 
 \end_inset
@@ -836,7 +1907,7 @@ Manual (up to you)
 \begin_inset Text
 
 \begin_layout Plain Layout
-Determined by server-side caching
+Automatic (determined by server-side caching)
 \end_layout
 
 \end_inset
@@ -845,7 +1916,7 @@ Determined by server-side caching
 \begin_inset Text
 
 \begin_layout Plain Layout
-Supported by cache filter
+Can be added with CacheControlFilter
 \end_layout
 
 \end_inset
@@ -908,27 +1979,7 @@ Integrating Textual Resources
 \end_layout
 
 \begin_layout Subsection
-Static Resources
-\end_layout
-
-\begin_layout Standard
-Must be mapped.
-\end_layout
-
-\begin_layout Subsubsection
-Controlling the Format
-\end_layout
-
-\begin_layout Subsubsection
-Client-Side Caching
-\end_layout
-
-\begin_layout Subsubsection
-CSS and JavaScript
-\end_layout
-
-\begin_layout Subsection
-Textual Resources
+Scriptlet Resources
 \end_layout
 
 \begin_layout Standard
@@ -962,6 +2013,26 @@ Client-Side Caching
 
 \begin_layout Subsubsection
 Scriptlet Plugins
+\end_layout
+
+\begin_layout Subsection
+Static Resources
+\end_layout
+
+\begin_layout Standard
+Must be mapped.
+\end_layout
+
+\begin_layout Subsubsection
+Controlling the Format
+\end_layout
+
+\begin_layout Subsubsection
+Client-Side Caching
+\end_layout
+
+\begin_layout Subsubsection
+CSS and JavaScript
 \end_layout
 
 \begin_layout Subsection
@@ -1205,6 +2276,10 @@ How Routing Works
 \end_layout
 
 \begin_layout Subsection
+Injection
+\end_layout
+
+\begin_layout Subsection
 Built-in Filters
 \end_layout
 
@@ -1257,6 +2332,10 @@ app.routes
 \end_layout
 
 \begin_layout Subsubsection
+app.errors
+\end_layout
+
+\begin_layout Subsubsection
 app.dispatchers
 \end_layout
 
@@ -1269,7 +2348,7 @@ Default Directories
 \end_layout
 
 \begin_layout Standard
-/mapped/
+/resources/
 \end_layout
 
 \begin_layout Standard
@@ -1599,6 +2678,162 @@ or
 
 \begin_layout Subsection
 Cache Backends
+\end_layout
+
+\begin_layout Section
+Upgrading from Prudence 1.1
+\end_layout
+
+\begin_layout Subsection
+Upgrading Applications
+\end_layout
+
+\begin_layout Enumerate
+Start with a new application
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Rename old application (add 
+\begin_inset Quotes eld
+\end_inset
+
+-old
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence
+\begin_inset Quotes erd
+\end_inset
+
+ tool to create a new application
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Copy over individual settings from settings.js
+\end_layout
+
+\begin_layout Enumerate
+Copy over individual settings from routing.js
+\end_layout
+
+\begin_layout Enumerate
+Merge 
+\begin_inset Quotes eld
+\end_inset
+
+/web/dynamic/
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+/web/static/
+\begin_inset Quotes erd
+\end_inset
+
+ into 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Rename 
+\begin_inset Quotes eld
+\end_inset
+
+/web/dynamic/
+\begin_inset Quotes erd
+\end_inset
+
+ files to add a 
+\begin_inset Quotes eld
+\end_inset
+
+.s.
+\begin_inset Quotes erd
+\end_inset
+
+ pre-extension (they are now called 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet resources
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Enumerate
+Rename original 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ files to add a 
+\begin_inset Quotes eld
+\end_inset
+
+.m.
+\begin_inset Quotes erd
+\end_inset
+
+ pre-extension (they are now called 
+\begin_inset Quotes eld
+\end_inset
+
+manual resources
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Move 
+\begin_inset Quotes eld
+\end_inset
+
+/web/fragments/
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+/fragments/
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Upgrading the Component
 \end_layout
 
 \end_body

@@ -67,8 +67,74 @@ Prudence.Routing = Prudence.Routing || function() {
 	}
 
 	/**
+	 * Allows creation of a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceApplication.html">PrudenceApplication</a>
+	 * instance according to rich configuration properties.
+	 * <p>
+	 * Before calling {@link Prudence.Routing.Application#create}, you should set the various properties that will be used
+	 * to create and configure the application.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.Application
+	 * @property {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root=Sincerity.Container.here]
+	 * 
+	 * @property {Object} [settings] Application settings
+	 * 
+	 * @property {Object} [settings.description] A human-readable description of your application
+	 * @property {String} [settings.description.name] The application's name (short)
+	 * @property {String} [settings.description.description] The application's description (long)
+	 * @property {String} [settings.description.author] The application's author (person, organization or company)
+	 * @property {String} [settings.description.owner] The application's project's name
+	 * 
+	 * @property {Object} [settings.errors] Error handling settings
+	 * @property {Boolean} [settings.errors.debug=false] When true, enabled the special debugging HTML page in case of 500 errors
+	 *                     (usually caused by unhandled exceptions in your code)
+	 * @property {String} [settings.errors.homeUrl] Shows this URL on the default error page
+	 * @property {String} [settings.errors.contactEmail] Shows this contact email on the default error page
+	 * 
+	 * @property {Object} [settings.code] Programming language settings
+	 * @property {String[]} [settings.code.libraries=['libraries'] A list of base paths from which {@link document#execute} (and also
+	 *                      the programming languages' internal import facilities) will look for libraries;
+	 *                      the <i>first</i> library in this list is special: it is used to look for handlers and tasks;
+	 *                      paths are relative to the application directory
+	 * @property {Number} [settings.code.minimumTimeBetweenValidityChecks=1000] Time in milliseconds between validity checks on files
+	 *                    containing source code (libraries, manual resources and scriptlet resources)
+	 * @property {String} [settings.code.defaultDocumentName='default'] Used for {@link document#execute} when a directory name is given
+	 * @property {String} [settings.code.defaultExtension='js'] Used for {@link document#execute} as the preference when multiple documents
+	 *                    of the same name exist
+	 * @property {String} [settings.code.defaultLanguageTag='javascript'] Used for scriptlets as the default language when
+	 *                    not specified in the scriptlet tag
+	 * @property {Boolean} [settings.code.sourceViewable=false] When true enabled the source code viewing facility
+	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
+	 * 
+	 * @property {Object} [settings.uploads] File upload settings
+	 * @property {String} [settings.uploads.root='uploads'] Path in which to store uploaded files; the path is relative to the
+	 *                    application directory
+	 * @property {Number} [settings.uploads.sizeThreshold=0] The size in bytes beyond which uploaded files are
+	 *                    permanently stored; below this threshold they are simply stored in memory
+	 * 
+	 * @property {Object} [settings.mediaTypes] A dict matching filename extensions to media (MIME) types
+	 * 
+	 * @property {String} [settings.logger=root.name]
+	 * 
+	 * @property {Object} [globals] These values will be available as {@link application#globals} when the application
+	 *                    is running; not that this dict will be flattened using {@link Sincerity.Objects#flatten}
+	 * 
+	 * @property {Object} [hosts] A dict matching virtual host names to the root URIs on which the application
+	 *                    will be available; the special 'internal' host name is used for internal requests (via
+	 *                    the RIAP protocol); the default value for "hosts" is {internal: root.name}
+	 * 
+	 * @property {Object} [routes] Dict matching URI templates to target configurations;
+	 *                    the targets are created only when {@link Prudence.Routing.Application#create} is called,
+	 *                    and are usually instances of {@link Prudence.Routing.Restlet} sub-classes;
+	 *                    see the Prudence Manual for more details
+	 * 
+	 * @property {Object} [errors] A dict matching HTTP error codes to URIs
+	 * 
+	 * @property {Object} [dispatchers] A dict matching dispatcher names (usually programming language names)
+	 *                    to library names
+	 * 
+	 * @property {String[]} [preheat] A list of URIs that will be "pre-heated" (via internal requests) as soon
+	 *                      as the application starts
 	 */
 	Public.Application = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Application */
@@ -79,13 +145,22 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.root = Sincerity.Container.here
 			this.settings = {}
 			this.globals = {}
-			this.sharedGlobals = {}
 			this.hosts = {}
 			this.routes = {}
+			this.errors = {}
 			this.dispatchers = {}
 			this.preheat = []
 		}
 
+		/**
+		 * Creates a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceApplication.html">PrudenceApplication</a> instance
+		 * based on the configured properties,
+		 * in conjunction with <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ApplicationTaskCollector.html">ApplicationTaskCollector</a>,
+		 * <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedStatusService.html">DelegatedStatusService</a>,
+		 * and <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/PreheatTask.html">PreheatTask</a>.
+		 * 
+		 * @returns {<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceApplication.html">com.threecrickets.prudence.PrudenceApplication</a>}
+		 */
 		Public.create = function(component) {
 			importClass(
 				com.threecrickets.prudence.PrudenceApplication,
@@ -108,7 +183,6 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			// Flatten globals
 			this.globals = Sincerity.Objects.flatten(this.globals)
-			this.sharedGlobals = Sincerity.Objects.flatten(this.sharedGlobals)
 
 			// Ensure settings exist
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
@@ -202,23 +276,22 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? '/source/' : null)
 			this.instance.statusService.debugging = true == this.settings.errors.debug
-			delete this.settings.errors.debug
 			if (Sincerity.Objects.exists(this.settings.errors.homeUrl)) {
 				if (sincerity.verbosity >= 2) {
 					println('    Home URL: "{0}"'.cast(this.settings.errors.homeUrl))
 				}
 				this.instance.statusService.homeRef = new Reference(this.settings.errors.homeUrl)
-				delete this.settings.errors.homeUrl
 			}
 			if (Sincerity.Objects.exists(this.settings.errors.contactEmail)) {
 				if (sincerity.verbosity >= 2) {
 					println('    Contact email: "{0}"'.cast(this.settings.errors.contactEmail))
 				}
 				this.instance.statusService.contactEmail = this.settings.errors.contactEmail
-				delete this.settings.errors.contactEmail
 			}
-			for (var code in this.settings.errors) {
-				var uri = this.settings.errors[code]
+			
+			// Errors
+			for (var code in this.errors) {
+				var uri = this.errors[code]
 				if (sincerity.verbosity >= 2) {
 					println('    Capturing error code {0} to "{1}"'.cast(code, uri))
 				}
@@ -384,13 +457,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 			}
 
-			// Apply shared globals
-			for (var name in this.sharedGlobals) {
-				if (null !== this.sharedGlobals[name]) {
-					component.context.attributes.put(name, this.sharedGlobals[name])
-				}
-			}
-
 			// Preheat tasks
 			var internal = String(this.hosts.internal).replace(/\//g, '')
 			for (var p in this.preheat) {
@@ -438,7 +504,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					}*/
 					return new Module.Capture({uri: restlet}).create(this, uri)
 				}
-				else if (restlet[0] == '#') {
+				else if (restlet[0] == '@') {
 					restlet = restlet.substring(1)
 					return new Module.Dispatch({id: restlet}).create(this, uri)
 				}
@@ -509,14 +575,16 @@ Prudence.Routing = Prudence.Routing || function() {
 			return dispatcher
 		}
 		
-		return Public	
+		return Public
 	}(Public))
 
    	/**
+   	 * Base class for Prudence-based restlets.
+   	 * 
 	 * @class
 	 * @name Prudence.Routing.Restlet
 	 */
-	Public.Static = Sincerity.Classes.define(function(Module) {
+	Public.Restlet = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Restlet */
 		var Public = {}
 		
@@ -528,9 +596,47 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Maps every file in a subdirectory to a static RESTful resource.
+	 * <p>
+	 * Each file represents a single resource.
+	 * These resources are called "static" because their representations never change. They are always equal
+	 * exactly to the contents of the file. This functionality is identical to that of most static web
+	 * servers.
+	 * <p>
+	 * Note that it also performs as well as most web servers, such that it would usually be unnecessary to
+	 * install a separate web server just for static files. However, for true Internet scalability, it would be
+	 * best to serve your static files with a CDN (Content Delivery Network) that specializes in and is highly
+	 * optimized for serving static files.
+	 * <p>
+	 * By default, this class will not map directories (they will return 404 errors, even if they exist).
+	 * However, this can be changed if you set "listingAllowed" to true, in which case a friendly human-readable
+	 * HTML page will be generated for each directory, with a hyperlinked list of its contents.
+	 * <p>
+	 * You will always want use a wildcard URI template with this class, because it will attempt to match
+	 * all URIs to files or directories.
+	 * <p>
+	 * The mapped URI for each file will be its path (relative to the root) appended to the URI
+	 * template. For example, if the URI template is "/archive/*", and the root is "/usr/share/web/",
+	 * and the file is "/user/share/web/images/logo.png", then the final URI would be "/archive/images/logo.png".
+	 * <p>
+	 * When "negotiate" is true (the default), then Prudence will handle HTTP content negotiation for you.
+	 * The preferred media (MIME) type will be determined by the filename extension. For example, a ".png"
+	 * file will have the MIME type "image/png".
+	 * Note that each application has its own extension mapping table, which can
+	 * be configured in its settings.js, under "settings.mediaTypes".
+	 * <p>
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Directory.html">Directory</a> instance.
+	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/DefaultEncoder.html">DefaultEncoder</a>
+	 * filter before the Directory.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.Static
 	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
+	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
+	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
 	 */
 	Public.Static = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Static */
@@ -548,7 +654,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.util.DefaultEncoder,
 				java.io.File)
 			
-			this.root = Sincerity.Objects.ensure(this.root, 'mapped')
+			this.root = Sincerity.Objects.ensure(this.root, 'resources')
 			if (!(this.root instanceof File)) {
 				this.root = new File(app.root, this.root).absoluteFile
 			}
@@ -570,12 +676,180 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Maps specially marked files in a subdirectory to manual resources.
+	 * <p>
+	 * Each file represents a single resource.
+	 * They are text files containing code in one of the supported programming languages. The language
+	 * is determined by the extension: .js for JavaScript, .py for Python, .clj for Clojure, etc.
+	 * A set of well-defined global functions (or closures in some languages) is used as entry points for Prudence
+	 * to hook into your resource implementation.
+	 * <p>
+	 * You will always want use a wildcard URI template with this class, because it will attempt to match
+	 * all URIs to files. However, only files with a ".m." pre-extension will be matched. For example:
+	 * "default.m.js", "service.m.js", "profile.m.py". Files without this pre-extension will not be
+	 * matched, and will return a 404 error even if they exist. It is thus possible to combine
+	 * this class with {@link Prudence.Resources.Static} via a {@link Prudence.Resources.Chain},
+	 * though note that this class must be before the static instance in the chain.
+	 * <p>
+	 * The mapped URI for each file will be its path (relative to the root) appended to the URI
+	 * template, <i>without</i> the filename extension but <i>with</i> a trailing slash.
+	 * For example, if the URI template is "/info/*", and the root is "/usr/share/web/",
+	 * and the file is "/user/share/web/main/about.t.hml", then the final URI would be "/info/main/about/".
+	 * <p>
+	 * Directories will be mapped only if they contain a file named "default" (with any extension), which
+	 * will be used to represent the directory. For example, "/usr/share/web/main/default.m.js" will be mapped
+	 * to the URI "/info/main/". Note that the extension does not have to be ".js", and can be of any
+	 * supported programming language.
+	 * <p>
+	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedResource.html">DelegatedResource</a>
+	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * 
 	 * @class
-	 * @name Prudence.Routing.Textual
+	 * @name Prudence.Routing.Manual
 	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {String[]} [passThroughs]
+	 * @param {String} [preExtension='m']
 	 */
-	Public.Textual = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Textual */
+	Public.Manual = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Manual */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['root', 'passThroughs', 'preExtension']
+
+		Public.create = function(app, uri) {
+			if (app.hasDelegatedResource) {
+				throw new SincerityException('There can be only one Manual per application')
+			}
+			app.hasDelegatedResource = true
+
+			importClass(
+				org.restlet.resource.Finder,
+				java.io.File)
+
+			this.root = Sincerity.Objects.ensure(this.root, 'resources')
+			if (!(this.root instanceof File)) {
+				this.root = new File(app.root, this.root).absoluteFile
+			}
+
+			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
+
+			if (sincerity.verbosity >= 2) {
+				println('    Manual:')
+				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
+			}
+
+			var delegatedResource = {
+				documentSource: app.createDocumentSource(this.root, this.preExtension),
+				libraryDocumentSources: app.libraryDocumentSources,
+				passThroughDocuments: app.passThroughDocuments,
+				defaultName: app.settings.code.defaultDocumentName,
+				defaultLanguageTag: app.settings.code.defaultLanguageTag,
+				languageManager: executable.manager,
+				sourceViewable: app.settings.code.sourceViewable,
+				fileUploadDirectory: app.settings.uploads.root,
+				fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
+			}
+
+			// Pass-throughs
+			if (Sincerity.Objects.exists(this.passThroughs)) {
+				for (var i in this.passThroughs) {
+					if (sincerity.verbosity >= 2) {
+						println('      Pass through: "{0}"'.cast(this.passThroughs[i]))
+					}
+					delegatedResource.passThroughDocuments.add(this.passThroughs[i])
+				}
+			}
+
+			// Viewable source
+			if (true == app.settings.code.sourceViewable) {
+				app.sourceViewableDocumentSources.add(delegatedResource.documentSource)
+				app.sourceViewableDocumentSources.addAll(app.libraryDocumentSources)
+			}
+
+			// Pass-through and hide dispatchers
+			var dispatcherBaseUri = Module.cleanBaseUri(uri)
+			for (var name in app.dispatchers) {
+				var dispatcher = app.getDispatcher(name)
+				delegatedResource.passThroughDocuments.add(dispatcher.manual)
+				var manual = dispatcherBaseUri + dispatcher.manual
+				app.hidden.push(manual)
+				if (sincerity.verbosity >= 2) {
+					println('      Dispatcher: "{0}" -> "{1}"'.cast(name, manual))
+				}
+			}
+
+			// Defrost
+			app.defrost(delegatedResource.documentSource)
+
+			// Merge globals
+			Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
+
+			return new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 * Maps specially marked files in a subdirectory to scriptlet resources.
+	 * <p>
+	 * Each file represents a single resource.
+	 * These resources only support textual formats such as HTML, XML, JSON and
+	 * plain text. They combine regular text with specially delimited code segments
+	 * called "scriptlets" that are executed for every user request. This functionality
+	 * is identical in many ways to PHP, JSP and ASP, but Prudence goes beyond those
+	 * platforms by providing fine-tuned integrated caching.
+	 * <p>
+	 * You will always want use a wildcard URI template with this class, because it will attempt to match
+	 * all URIs to files. However, only files with a ".s." pre-extension will be matched. For example:
+	 * "index.s.html", "sitemap.s.xml", "info.s.json". Files without this pre-extension will not be
+	 * matched, and will return a 404 error even if they exist. It is thus possible to combine
+	 * this class with {@link Prudence.Resources.Static} via a {@link Prudence.Resources.Chain},
+	 * though note that this class must be before the static instance in the chain.
+	 * <p>
+	 * The mapped URI for each file will be its path (relative to the root) appended to the URI
+	 * template, <i>without</i> the filename extension but <i>with</i> a trailing slash.
+	 * For example, if the URI template is "/info/*", and the root is "/usr/share/web/",
+	 * and the file is "/user/share/web/main/about.t.hml", then the final URI would be "/info/main/about/".
+	 * <p>
+	 * Directories will be mapped only if they contain a file named "index" (with any extension), which
+	 * will be used to represent the directory. For example, "/usr/share/web/main/index.t.html" will be mapped
+	 * to the URI "/info/main/". Note that the extension does not have to be ".html", and can be of any
+	 * textual format.
+	 * <p>
+	 * Prudence supports powerful server-side caching for scriptlet resources. See {@link conversation#cacheDuration}
+	 * for the most important API for enabling caching. Client-side caching is implemented to match the
+	 * server-side cache, and can work in three modes, according to the "clientCachingMode" param.
+	 * <p>
+	 * Prudence will handle HTTP content negotiation for you.
+	 * The preferred media (MIME) type will be determined by the filename extension. For example, a ".t.html"
+	 * file will have the MIME type "text/html".
+	 * Note that each application has its own extension mapping table, which can
+	 * be configured in its settings.js, under "settings.mediaTypes".
+	 * <p>
+	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/GeneratedTextResource.html">GeneratedTextResource</a>
+	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * 
+	 * @class
+	 * @name Prudence.Routing.Scriptlet
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [fragmentsRoot]
+	 * @param {String[]} [passThroughs]
+	 * @param {String} [preExtension='s']
+	 * @param {String} [defaultDocumentName='index']
+	 * @param {String} [defaultExtension='html']
+	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
+	 */
+	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Scriptlet */
 		var Public = {}
 		
 		/** @ignore */
@@ -599,7 +873,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				java.util.concurrent.ConcurrentHashMap,
 				java.io.File)
 				
-			this.root = Sincerity.Objects.ensure(this.root, 'mapped')
+			this.root = Sincerity.Objects.ensure(this.root, 'resources')
 			if (!(this.root instanceof File)) {
 				this.root = new File(app.root, this.root).absoluteFile
 			}
@@ -629,7 +903,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
 			this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
-			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 't')
+			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
 
 			if (sincerity.verbosity >= 2) {
 				println('    Textual:')
@@ -716,98 +990,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * @class
-	 * @name Prudence.Routing.Manual
-	 * @augments Prudence.Routing.Restlet
-	 */
-	Public.Manual = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Manual */
-		var Public = {}
-		
-		/** @ignore */
-		Public._inherit = Module.Restlet
-
-		/** @ignore */
-		Public._configure = ['root', 'passThroughs', 'implicit', 'preExtension']
-
-		Public.create = function(app, uri) {
-			if (app.hasDelegatedResource) {
-				throw new SincerityException('There can be only one Manual per application')
-			}
-			app.hasDelegatedResource = true
-
-			importClass(
-				org.restlet.resource.Finder,
-				java.io.File)
-
-			this.root = Sincerity.Objects.ensure(this.root, 'mapped')
-			if (!(this.root instanceof File)) {
-				this.root = new File(app.root, this.root).absoluteFile
-			}
-
-			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
-
-			if (sincerity.verbosity >= 2) {
-				println('    Manual:')
-				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
-			}
-
-			var delegatedResource = {
-				documentSource: app.createDocumentSource(this.root, this.preExtension),
-				libraryDocumentSources: app.libraryDocumentSources,
-				passThroughDocuments: app.passThroughDocuments,
-				defaultName: app.settings.code.defaultDocumentName,
-				defaultLanguageTag: app.settings.code.defaultLanguageTag,
-				languageManager: executable.manager,
-				sourceViewable: app.settings.code.sourceViewable,
-				fileUploadDirectory: app.settings.uploads.root,
-				fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
-			}
-
-			// Pass-throughs
-			if (Sincerity.Objects.exists(this.passThroughs)) {
-				for (var i in this.passThroughs) {
-					if (sincerity.verbosity >= 2) {
-						println('      Pass through: "{0}"'.cast(this.passThroughs[i]))
-					}
-					delegatedResource.passThroughDocuments.add(this.passThroughs[i])
-				}
-			}
-
-			// Viewable source
-			if (true == app.settings.code.sourceViewable) {
-				app.sourceViewableDocumentSources.add(delegatedResource.documentSource)
-				app.sourceViewableDocumentSources.addAll(app.libraryDocumentSources)
-			}
-
-			// Pass-through and hide dispatchers
-			var dispatcherBaseUri = Module.cleanBaseUri(uri)
-			for (var name in app.dispatchers) {
-				var dispatcher = app.getDispatcher(name)
-				delegatedResource.passThroughDocuments.add(dispatcher.manual)
-				var manual = dispatcherBaseUri + dispatcher.manual
-				app.hidden.push(manual)
-				if (sincerity.verbosity >= 2) {
-					println('      Dispatcher: "{0}" -> "{1}"'.cast(name, manual))
-				}
-			}
-
-			// Defrost
-			app.defrost(delegatedResource.documentSource)
-
-			// Merge globals
-			Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
-
-			return new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
-		}
-		
-		return Public
-	}(Public))
-
-	/**
+	 *
 	 * @class
 	 * @name Prudence.Routing.Dispatch
 	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String} id
+	 * @param {Object} [locals]
+	 * @param {String} [dispatcher='javascript']
 	 */
 	Public.Dispatch = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Dispatch */
@@ -848,9 +1038,17 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CapturingRedirector.html">CapturingRedirector</a> instance.
+	 * If "locals" is defined, inserts an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a>
+	 * filter before the Directory.
+	 *
 	 * @class
 	 * @name Prudence.Routing.Capture
 	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String} uri
+	 * @param {Boolean} hidden
+	 * @param {Object} locals
 	 */
 	Public.Capture = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Capture */
@@ -898,9 +1096,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceRouter.html">PrudenceRouter</a> instance.
+	 *
 	 * @class
 	 * @name Prudence.Routing.Router
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {Object} [routes]
+	 * @param {String} [routingMode='best']
 	 */
 	Public.Router = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Router */
@@ -946,44 +1149,46 @@ Prudence.Routing = Prudence.Routing || function() {
 			router.routingMode = this.routingMode
 			
 			// Create and attach restlets
-			for (var uri in this.routes) {
-				var restlet = this.routes[uri]
+			if (Sincerity.Objects.exists(this.routes)) {
+				for (var uri in this.routes) {
+					var restlet = this.routes[uri]
 
-				var attachBase = false
-				var length = uri.length
-				if (length > 1) {
-					var last = uri[length - 1]
-					if (last == '*') {
-						uri = uri.substring(0, length - 1)
-						attachBase = true
+					var attachBase = false
+					var length = uri.length
+					if (length > 1) {
+						var last = uri[length - 1]
+						if (last == '*') {
+							uri = uri.substring(0, length - 1)
+							attachBase = true
+						}
 					}
-				}
-				
-				uri = Module.cleanUri(uri)
+					
+					uri = Module.cleanUri(uri)
 
-				restlet = app.createRestlet(restlet, uri)
-				if (Sincerity.Objects.exists(restlet)) {
-					if ((restlet == 'hidden') || (restlet == '!')) {
-						if (sincerity.verbosity >= 2) {
-							println('    "{0}" hidden'.cast(uri))
+					restlet = app.createRestlet(restlet, uri)
+					if (Sincerity.Objects.exists(restlet)) {
+						if ((restlet == 'hidden') || (restlet == '!')) {
+							if (sincerity.verbosity >= 2) {
+								println('    "{0}" hidden'.cast(uri))
+							}
+							router.hide(uri)
 						}
-						router.hide(uri)
-					}
-					else if (attachBase) {
-						if (sincerity.verbosity >= 2) {
-							println('    "{0}*" -> {1}'.cast(uri, restlet))
+						else if (attachBase) {
+							if (sincerity.verbosity >= 2) {
+								println('    "{0}*" -> {1}'.cast(uri, restlet))
+							}
+							router.attachBase(uri, restlet)
 						}
-						router.attachBase(uri, restlet)
+						else {
+							if (sincerity.verbosity >= 2) {
+								println('    "{0}" -> {1}'.cast(uri, restlet))
+							}
+							router.attach(uri, restlet).matchingMode = Template.MODE_EQUALS
+						}
 					}
 					else {
-						if (sincerity.verbosity >= 2) {
-							println('    "{0}" -> {1}'.cast(uri, restlet))
-						}
-						router.attach(uri, restlet).matchingMode = Template.MODE_EQUALS
+						throw new SincerityException('Unsupported restlet for "{0}"'.cast(uri))
 					}
-				}
-				else {
-					throw new SincerityException('Unsupported restlet for "{0}"'.cast(uri))
 				}
 			}
 
@@ -994,9 +1199,13 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 	
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Fallback.html">Fallback</a> instance.
+	 *
 	 * @class
 	 * @name Prudence.Routing.Chain
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {Array} [restlets]
 	 */
 	Public.Chain = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Chain */
@@ -1029,9 +1238,13 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 	
 	/**
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 *
 	 * @class
 	 * @name Prudence.Routing.Resource
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String} class
 	 */
 	Public.Resource = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Resource */
@@ -1057,6 +1270,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
+	 * singleton instance shared by all usages in the application.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.AddSlash
 	 * @augments Prudence.Routing.Restlet 
@@ -1076,9 +1292,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedFilter.html">DelegatedFilter</a> instance.
+	 *
 	 * @class
 	 * @name Prudence.Routing.Filter
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String} library
+	 * @param {Object} next
 	 */
 	Public.Filter = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Filter */
@@ -1103,9 +1324,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/JavaScriptUnifyMinifyFilter.html">JavaScriptUnifyMinifyFilter</a> instance.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.JavaScriptUnifyMinify
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String[]} roots
+	 * @param {Object} next
 	 */
 	Public.JavaScriptUnifyMinify = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.JavaScriptUnifyMinify */
@@ -1124,7 +1350,7 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [new File(new File(app.root, 'mapped'), 'scripts'), sincerity.container.getLibrariesFile('web', 'scripts')]
+				this.roots = [new File(new File(app.root, 'resources'), 'scripts'), sincerity.container.getLibrariesFile('web', 'scripts')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
@@ -1155,9 +1381,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CssScriptUnifyMinifyFilter.html">CssUnifyMinifyFilter</a> instance.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.CssUnifyMinify
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String[]} roots
+	 * @param {Object} next
 	 */
 	Public.CssUnifyMinify = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.CssUnifyMinify */
@@ -1176,7 +1407,7 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [new File(new File(app.root, 'mapped'), 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+				this.roots = [new File(new File(app.root, 'resources'), 'style'), sincerity.container.getLibrariesFile('web', 'style')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
@@ -1207,9 +1438,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ZussFilter.html">ZussFilter</a> instance.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.Zuss
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String[]} roots
+	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>]
+	 * @param {Object} next
 	 */
 	Public.Zuss = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Zuss */
@@ -1228,7 +1465,7 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [new File(new File(app.root, 'mapped'), 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+				this.roots = [new File(new File(app.root, 'resources'), 'style'), sincerity.container.getLibrariesFile('web', 'style')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
@@ -1265,9 +1502,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CacheControlFilter.html">CacheControlFilter</a> instance.
+	 * 
 	 * @class
 	 * @name Prudence.Routing.CacheControl
-	 * @augments Prudence.Routing.Restlet 
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String[]} [mediaTypes]
+	 * @param {Number|String} [default=-1]
+	 * @param {Object} next
 	 */
 	Public.CacheControl = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.CacheControl */
@@ -1285,7 +1528,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				org.restlet.data.MediaType,
 				java.io.File)
    
-			this.root = Sincerity.Objects.ensure(this.root, 'mapped')
+			this.root = Sincerity.Objects.ensure(this.root, 'resources')
 			if (!(this.root instanceof File)) {
 				this.root = new File(app.root, this.root).absoluteFile
 			}

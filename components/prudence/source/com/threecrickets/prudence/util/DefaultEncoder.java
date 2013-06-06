@@ -21,7 +21,10 @@ import org.restlet.engine.application.Encoder;
 import org.restlet.service.EncoderService;
 
 /**
+ * An encoder supporting a list of default encodings.
+ * 
  * @author Tal Liron
+ * @see IoUtil#SUPPORTED_COMPRESSION_ENCODINGS
  */
 public class DefaultEncoder extends Encoder
 {

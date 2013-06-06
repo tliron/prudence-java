@@ -7,7 +7,7 @@ app.hosts = {
 app.routes = {
 	'/*': [
 		'manual',
-		'textual',
+		'scriptlet',
 		// For our static files we'll cache all images on the client for the far future, and enable on-the-fly ZUSS support and JavaScript compression:
 		{type: 'cacheControl', 'default': -1, mediaTypes: {'image/png': 'farFuture', 'image/jpeg': 'farFuture', 'image/gif': 'farFuture'}, next:
 			{type: 'javaScriptUnifyMinify', next:

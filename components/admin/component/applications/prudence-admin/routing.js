@@ -7,7 +7,7 @@ app.hosts = {
 app.routes = {
 	'/*': [
 		'manual',
-		'textual',
+		'scriptlet',
 		{type: 'javaScriptUnifyMinify', next:
 			{type: 'zuss', next: [
 				'static',
