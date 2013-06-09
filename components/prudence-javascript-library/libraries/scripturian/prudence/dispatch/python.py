@@ -16,7 +16,7 @@ resources = {}
 document.executeOnce(application.globals['prudence.dispatch.python.library'])
 
 def handle(conversation, method):
-    id = conversation.locals['prudence.id']
+    id = conversation.locals['prudence.dispatch.id']
     resource = resources.get(id, None)
     if resource is None:
         conversation.statusCode = 404

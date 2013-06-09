@@ -26,7 +26,7 @@ import com.threecrickets.prudence.internal.JSMin;
  * A {@link Filter} that automatically unifies and/or compresses JavaScript
  * source files, saving them as a single file. Unifying them allows clients to
  * retrieve the JavaScript via one request rather than many. Compressing them
- * makes them retrievable faster.
+ * makes their retrieval faster.
  * <p>
  * Compression is done via <a
  * href="http://www.inconspicuous.org/projects/jsmin/jsmin.java">John Reilly's

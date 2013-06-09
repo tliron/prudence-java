@@ -314,8 +314,7 @@ URI-space
 \begin_inset Quotes erd
 \end_inset
 
- represents the published (publicly or internally: more on that later) set
- of all URIs supported by your server.
+ represents the published set of all URIs supported by your server.
  
 \begin_inset Quotes eld
 \end_inset
@@ -380,7 +379,17 @@ The URI-space is mostly configured in the application's routing.js.
 \begin_inset Quotes erd
 \end_inset
 
- would always be a decimal integer, this limiting the extent of the URI-space.
+ would always be a decimal integer, thus limiting the extent of the URI-space.
+ More generally, Prudence supports 
+\begin_inset Quotes eld
+\end_inset
+
+wildcard
+\begin_inset Quotes erd
+\end_inset
+
+ URI templates, allowing you to delegate the parsing of the URI entirely
+ to your resource code.
 \end_layout
 
 \begin_layout Standard
@@ -597,47 +606,31 @@ We will summarize their usage briefly here, but please refer to the API
 \end_layout
 
 \begin_layout Subsubsection
-static
+Routing
 \end_layout
 
-\begin_layout Itemize
-root (defaults to the 
-\begin_inset Quotes eld
-\end_inset
-
-resources
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory under the application directory)
-\end_layout
-
-\begin_layout Itemize
-listingAllowed (defaults to false)
-\end_layout
-
-\begin_layout Itemize
-negotiate (defaults to true)
-\end_layout
-
-\begin_layout Itemize
-compress (defaults to true)
-\end_layout
-
-\begin_layout Subsubsection
-manual
-\end_layout
-
-\begin_layout Subsubsection
-textual
-\end_layout
-
-\begin_layout Subsubsection
+\begin_layout Paragraph
 dispatch
 \end_layout
 
 \begin_layout Standard
-Starting with 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ type with an 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+ param, or any string starting with the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -645,15 +638,51 @@ Starting with
 \begin_inset Quotes erd
 \end_inset
 
+ character, to configure a dispatch mapping.
+ For example, {type: 'dispatch', id: 'person'} is identical to '@person'.
+ The unique ID should match a manual resource handle by your dispatcher,
+ otherwise a 404 error (
+\begin_inset Quotes eld
+\end_inset
 
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) will result.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Dispatch"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Dispatch"
+
+\end_inset
+
+ class.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 capture
 \end_layout
 
 \begin_layout Standard
-Just a URI, starting with 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+capture
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+uri
+\begin_inset Quotes erd
+\end_inset
+
+ param, or any string starting with the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -661,11 +690,10 @@ Just a URI, starting with
 \begin_inset Quotes erd
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-Possibly ending in 
+ character, to configure a capture.
+ For example, {type: 'capture', uri: '/user/profile/'} is identical to '/user/pr
+ofile/'.
+ Note that adding a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -673,60 +701,32 @@ Possibly ending in
 \begin_inset Quotes erd
 \end_inset
 
+ character at the end of the URI (not considered as part of the actual target
+ URI) is a shortcut for 
+\emph on
+also
+\emph default
+ hiding the target URI.
+ Capturing-and-hiding is a common use case.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Capture"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Capture"
 
+\end_inset
+
+ class.
 \end_layout
 
-\begin_layout Subsubsection
-router
-\end_layout
-
-\begin_layout Subsubsection
-chain
-\end_layout
-
-\begin_layout Standard
-Array
-\end_layout
-
-\begin_layout Subsubsection
-resource
-\end_layout
-
-\begin_layout Subsubsection
-addSlash
-\end_layout
-
-\begin_layout Subsubsection
-filter
-\end_layout
-
-\begin_layout Subsubsection
-javaScriptUnifyMinify
-\end_layout
-
-\begin_layout Subsubsection
-cssUnifyMinify
-\end_layout
-
-\begin_layout Subsubsection
-zuss
-\end_layout
-
-\begin_layout Subsubsection
-chacheControl
-\end_layout
-
-\begin_layout Standard
+\begin_layout Paragraph
 
 \series bold
 hidden
 \end_layout
 
 \begin_layout Standard
-Special! Not actually handled by a class.
-\end_layout
-
-\begin_layout Standard
+Use the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -734,7 +734,305 @@ Special! Not actually handled by a class.
 \begin_inset Quotes erd
 \end_inset
 
+ or 
+\begin_inset Quotes eld
+\end_inset
 
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ string values to hide a URI template.
+ Prudence will always return a 404 error (
+\begin_inset Quotes eld
+\end_inset
+
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) for this match.
+ Note that internal requests always bypass this limitation, and so this
+ functionality is useful if you want some URIs available in the internal
+ URI-space but not the public one.
+ This special value is not actually handled by a class, but rather is configured
+ into the current router.
+\end_layout
+
+\begin_layout Paragraph
+addSlash
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+addSlash
+\begin_inset Quotes erd
+\end_inset
+
+ type, or just the 
+\begin_inset Quotes eld
+\end_inset
+
+addSlash
+\begin_inset Quotes erd
+\end_inset
+
+ string, for a permanent client redirect the URI template to the original
+ URI with a trailing slash added.
+ An easy way to enforce trailing slashes in your application.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.AddSlash"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddSlash"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+resource
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+resource
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+class
+\begin_inset Quotes erd
+\end_inset
+
+ param to attach a Restlet ServerResource.
+ This is an easy way to combine Java-written Restlet libraries into your
+ Prudence applications.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Resource"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Resource"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Subsubsection
+Combining
+\end_layout
+
+\begin_layout Paragraph
+chain
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+chain
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+restlets
+\begin_inset Quotes erd
+\end_inset
+
+ param (a JavaScript array), or just a JavaScript array, to create a fallback
+ chain.
+ The values of the array can be any of the supported types.
+ They will be tested in order: the first value that 
+\emph on
+doesn't
+\emph default
+ return a 404 (
+\begin_inset Quotes eld
+\end_inset
+
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) error will have its value returned.
+ This is very commonly used to combine mapping types, for example: ['manual',
+ 'scriptlet', 'static'].
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Chain"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Chain"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+router
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Router"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Router"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Subsubsection
+Mapping
+\end_layout
+
+\begin_layout Paragraph
+static
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Static"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Static"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+manual
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Manual"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manual"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+scriptlet
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Scriptlet"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Scriptlet"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Subsubsection
+Filtering
+\end_layout
+
+\begin_layout Paragraph
+filter
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Filter"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filter"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+cacheControl
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.CacheControl"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.CacheControl"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+javaScriptUnifyMinify
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.JavaScriptUnifyMinify"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.JavaScriptUnifyMinify"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+cssUnifyMinify
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.CssUnifyMinify"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.CssUnifyMinify"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+zuss
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Zuss"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Zuss"
+
+\end_inset
+
+ class.
 \end_layout
 
 \begin_layout Subsection
@@ -747,6 +1045,10 @@ Resource Mapping
 
 \begin_layout Subsection
 URI Capturing
+\end_layout
+
+\begin_layout Subsection
+The Internal URI-space
 \end_layout
 
 \begin_layout Subsection
@@ -2251,6 +2553,10 @@ Libraries for Bootstrap and Configuration
 Working in a Cluster
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsection
 Shared Globals
 \end_layout
@@ -2263,12 +2569,24 @@ Task Farming
 Accepting Uploads
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Section
 Cookies
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Section
 Filtering
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsection
@@ -2681,15 +2999,628 @@ Cache Backends
 \end_layout
 
 \begin_layout Section
+Utilities for Restlet
+\end_layout
+
+\begin_layout Standard
+You do not have to use the entire Prudence container skeleton: Prudence
+ is also available as a small standalone Java library (a jar), and as such
+ has several well-documented classes useful for any Java-written Restlet
+ application.
+ They're all in the 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence.util
+\begin_inset Quotes erd
+\end_inset
+
+ package.
+\end_layout
+
+\begin_layout Subsection
+Utility Restlets
+\end_layout
+
+\begin_layout Standard
+We wish these existed in the standard Restlet library!
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CacheControlFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CacheControlFilter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that adds cache control directives to responses.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "Injector"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that adds values to the request attributes before moving to the next restlet.
+ It allows for a straightforward implementation of IoC (Inversion of Control).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "StatusRestlet"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/StatusRestlet.html"
+
+\end_inset
+
+: A restlet that always sets a specific status and does nothing else.
+\end_layout
+
+\begin_layout Subsection
+Client Data
+\end_layout
+
+\begin_layout Standard
+These classes add no functionality, but make working with some client data
+ a bit easier.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CompressedStringRepresentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CompressedStringRepresentation.html"
+
+\end_inset
+
+: This is a 
+\begin_inset CommandInset href
+LatexCommand href
+name "ByteArrayRepresentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html"
+
+\end_inset
+
+ that can be constructed using text and an encoding, which it then compresses
+ into bytes according the encoding.
+ This is an alternative to using an 
+\begin_inset CommandInset href
+LatexCommand href
+name "Encoder"
+target "http://restlet.org/learn/javadocs/2.1/jse/engine/index.html?org/restlet/engine/application/Encoder.html"
+
+\end_inset
+
+ filter, allowing you direct control over and access to the final representation.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ConversationCookie"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html"
+
+\end_inset
+
+: A modifiable extension of a regular 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cookie"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Cookie.html"
+
+\end_inset
+
+.
+ Tracks modifications, and upon calling save() stores them as a 
+\begin_inset CommandInset href
+LatexCommand href
+name "CookieSetting"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/CookieSetting.html"
+
+\end_inset
+
+, likely in the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Response"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Response.html"
+
+\end_inset
+
+.
+ Also supports cookie deletion via remove().
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "FormWithFiles"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/FormWithFiles.html"
+
+\end_inset
+
+: A form that can parse 
+\begin_inset CommandInset href
+LatexCommand href
+name "MediaType.MULTIPART_FORM_DATA"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/org/restlet/data/MediaType.html#MULTIPART_FORM_DATA"
+
+\end_inset
+
+ entities by accepting file uploads.
+ Files will appear as parameters of type 
+\begin_inset CommandInset href
+LatexCommand href
+name "FileParameter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/FileParameter.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Redirection
+\end_layout
+
+\begin_layout Standard
+Restlet's server-side redirection works by creating a new request.
+ Unfortunately, this means that some information from the original request
+ is lost.
+ Prudence includes a set of classes that work together to preserve the original
+ URI, which we here call the 
+\begin_inset Quotes eld
+\end_inset
+
+captured
+\begin_inset Quotes erd
+\end_inset
+
+ URI.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CapturingRedirector"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CapturingRedirector.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Redirector"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html"
+
+\end_inset
+
+ that keeps track of the captured reference.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "NormalizingRedirector"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/NormalizingRedirector.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Redirector"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html"
+
+\end_inset
+
+ that normalizes relative paths.
+ This may be unnecessary in future versions of Restlet.
+ See 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet issue 238"
+target "https://github.com/restlet/restlet-framework-java/issues/238"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Fallback Routing
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Fallback
+\begin_inset Quotes erd
+\end_inset
+
+ is a powerful new routing paradigm introduced in Prudence that lets you
+ attach multiple restlets to a single route.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "Fallback"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Fallback.html"
+
+\end_inset
+
+: A restlet that delegates 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet.handle(Request, Response)"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/org/restlet/Restlet.html#handle(org.restlet.Request,%20org.restlet.Response)"
+
+\end_inset
+
+ to a series of targets in sequence, stopping at the first target that satisfies
+ the condition of wasHandled.
+ This is very useful for allowing multiple restlets a chance to handle a
+ request, while 
+\begin_inset Quotes eld
+\end_inset
+
+falling back
+\begin_inset Quotes erd
+\end_inset
+
+ to subsequent restlets when those 
+\begin_inset Quotes eld
+\end_inset
+
+fail.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "FallbackRouter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/FallbackRouter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Router"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Router.html"
+
+\end_inset
+
+ that takes care to bunch identical routes under Fallback restlets.
+ This is very useful for allowing multiple restlets a chance to handle a
+ request, while 
+\begin_inset Quotes eld
+\end_inset
+
+falling back
+\begin_inset Quotes erd
+\end_inset
+
+ to subsequent restlets when those 
+\begin_inset Quotes eld
+\end_inset
+
+fail.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Resolver Selection
+\end_layout
+
+\begin_layout Standard
+Restlet does not provide an easy way to use different 
+\begin_inset CommandInset href
+LatexCommand href
+name "template variable resolver"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+
+\end_inset
+
+ instances.
+ We've created new implementations of a few of the core classes that let
+ you choose which resolver to use.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ResolvingTemplate"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ResolvingTemplate.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Template"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Template.html"
+
+\end_inset
+
+ that allows control over which 
+\begin_inset CommandInset href
+LatexCommand href
+name "Resolver"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+
+\end_inset
+
+ instances it will use.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ResolvingRedirector"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ResolvingRedirector.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Redirector"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html"
+
+\end_inset
+
+ that uses ResolvingTemplate.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ResolvingRouter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ResolvingRouter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Router"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Router.html"
+
+\end_inset
+
+ that uses ResolvingTemplate for all routes.
+\end_layout
+
+\begin_layout Subsection
+Web Filters
+\end_layout
+
+\begin_layout Standard
+A set of filter classes for web technologies.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CssUnifyMinifyFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CssUnifyMinifyFilter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that automatically unifies and/or compresses CSS source files, saving them
+ as a single file.
+ Unifying them allows clients to retrieve the CSS via one request rather
+ than many.
+ Compressing them makes their retrieval faster.
+ Compression is done via 
+\begin_inset CommandInset href
+LatexCommand href
+name "CSSMin"
+target "http://barryvan.github.com/CSSMin/CSSMin"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "JavaScriptUnifyMinifyFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/JavaScriptUnifyMinifyFilter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that automatically unifies and/or compresses JavaScript source files, saving
+ them as a single file.
+ Unifying them allows clients to retrieve the JavaScript via one request
+ rather than many.
+ Compressing them makes their retrieval faster.
+ Compression is done via 
+\begin_inset CommandInset href
+LatexCommand href
+name "John Reilly's Java port"
+target "http://www.inconspicuous.org/projects/jsmin/jsmin.java"
+
+\end_inset
+
+ of Douglas Crockford's 
+\begin_inset CommandInset href
+LatexCommand href
+name "JSMin"
+target "http://www.crockford.com/javascript/jsmin.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ZussFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ZussFilter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that automatically parses 
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
+
+\end_inset
+
+ code and renders CSS.
+ Also supports minifying files, if the 
+\begin_inset Quotes eld
+\end_inset
+
+.min.css
+\begin_inset Quotes erd
+\end_inset
+
+ extension is used.
+\end_layout
+
+\begin_layout Section
 Upgrading from Prudence 1.1
+\end_layout
+
+\begin_layout Standard
+Prudence 1.1 did not use Sincerity: instead, it was a self-contained container
+ with everything in the box.
+ This meant it could also not be modular, and instead supported several
+ distributions (
+\begin_inset Quotes eld
+\end_inset
+
+flavors
+\begin_inset Quotes erd
+\end_inset
+
+) per supported programming language.
+ Because of this, it allowed you to use any programming language for your
+ bootstrapping code, and indeed the project maintained a separate set of
+ bootstrapping code for all languages.
+\end_layout
+
+\begin_layout Standard
+This was not only cumbersome in terms of documentation and maintenance,
+ but it also made it hard to port applications between 
+\begin_inset Quotes eld
+\end_inset
+
+flavors.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With the move to Sincerity in Prudence 2.0, it was possible to make Prudence
+ more minimal as well as more modular, as Sincerity handles the bootstrapping
+ and installation of supported languages.
+ Though Sincerity can ostensibly run bootstrapping scripts in any Scripturian-su
+pported language, it standardizes on JavaScript in order to maintain focus
+ and portability.
+ The bottom line is that if you used non-JavaScript flavors of Prudence
+ 1.1, you will need to use JavaScript for your bootstrapping scripts, even
+ if your application code (resources, scriptlets, tasks, etc.) is written
+ in a different language.
+\end_layout
+
+\begin_layout Standard
+To be 100% clear: 
+\emph on
+all 
+\begin_inset Quotes eld
+\end_inset
+
+flavors
+\begin_inset Quotes erd
+\end_inset
+
+ supported in Prudence 1.1 are still supported in Prudence 2.0
+\emph default
+, and your application code will likely not even have to change.
+ You 
+\emph on
+only
+\emph default
+ need (or rather, are recommended) to use JavaScript for bootstrapping.
 \end_layout
 
 \begin_layout Subsection
 Upgrading Applications
 \end_layout
 
+\begin_layout Standard
+There are no significant API changes between Prudence 1.1 and Prudence 2.0.
+ However, the bootstrapping and configuration has been completely overhauled.
+ You will likely need to take a few minutes to rewrite your settings.js,
+ routing.js, etc.
+ Here is a step-by-step checklist:
+\end_layout
+
 \begin_layout Enumerate
-Start with a new application
+Start with a new application based on the default template.
 \end_layout
 
 \begin_deeper
@@ -2702,7 +3633,15 @@ Rename old application (add
 \begin_inset Quotes erd
 \end_inset
 
-)
+), for example: 
+\begin_inset Quotes eld
+\end_inset
+
+myapp-old
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -2714,16 +3653,31 @@ prudence
 \begin_inset Quotes erd
 \end_inset
 
- tool to create a new application
+ tool to create a new application for your application name:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity prudence create myapp
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
 \begin_layout Enumerate
-Copy over individual settings from settings.js
+Copy over individual settings from settings.js, using the new Prudence Manual
+ to find equivalences.
 \end_layout
 
 \begin_layout Enumerate
-Copy over individual settings from routing.js
+Copy over individual settings from routing.js, using the new Prudence Manual
+ to find equivalences.
+ Note that Prudence 2.0 has a far more powerful and clearer routing configuration.
 \end_layout
 
 \begin_layout Enumerate
@@ -2756,34 +3710,6 @@ Merge
 
 \begin_deeper
 \begin_layout Enumerate
-Rename 
-\begin_inset Quotes eld
-\end_inset
-
-/web/dynamic/
-\begin_inset Quotes erd
-\end_inset
-
- files to add a 
-\begin_inset Quotes eld
-\end_inset
-
-.s.
-\begin_inset Quotes erd
-\end_inset
-
- pre-extension (they are now called 
-\begin_inset Quotes eld
-\end_inset
-
-scriptlet resources
-\begin_inset Quotes erd
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Enumerate
 Rename original 
 \begin_inset Quotes eld
 \end_inset
@@ -2808,7 +3734,77 @@ manual resources
 \begin_inset Quotes erd
 \end_inset
 
-)
+).
+ Under Unix-like operation systems, you can rename the all files in the
+ tree via a Perl expression using something like this:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+find .
+ -name "*.js" -exec rename -v 's/
+\backslash
+.js$/
+\backslash
+.m.js/i' {} 
+\backslash
+;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Rename 
+\begin_inset Quotes eld
+\end_inset
+
+/web/dynamic/
+\begin_inset Quotes erd
+\end_inset
+
+ files to add a 
+\begin_inset Quotes eld
+\end_inset
+
+.s.
+\begin_inset Quotes erd
+\end_inset
+
+ pre-extension (they are now called 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet resources
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Under Unix-like operation systems, you can rename the all files in the
+ tree via a Perl expression using something like this:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+find .
+ -name "*.html" -exec rename -v 's/
+\backslash
+.html$/
+\backslash
+.s.html/i' {} 
+\backslash
+;
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -2829,7 +3825,7 @@ Move
 \begin_inset Quotes erd
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Subsection

@@ -856,6 +856,9 @@ Prudence.Resources = Prudence.Resources || function() {
 
 	/**
 	 * Converts a dict into a Restlet Form.
+	 * <p>
+	 * Values that are arrays will be considered as multiple values
+	 * for a form field.
 	 * 
 	 * @param dict
 	 * @returns {org.restlet.data.Form}
@@ -864,7 +867,12 @@ Prudence.Resources = Prudence.Resources || function() {
 		var form = new org.restlet.data.Form()
 		for (var d in dict) {
 			var value = dict[d]
-			if (null !== value) {
+			if (Sincerity.Objects.isArray(value)) {
+				for (i in value) {
+					form.add(d, String(value[i]))
+				}
+			}
+			else if (null !== value) {
 				form.add(d, String(value))
 			}
 		}

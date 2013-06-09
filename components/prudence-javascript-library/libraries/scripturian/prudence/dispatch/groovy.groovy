@@ -16,7 +16,7 @@ resources = [:]
 document.executeOnce(application.globals['prudence.dispatch.groovy.library'])
 
 handle = { conversation, method ->
-	id = conversation.locals['prudence.id']
+	id = conversation.locals['prudence.dispatch.id']
 	resource = resources[id]
 	if (resource == null) {
 		conversation.statusCode = 404

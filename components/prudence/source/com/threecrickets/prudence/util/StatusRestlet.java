@@ -17,7 +17,7 @@ import org.restlet.Restlet;
 import org.restlet.data.Status;
 
 /**
- * A restlet that sets a specific status.
+ * A restlet that always sets a specific status and does nothing else.
  * 
  * @author Tal Liron
  */

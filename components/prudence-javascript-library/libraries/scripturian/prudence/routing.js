@@ -24,7 +24,7 @@ importClass(com.threecrickets.sincerity.exception.SincerityException)
 /**
  * Handles the bootstrapping of Prudence applications using a convenient DSL.
  * This library is meant to be used in the bootstrapping scripts of the
- * Sincerity Restlet skeleton. * 
+ * Sincerity Restlet skeleton. 
  * 
  * @namespace
  * 
@@ -701,6 +701,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * to the URI "/info/main/". Note that the extension does not have to be ".js", and can be of any
 	 * supported programming language.
 	 * <p>
+	 * Important limitation: <i>All</i> uses of this class in the same application share the same
+	 * configuration. Only the first found configuration will take hold and will be shared by
+	 * other instances. If you try to configure more than one instance of this class, an exception will
+	 * be thrown.
+	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedResource.html">DelegatedResource</a>
 	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
@@ -723,74 +728,76 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._configure = ['root', 'passThroughs', 'preExtension']
 
 		Public.create = function(app, uri) {
-			if (app.hasDelegatedResource) {
-				throw new SincerityException('There can be only one Manual per application')
-			}
-			app.hasDelegatedResource = true
+			if (!Sincerity.Objects.exists(app.delegatedResource)) {
+				importClass(
+					org.restlet.resource.Finder,
+					java.io.File)
 
-			importClass(
-				org.restlet.resource.Finder,
-				java.io.File)
-
-			this.root = Sincerity.Objects.ensure(this.root, 'resources')
-			if (!(this.root instanceof File)) {
-				this.root = new File(app.root, this.root).absoluteFile
-			}
-
-			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
-
-			if (sincerity.verbosity >= 2) {
-				println('    Manual:')
-				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
-			}
-
-			var delegatedResource = {
-				documentSource: app.createDocumentSource(this.root, this.preExtension),
-				libraryDocumentSources: app.libraryDocumentSources,
-				passThroughDocuments: app.passThroughDocuments,
-				defaultName: app.settings.code.defaultDocumentName,
-				defaultLanguageTag: app.settings.code.defaultLanguageTag,
-				languageManager: executable.manager,
-				sourceViewable: app.settings.code.sourceViewable,
-				fileUploadDirectory: app.settings.uploads.root,
-				fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
-			}
-
-			// Pass-throughs
-			if (Sincerity.Objects.exists(this.passThroughs)) {
-				for (var i in this.passThroughs) {
-					if (sincerity.verbosity >= 2) {
-						println('      Pass through: "{0}"'.cast(this.passThroughs[i]))
-					}
-					delegatedResource.passThroughDocuments.add(this.passThroughs[i])
+				this.root = Sincerity.Objects.ensure(this.root, 'resources')
+				if (!(this.root instanceof File)) {
+					this.root = new File(app.root, this.root).absoluteFile
 				}
-			}
 
-			// Viewable source
-			if (true == app.settings.code.sourceViewable) {
-				app.sourceViewableDocumentSources.add(delegatedResource.documentSource)
-				app.sourceViewableDocumentSources.addAll(app.libraryDocumentSources)
-			}
+				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
 
-			// Pass-through and hide dispatchers
-			var dispatcherBaseUri = Module.cleanBaseUri(uri)
-			for (var name in app.dispatchers) {
-				var dispatcher = app.getDispatcher(name)
-				delegatedResource.passThroughDocuments.add(dispatcher.manual)
-				var manual = dispatcherBaseUri + dispatcher.manual
-				app.hidden.push(manual)
 				if (sincerity.verbosity >= 2) {
-					println('      Dispatcher: "{0}" -> "{1}"'.cast(name, manual))
+					println('    Manual:')
+					println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
+
+				var delegatedResource = {
+					documentSource: app.createDocumentSource(this.root, this.preExtension),
+					libraryDocumentSources: app.libraryDocumentSources,
+					passThroughDocuments: app.passThroughDocuments,
+					defaultName: app.settings.code.defaultDocumentName,
+					defaultLanguageTag: app.settings.code.defaultLanguageTag,
+					languageManager: executable.manager,
+					sourceViewable: app.settings.code.sourceViewable,
+					fileUploadDirectory: app.settings.uploads.root,
+					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
+				}
+
+				// Pass-throughs
+				if (Sincerity.Objects.exists(this.passThroughs)) {
+					for (var i in this.passThroughs) {
+						if (sincerity.verbosity >= 2) {
+							println('      Pass through: "{0}"'.cast(this.passThroughs[i]))
+						}
+						delegatedResource.passThroughDocuments.add(this.passThroughs[i])
+					}
+				}
+
+				// Viewable source
+				if (true == app.settings.code.sourceViewable) {
+					app.sourceViewableDocumentSources.add(delegatedResource.documentSource)
+					app.sourceViewableDocumentSources.addAll(app.libraryDocumentSources)
+				}
+
+				// Pass-through and hide dispatchers
+				var dispatcherBaseUri = Module.cleanBaseUri(uri)
+				for (var name in app.dispatchers) {
+					var dispatcher = app.getDispatcher(name)
+					delegatedResource.passThroughDocuments.add(dispatcher.manual)
+					var manual = dispatcherBaseUri + dispatcher.manual
+					app.hidden.push(manual)
+					if (sincerity.verbosity >= 2) {
+						println('      Dispatcher: "{0}" -> "{1}"'.cast(name, manual))
+					}
+				}
+
+				// Defrost
+				app.defrost(delegatedResource.documentSource)
+
+				// Merge globals
+				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
+
+				app.delegatedResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
+			}
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension)) {
+				throw new SincerityException('You can configure a Manual only once per application')
 			}
 
-			// Defrost
-			app.defrost(delegatedResource.documentSource)
-
-			// Merge globals
-			Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
-
-			return new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
+			return app.delegatedResource
 		}
 		
 		return Public
@@ -800,8 +807,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Maps specially marked files in a subdirectory to scriptlet resources.
 	 * <p>
 	 * Each file represents a single resource.
-	 * These resources only support textual formats such as HTML, XML, JSON and
-	 * plain text. They combine regular text with specially delimited code segments
+	 * These resources work best with textual formats such as HTML, XML, JSON and
+	 * plain text. They combine "raw" textual output with specially delimited code segments
 	 * called "scriptlets" that are executed for every user request. This functionality
 	 * is identical in many ways to PHP, JSP and ASP, but Prudence goes beyond those
 	 * platforms by providing fine-tuned integrated caching.
@@ -833,6 +840,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Note that each application has its own extension mapping table, which can
 	 * be configured in its settings.js, under "settings.mediaTypes".
 	 * <p>
+	 * Important limitation: <i>All</i> uses of this class in the same application share the same
+	 * configuration. Only the first found configuration will take hold and will be shared by
+	 * other instances. If you try to configure more than one instance of this class, an exception will
+	 * be thrown.
+	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/GeneratedTextResource.html">GeneratedTextResource</a>
 	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
@@ -859,131 +871,133 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._configure = ['root', 'fragmentsRoot', 'passThroughs', 'preExtension', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode']
 
 		Public.create = function(app, uri) {
-			if (app.hasGeneratedTextResource) {
-				throw new SincerityException('There can be only one Textual per application')
-			}
-			app.hasGeneratedTextResource = true
-
-			importClass(
-				com.threecrickets.prudence.util.PhpExecutionController,
-				com.threecrickets.prudence.util.PrudenceScriptletPlugin,
-				org.restlet.resource.Finder,
-				java.util.concurrent.CopyOnWriteArrayList,
-				java.util.concurrent.CopyOnWriteArraySet,
-				java.util.concurrent.ConcurrentHashMap,
-				java.io.File)
-				
-			this.root = Sincerity.Objects.ensure(this.root, 'resources')
-			if (!(this.root instanceof File)) {
-				this.root = new File(app.root, this.root).absoluteFile
-			}
-			
-			this.fragmentsRoot = Sincerity.Objects.ensure(this.fragmentsRoot, 'fragments')
-			if (!(this.fragmentsRoot instanceof File)) {
-				this.fragmentsRoot = new File(app.root, this.fragmentsRoot).absoluteFile
-			}
-
-			if (Sincerity.Objects.isString(this.clientCachingMode)) {
-				if (this.clientCachingMode == 'disabled') {
-					this.clientCachingMode = 0
+			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
+				importClass(
+					com.threecrickets.prudence.util.PhpExecutionController,
+					com.threecrickets.prudence.util.PrudenceScriptletPlugin,
+					org.restlet.resource.Finder,
+					java.util.concurrent.CopyOnWriteArrayList,
+					java.util.concurrent.CopyOnWriteArraySet,
+					java.util.concurrent.ConcurrentHashMap,
+					java.io.File)
+					
+				this.root = Sincerity.Objects.ensure(this.root, 'resources')
+				if (!(this.root instanceof File)) {
+					this.root = new File(app.root, this.root).absoluteFile
 				}
-				else if (this.clientCachingMode == 'conditional') {
+				
+				this.fragmentsRoot = Sincerity.Objects.ensure(this.fragmentsRoot, 'fragments')
+				if (!(this.fragmentsRoot instanceof File)) {
+					this.fragmentsRoot = new File(app.root, this.fragmentsRoot).absoluteFile
+				}
+
+				if (Sincerity.Objects.isString(this.clientCachingMode)) {
+					if (this.clientCachingMode == 'disabled') {
+						this.clientCachingMode = 0
+					}
+					else if (this.clientCachingMode == 'conditional') {
+						this.clientCachingMode = 1
+					}
+					else if (this.clientCachingMode == 'offline') {
+						this.clientCachingMode = 2
+					}
+					else {
+						throw new SavoryException('Unsupported clientCachingMode: ' + this.clientCachingMode)
+					}
+				}
+				else if (!Sincerity.Objects.exists(this.clientCachingMode)) {
 					this.clientCachingMode = 1
 				}
-				else if (this.clientCachingMode == 'offline') {
-					this.clientCachingMode = 2
-				}
-				else {
-					throw new SavoryException('Unsupported clientCachingMode: ' + this.clientCachingMode)
-				}
-			}
-			else if (!Sincerity.Objects.exists(this.clientCachingMode)) {
-				this.clientCachingMode = 1
-			}
 
-			this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
-			this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
-			this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
+				this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
+				this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
+				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
 
-			if (sincerity.verbosity >= 2) {
-				println('    Textual:')
-				println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
-			}
-
-			var generatedTextResource = {
-				documentSource: app.createDocumentSource(this.root, this.preExtension, this.defaultDocumentName, this.defaultExtenion),
-				extraDocumentSources: new CopyOnWriteArrayList(),
-				libraryDocumentSources: app.libraryDocumentSources,
-				passThroughDocuments: app.passThroughDocuments,
-				cacheKeyPatternHandlers: new ConcurrentHashMap(),
-				scriptletPlugins: new ConcurrentHashMap(),
-				clientCachingMode: this.clientCachingMode,
-				defaultIncludedName: this.defaultDocumentName,
-				executionController: new PhpExecutionController(), // Adds PHP predefined variables
-				languageManager: executable.manager,
-				sourceViewable: app.settings.code.sourceViewable,
-				fileUploadDirectory: app.settings.uploads.root,
-				fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-				scriptletPlugins: new ConcurrentHashMap()
-			}
-
-			// Fragments
-			if (Sincerity.Objects.exists(this.fragmentsRoot)) {
 				if (sincerity.verbosity >= 2) {
-					println('      Fragments: "{0}"'.cast(sincerity.container.getRelativePath(this.fragmentsRoot)))
+					println('    Textual:')
+					println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
-				generatedTextResource.extraDocumentSources.add(app.createDocumentSource(this.fragmentsRoot, null, this.defaultDocumentName, this.defaultExtenion))
-			}
 
-			// Common fragments
-			var commonFragmentsDocumentSource = app.component.context.attributes.get('prudence.fragmentsDocumentSource')
-			if (!Sincerity.Objects.exists(commonFragmentsDocumentSource)) {
-				var library = sincerity.container.getFile('libraries', 'prudence')
-				commonFragmentsDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
-				app.component.context.attributes.put('prudence.fragmentsDocumentSource', commonFragmentsDocumentSource)
-			}
-
-			if (sincerity.verbosity >= 2) {
-				println('      Common fragments: "{0}"'.cast(sincerity.container.getRelativePath(commonFragmentsDocumentSource.basePath)))
-			}
-			generatedTextResource.extraDocumentSources.add(commonFragmentsDocumentSource)
-
-			// Viewable source
-			if (true == app.settings.code.sourceViewable) {
-				app.sourceViewableDocumentSources.add(generatedTextResource.documentSource)
-				app.sourceViewableDocumentSources.addAll(generatedTextResource.extraDocumentSources)
-			}
-			
-			// Pass-throughs
-			if (Sincerity.Objects.exists(this.passThroughs)) {
-				for (var i in this.passThroughs) {
-					println('      Pass through: "{0}"'.cast(this.passThroughs[i]))
-					generatedTextResource.passThroughDocuments.add(this.passThroughs[i])
+				var generatedTextResource = {
+					documentSource: app.createDocumentSource(this.root, this.preExtension, this.defaultDocumentName, this.defaultExtenion),
+					extraDocumentSources: new CopyOnWriteArrayList(),
+					libraryDocumentSources: app.libraryDocumentSources,
+					passThroughDocuments: app.passThroughDocuments,
+					cacheKeyPatternHandlers: new ConcurrentHashMap(),
+					scriptletPlugins: new ConcurrentHashMap(),
+					clientCachingMode: this.clientCachingMode,
+					defaultIncludedName: this.defaultDocumentName,
+					executionController: new PhpExecutionController(), // Adds PHP predefined variables
+					languageManager: executable.manager,
+					sourceViewable: app.settings.code.sourceViewable,
+					fileUploadDirectory: app.settings.uploads.root,
+					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
+					scriptletPlugins: new ConcurrentHashMap()
 				}
-			}
-			
-			// Scriptlet plugins
-			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
-			generatedTextResource.scriptletPlugins.put('{{', prudenceScriptletPlugin)
-			generatedTextResource.scriptletPlugins.put('}}', prudenceScriptletPlugin)
-			generatedTextResource.scriptletPlugins.put('==', prudenceScriptletPlugin)
-			
-			if (Sincerity.Objects.exists(app.settings.scriptletPlugins)) {
-				for (var code in app.settings.scriptletPlugins) {
+
+				// Fragments
+				if (Sincerity.Objects.exists(this.fragmentsRoot)) {
 					if (sincerity.verbosity >= 2) {
-						println('      Scriptlet plugin: {0} -> "{1}"'.cast(code, app.settings.scriptletPlugins[code]))
+						println('      Fragments: "{0}"'.cast(sincerity.container.getRelativePath(this.fragmentsRoot)))
 					}
-					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptletPlugins[code])
+					generatedTextResource.extraDocumentSources.add(app.createDocumentSource(this.fragmentsRoot, null, this.defaultDocumentName, this.defaultExtenion))
 				}
+
+				// Common fragments
+				var commonFragmentsDocumentSource = app.component.context.attributes.get('prudence.fragmentsDocumentSource')
+				if (!Sincerity.Objects.exists(commonFragmentsDocumentSource)) {
+					var library = sincerity.container.getFile('libraries', 'prudence')
+					commonFragmentsDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
+					app.component.context.attributes.put('prudence.fragmentsDocumentSource', commonFragmentsDocumentSource)
+				}
+
+				if (sincerity.verbosity >= 2) {
+					println('      Common fragments: "{0}"'.cast(sincerity.container.getRelativePath(commonFragmentsDocumentSource.basePath)))
+				}
+				generatedTextResource.extraDocumentSources.add(commonFragmentsDocumentSource)
+
+				// Viewable source
+				if (true == app.settings.code.sourceViewable) {
+					app.sourceViewableDocumentSources.add(generatedTextResource.documentSource)
+					app.sourceViewableDocumentSources.addAll(generatedTextResource.extraDocumentSources)
+				}
+				
+				// Pass-throughs
+				if (Sincerity.Objects.exists(this.passThroughs)) {
+					for (var i in this.passThroughs) {
+						println('      Pass through: "{0}"'.cast(this.passThroughs[i]))
+						generatedTextResource.passThroughDocuments.add(this.passThroughs[i])
+					}
+				}
+				
+				// Scriptlet plugins
+				var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
+				generatedTextResource.scriptletPlugins.put('{{', prudenceScriptletPlugin)
+				generatedTextResource.scriptletPlugins.put('}}', prudenceScriptletPlugin)
+				generatedTextResource.scriptletPlugins.put('==', prudenceScriptletPlugin)
+				
+				if (Sincerity.Objects.exists(app.settings.scriptletPlugins)) {
+					for (var code in app.settings.scriptletPlugins) {
+						if (sincerity.verbosity >= 2) {
+							println('      Scriptlet plugin: {0} -> "{1}"'.cast(code, app.settings.scriptletPlugins[code]))
+						}
+						generatedTextResource.scriptletPlugins.put(code, app.settings.scriptletPlugins[code])
+					}
+				}
+				
+				// Defrost
+				app.defrost(generatedTextResource.documentSource)
+
+				// Merge globals
+				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.GeneratedTextResource': generatedTextResource}))
+				
+				app.generatedTextResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
+			}
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.fragmentsRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode)) {
+				throw new SincerityException('You can configure a Scriptlet only once per application')
 			}
 			
-			// Defrost
-			app.defrost(generatedTextResource.documentSource)
-
-			// Merge globals
-			Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.GeneratedTextResource': generatedTextResource}))
-			
-			return new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
+			return app.generatedTextResource
 		}
 		
 		return Public
@@ -1014,7 +1028,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.util.Injector,
 				com.threecrickets.prudence.util.CapturingRedirector)
 				
-			if (!app.hasDelegatedResource) {
+			if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				throw new SincerityException('A Manual must be attached before a Dispatch can be created')
 	   		}
 				
@@ -1022,7 +1036,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			var dispatcher = app.getDispatcher(this.dispatcher)
 	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.manual + '?{rq}', false)
 			var injector = new Injector(app.context, capture)
-			injector.values.put('prudence.id', this.id)
+			injector.values.put('prudence.dispatch.id', this.id)
 
 			// Extra locals
 			if (Sincerity.Objects.exists(this.locals)) {

@@ -28,6 +28,7 @@ import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.data.Tag;
+import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.ObjectRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.RepresentationInfo;
@@ -43,7 +44,6 @@ import com.threecrickets.prudence.service.ApplicationService;
 import com.threecrickets.prudence.service.ConversationStoppedException;
 import com.threecrickets.prudence.service.DelegatedResourceConversationService;
 import com.threecrickets.prudence.service.DelegatedResourceDocumentService;
-import com.threecrickets.prudence.util.ByteArrayRepresentation;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
@@ -523,7 +523,7 @@ public class DelegatedResource extends ServerResource
 			}
 			else if( object instanceof byte[] )
 			{
-				representation = new ByteArrayRepresentation( conversationService.getMediaType(), (byte[]) object );
+				representation = new ByteArrayRepresentation( (byte[]) object, conversationService.getMediaType() );
 			}
 			else
 			{

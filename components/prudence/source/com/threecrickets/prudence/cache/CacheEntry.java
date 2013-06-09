@@ -28,11 +28,11 @@ import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Metadata;
 import org.restlet.data.Parameter;
+import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.RepresentationInfo;
 import org.restlet.representation.StringRepresentation;
 
-import com.threecrickets.prudence.util.ByteArrayRepresentation;
 import com.threecrickets.prudence.util.IoUtil;
 
 /**
@@ -391,7 +391,7 @@ public class CacheEntry implements Externalizable
 
 		if( bytes != null )
 		{
-			representation = new ByteArrayRepresentation( mediaType, bytes );
+			representation = new ByteArrayRepresentation( bytes, mediaType );
 			if( language != null )
 				representation.getLanguages().add( language );
 			representation.setCharacterSet( characterSet );

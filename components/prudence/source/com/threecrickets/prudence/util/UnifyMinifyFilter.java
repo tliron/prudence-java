@@ -37,8 +37,8 @@ import org.restlet.routing.Filter;
 /**
  * A {@link Filter} that automatically unifies and/or minifies source files,
  * saving them as a single file. Unifying them allows clients to retrieve the
- * source via one request rather than many. Minifying them makes them
- * retrievable faster.
+ * source via one request rather than many. Minifying them makes their retrieval
+ * faster.
  * <p>
  * This filter can track changes to the source files, updating the result file
  * on-the-fly. This makes it easy to develop and debug a live site.

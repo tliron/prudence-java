@@ -26,8 +26,8 @@ import com.threecrickets.prudence.internal.CSSMin;
 /**
  * A {@link Filter} that automatically unifies and/or compresses CSS source
  * files, saving them as a single file. Unifying them allows clients to retrieve
- * the CSS via one request rather than many. Compressing them makes them
- * retrievable faster.
+ * the CSS via one request rather than many. Compressing them makes their
+ * retrieval faster.
  * <p>
  * Compression is done via <a
  * href="http://barryvan.github.com/CSSMin/">CSSMin</a>.

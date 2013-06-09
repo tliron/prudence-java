@@ -31,7 +31,7 @@ if (conversation.request.method == 'POST') {
 <% } else { %>
 	<form name="external" method="POST">
 		<p>Enter the URL of a JSON resource:</p>
-		<p><input name="url" type="text" value="<%= conversation.reference.baseRef %>/external/house.json" size="100"></input></p>
+		<p><input name="url" type="text" value="<%= conversation.reference.baseRef %>external/house.json" size="100"></input></p>
 		<p><button type="submit">Fetch it!</button></p>
 	</form>
 <% } %>

@@ -16,7 +16,7 @@ $resources = {}
 $document.execute_once $application.globals['prudence.dispatch.ruby.library']
 
 def handle conversation, method
-  id = conversation.locals['prudence.id']
+  id = conversation.locals['prudence.dispatch.id']
   resource = $resources[id]
   if resource.nil?
     conversation.status_code = 404

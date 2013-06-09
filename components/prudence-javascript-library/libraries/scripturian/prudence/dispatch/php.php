@@ -20,7 +20,7 @@ $document->executeOnce($application->globals['prudence.dispatch.php.library']);
 
 function handle($conversation, $method) {
 	global $resources;
-	$id = $conversation->locals['prudence.id'];
+	$id = $conversation->locals['prudence.dispatch.id'];
 	$resource = $resources[$id];
 	if (is_null($resource)) {
 		$conversation->statusCode = 404;

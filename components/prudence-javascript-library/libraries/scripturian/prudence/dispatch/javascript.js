@@ -16,7 +16,7 @@ var resources = {}
 document.executeOnce(application.globals.get('prudence.dispatch.javascript.library'))
 
 function handle(conversation, method) {
-	var id = conversation.locals.get('prudence.id')
+	var id = conversation.locals.get('prudence.dispatch.id')
 	var resource = resources[id]
 	if (undefined === resource) {
 		conversation.statusCode = 404

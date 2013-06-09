@@ -17,10 +17,15 @@ import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
+import org.restlet.engine.application.Encoder;
+import org.restlet.representation.ByteArrayRepresentation;
 
 /**
  * This is a {@link ByteArrayRepresentation} that can be constructed using text
  * and an encoding, which it then compresses into bytes according the encoding.
+ * <p>
+ * This is an alternative to using an {@link Encoder} filter, allowing you
+ * direct control over and access to the final representation.
  * 
  * @author Tal Liron
  */
@@ -109,7 +114,7 @@ public class CompressedStringRepresentation extends ByteArrayRepresentation
 	 */
 	public CompressedStringRepresentation( CharSequence text, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding ) throws IOException
 	{
-		super( mediaType, IoUtil.compress( text, encoding, "text" ) );
+		super( IoUtil.compress( text, encoding, "text" ), mediaType );
 		if( language != null )
 			getLanguages().add( language );
 		setCharacterSet( characterSet );

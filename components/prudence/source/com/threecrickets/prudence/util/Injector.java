@@ -11,7 +11,8 @@ import org.restlet.routing.Filter;
 
 /**
  * A {@link Filter} that adds values to the request attributes before moving to
- * the next restlet.
+ * the next restlet. It allows for a straightforward implementation of IoC
+ * (Inversion of Control).
  * 
  * @author Tal Liron
  */

@@ -19,7 +19,7 @@
 
 (defn get-resource [conversation]
   (let
-    [id (.. conversation (getLocals) (get "prudence.id"))]
+    [id (.. conversation (getLocals) (get "prudence.dispatch.id"))]
     (resources id)))
 
 (defn handle-init [conversation]
