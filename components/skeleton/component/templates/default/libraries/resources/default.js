@@ -2,5 +2,5 @@
 document.executeOnce('/resources/sample/')
 
 resources = {
-	sample: new SampleResource()
+	sample1: new SampleResource()
 }

@@ -14,21 +14,21 @@ app.routes = {
 					'static',
 					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
 	],
-	'/person/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'javascript'},
-	'/pythonperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'python'},
-	'/groovyperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'groovy'},
-	'/phpperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'php'},
-	'/rubyperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'ruby'},
-	'/clojureperson/{id}/': {type: 'dispatch', id: 'person', dispatcher: 'clojure'}
+	'/person/{id}/': '@person',
+	'/pythonperson/{id}/': '@python:person',
+	'/groovyperson/{id}/': '@groovy:person',
+	'/phpperson/{id}/': '@php:person',
+	'/rubyperson/{id}/': '@ruby:person',
+	'/clojureperson/{id}/': '@clojure:person'
 }
 
 app.dispatchers = {
-	javascript: {manual: '/prudence/dispatch/javascript/', library: '/resources/javascript/'},
-	python: {manual: '/prudence/dispatch/python/', library: '/resources/python/'},
-	ruby: {manual: '/prudence/dispatch/ruby/', library: '/resources/ruby/'},
-	groovy: {manual: '/prudence/dispatch/groovy/', library: '/resources/groovy/'},
-	clojure: {manual: '/prudence/dispatch/clojure/', library: '/resources/clojure/'},
-	php: {manual: '/prudence/dispatch/php/', library: '/resources/php/'}
+	javascript: '/resources/javascript/',
+	python: '/resources/python/',
+	ruby: '/resources/ruby/',
+	groovy: '/resources/groovy/',
+	clojure: '/resources/clojure/',
+	php: '/resources/php/'
 }
 
 //

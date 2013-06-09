@@ -15,11 +15,12 @@ app.routes = {
 					'static',
 					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
 	],
-	// A sample dispatch resource, see /libraries/resources/sample.js:
-	'/sample/': '#sample'
+	// Dispatched resource
+	'/sample1/': '@sample1', // see /libraries/resources/sample.js
+	// Captured resource
+	'/sample2/': '/resources/sample/' // see /fragments/resources/sample.html
 }
 
-// See /libraries/resources/default.js:
 app.dispatchers = {
-	javascript: {library: '/resources/'}
+	javascript: '/resources/'
 }

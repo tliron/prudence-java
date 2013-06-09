@@ -487,7 +487,156 @@ only
 \end_layout
 
 \begin_layout Subsection
-Routes
+routing.js
+\end_layout
+
+\begin_layout Standard
+By convention, all routing is configured in your application's routing.js
+ file (which is executed by its default.js file).
+ The file should configure at least app.hosts and app.routes, and app.dispatchers
+ and app.preheat if you are using those optional features.
+\end_layout
+
+\begin_layout Standard
+It's important to remind you that routing.js is written in real JavaScript
+ source! You can include JavaScript code to dynamically configure your applicati
+on's routing during the bootstrap process.
+\end_layout
+
+\begin_layout Standard
+Reproduced below is the routing.js used in the 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ application template, demonstrating many of the main routing types, including
+ how to chain and nest types:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/myapp/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal: '/myapp/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+		'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+		{type: 'cacheControl', 'default': -1, mediaTypes: {'image/png': 'farFuture',
+ 'image/jpeg': 'farFuture', 'image/gif': 'farFuture'}, next:
+\end_layout
+
+\begin_layout Plain Layout
+
+			{type: 'javaScriptUnifyMinify', next:
+\end_layout
+
+\begin_layout Plain Layout
+
+				{type: 'zuss', next: [
+\end_layout
+
+\begin_layout Plain Layout
+
+					'static',
+\end_layout
+
+\begin_layout Plain Layout
+
+					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
+\end_layout
+
+\begin_layout Plain Layout
+
+	],
+\end_layout
+
+\begin_layout Plain Layout
+
+	// A sample dispatch resource, see /libraries/resources/sample.js:
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/sample/': '@sample'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	javascript: {library: '/resources/'}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+app.routes
 \end_layout
 
 \begin_layout Standard
@@ -587,10 +736,43 @@ type
 \begin_inset Quotes erd
 \end_inset
 
- key defines the type of the value, and the rest of the keys are defined
- according to the type.
- There are also shortcuts and alternate forms for some of the commonly used
- types.
+ key defines the type of the value, and the rest of the keys configure the
+ type.
+ As a shortcut, you can just use a string for the 
+\begin_inset Quotes eld
+\end_inset
+
+type
+\begin_inset Quotes erd
+\end_inset
+
+ name, however when used this way you must accept the default configuration.
+ There are also special alternate forms for some of the commonly used types,
+ such as 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+ for the 
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ type and JavaScript arrays for the 
+\begin_inset Quotes eld
+\end_inset
+
+chain
+\begin_inset Quotes erd
+\end_inset
+
+ type.
 \end_layout
 
 \begin_layout Standard
@@ -640,6 +822,56 @@ id
 
  character, to configure a dispatch mapping.
  For example, {type: 'dispatch', id: 'person'} is identical to '@person'.
+ If you use 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+, you can also optionally use a 
+\begin_inset Quotes eld
+\end_inset
+
+:
+\begin_inset Quotes erd
+\end_inset
+
+ to specify the 
+\begin_inset Quotes eld
+\end_inset
+
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ param, for example: 
+\begin_inset Quotes eld
+\end_inset
+
+@profile:person
+\begin_inset Quotes erd
+\end_inset
+
+ is identical to {type: 'dispatch', dispatcher: 'profile', id: 'person'}.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ is not specified, it defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+javascript
+\begin_inset Quotes erd
+\end_inset
+
+.
  The unique ID should match a manual resource handle by your dispatcher,
  otherwise a 404 error (
 \begin_inset Quotes eld
@@ -650,6 +882,15 @@ not found
 \end_inset
 
 ) will result.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ param's value can be any key from the app.dispatchers dict.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -772,15 +1013,7 @@ addSlash
 \begin_inset Quotes erd
 \end_inset
 
- type, or just the 
-\begin_inset Quotes eld
-\end_inset
-
-addSlash
-\begin_inset Quotes erd
-\end_inset
-
- string, for a permanent client redirect the URI template to the original
+ type for a permanent client redirect from the URI template to the original
  URI with a trailing slash added.
  An easy way to enforce trailing slashes in your application.
  Handled by the 
@@ -856,7 +1089,7 @@ restlets
 
  param (a JavaScript array), or just a JavaScript array, to create a fallback
  chain.
- The values of the array can be any of the supported types.
+ The values of the array can be any of the routing types, allowing for nesting.
  They will be tested in order: the first value that 
 \emph on
 doesn't
@@ -888,7 +1121,26 @@ router
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+router
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+routes
+\begin_inset Quotes erd
+\end_inset
+
+ param (a JavaScript dict) to create a router.
+ The values of the dict can be any of the routing types, allowing for nesting.
+ This is in fact how Prudence creates the root router (app.routes).
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Router"
@@ -908,7 +1160,58 @@ static
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ type to create a static resource handler.
+ By default uses the application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory for its 
+\begin_inset Quotes eld
+\end_inset
+
+root
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Note that if you include it in a 
+\begin_inset Quotes eld
+\end_inset
+
+chain
+\begin_inset Quotes erd
+\end_inset
+
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ and/or 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet
+\begin_inset Quotes erd
+\end_inset
+
+, it should be the last entry in the chain.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Static"
@@ -924,7 +1227,40 @@ manual
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ type to create a static resource handler.
+ By default uses the application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory for its 
+\begin_inset Quotes eld
+\end_inset
+
+root
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Important limitation: 
+\emph on
+All
+\emph default
+ uses of this class in the same application share the same configuration.
+ Only the first found configuration will take hold and will be shared by
+ other instances.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Manual"
@@ -933,6 +1269,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manu
 \end_inset
 
  class.
+ [See Implementing Resources]
 \end_layout
 
 \begin_layout Paragraph
@@ -940,7 +1277,40 @@ scriptlet
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet
+\begin_inset Quotes erd
+\end_inset
+
+ type to create a static resource handler.
+ By default uses the application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory for its 
+\begin_inset Quotes eld
+\end_inset
+
+root
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Important limitation: 
+\emph on
+All
+\emph default
+ uses of this class in the same application share the same configuration.
+ Only the first found configuration will take hold and will be shared by
+ other instances.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Scriptlet"
@@ -949,6 +1319,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Scri
 \end_inset
 
  class.
+ [See Implementing Resources]
 \end_layout
 
 \begin_layout Subsubsection
@@ -960,7 +1331,57 @@ filter
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+filter
+\begin_inset Quotes erd
+\end_inset
+
+ type with the 
+\begin_inset Quotes eld
+\end_inset
+
+library
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ params to create a filter.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+library
+\begin_inset Quotes erd
+\end_inset
+
+ is the document name (from the application's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory), while 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ is any routing type, allowing for nesting.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Filter"
@@ -969,6 +1390,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filt
 \end_inset
 
  class.
+ [See Filtering]
 \end_layout
 
 \begin_layout Paragraph
@@ -976,7 +1398,33 @@ cacheControl
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+cacheControl
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ param to create a cache control filter.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ is any routing type, allowing for nesting.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.CacheControl"
@@ -992,7 +1440,58 @@ javaScriptUnifyMinify
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+javaScriptUnifyMinify
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ param to create a JavaScript unify/minify filter.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+ defaults to your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/scripts/
+\begin_inset Quotes erd
+\end_inset
+
+ and your container 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/scripts/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectories.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ is any routing type, allowing for nesting.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.JavaScriptUnifyMinify"
@@ -1008,7 +1507,58 @@ cssUnifyMinify
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+cssScriptUnifyMinify
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ param to create a CSS unify/minify filter.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+ defaults to your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/style/
+\begin_inset Quotes erd
+\end_inset
+
+ and your container 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/style/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectories.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ is any routing type, allowing for nesting.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.CssUnifyMinify"
@@ -1024,7 +1574,66 @@ zuss
 \end_layout
 
 \begin_layout Standard
-Handled by the 
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+zuss
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ param to create a 
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
+
+\end_inset
+
+ compiling filter.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+ defaults to your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/style/
+\begin_inset Quotes erd
+\end_inset
+
+ and your container 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/style/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectories.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ is any routing type, allowing for nesting.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Zuss"
@@ -1036,11 +1645,352 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Zuss
 \end_layout
 
 \begin_layout Subsection
-Resource Dispatching
+app.hosts
+\end_layout
+
+\begin_layout Subsection
+app.preheat
 \end_layout
 
 \begin_layout Subsection
 Resource Mapping
+\end_layout
+
+\begin_layout Standard
+Resource mapping is the most straightforward and most familiar way to create
+ your URI-space.
+ It relies on a one-to-one mapping between the filesystem (specifically
+ files under your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory) and the URI space.
+ This is how static web servers, as well as the the PHP, ASP and JSP platforms
+ work.
+\end_layout
+
+\begin_layout Standard
+Prudence goes beyond the familiar paradigm in three ways:
+\end_layout
+
+\begin_layout Enumerate
+For manual and scriptlet resources, Prudence hides filename extensions from
+ the URIs by default.
+ Thus, 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/myresource.m.js
+\begin_inset Quotes erd
+\end_inset
+
+ would be mapped to 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/myresource/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The reasons are two: 1) clients should not have to know about your internal
+ implementation of the resource, and 2) it allows for cleaner and more coherent
+ URIs.
+ Note the filename extensions are used internally by Prudence (differently
+ for manual and scriptlet resources).
+ Note that this does not apply to static resources: 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ will be mapped to 
+\begin_inset Quotes eld
+\end_inset
+
+/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+For manual and scriptlet resources, Prudence by default 
+\emph on
+requires 
+\emph default
+trailing slashes for URIs.
+ If clients do not include the trailing slash, they will receive a 404 (
+\begin_inset Quotes eld
+\end_inset
+
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) error.
+ Again, the reasons are two: 1) it makes relative URIs always unambiguous,
+ which is especially relevant in HTML and CSS, and 2) it clarifies the extent
+ of URI template variables.
+ As a courtesy to client errors, you can manually add a permanent redirection
+ to a trailing slash, using the 
+\begin_inset Quotes eld
+\end_inset
+
+addSlash
+\begin_inset Quotes erd
+\end_inset
+
+ routing type.
+ For example:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/main', 'addSlash',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/person/profile/{id}': 'addSlash'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+This mapped URI-space can be manipulated using URI hiding and URI capturing,
+ allowing you to support URI templates and rewrite URIs.
+\end_layout
+
+\begin_layout Subsubsection
+Capturing and Hiding
+\end_layout
+
+\begin_layout Standard
+A common way to support URI templates is to capture the URI template to
+ your mapped resource.
+ For example, let's say you have a scriptlet resource file at 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/user/profile.t.html
+\begin_inset Quotes erd
+\end_inset
+
+, but instead of it being mapped to the URI 
+\begin_inset Quotes eld
+\end_inset
+
+/user/profile/
+\begin_inset Quotes erd
+\end_inset
+
+, you want to support a URI template with the user ID.
+ Furthermore, you want to make sure that 
+\begin_inset Quotes eld
+\end_inset
+
+/user/profile/
+\begin_inset Quotes erd
+\end_inset
+
+ cannot be accessed without the user ID.
+ To capture and hide together you can use the following shortcut:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/profile/{userId}/': '/user/profile/!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can also configure capturing and hiding separately.
+ The following is equivalent to the above:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/profile/{userId}/': '/user/profile/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/profile/': '!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/user/profile/4431/
+\begin_inset Quotes erd
+\end_inset
+
+ would then be internally redirected to the 
+\begin_inset Quotes eld
+\end_inset
+
+/user/profile/
+\begin_inset Quotes erd
+\end_inset
+
+ URI.
+ Within your 
+\begin_inset Quotes eld
+\end_inset
+
+profile.t.html
+\begin_inset Quotes erd
+\end_inset
+
+ file, you could then access the captured value via the conversation.locals
+ API:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<head>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<title>User Profile</title>
+\end_layout
+
+\begin_layout Plain Layout
+
+</head>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	User profile for user <%= conversation.locals.get('userId') %>.
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Capturing can be used for both scriptlet and manual resources, and uses
+ the same conversation.locals API.
+\end_layout
+
+\begin_layout Subsection
+Resource Dispatching
+\end_layout
+
+\begin_layout Standard
+Resource mapping is straightforward, but may not be the best solution.
 \end_layout
 
 \begin_layout Subsection
@@ -1049,10 +1999,6 @@ URI Capturing
 
 \begin_layout Subsection
 The Internal URI-space
-\end_layout
-
-\begin_layout Subsection
-Virtual Hosts
 \end_layout
 
 \begin_layout Subsection
@@ -3023,7 +3969,8 @@ Utility Restlets
 \end_layout
 
 \begin_layout Standard
-We wish these existed in the standard Restlet library!
+We wish these general-purpose utilities existed in the standard Restlet
+ library!
 \end_layout
 
 \begin_layout Itemize
@@ -3081,8 +4028,8 @@ Client Data
 \end_layout
 
 \begin_layout Standard
-These classes add no functionality, but make working with some client data
- a bit easier.
+These classes add no new functionality, but make working with some client
+ data a bit easier.
 \end_layout
 
 \begin_layout Itemize
@@ -3319,24 +4266,6 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/rou
 \end_inset
 
  that takes care to bunch identical routes under Fallback restlets.
- This is very useful for allowing multiple restlets a chance to handle a
- request, while 
-\begin_inset Quotes eld
-\end_inset
-
-falling back
-\begin_inset Quotes erd
-\end_inset
-
- to subsequent restlets when those 
-\begin_inset Quotes eld
-\end_inset
-
-fail.
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsection

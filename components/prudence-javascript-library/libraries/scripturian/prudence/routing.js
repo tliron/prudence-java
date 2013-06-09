@@ -506,7 +506,15 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 				else if (restlet[0] == '@') {
 					restlet = restlet.substring(1)
-					return new Module.Dispatch({id: restlet}).create(this, uri)
+					var colon = restlet.indexOf(':')
+					if (colon != -1) {
+						var dispatcher = restlet.substring(0, colon)
+						var id = restlet.substring(colon + 1)
+						return new Module.Dispatch({id: id, dispatcher: dispatcher}).create(this, uri)
+					}
+					else {
+						return new Module.Dispatch({id: restlet}).create(this, uri)
+					}
 				}
 				else {
 					var type = Module[Sincerity.Objects.capitalize(restlet)]
@@ -561,17 +569,15 @@ Prudence.Routing = Prudence.Routing || function() {
 		}
 		
 		Public.getDispatcher = function(name) {
-			var dispatcher = this.dispatchers[name]
-			if (!Sincerity.Objects.exists(dispatcher)) {
-				dispatcher = this.dispatchers[name] = {}
+			var dispatcher = Sincerity.Objects.ensure(this.dispatchers[name], {})
+			if (Sincerity.Objects.isString(dispatcher)) {
+				dispatcher = {library: dispatcher}
 			}
-			if (!Sincerity.Objects.exists(dispatcher.manual)) {
-				dispatcher.manual = '/prudence/dispatch/{0}/'.cast(name)
-			}
-			if (!Sincerity.Objects.exists(dispatcher.library)) {
-				dispatcher.library = '/resources/{0}/'.cast(name)
-			}
-			this.globals['prudence.dispatch.{0}.library'.cast(name)] = dispatcher.library
+			dispatcher.language = Sincerity.Objects.ensure(dispatcher.language, name)
+			dispatcher.manual = Sincerity.Objects.ensure(dispatcher.manual, '/prudence/dispatch/{language}/'.cast(dispatcher))
+			dispatcher.library = Sincerity.Objects.ensure(dispatcher.library, '/resources/')
+			this.globals['prudence.dispatch.{language}.library'.cast(dispatcher)] = dispatcher.library
+			this.dispatchers[name] = dispatcher
 			return dispatcher
 		}
 		
@@ -914,7 +920,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
 
 				if (sincerity.verbosity >= 2) {
-					println('    Textual:')
+					println('    Scriptlet:')
 					println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
 
@@ -1118,6 +1124,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @param {Object} [routes]
 	 * @param {String} [routingMode='best']
+	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Router = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Router */
@@ -1127,14 +1134,16 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['routes', 'routingMode']
+		Public._configure = ['routes', 'routingMode', 'cacheDuration']
 
 		Public.create = function(app, uri) {
 			importClass(
 				com.threecrickets.prudence.PrudenceRouter,
 				org.restlet.routing.Router)
 			
-			var router = new PrudenceRouter(app.context, app.settings.code.minimumTimeBetweenValidityChecks)
+			this.cacheDuration = Sincerity.Objects.ensure(this.cacheDuration, app.settings.code.minimumTimeBetweenValidityChecks)
+
+			var router = new PrudenceRouter(app.context, this.cacheDuration)
 			
 			if (Sincerity.Objects.isString(this.routingMode)) {
 				if (this.routingMode == 'best') {
@@ -1220,6 +1229,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {Array} [restlets]
+	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Chain = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Chain */
@@ -1229,12 +1239,14 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['restlets']
+		Public._configure = ['restlets', 'cacheDuration']
 
 		Public.create = function(app, uri) {
 			importClass(com.threecrickets.prudence.util.Fallback)
 			
-			var fallback = new Fallback(app.context, app.settings.code.minimumTimeBetweenValidityChecks)
+			this.cacheDuration = Sincerity.Objects.ensure(this.cacheDuration, app.settings.code.minimumTimeBetweenValidityChecks)
+			
+			var fallback = new Fallback(app.context, this.cacheDuration)
 			
 			if (Sincerity.Objects.exists(this.restlets)) {
 				for (var i in this.restlets) {

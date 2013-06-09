@@ -12,10 +12,10 @@ SampleResource = Sincerity.Classes.define(function() {
 
 	Public.handleGet = function(conversation) {
 		if (conversation.mediaTypeName == 'text/html') {
-			return '<html><body><p>This is a sample resource</p></body></html>'
+			return '<html><body><p>This is a sample manual resource</p></body></html>'
 		}
 		else {
-			return 'This is a sample resource'
+			return 'This is a sample manual resource'
 		}
 	}
 

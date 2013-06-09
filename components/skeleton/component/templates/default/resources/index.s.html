@@ -6,7 +6,17 @@
 	Your Prudence application skeleton has been successfully create! Time to start programming...
 </p>
 <p>
-	Click <a href="sample/">here</a> to see the sample resource.
+	It is currently:
+<%
+document.executeOnce('/sincerity/localization/')
+print(Sincerity.Localization.formatDateTime(new Date(), 'hh:mm:ss a'))
+%>
+</p>
+<p>
+	Click <a href="sample1/">here</a> to see the sample manual resource.
+</p>
+<p>
+	Click <a href="sample2/">here</a> to see the sample scriptlet resource.
 </p>
 
 <%& '/site/footer/' %>
