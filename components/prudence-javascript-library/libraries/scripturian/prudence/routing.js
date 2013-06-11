@@ -409,7 +409,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			this.hidden = []
-
+			
 			// Inbound root (a router)
 			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
 			
@@ -748,7 +748,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				if (sincerity.verbosity >= 2) {
 					println('    Manual:')
-					println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
+					println('      Root: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
 
 				var delegatedResource = {
@@ -858,7 +858,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Scriptlet
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [fragmentsRoot]
 	 * @param {String[]} [passThroughs]
 	 * @param {String} [preExtension='s']
@@ -892,7 +892,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					this.root = new File(app.root, this.root).absoluteFile
 				}
 				
-				this.fragmentsRoot = Sincerity.Objects.ensure(this.fragmentsRoot, 'fragments')
+				this.fragmentsRoot = Sincerity.Objects.ensure(this.fragmentsRoot, 'libraries')
 				if (!(this.fragmentsRoot instanceof File)) {
 					this.fragmentsRoot = new File(app.root, this.fragmentsRoot).absoluteFile
 				}
@@ -921,7 +921,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				if (sincerity.verbosity >= 2) {
 					println('    Scriptlet:')
-					println('      Library: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
+					println('      Root: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
 
 				var generatedTextResource = {
@@ -944,7 +944,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				// Fragments
 				if (Sincerity.Objects.exists(this.fragmentsRoot)) {
 					if (sincerity.verbosity >= 2) {
-						println('      Fragments: "{0}"'.cast(sincerity.container.getRelativePath(this.fragmentsRoot)))
+						println('      Libraries: "{0}"'.cast(sincerity.container.getRelativePath(this.fragmentsRoot)))
 					}
 					generatedTextResource.extraDocumentSources.add(app.createDocumentSource(this.fragmentsRoot, null, this.defaultDocumentName, this.defaultExtenion))
 				}
@@ -952,13 +952,13 @@ Prudence.Routing = Prudence.Routing || function() {
 				// Common fragments
 				var commonFragmentsDocumentSource = app.component.context.attributes.get('prudence.fragmentsDocumentSource')
 				if (!Sincerity.Objects.exists(commonFragmentsDocumentSource)) {
-					var library = sincerity.container.getFile('libraries', 'prudence')
+					var library = sincerity.container.getFile('libraries', 'prudence-scriptlet')
 					commonFragmentsDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
 					app.component.context.attributes.put('prudence.fragmentsDocumentSource', commonFragmentsDocumentSource)
 				}
 
 				if (sincerity.verbosity >= 2) {
-					println('      Common fragments: "{0}"'.cast(sincerity.container.getRelativePath(commonFragmentsDocumentSource.basePath)))
+					println('      Common libraries: "{0}"'.cast(sincerity.container.getRelativePath(commonFragmentsDocumentSource.basePath)))
 				}
 				generatedTextResource.extraDocumentSources.add(commonFragmentsDocumentSource)
 
