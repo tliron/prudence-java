@@ -11,15 +11,15 @@
 ; at http://threecrickets.com/
 ;
 
-(require 'prudence.dispatch.resource)
+(require 'prudence.dispatcher.resource)
 
 (def resources {})
 
-(.executeOnce document (.. application (getGlobals) (get "prudence.dispatch.clojure.library")))
+(.executeOnce document (.. application (getGlobals) (get "prudence.dispatcher.clojure.resources")))
 
 (defn get-resource [conversation]
   (let
-    [id (.. conversation (getLocals) (get "prudence.dispatch.id"))]
+    [id (.. conversation (getLocals) (get "prudence.dispatcher.id"))]
     (resources id)))
 
 (defn handle-init [conversation]

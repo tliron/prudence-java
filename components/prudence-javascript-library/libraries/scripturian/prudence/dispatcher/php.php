@@ -16,11 +16,11 @@ global $resources;
 
 $resources = array();
 
-$document->executeOnce($application->globals['prudence.dispatch.php.library']);
+$document->executeOnce($application->globals['prudence.dispatcher.php.resources']);
 
 function handle($conversation, $method) {
 	global $resources;
-	$id = $conversation->locals['prudence.dispatch.id'];
+	$id = $conversation->locals['prudence.dispatcher.id'];
 	$resource = $resources[$id];
 	if (is_null($resource)) {
 		$conversation->statusCode = 404;

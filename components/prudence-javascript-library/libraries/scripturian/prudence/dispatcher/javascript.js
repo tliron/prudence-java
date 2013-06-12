@@ -11,46 +11,45 @@
 // at http://threecrickets.com/
 //
 
-resources = [:]
+var resources = {}
 
-document.executeOnce(application.globals['prudence.dispatch.groovy.library'])
+document.executeOnce(application.globals.get('prudence.dispatcher.javascript.resources'))
 
-handle = { conversation, method ->
-	id = conversation.locals['prudence.dispatch.id']
-	resource = resources[id]
-	if (resource == null) {
+function handle(conversation, method) {
+	var id = conversation.locals.get('prudence.dispatcher.id')
+	var resource = resources[id]
+	if (undefined === resource) {
 		conversation.statusCode = 404
 		return null
 	}
-	try {
-		return resource."$method"(conversation)
-	}
-	catch (MissingMethodException x) {
+	method = resource[method]
+	if (undefined === method) {
 		conversation.statusCode = 405
 		return null
 	}
+	return method.call(resource, conversation)
 }
 
-handleInit = { conversation ->
+function handleInit(conversation) {
 	handle(conversation, 'handleInit')
 }
 
-handleGet = { conversation ->
+function handleGet(conversation) {
 	return handle(conversation, 'handleGet')
 }
 
-handleGetInfo = { conversation ->
+function handleGetInfo(conversation) {
 	return handle(conversation, 'handleGetInfo')
 }
 
-handlePost = { conversation ->
+function handlePost(conversation) {
 	return handle(conversation, 'handlePost')
 }
 
-handlePut = { conversation ->
+function handlePut(conversation) {
 	return handle(conversation, 'handlePut')
 }
 
-handleDelete = { conversation ->
+function handleDelete(conversation) {
 	return handle(conversation, 'handleDelete')
 }

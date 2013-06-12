@@ -1861,7 +1861,7 @@ Specifically, URI templates can be captured to mapped resources.
 without
 \emph default
  the user ID.
- To capture and hide together you can use the following shortcut:
+ To capture and hide together you can use the following shortcut notation:
 \end_layout
 
 \begin_layout Standard
@@ -1895,7 +1895,16 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-You can also configure capturing and hiding separately.
+That final 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+ implies hiding.
+ You can also configure capturing and hiding separately.
  The following is equivalent to the above:
 \end_layout
 
@@ -2016,7 +2025,7 @@ We've used a scriptlet resource in this example, but capturing can be used
 \end_layout
 
 \begin_layout Subsubsection
-Problems with Resource Mapping
+Limitations of Resource Mapping
 \end_layout
 
 \begin_layout Standard
@@ -2072,7 +2081,7 @@ URI Capturing
 
 \begin_layout Standard
 URI capturing, for the purpose of the URI/resource separation paradigm,
- is only applicable to scriptlet resources.
+ only makes sense for scriptlet resources.
  For manual resources, use resource dispatching (explained below) instead.
 \end_layout
 
@@ -2092,8 +2101,14 @@ URI rewriting
 \begin_inset Quotes erd
 \end_inset
 
-), with the added ability to use hidden URIs as the destination.
- This includes both scriptlet resource files in you application's 
+), 
+\emph on
+with the added ability to use hidden URIs as the destination
+\emph default
+.
+ It's this added ability which makes URI capturing useful for URI/resource
+ separation: hidden URIs include both scriptlet resource files in your applicati
+on's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2113,8 +2128,7 @@ hidden
 \end_layout
 
 \begin_layout Standard
-This straightforward ability gives you complete control over URI/resource
- separation: you can put your scriptlet resources under 
+The effect is that you can put your scriptlet resources under 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2208,10 +2222,9 @@ Resource Dispatching
 \end_layout
 
 \begin_layout Standard
-Resource dispatching is only available for manual resources.
- It just doesn't make sense for scriptlet and static resources: however,
- URI capturing (explained above) provides equivalent URI/resource separation
- and can be used for non-manual resources.
+Resource dispatching, for the purpose of the URI/resource separation paradigm,
+ only makes sense for manual resources.
+ For scriptlet resources, use URI capturing (explained above) instead.
 \end_layout
 
 \begin_layout Standard
@@ -2495,7 +2508,8 @@ Object-oriented inheritance is one useful way to reuse code while allowing
 \end_layout
 
 \begin_layout Standard
-When defining the dispatch, you can also set conversation.locals to set values:
+When defining the dispatch, you can also set conversation.locals to set values.
+ You would need to use the long-form configuration for this:
 \end_layout
 
 \begin_layout Standard
@@ -2522,7 +2536,7 @@ app.routes = {
 \begin_layout Plain Layout
 
 	'/user/{userId}/profile: {type: 'dispatch', id: 'user', locals: {section:
- profile'}}
+ 'profile'}}
 \end_layout
 
 \begin_layout Plain Layout
@@ -2625,6 +2639,11 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
 	python: '/resources/'
 \end_layout
 
@@ -2648,7 +2667,7 @@ Dispatching is handled by special manual resources that can be found in
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scripturian/prudence/dispatch/
+/libraries/scripturian/prudence/dispatcher/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2657,7 +2676,7 @@ Dispatching is handled by special manual resources that can be found in
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scripturian/prudence/dispatch/javascript.js
+/libraries/scripturian/prudence/dispatcher/javascript.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -2667,9 +2686,17 @@ Dispatching is handled by special manual resources that can be found in
 \end_layout
 
 \begin_layout Standard
-You can furthermore write your own dispatcher to handle more complex dispatching
- paradigms.
- To configure it:
+You can furthermore write your own dispatchers to handle more complex dispatchin
+g paradigms.
+ An example configuration of overriding the default 
+\begin_inset Quotes eld
+\end_inset
+
+javascript
+\begin_inset Quotes erd
+\end_inset
+
+ dispatcher:
 \end_layout
 
 \begin_layout Standard
@@ -2684,17 +2711,22 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
 	javascript: {
 \end_layout
 
 \begin_layout Plain Layout
 
-		library: '/resources/',
+		dispatcher: '/dispatchers/mydispatcher/',
 \end_layout
 
 \begin_layout Plain Layout
 
-		manual: '/dispatchers/mydispatcher/'
+		resources: '/resources/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2722,6 +2754,114 @@ You would then need a
 \end_inset
 
  file under your application's subdirectory.
+ You would be able to access the dispatch ID as the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.dispatcher.id
+\begin_inset Quotes erd
+\end_inset
+
+ conversation.local.
+\end_layout
+
+\begin_layout Standard
+Note that you do not need to override the default dispatchers, and can use
+ any dispatcher name:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	special: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		dispatcher: '/dispatchers/myspecialdispatcher/',
+\end_layout
+
+\begin_layout Plain Layout
+
+		customValue1: 'hello',
+\end_layout
+
+\begin_layout Plain Layout
+
+		customValue2: 'world'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+customValue1
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+customValue2
+\begin_inset Quotes erd
+\end_inset
+
+ would then be available to your dispatcher code as the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.dispatcher.special.customValue1
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.dispatcher.special.customValue2
+\begin_inset Quotes erd
+\end_inset
+
+ application.globals respectively (replace 
+\begin_inset Quotes eld
+\end_inset
+
+special
+\begin_inset Quotes erd
+\end_inset
+
+ in the name with your dispatcher name).
+ Thus, you can configure your dispatcher in routing.js.
 \end_layout
 
 \begin_layout Subsection
