@@ -205,11 +205,11 @@
 			<arg value=":" />
 			<arg value="repositories:attach" />
 			<arg value="public" />
-			<arg value="three-crickets" />
+			<arg value="${component}" />
 			<arg value="maven" />
 			<arg value="${dependencies.repo}" />
 			<arg value=":" />
-			<arg value="dependencies:install" />
+			<arg value="artifacts:install" />
 			<arg value=":" />
 			<arg value="repositories:detach" />
 			<arg value="public" />
