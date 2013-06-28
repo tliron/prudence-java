@@ -18,7 +18,7 @@ app.routes = {
 	// Dispatched resource
 	'/sample1/': '@sample1', // see /libraries/resources/sample.js
 	// Captured resource
-	'/sample2/': '/resources/sample/' // see /fragments/resources/sample.html
+	'/sample2/': '/sample/' // see /libraries/fragments/sample.html
 }
 
 app.dispatchers = {

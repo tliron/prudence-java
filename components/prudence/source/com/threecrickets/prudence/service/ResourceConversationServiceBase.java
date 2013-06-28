@@ -42,7 +42,7 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 *        The resource
 	 * @param entity
 	 *        The client entity or null
-	 * @param preferences
+	 * @param negotiated
 	 *        The negotiated client preferences or null
 	 * @param defaultCharacterSet
 	 *        The character set to use if unspecified by variant
@@ -54,23 +54,23 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 * @param fileUploadDirectory
 	 *        The directory in which to place uploaded files
 	 */
-	public ResourceConversationServiceBase( R resource, Representation entity, Variant preferences, CharacterSet defaultCharacterSet, List<Encoding> supportedEncodings, int fileUploadSizeThreshold,
+	public ResourceConversationServiceBase( R resource, Representation entity, Variant negotiated, CharacterSet defaultCharacterSet, List<Encoding> supportedEncodings, int fileUploadSizeThreshold,
 		File fileUploadDirectory )
 	{
 		super( fileUploadSizeThreshold, fileUploadDirectory );
 
 		this.resource = resource;
 		this.entity = entity;
-		this.preferences = preferences != null ? preferences : getPreferredVariant();
+		this.negotiated = negotiated != null ? negotiated : resource.getConnegService().getPreferredVariant( resource.getVariants(), resource.getRequest(), resource.getMetadataService() );
 
-		if( preferences != null )
+		if( negotiated != null )
 		{
-			mediaType = preferences.getMediaType();
-			characterSet = preferences.getCharacterSet();
+			mediaType = negotiated.getMediaType();
+			characterSet = negotiated.getCharacterSet();
 
 			if( supportedEncodings != null )
 			{
-				List<Encoding> preferredEncodings = preferences.getEncodings();
+				List<Encoding> preferredEncodings = negotiated.getEncodings();
 				for( Encoding encoding : supportedEncodings )
 				{
 					if( preferredEncodings.contains( encoding ) )
@@ -308,9 +308,9 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 * 
 	 * @return The negotiated preferences or null if not available
 	 */
-	public Variant getPreferences()
+	public Variant getNegotiated()
 	{
-		return preferences;
+		return negotiated;
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	}
 
 	//
-	// ConversationServiceBase
+	// ConversationService
 	//
 
 	/**
@@ -360,7 +360,7 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	/**
 	 * The negotiated client preferences.
 	 */
-	private final Variant preferences;
+	private final Variant negotiated;
 
 	/**
 	 * The client entity.
@@ -386,21 +386,4 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 * The media type.
 	 */
 	private MediaType mediaType;
-
-	/**
-	 * The preferred variant
-	 */
-	private Variant preferredVariant;
-
-	/**
-	 * The preferred variant.
-	 * 
-	 * @return The preferred variant
-	 */
-	private Variant getPreferredVariant()
-	{
-		if( preferredVariant == null )
-			preferredVariant = resource.getConnegService().getPreferredVariant( resource.getVariants(), resource.getRequest(), resource.getMetadataService() );
-		return preferredVariant;
-	}
 }

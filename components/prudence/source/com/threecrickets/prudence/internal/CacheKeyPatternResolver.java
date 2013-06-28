@@ -62,8 +62,8 @@ public class CacheKeyPatternResolver extends Resolver<Object>
 			return documentDescriptor.getDefaultName();
 		else if( name.equals( APPLICATION_NAME_VARIABLE ) )
 			return resource.getApplication().getName();
-		else if( name.equals( PATH_TO_BASE_VARIABLE ) )
-			return conversationService.getPathToBase();
+		else if( name.equals( CONVERSATION_BASE_VARIABLE ) )
+			return conversationService.getBase();
 
 		return callResolver.resolve( name );
 	}
@@ -75,7 +75,7 @@ public class CacheKeyPatternResolver extends Resolver<Object>
 
 	private static final String APPLICATION_NAME_VARIABLE = "an";
 
-	private static final String PATH_TO_BASE_VARIABLE = "ptb";
+	private static final String CONVERSATION_BASE_VARIABLE = "cb";
 
 	private final DocumentDescriptor<Executable> documentDescriptor;
 

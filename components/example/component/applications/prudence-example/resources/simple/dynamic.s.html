@@ -1,4 +1,4 @@
-<%& '/fragments/header/' %>
+<%& '/header/' %>
 <%
 document.executeOnce('/util/')
 document.cacheDuration = 5000
@@ -7,4 +7,4 @@ document.cacheDuration = 5000
 	<p>
 		This is a dynamic page, generated via a scriptlet, at <%= getNow() %>. It is being cached for <%= document.cacheDuration / 1000 %> seconds.
 	</p>
-<%& '/fragments/footer/' %>
+<%& '/footer/' %>

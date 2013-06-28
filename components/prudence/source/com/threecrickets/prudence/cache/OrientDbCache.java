@@ -76,10 +76,12 @@ public class OrientDbCache implements Cache
 	/**
 	 * The logger.
 	 */
+	@SuppressWarnings("unused")
 	private final Logger logger = Logger.getLogger( this.getClass().getCanonicalName() );
 
 	/**
 	 * The database document pool.
 	 */
+	@SuppressWarnings("unused")
 	private final ODatabaseDocumentPool databaseDocumentPool;
 }

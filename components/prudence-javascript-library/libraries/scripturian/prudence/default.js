@@ -31,6 +31,15 @@ var Prudence = {}
  */
 
 /**
+ * Arguments sent to the Sincerity command line.
+ * <p>
+ * <i>Availability: only available for Sincerity programs and plugins.</i>
+ * 
+ * @name application.arguments
+ * @type String[]
+ */
+
+/**
  * Application globals are general purpose attributes accessible by any code in the application.
  * <p>
  * Names can be any string, but the convention is to use "." paths to allow for unique "namespaces"
@@ -171,13 +180,13 @@ var Prudence = {}
  * <p>
  * This is useful for querying additional information about the MIME type. For example:
  * <pre>
- * var mediaType = application.getMediaType('html')
+ * var mediaType = application.getMediaTypeByExtension('html')
  * print(mediaType.name + ': ' + mediaType.description)
  * </pre>
  * Note that each application has its own extension mapping table, which can
  * be configured in its settings.js, under "settings.mediaTypes".
  *
- * @name application.getMediaType
+ * @name application.getMediaTypeByExtension
  * @function
  * @param {String} extension The extension
  * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} The mapped media type, or null if the extension is not mapped
@@ -634,15 +643,15 @@ var Prudence = {}
  * <p>
  * It's also, importantly, less error-prone than hardcoding URIs. For example, here is snippet from a textual HTML resource:
  * <pre>
- * Click <a href="&lt;%= conversation.pathToBase %&gt;/contact/">here</a> to contact us.
+ * Click <a href="&lt;%= conversation.base %&gt;/contact/">here</a> to contact us.
  * </pre>
  * The above snippet can be used in <i>any</i> textual resource, no matter its URI, and will alwaus refer to the "/contact/"
  * URI starting at the root URI of the application.
  * <p>
- * Note that it can also be useful to use the pathToBase as part of your {@link document#cacheKeyPattern}, where it is
- * available as "{ptb}".
+ * Note that it can also be useful to use the base as part of your {@link document#cacheKeyPattern}, where it is
+ * available as "{cb}".
  *
- * @name conversation.pathToBase
+ * @name conversation.base
  * @type String
  */
 
@@ -928,8 +937,8 @@ var Prudence = {}
  */
 
 /**
- * Provides low-level access to the content preferences negotiated between those requested by the client and
- * those supported by your resource.
+ * Provides low-level access to the content preferences negotiated between those announced as supported by the client
+ * and those supported by your resource.
  * <p>
  * Note that this property is read-only. Usually you will not have to use it; instead, use the read/write properties
  * derived from this property:
@@ -943,13 +952,13 @@ var Prudence = {}
  * {@link conversation#modificationDate}, and
  * {@link conversation#disposition}.
  * <p>
- * Note that if you change the above properties, the conversation.preferences property will <i>not</i> change, and
+ * Note that if you change the above properties, the conversation.negotiated property will <i>not</i> change, and
  * instead reflect the original preferences negotiated with the client.
  * <p>
  * Note for manual resources: This property will be null during handleInit, which occurs before format
  * negotiation.
  * 
- * @name conversation.preferences
+ * @name conversation.negotiated
  * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Variant.html">org.restlet.representation.Variant</a>
  */
 
@@ -1015,6 +1024,13 @@ var Prudence = {}
  *
  * @name conversation.request
  * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Request.html">org.restlet.Request</a>
+ */
+
+/**
+ * Provides low-level access to the underlying Restlet client info instance for the current conversation.
+ *
+ * @name conversation.client
+ * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/ClientInfo.html">org.restlet.data.ClientInfo</a>
  */
 
 /**

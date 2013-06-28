@@ -1,22 +1,28 @@
-<%& '/fragments/header/' %>
+<%& '/header/' %>
 
 <h1>${APPLICATION}</h1>
 
 <p>
-	Your Prudence application skeleton has been successfully create! Time to start programming...
+	Your Prudence application skeleton has been successfully created! Time to start building your application...
 </p>
 <p>
-	It is currently:
+	This sample home page contains examples of a few Prudence features.
+</p>
+<p>
+	First, a scriptlet. It is currently:
 <%
 document.executeOnce('/sincerity/localization/')
 print(Sincerity.Localization.formatDateTime(new Date(), 'hh:mm:ss a'))
 %>
 </p>
 <p>
-	Click <a href="sample1/">here</a> to see the sample manual resource.
+	Next, two examples of URI/resource separation:
 </p>
 <p>
-	Click <a href="sample2/">here</a> to see the sample scriptlet resource.
+	Click <a href="sample1/">here</a> to see the sample dispatched manual resource.
+</p>
+<p>
+	Click <a href="sample2/">here</a> to see the sample captured scriptlet resource.
 </p>
 
-<%& '/fragments/footer/' %>
+<%& '/footer/' %>

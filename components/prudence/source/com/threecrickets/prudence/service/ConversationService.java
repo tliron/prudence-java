@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.ClientInfo;
 import org.restlet.data.Disposition;
 import org.restlet.data.Form;
 import org.restlet.data.LocalReference;
@@ -100,6 +101,7 @@ public class ConversationService
 	{
 		if( conversationCookies == null )
 			conversationCookies = ConversationCookie.wrapCookies( getRequest().getCookies(), getResponse().getCookieSettings() );
+
 		return conversationCookies;
 	}
 
@@ -187,8 +189,8 @@ public class ConversationService
 	 */
 	public boolean getStatusPassthrough()
 	{
-		Object passthrough = getRequest().getAttributes().get( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE );
-		return passthrough != null ? (Boolean) passthrough : false;
+		Boolean passthrough = (Boolean) getRequest().getAttributes().get( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE );
+		return passthrough != null ? passthrough : false;
 	}
 
 	/**
@@ -216,6 +218,16 @@ public class ConversationService
 	}
 
 	/**
+	 * A shortcut to the resource request client info.
+	 * 
+	 * @return The client info
+	 */
+	public ClientInfo getClient()
+	{
+		return getRequest().getClientInfo();
+	}
+
+	/**
 	 * A shortcut to the resource response.
 	 * 
 	 * @return The response
@@ -233,7 +245,10 @@ public class ConversationService
 	 */
 	public boolean isInternal()
 	{
-		return getReference().getSchemeProtocol().equals( Protocol.RIAP );
+		if( internal == null )
+			internal = getReference().getSchemeProtocol().equals( Protocol.RIAP );
+
+		return internal;
 	}
 
 	/**
@@ -255,12 +270,29 @@ public class ConversationService
 	 * 
 	 * @return The relative path
 	 */
+	public String getBase()
+	{
+		if( base == null )
+		{
+			Reference reference = getReference();
+
+			// Reverse relative reference
+			base = reference.getBaseRef().getRelativeRef( reference ).getPath();
+		}
+
+		return base;
+	}
+
+	/**
+	 * The relative path that would reach the base URI of the application if
+	 * appended to the current resource URI.
+	 * 
+	 * @return The relative path
+	 */
+	@Deprecated
 	public String getPathToBase()
 	{
-		Reference reference = getReference();
-
-		// Reverse relative reference
-		return reference.getBaseRef().getRelativeRef( reference ).getPath();
+		return getBase();
 	}
 
 	/**
@@ -274,6 +306,7 @@ public class ConversationService
 	{
 		if( queryAll == null )
 			queryAll = getRequest().getResourceRef().getQueryAsForm();
+
 		return queryAll;
 	}
 
@@ -289,6 +322,7 @@ public class ConversationService
 	{
 		if( query == null )
 			query = getQueryAll().getValuesMap();
+
 		return query;
 	}
 
@@ -312,6 +346,7 @@ public class ConversationService
 			else
 				formAll = new Form();
 		}
+
 		return formAll;
 	}
 
@@ -337,6 +372,7 @@ public class ConversationService
 					form.put( parameter.getName(), parameter.getValue() );
 			}
 		}
+
 		return form;
 	}
 
@@ -364,6 +400,7 @@ public class ConversationService
 			headers = new Form();
 			attributes.put( HEADERS_ATTRIBUTES, headers );
 		}
+
 		return headers;
 	}
 
@@ -436,4 +473,14 @@ public class ConversationService
 	 * The representation's disposition.
 	 */
 	private Disposition disposition = new Disposition();
+
+	/**
+	 * True if the request was received via the RIAP protocol.
+	 */
+	private Boolean internal;
+
+	/**
+	 * The relative path that would reach the base URI of the application.
+	 */
+	private String base;
 }

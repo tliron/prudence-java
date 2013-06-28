@@ -251,12 +251,21 @@ public class ApplicationService
 	 *        The MIME type name
 	 * @return The media type
 	 */
-	public MediaType getMediaType( String name )
+	public MediaType getMediaTypeByName( String name )
 	{
-		MediaType mediaType = MediaType.valueOf( name );
-		if( mediaType == null )
-			mediaType = getApplication().getMetadataService().getMediaType( name );
-		return mediaType;
+		return MediaType.valueOf( name );
+	}
+
+	/**
+	 * Get a media type by its extension.
+	 * 
+	 * @param extension
+	 *        The extension
+	 * @return The media type
+	 */
+	public MediaType getMediaTypeByExtension( String extension )
+	{
+		return getApplication().getMetadataService().getMediaType( extension );
 	}
 
 	/**

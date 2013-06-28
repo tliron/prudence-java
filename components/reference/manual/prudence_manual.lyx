@@ -1423,6 +1423,26 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filt
 \end_layout
 
 \begin_layout Paragraph
+injector
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Injector"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Injector"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
 cacheControl
 \end_layout
 
@@ -2025,6 +2045,336 @@ We've used a scriptlet resource in this example, but capturing can be used
 \end_layout
 
 \begin_layout Subsubsection
+Dynamic Capturing
+\end_layout
+
+\begin_layout Standard
+URI capturing can actually do more than just capture to a 
+\emph on
+single
+\emph default
+ URI: the target URI for a capture is, in fact, 
+\emph on
+also
+\emph default
+ a URI template, and moreover can include special variables that are dynamically
+ injected from the user request.
+\end_layout
+
+\begin_layout Standard
+For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/preferences/': '/database/preferences/{m}/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+{m}
+\begin_inset Quotes erd
+\end_inset
+
+ variable is injected with the request method name, for example 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It would thus capture to different target URIs depending on the request.
+ So, you could have 
+\begin_inset Quotes eld
+\end_inset
+
+/database/preferences/GET.html
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+/database/preferences/POST.html
+\begin_inset Quotes erd
+\end_inset
+
+ files in your 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory to handle different kinds of requests.
+\end_layout
+
+\begin_layout Standard
+You should cannot use the 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+ capture-and-hide trick with dynamic capturing, because Prudence cannot
+ know in advance which URIs to hide.
+ Use explicit hiding instead:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/database/preferences/GET/': '!',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/database/preferences/POST/': '!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A complete list of injected variables is available in the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet API documentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+
+\end_inset
+
+, but we'll summarize them here:
+\end_layout
+
+\begin_layout Paragraph
+Data Attributes
+\end_layout
+
+\begin_layout Standard
+All these refer to the data (“entity”) sent by the client or that you are
+ returning to the client.
+ Lowercase is used for request attributes, uppercase for response attributes.
+ We'll note these as pairs:
+\end_layout
+
+\begin_layout Itemize
+{es} or {ES}: entity size in bytes
+\end_layout
+
+\begin_layout Itemize
+{emt} or {EMT}: entity media type
+\end_layout
+
+\begin_layout Itemize
+{ecs} or {ECS}: entity character set
+\end_layout
+
+\begin_layout Itemize
+{el} or {EL}: entity language
+\end_layout
+
+\begin_layout Itemize
+{ee} or {EE}: entity encoding
+\end_layout
+
+\begin_layout Itemize
+{et} or {ET}: entity tag (HTTP ETag)
+\end_layout
+
+\begin_layout Itemize
+{eed} or {EED}: entity expiration date
+\end_layout
+
+\begin_layout Itemize
+{emd} or {EMD}: entity modification date
+\end_layout
+
+\begin_layout Paragraph
+Request Attributes
+\end_layout
+
+\begin_layout Itemize
+{d}: date (Unix timestamp)
+\end_layout
+
+\begin_layout Itemize
+{m}: the method (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{cia}: client IP address
+\end_layout
+
+\begin_layout Itemize
+{ciua}: client upstream IP address (if the request reached us through an
+ upstream load balancer)
+\end_layout
+
+\begin_layout Itemize
+{cig}: client agent name
+\end_layout
+
+\begin_layout Paragraph
+Response Attributes
+\end_layout
+
+\begin_layout Itemize
+{S}: the status code
+\end_layout
+
+\begin_layout Itemize
+{SIA}: server IP address
+\end_layout
+
+\begin_layout Itemize
+{SIP}: server port number
+\end_layout
+
+\begin_layout Itemize
+{SIG}: server agent name
+\end_layout
+
+\begin_layout Paragraph
+URIs
+\end_layout
+
+\begin_layout Standard
+We'll use a hyphen to show that you need to add one of the modifiers detailed
+ after this list.
+ For example, “{ri}” is the complete actual URI.
+\end_layout
+
+\begin_layout Itemize
+{p}: the protocol (“http,” “https,” “ftp,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{r-} or {R-}: actual URI (the capital “R” here refers to the response, which
+ may be different from the request if you're redirecting)
+\end_layout
+
+\begin_layout Itemize
+{h-}: virtual host URI
+\end_layout
+
+\begin_layout Itemize
+{o-}: the application's root URI on the virtual host
+\end_layout
+
+\begin_layout Itemize
+{f-}: the referring URI (usually means that the client clicked a hyperlink
+ or was redirected here)
+\end_layout
+
+\begin_layout Standard
+Add the following modifiers to URI values above in order to access the various
+ parts of the URI:
+\end_layout
+
+\begin_layout Itemize
+{-i}: the complete URI
+\end_layout
+
+\begin_layout Itemize
+{-a}: the authority (for URLs, this is the host or IP address)
+\end_layout
+
+\begin_layout Itemize
+{-h}: the host identifier (protocol + authority)
+\end_layout
+
+\begin_layout Itemize
+{-p}: the path
+\end_layout
+
+\begin_layout Itemize
+{-q}: the query
+\end_layout
+
+\begin_layout Itemize
+{-f}: the fragment
+\end_layout
+
+\begin_layout Itemize
+{-r}: the remaining part of the path
+\end_layout
+
+\begin_layout Itemize
+{-e}: the part of the path relative to the application's root URI
+\end_layout
+
+\begin_layout Standard
+Every URI also has a “base” URI, accessed via the “b” modifier.
+ Usually, this is the application's root URI on the virtual host.
+ You can add the URI modifiers above to this URI.
+ For example: “{rbi}”.
+\end_layout
+
+\begin_layout Subsubsection
 Limitations of Resource Mapping
 \end_layout
 
@@ -2112,7 +2462,7 @@ on's
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/
+/libraries/fragments/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2132,7 +2482,7 @@ The effect is that you can put your scriptlet resources under
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/
+/libraries/fragments/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2145,7 +2495,7 @@ For example, let's assume that you have the following files in
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/
+/libraries/fragments/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2217,6 +2567,10 @@ app.routes = {
 
 \end_layout
 
+\begin_layout Standard
+Note how the URI-space is organized completely differently from your filesystem.
+\end_layout
+
 \begin_layout Subsection
 Resource Dispatching
 \end_layout
@@ -2228,7 +2582,7 @@ Resource dispatching, for the purpose of the URI/resource separation paradigm,
 \end_layout
 
 \begin_layout Standard
-Configuring it is fairly straightforward.
+Configuring a dispatch is straightforward.
  In routing.js, use the 
 \begin_inset Quotes eld
 \end_inset
@@ -2662,12 +3016,24 @@ Custom Dispatching
 \end_layout
 
 \begin_layout Standard
-Dispatching is handled by special manual resources that can be found in
- the 
+Under the hood resource dispatching is handled by URI capturing.
+ The URI is captured to a special manual resource called a 
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scripturian/prudence/dispatcher/
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ with an injected value specifying to which resource it should dispatch.
+\end_layout
+
+\begin_layout Standard
+Prudence comes with a few dipsatchers to be found in the 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scripturian/prudence/dispatchers/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2676,7 +3042,7 @@ Dispatching is handled by special manual resources that can be found in
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scripturian/prudence/dispatcher/javascript.js
+/libraries/scripturian/prudence/dispatchers/javascript.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -2686,8 +3052,8 @@ Dispatching is handled by special manual resources that can be found in
 \end_layout
 
 \begin_layout Standard
-You can furthermore write your own dispatchers to handle more complex dispatchin
-g paradigms.
+However, you can also write your own dispatchers to handle more complex
+ dispatching paradigms.
  An example configuration of overriding the default 
 \begin_inset Quotes eld
 \end_inset

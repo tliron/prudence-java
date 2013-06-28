@@ -179,7 +179,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				org.restlet.data.Reference,
 				org.restlet.data.MediaType,
 				java.util.concurrent.CopyOnWriteArrayList,
-				java.util.concurrent.CopyOnWriteArraySet,
 				java.io.File)
 					
 			this.component = component
@@ -309,9 +308,6 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			// Libraries
 			this.libraryDocumentSources = new CopyOnWriteArrayList()
-			
-			// Pass-through documents
-			this.passThroughDocuments = new CopyOnWriteArraySet()
 
 			// Container library
 			var containerLibraryDocumentSource = component.context.attributes.get('prudence.containerLibraryDocumentSource')
@@ -582,7 +578,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			if (Sincerity.Objects.isString(dispatcher)) {
 				dispatcher = {resources: dispatcher}
 			}
-			dispatcher.dispatcher = Sincerity.Objects.ensure(dispatcher.dispatcher, '/prudence/dispatcher/{0}/'.cast(name))
+			dispatcher.dispatcher = Sincerity.Objects.ensure(dispatcher.dispatcher, '/prudence/dispatchers/{0}/'.cast(name))
 			for (var key in dispatcher) {
 				if (key != 'dispatcher') {
 					this.globals['prudence.dispatcher.{0}.{1}'.cast(name, key)] = dispatcher[key]
@@ -733,6 +729,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
 	 * @param {String[]} [passThroughs]
 	 * @param {String} [preExtension='m']
+	 * @param {Boolean} [trailingSlashRequired=true]
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Manual */
@@ -742,12 +739,13 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'passThroughs', 'preExtension']
+		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				importClass(
 					org.restlet.resource.Finder,
+					java.util.concurrent.CopyOnWriteArraySet,
 					java.io.File)
 
 				this.root = Sincerity.Objects.ensure(this.root, 'resources')
@@ -756,6 +754,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
+				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
 
 				if (sincerity.verbosity >= 2) {
 					println('    Manual:')
@@ -765,9 +764,10 @@ Prudence.Routing = Prudence.Routing || function() {
 				var delegatedResource = {
 					documentSource: app.createDocumentSource(this.root, this.preExtension),
 					libraryDocumentSources: app.libraryDocumentSources,
-					passThroughDocuments: app.passThroughDocuments,
+					passThroughDocuments: new CopyOnWriteArraySet(),
 					defaultName: app.settings.code.defaultDocumentName,
 					defaultLanguageTag: app.settings.code.defaultLanguageTag,
+					trailingSlashRequired: this.trailingSlashRequired,
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
@@ -798,7 +798,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					var dispatcherUri = dispatcherBaseUri + dispatcher.dispatcher
 					app.hidden.push(dispatcherUri)
 					if (sincerity.verbosity >= 2) {
-						println('      Dispatcher: "{0}" -> "{1}", "{2}"'.cast(name, dispatcherUri, dispatcher.library))
+						println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcherUri))
 					}
 				}
 
@@ -810,7 +810,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				app.delegatedResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
 			}
-			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension)) {
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired)) {
 				throw new SincerityException('You can configure a Manual only once per application')
 			}
 
@@ -873,6 +873,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [librariesRoot]
 	 * @param {String[]} [passThroughs]
 	 * @param {String} [preExtension='s']
+	 * @param {Boolean} [trailingSlashRequired=true]
 	 * @param {String} [defaultDocumentName='index']
 	 * @param {String} [defaultExtension='html']
 	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
@@ -886,7 +887,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'librariesRoot', 'passThroughs', 'preExtension', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins']
+		Public._configure = ['root', 'librariesRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
@@ -903,7 +904,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					this.root = new File(app.root, this.root).absoluteFile
 				}
 				
-				this.librariesRoot = Sincerity.Objects.ensure(this.librariesRoot, 'libraries')
+				this.librariesRoot = Sincerity.Objects.ensure(this.librariesRoot, 'libraries' + File.separator + 'fragments')
 				if (!(this.librariesRoot instanceof File)) {
 					this.librariesRoot = new File(app.root, this.librariesRoot).absoluteFile
 				}
@@ -929,6 +930,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
 				this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
+				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
 
 				if (sincerity.verbosity >= 2) {
 					println('    Scriptlet:')
@@ -939,7 +941,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					documentSource: app.createDocumentSource(this.root, this.preExtension, this.defaultDocumentName, this.defaultExtenion),
 					extraDocumentSources: new CopyOnWriteArrayList(),
 					libraryDocumentSources: app.libraryDocumentSources,
-					passThroughDocuments: app.passThroughDocuments,
+					passThroughDocuments: new CopyOnWriteArraySet(),
+					trailingSlashRequired: this.trailingSlashRequired,
 					cacheKeyPatternHandlers: new ConcurrentHashMap(),
 					scriptletPlugins: new ConcurrentHashMap(),
 					clientCachingMode: this.clientCachingMode,
@@ -991,7 +994,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				// Scriptlet plugins
 				for (var code in app.settings.scriptletPlugins) {
 					if (sincerity.verbosity >= 2) {
-						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptletPlugins[code].class.name))
+						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptletPlugins[code]))
 					}
 					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptletPlugins[code])
 				}
@@ -1004,7 +1007,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				
 				app.generatedTextResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
 			}
-			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.librariesRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode)) {
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.librariesRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode)) {
 				throw new SincerityException('You can configure a Scriptlet only once per application')
 			}
 			
@@ -1015,14 +1018,35 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Routes to a resource implementation via a dispatcher, which is a manual resource in
+	 * charge of forwarding entry point calls to the appropriate handlers.
+	 * <p>
+	 * This means that your application <i>must</i> have a {@link Prudence.Routing.Manual} configured for
+	 * it. If you try to configure a Dispatch without a Manual, you will get an error.
+	 * <p>
+	 * Prudence supports a special short-form notation for configuring this class: '@dispatcher:id'
+	 * or just '@id' (where "dispatcher" defaults to "javascript"). For example, "@clojure:record"
+	 * is equivalent to {type: 'dispatch', id: 'record', dispatcher: 'clojure'}.
+	 * <p>
+	 * This class will automatically inject a "prudence.dispatcher.id" local to the dispatcher, but
+	 * you can inject your own custom locals using the "locals" param.
+	 * <p>
+	 * The dispatcher configured here must be defined in the app.dispatchers dict. If not specified, it will
+	 * default to "javascript", for which the default document name is "/prudence/dispatchers/javascript/".
+	 * Indeed, Prudence comes with default dispatchers for all supported programming languages. However, you
+	 * are free to create your own custom dispatcher and specify it in app.dispatchers.
+	 * <p>
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CapturingRedirector.html">CapturingRedirector</a> instance
+	 * with an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a>
+	 * before it.
 	 *
 	 * @class
 	 * @name Prudence.Routing.Dispatch
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String} id
-	 * @param {Object} [locals]
 	 * @param {String} [dispatcher='javascript']
+	 * @param {Object} [locals]
 	 */
 	Public.Dispatch = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Dispatch */
@@ -1032,7 +1056,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['id', 'locals', 'dispatcher']
+		Public._configure = ['id', 'dispatcher', 'locals']
 
 		Public.create = function(app, uri) {
 			importClass(
@@ -1063,17 +1087,41 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * A server-side redirector that preserves the original URI used by the client (called the "captured URI").
+	 * <p>
+	 * Because the new request created by the redirector is actually an internal request, it can reach
+	 * hidden URIs. It thus allows you to "cloak" an existing URI while still allowing access to the resource via
+	 * a new one. A common use case is to expose a URI template instead of a URI that is not a template. 
+	 * <p>
+	 * If the target URI ends with a "!", it is specially interpreted to mean that the "hidden"
+	 * param is true (and the "!" is not actually include in the target). Hiding is actually
+	 * not handled by this class, but rather the {@link Prudence.Routing.Router}, but is available
+	 * here as convenient shortcut for the commonly used capture-and-hide paradigm. 
+	 * Note that you should not use the capture-and-hide trick with URI template targets, because
+	 * Prudence cannot know in advance which URIs to hide. Use explicit hiding instead.
+	 * <p>
+	 * Prudence supports a special short-form notation for configuring this class: a configuration
+	 * string starting with a "/" will be considered as a URI for a capture. For example, '/target/!'
+	 * is equivalent to {type: 'capture', uri: '/target/', hidden: true}.
+	 * <p>
+	 * Note that the target URI is in the URI template format, and can use variables from the
+	 * request. Not only that, but you can also use a host of Restlet-specific special variables:
+	 * see the <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html">Resolver</a>
+	 * documentation for a complete list.
+	 * <p>
+	 * Optionally supports value injection via the "locals" param.
+	 * 
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CapturingRedirector.html">CapturingRedirector</a> instance.
 	 * If "locals" is defined, inserts an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a>
-	 * filter before the Directory.
+	 * filter before the CapturingRedirector.
 	 *
 	 * @class
 	 * @name Prudence.Routing.Capture
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String} uri
-	 * @param {Boolean} hidden
-	 * @param {Object} locals
+	 * @param {Boolean} [hidden=false]
+	 * @param {Object} [locals]
 	 */
 	Public.Capture = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Capture */
@@ -1349,6 +1397,45 @@ Prudence.Routing = Prudence.Routing || function() {
 			var filter = new DelegatedFilter(app.context, this.next, this.library)
 			
 			return filter
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 * Implementation note: Internally handled by an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a> instance.
+	 *
+	 * @class
+	 * @name Prudence.Routing.Filter
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {Object} [locals]
+	 * @param {Object} next
+	 */
+	Public.Injector = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Injector */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['locals', 'next']
+
+		Public.create = function(app, uri) {
+			importClass(com.threecrickets.prudence.util.Injector)
+					
+			this.next = app.createRestlet(this.next, uri)
+			var injector = new Injector(app.context, this.next)
+
+			// Locals
+			if (Sincerity.Objects.exists(this.locals)) {
+				for (var i in this.locals) {
+					injector.values.put(i, this.locals[i])
+				}
+			}
+   
+			return injector
 		}
 		
 		return Public
