@@ -286,12 +286,12 @@
 	</target>
 
 	<target name="deploy-googledrive" if="googledrive.repo" description="Deploy to Google Drive">
-		<googlecode suffix="-installer.jar" />
-		<googlecode suffix=".zip" />
-		<googlecode suffix=".rpm" />
-		<googlecode suffix=".deb" />
-		<googlecode suffix="-osx-installer.zip" />
-		<googlecode suffix="-windows-installer.exe" />
+		<googledrive suffix="-installer.jar" />
+		<googledrive suffix=".zip" />
+		<googledrive suffix=".rpm" />
+		<googledrive suffix=".deb" />
+		<googledrive suffix="-osx-installer.zip" />
+		<googledrive suffix="-windows-installer.exe" />
 	</target>
 	
 	<target name="deploy-googlecode" if="googlecode.password" description="Deploy to Google Code">
