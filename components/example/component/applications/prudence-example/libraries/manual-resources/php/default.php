@@ -1,6 +1,6 @@
 <?php
 
-require 'resources/php/person.php';
+require 'manual-resources/php/person.php';
 
 global $resources;
 

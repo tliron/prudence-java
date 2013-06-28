@@ -870,7 +870,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [librariesRoot]
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/scriptlet-resources']
 	 * @param {String[]} [passThroughs]
 	 * @param {String} [preExtension='s']
 	 * @param {Boolean} [trailingSlashRequired=true]
@@ -887,7 +887,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'librariesRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins']
+		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
@@ -904,9 +904,9 @@ Prudence.Routing = Prudence.Routing || function() {
 					this.root = new File(app.root, this.root).absoluteFile
 				}
 				
-				this.librariesRoot = Sincerity.Objects.ensure(this.librariesRoot, 'libraries' + File.separator + 'fragments')
-				if (!(this.librariesRoot instanceof File)) {
-					this.librariesRoot = new File(app.root, this.librariesRoot).absoluteFile
+				this.includeRoot = Sincerity.Objects.ensure(this.includeRoot, 'libraries' + File.separator + 'scriptlet-resources')
+				if (!(this.includeRoot instanceof File)) {
+					this.includeRoot = new File(app.root, this.includeRoot).absoluteFile
 				}
 
 				if (Sincerity.Objects.isString(this.clientCachingMode)) {
@@ -956,22 +956,22 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 
 				// Libraries
-				if (Sincerity.Objects.exists(this.librariesRoot)) {
+				if (Sincerity.Objects.exists(this.includeRoot)) {
 					if (sincerity.verbosity >= 2) {
-						println('      Libraries: "{0}"'.cast(sincerity.container.getRelativePath(this.librariesRoot)))
+						println('      Includes: "{0}"'.cast(sincerity.container.getRelativePath(this.includeRoot)))
 					}
-					generatedTextResource.extraDocumentSources.add(app.createDocumentSource(this.librariesRoot, null, this.defaultDocumentName, this.defaultExtenion))
+					generatedTextResource.extraDocumentSources.add(app.createDocumentSource(this.includeRoot, null, this.defaultDocumentName, this.defaultExtenion))
 				}
 
 				// Common libraries
 				if (!Sincerity.Objects.exists(app.commonScriptletDocumentSource)) {
-					var library = sincerity.container.getFile('libraries', 'prudence-scriptlet')
+					var library = sincerity.container.getFile('libraries', 'prudence-scriptlet-resources')
 					app.commonScriptletDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
 					app.commonScriptletDocumentSource = app.commonScriptletDocumentSource
 				}
 
 				if (sincerity.verbosity >= 2) {
-					println('      Common libraries: "{0}"'.cast(sincerity.container.getRelativePath(app.commonScriptletDocumentSource.basePath)))
+					println('      Common includes: "{0}"'.cast(sincerity.container.getRelativePath(app.commonScriptletDocumentSource.basePath)))
 				}
 				generatedTextResource.extraDocumentSources.add(app.commonScriptletDocumentSource)
 
@@ -1007,7 +1007,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				
 				app.generatedTextResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
 			}
-			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.librariesRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode)) {
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.includeRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode)) {
 				throw new SincerityException('You can configure a Scriptlet only once per application')
 			}
 			

@@ -16,11 +16,11 @@ app.routes = {
 					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
 	],
 	// Dispatched resource
-	'/sample1/': '@sample1', // see /libraries/resources/sample.js
+	'/sample1/': '@sample1', // see /libraries/manual-resources/sample.js
 	// Captured resource
-	'/sample2/': '/sample/' // see /libraries/fragments/sample.html
+	'/sample2/': '/sample/' // see /libraries/scriptlet-resources/sample.html
 }
 
 app.dispatchers = {
-	javascript: '/resources/'
+	javascript: '/manual-resources/'
 }

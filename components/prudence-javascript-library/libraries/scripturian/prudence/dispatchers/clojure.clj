@@ -11,7 +11,7 @@
 ; at http://threecrickets.com/
 ;
 
-(require 'prudence.dispatcher.resource)
+(require 'prudence.dispatchers.resource)
 
 (def resources {})
 

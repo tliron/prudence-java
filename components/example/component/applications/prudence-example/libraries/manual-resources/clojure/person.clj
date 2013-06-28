@@ -1,5 +1,5 @@
 
-(ns resources.clojure.person
+(ns manual-resources.clojure.person
   (:use prudence.dispatch.resource))
 
 (deftype Person []

@@ -2462,7 +2462,7 @@ on's
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/fragments/
+/libraries/scriptlet-resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2482,7 +2482,7 @@ The effect is that you can put your scriptlet resources under
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/fragments/
+/libraries/scriptlet-resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2495,7 +2495,7 @@ For example, let's assume that you have the following files in
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/fragments/
+/libraries/scriptlet-resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -5977,7 +5977,7 @@ Merge
 \end_layout
 
 \begin_layout Enumerate
-Merge 
+Move 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5985,11 +5985,11 @@ Merge
 \begin_inset Quotes erd
 \end_inset
 
- into 
+ to 
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/
+/libraries/scriptlet-resources
 \begin_inset Quotes erd
 \end_inset
 

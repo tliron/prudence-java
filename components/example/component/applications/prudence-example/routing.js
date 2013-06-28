@@ -14,21 +14,21 @@ app.routes = {
 					'static',
 					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
 	],
-	'/person/{id}/': '@person',
-	'/pythonperson/{id}/': '@python:person',
-	'/groovyperson/{id}/': '@groovy:person',
-	'/phpperson/{id}/': '@php:person',
-	'/rubyperson/{id}/': '@ruby:person',
+	'/person/{id}/':        '@person',
+	'/pythonperson/{id}/':  '@python:person',
+	'/groovyperson/{id}/':  '@groovy:person',
+	'/phpperson/{id}/':     '@php:person',
+	'/rubyperson/{id}/':    '@ruby:person',
 	'/clojureperson/{id}/': '@clojure:person'
 }
 
 app.dispatchers = {
-	javascript: '/resources/javascript/',
-	python: '/resources/python/',
-	ruby: '/resources/ruby/',
-	groovy: '/resources/groovy/',
-	clojure: '/resources/clojure/',
-	php: '/resources/php/'
+	javascript: '/manual-resources/javascript/',
+	python:     '/manual-resources/python/',
+	ruby:       '/manual-resources/ruby/',
+	groovy:     '/manual-resources/groovy/',
+	clojure:    '/manual-resources/clojure/',
+	php:        '/manual-resources/php/'
 }
 
 //

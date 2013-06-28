@@ -11,6 +11,5 @@ app.routes = {
 			'static',
 			{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}
 	],
-	'/data/note/{id}/': '/data/note/',
-	'/data/note/': 'hidden'
+	'/data/note/{id}/': '/data/note/!'
 }
