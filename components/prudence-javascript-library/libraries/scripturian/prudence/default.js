@@ -1233,6 +1233,8 @@ var Prudence = {}
 /**
  * Adds a server-supported media (MIME) type for content negotiation.
  * <p>
+ * It is a shortcut, equivalent to calling: conversation.resource.variants.add(mediaType).
+ * <p>
  * This is a low-level version, you may prefer to use {@link conversation#addMediaTypeByName} instead.
  * <p>
  * <i>Availability: only available for manual resources.</i>
@@ -1240,6 +1242,16 @@ var Prudence = {}
  * @name conversation.addMediaType
  * @function
  * @param {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
+ * @see conversation#addMediaTypeWithLanguage
+ */
+
+/**
+ * A variant of {@link conversation#addMediaType} that supports an additional "language" param.
+ * 
+ * @name conversation.addMediaTypeWithLanguage
+ * @function
+ * @param {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
+ * @type {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
  */
 
 /**
@@ -1283,6 +1295,16 @@ var Prudence = {}
  * @name conversation.addMediaTypeByName
  * @function
  * @param {String} mediaTypeName The MIME type name
+ * @see conversation#addMediaTypeByNameWithLanguage
+ */
+
+/**
+ * A variant of {@link conversation#addMediaTypeByName} that supports an additional "languageName" param.
+ * 
+ * @name conversation.addMediaTypeByNameWithLanguage
+ * @function
+ * @param {String} mediaTypeName The MIME type name
+ * @param {String} languageName The language name
  */
 
 /**
@@ -1298,6 +1320,16 @@ var Prudence = {}
  * @name conversation.addMediaTypeByExtension
  * @function
  * @param {String} mediaTypeExtension The MIME type extension
+ * @see conversation#addMediaTypeByExtensionWithLanguage
+ */
+
+/**
+ * A variant of {@link conversation#addMediaTypeByExtension} that supports an additional "languageName" param.
+ * 
+ * @name conversation.addMediaTypeByExtensionWithLanguage
+ * @function
+ * @param {String} mediaTypeExtension The MIME type extension
+ * @param {String} languageName The language name
  */
 
 /**

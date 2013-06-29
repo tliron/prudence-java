@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import org.restlet.data.CacheDirective;
 import org.restlet.data.CharacterSet;
+import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Tag;
 import org.restlet.engine.header.HeaderConstants;
@@ -228,6 +229,19 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	/**
 	 * Adds a media type to the list of variants.
 	 * 
+	 * @param mediaType
+	 *        The media type
+	 * @param language
+	 *        The language
+	 */
+	public void addMediaTypeWithLanguage( MediaType mediaType, Language language )
+	{
+		getResource().getVariants().add( new Variant( mediaType, language ) );
+	}
+
+	/**
+	 * Adds a media type to the list of variants.
+	 * 
 	 * @param mediaTypeName
 	 *        The media type name
 	 */
@@ -239,12 +253,38 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	/**
 	 * Adds a media type to the list of variants.
 	 * 
+	 * @param mediaTypeName
+	 *        The media type name
+	 * @param languageName
+	 *        The language name
+	 */
+	public void addMediaTypeByNameWithLanguage( String mediaTypeName, String languageName )
+	{
+		getResource().getVariants().add( new Variant( MediaType.valueOf( mediaTypeName ), Language.valueOf( languageName ) ) );
+	}
+
+	/**
+	 * Adds a media type to the list of variants.
+	 * 
 	 * @param mediaTypeExtension
 	 *        The media type extension
 	 */
 	public void addMediaTypeByExtension( String mediaTypeExtension )
 	{
 		getResource().getVariants().add( new Variant( getResource().getApplication().getMetadataService().getMediaType( mediaTypeExtension ) ) );
+	}
+
+	/**
+	 * Adds a media type to the list of variants.
+	 * 
+	 * @param mediaTypeExtension
+	 *        The media type extension
+	 * @param languageName
+	 *        The language name
+	 */
+	public void addMediaTypeByExtensionWithLanguage( String mediaTypeExtension, String languageName )
+	{
+		getResource().getVariants().add( new Variant( getResource().getApplication().getMetadataService().getMediaType( mediaTypeExtension ), Language.valueOf( languageName ) ) );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

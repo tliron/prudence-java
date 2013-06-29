@@ -12,6 +12,7 @@
 package com.threecrickets.prudence.service;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 import org.restlet.Request;
@@ -67,6 +68,10 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 		{
 			mediaType = negotiated.getMediaType();
 			characterSet = negotiated.getCharacterSet();
+
+			Iterator<Language> negotiatedLanguages = negotiated.getLanguages().iterator();
+			if( negotiatedLanguages.hasNext() )
+				language = negotiatedLanguages.next();
 
 			if( supportedEncodings != null )
 			{
