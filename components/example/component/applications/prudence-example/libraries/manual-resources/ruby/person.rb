@@ -7,6 +7,6 @@ class Person
       
   def handle_get conversation
     id = conversation.locals['id']
-    return "I am person #{id}, formatted as \"#{conversation.mediaTypeName}\", encased in Ruby"
+    return "I am person #{id}, formatted as \"#{conversation.media_type_name}\", encased in Ruby"
   end
 end

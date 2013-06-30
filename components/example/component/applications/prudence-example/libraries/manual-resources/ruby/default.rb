@@ -1,6 +1,4 @@
 
-### BROKEN ###
-
 require 'manual-resources/ruby/person.rb'
 
 $resources = {
