@@ -573,8 +573,8 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		{type: 'cacheControl', 'default': -1, mediaTypes: {'image/png': 'farFuture',
- 'image/jpeg': 'farFuture', 'image/gif': 'farFuture'}, next:
+		{type: 'cacheControl', mediaTypes: {'image/png': 'farFuture', 'image/jpeg':
+ 'farFuture', 'image/gif': 'farFuture'}, next:
 \end_layout
 
 \begin_layout Plain Layout
@@ -604,12 +604,12 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/sample1/': '@sample1', // (dispatched)
+	'/sample1/': '@sample', // (dispatched)
 \end_layout
 
 \begin_layout Plain Layout
 
-	'/sample2/': '/resources/sample/' // (captured)
+	'/sample2/': '/sample/' // (captured)
 \end_layout
 
 \begin_layout Plain Layout
@@ -628,7 +628,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	javascript: '/resources/'
+	javascript: '/manual-resources/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -980,9 +980,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Capt
 \end_layout
 
 \begin_layout Paragraph
-
-\series bold
-hidden
+redirect
 \end_layout
 
 \begin_layout Standard
@@ -990,33 +988,39 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-!
+redirect
 \begin_inset Quotes erd
 \end_inset
 
- or 
+ type with a 
 \begin_inset Quotes eld
 \end_inset
 
-hidden
+uri
 \begin_inset Quotes erd
 \end_inset
 
- string values to hide a URI template.
- Prudence will always return a 404 error (
+ param, or any string starting with the 
 \begin_inset Quotes eld
 \end_inset
 
-not found
+>
 \begin_inset Quotes erd
 \end_inset
 
-) for this match.
- Note that internal requests always bypass this limitation, and so this
- functionality is useful if you want some URIs available in the internal
- URI-space but not the public one.
- This special value is not actually handled by a class, but rather is configured
- into the current router.
+ character, to asks the client to redirect (repeat its request) to a new
+ URI.
+ For example, {type: 'redirect', uri: 'http://newsite.org/user/profile/'}
+ is identical to '>http://newsite.org/user/profile/'.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Redirect"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Redirect"
+
+\end_inset
+
+ class.
 \end_layout
 
 \begin_layout Paragraph
@@ -1047,6 +1051,51 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddS
 \end_layout
 
 \begin_layout Paragraph
+
+\series bold
+hidden
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ string values to hide a URI.
+ Prudence will always return a 404 error (
+\begin_inset Quotes eld
+\end_inset
+
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) for this match.
+ Note that internal requests always bypass this limitation, and so this
+ functionality is useful if you want some URIs available in the internal
+ URI-space but not the public one.
+ This special value is not actually handled by a class, but rather is configured
+ into the current router.
+ Furthermore, 
+\emph on
+you cannot hide URI templates
+\emph default
+, only exact URI matches.
+\end_layout
+
+\begin_layout Paragraph
 resource
 \end_layout
 
@@ -1067,7 +1116,15 @@ class
 \begin_inset Quotes erd
 \end_inset
 
- param to attach a Restlet 
+ param, or any string starting with the 
+\begin_inset Quotes eld
+\end_inset
+
+$
+\begin_inset Quotes erd
+\end_inset
+
+ character, to attach a Restlet 
 \begin_inset CommandInset href
 LatexCommand href
 name "ServerResource"
@@ -1076,6 +1133,8 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/res
 \end_inset
 
 .
+ For example, {type: 'resource', 'class': 'org.myorg.PersonResource'} is identical
+ to '$org.myorg.PersonResource'.
  This is an easy way to combine Java-written Restlet libraries into your
  Prudence applications.
  Handled by the 
@@ -1427,11 +1486,36 @@ injector
 \end_layout
 
 \begin_layout Standard
-TODO
-\end_layout
+Use the 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-Handled by the 
+injector
+\begin_inset Quotes erd
+\end_inset
+
+ type with the 
+\begin_inset Quotes eld
+\end_inset
+
+locals
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ params to create an injector.
+ An injector is a simple filter that injects preset valued into conversation.loca
+ls.
+ This is useful for Inversion of Control (IoC): you can use these conversation.lo
+cals to alter the behavior of nested route types directly in your routing.js.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Injector"
@@ -1691,6 +1775,782 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Zuss
 \end_inset
 
  class.
+\end_layout
+
+\begin_layout Subsubsection
+Custom Route Types
+\end_layout
+
+\begin_layout Standard
+If you know how to use the Restlet library, then you can easily create your
+ own custom route types for Prudence:
+\end_layout
+
+\begin_layout Enumerate
+Create a JavaScript class that:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Implements a create(app, uri) method.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+app
+\begin_inset Quotes erd
+\end_inset
+
+ argument is the instance of Prudence.Routing.Application, and the 
+\begin_inset Quotes eld
+\end_inset
+
+uri
+\begin_inset Quotes erd
+\end_inset
+
+ argument is the URI template to which the route type instance should be
+ attached.
+ The method must return an instance of a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Restlet.html"
+
+\end_inset
+
+ subclass.
+\end_layout
+
+\begin_layout Enumerate
+Accepts a single argument, a dict, to the constructor.
+ The dict will be populated by the route type configuration dict in app.routes.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Add the class to Prudence.Routing.
+ Remember that the class name begins with an uppercase letter, but will
+ begin with a lowercase letter when referenced in app.routes.
+\end_layout
+
+\begin_layout Standard
+If you like, you can use Sincerity.Classes to create your class, and also
+ inherit from Prudence.Routing.Restlet.
+\end_layout
+
+\begin_layout Standard
+Here's complete example in which we implement a route type that redirects
+ using HTTP status code 303 (
+\begin_inset Quotes eld
+\end_inset
+
+see other
+\begin_inset Quotes erd
+\end_inset
+
+).
+ (Note this can also be achieved using the built-in 
+\begin_inset Quotes eld
+\end_inset
+
+redirect
+\begin_inset Quotes erd
+\end_inset
+
+ route type, and is here intended merely as an example.)
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Prudence.Routing.See = Sincerity.Classes.define(function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var Public = {}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	Public._inherit = Prudence.Routing.Restlet
+\end_layout
+
+\begin_layout Plain Layout
+
+	Public._configure = ['uri']
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	Public.create = function(app, uri) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			importClass(org.restlet.routing.Redirector)
+\end_layout
+
+\begin_layout Plain Layout
+
+			var redirector = new Redirector(app.context, this.uri, Redirector.MODE_CLIENT_SE
+E_OTHER)
+\end_layout
+
+\begin_layout Plain Layout
+
+			return redirector
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Public
+\end_layout
+
+\begin_layout Plain Layout
+
+}())
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/original/': {type: 'see', uri: 'http://newsite.org/new/uri/'}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Injecting Conversation Attributes
+\end_layout
+
+\begin_layout Standard
+As we've seen in the app.routes section above, URI template variables delimited
+ by curly brackets can be used to match incoming requests and extract the
+ values into conversation.locals.
+ For example, a 
+\begin_inset Quotes eld
+\end_inset
+
+/person/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ URI template will match the 
+\begin_inset Quotes eld
+\end_inset
+
+/person/linus/
+\begin_inset Quotes erd
+\end_inset
+
+ URI and set the 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+ conversation.local to 
+\begin_inset Quotes eld
+\end_inset
+
+linus
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Template variables can furthermore be used to 
+\emph on
+inject
+\emph default
+ values in three use cases:
+\end_layout
+
+\begin_layout Itemize
+Captured URI targets
+\end_layout
+
+\begin_layout Itemize
+Redirection URI targets
+\end_layout
+
+\begin_layout Itemize
+Cache keys (see caching)
+\end_layout
+
+\begin_layout Standard
+In each of these cases you can inject the same conversation.locals that were
+ extracted from the matched URI pattern.
+ For example, you can redirect from 
+\begin_inset Quotes eld
+\end_inset
+
+/person/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+http://newsite.org/profile/?id={id}
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Prudence furthermore supports many built-in variables extracted from the
+ conversation attributes.
+ A list of them is available in the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet API documentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+
+\end_inset
+
+, but we'll summarize them here in detail.
+\end_layout
+
+\begin_layout Subsubsection
+Request URIs
+\end_layout
+
+\begin_layout Standard
+The variables are composed of a prefix and a suffix.
+ The prefix specifies which URI you are referring to, while the suffix specified
+ which part of that URI you need.
+ For example, the prefix 
+\begin_inset Quotes eld
+\end_inset
+
+{r-}
+\begin_inset Quotes erd
+\end_inset
+
+ can be combined with the suffix 
+\begin_inset Quotes eld
+\end_inset
+
+{-i}
+\begin_inset Quotes erd
+\end_inset
+
+ for 
+\begin_inset Quotes eld
+\end_inset
+
+{ri}
+\begin_inset Quotes erd
+\end_inset
+
+, which is the complete actual URI.
+\end_layout
+
+\begin_layout Paragraph
+Prefixes
+\end_layout
+
+\begin_layout Itemize
+{r-}: actual URI (
+\bar under
+r
+\bar default
+eference)
+\end_layout
+
+\begin_layout Itemize
+{h-}: virtual 
+\bar under
+h
+\bar default
+ost URI
+\end_layout
+
+\begin_layout Itemize
+{o-}: the application's r
+\bar under
+o
+\bar default
+ot URI on the current virtual host
+\end_layout
+
+\begin_layout Itemize
+{f-}: the re
+\bar under
+f
+\bar default
+erring URI (sent by some clients: usually means that the client clicked
+ a hyperlink or was redirected here from elsewhere)
+\end_layout
+
+\begin_layout Paragraph
+Suffixes
+\end_layout
+
+\begin_layout Itemize
+{-i}: the complete URI (
+\bar under
+i
+\bar default
+dentitifer)
+\end_layout
+
+\begin_layout Itemize
+{-h}: the 
+\bar under
+h
+\bar default
+ost identifier (protocol + authority)
+\end_layout
+
+\begin_layout Itemize
+{-a}: the 
+\bar under
+a
+\bar default
+uthority (for URLs, this is the host or IP address)
+\end_layout
+
+\begin_layout Itemize
+{-p}: the 
+\bar under
+p
+\bar default
+ath (everything after the authority)
+\end_layout
+
+\begin_layout Itemize
+{-r}: the 
+\bar under
+r
+\bar default
+emaining part of the path after the base URI (see below)
+\end_layout
+
+\begin_layout Itemize
+{-e}: a r
+\bar under
+e
+\bar default
+lative path from the URI to the application's base URI (see below; note
+ that this is a constructed value, not merely a string extracted from the
+ URI)
+\end_layout
+
+\begin_layout Itemize
+{-q}: the 
+\bar under
+q
+\bar default
+uery (everything after the 
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+{-f}: the 
+\bar under
+f
+\bar default
+ragment (the tag after the 
+\begin_inset Quotes eld
+\end_inset
+
+#
+\begin_inset Quotes erd
+\end_inset
+
+; note that web browsers handle fragments internally and 
+\emph on
+never
+\emph default
+ send them to the server, however fragments may exist in URIs sent 
+\emph on
+from
+\emph default
+ the server: see the 
+\begin_inset Quotes eld
+\end_inset
+
+{R-}
+\begin_inset Quotes erd
+\end_inset
+
+ variable mentioned below)
+\end_layout
+
+\begin_layout Paragraph
+Base URIs
+\end_layout
+
+\begin_layout Standard
+Every URI also has a 
+\begin_inset Quotes eld
+\end_inset
+
+base
+\begin_inset Quotes erd
+\end_inset
+
+ version of it: in the case of wildcard patterns, it is the URI before the
+ wildcard begins.
+ Otherwise it is usually the application's root URI on the virtual host.
+ It is used in the 
+\begin_inset Quotes eld
+\end_inset
+
+{-r}
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+{-e}
+\begin_inset Quotes erd
+\end_inset
+
+ suffixes above.
+\end_layout
+
+\begin_layout Standard
+To refer to the base URI directly, use the special 
+\begin_inset Quotes eld
+\end_inset
+
+{-b-}
+\begin_inset Quotes erd
+\end_inset
+
+ suffix, which also function as a prefix to which you need to add one of
+ the above suffixed.
+ For example, “{rbi}” refers to the complete base URI of the actual URI.
+\end_layout
+
+\begin_layout Subsubsection
+Request Attributes
+\end_layout
+
+\begin_layout Itemize
+{p}: the 
+\bar under
+p
+\bar default
+rotocol (“http,” “https,” “ftp,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{m}: the 
+\bar under
+m
+\bar default
+ethod (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{d}: 
+\bar under
+d
+\bar default
+ate (as a Unix timestamp)
+\end_layout
+
+\begin_layout Subsubsection
+Client Attributes
+\end_layout
+
+\begin_layout Itemize
+{cia}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent IP 
+\bar under
+a
+\bar default
+ddress
+\end_layout
+
+\begin_layout Itemize
+{ciua}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent 
+\bar under
+u
+\bar default
+pstream IP 
+\bar under
+a
+\bar default
+ddress (if the request reached us through an upstream load balancer)
+\end_layout
+
+\begin_layout Itemize
+{cig}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent a
+\bar under
+g
+\bar default
+ent name (for example, and identifier for the browser)
+\end_layout
+
+\begin_layout Subsubsection
+Entity Attributes
+\end_layout
+
+\begin_layout Standard
+All these refer to the data (“entity”) sent by the client.
+\end_layout
+
+\begin_layout Itemize
+{es}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+s
+\bar default
+ize (in bytes)
+\end_layout
+
+\begin_layout Itemize
+{emt}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+m
+\bar default
+edia (MIME) 
+\bar under
+t
+\bar default
+ype
+\end_layout
+
+\begin_layout Itemize
+{ecs}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+c
+\bar default
+haracter 
+\bar under
+s
+\bar default
+et
+\end_layout
+
+\begin_layout Itemize
+{el}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+l
+\bar default
+anguage
+\end_layout
+
+\begin_layout Itemize
+{ee}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+e
+\bar default
+ncoding
+\end_layout
+
+\begin_layout Itemize
+{et}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+t
+\bar default
+ag (HTTP ETag)
+\end_layout
+
+\begin_layout Itemize
+{eed}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+e
+\bar default
+xpiration 
+\bar under
+d
+\bar default
+ate
+\end_layout
+
+\begin_layout Itemize
+{emd}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+m
+\bar default
+odification 
+\bar under
+d
+\bar default
+ate
+\end_layout
+
+\begin_layout Subsubsection
+Response Attributes
+\end_layout
+
+\begin_layout Standard
+[these are not supported in capturing or other forms of server-side redirection,
+ because redirection happens before a response is actually generated.] [useful
+ for cache patterns?]
+\end_layout
+
+\begin_layout Standard
+These are all in uppercase to differentiate them from the request variables:
+\end_layout
+
+\begin_layout Itemize
+{S}: the HTTP status code
+\end_layout
+
+\begin_layout Itemize
+{SIA}: server IP address
+\end_layout
+
+\begin_layout Itemize
+{SIP}: server port number
+\end_layout
+
+\begin_layout Itemize
+{SIG}: server agent name
+\end_layout
+
+\begin_layout Itemize
+{R-}: the redirection URI (see 
+\begin_inset Quotes eld
+\end_inset
+
+Request URIs
+\begin_inset Quotes erd
+\end_inset
+
+ above for a list of suffixes, which must also be in uppercase)
+\end_layout
+
+\begin_layout Standard
+Additionally, all the entity attributes can be used in uppercase to correspond
+ to the response entity.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+{ES}
+\begin_inset Quotes erd
+\end_inset
+
+ for the response entity size, 
+\begin_inset Quotes eld
+\end_inset
+
+{EMT}
+\begin_inset Quotes erd
+\end_inset
+
+ for the response media type, etc.
 \end_layout
 
 \begin_layout Subsection
@@ -2057,12 +2917,9 @@ single
 \emph on
 also
 \emph default
- a URI template, and moreover can include special variables that are dynamically
- injected from the user request.
-\end_layout
-
-\begin_layout Standard
-For example:
+ a URI template, and can include any of the conversation attributes (see
+ above).
+ For example:
 \end_layout
 
 \begin_layout Standard
@@ -2082,7 +2939,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/user/{userId}/preferences/': '/database/preferences/{m}/'
+	'/user/{userId}/preferences/': '/database/preferences/{m}/?id={userId}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2150,7 +3007,7 @@ POST
 \end_layout
 
 \begin_layout Standard
-You should cannot use the 
+You cannot use the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2158,8 +3015,8 @@ You should cannot use the
 \begin_inset Quotes erd
 \end_inset
 
- capture-and-hide trick with dynamic capturing, because Prudence cannot
- know in advance which URIs to hide.
+ capture-and-hide trick with dynamic capturing, because Prudence can only
+ hide exact matches of URIs.
  Use explicit hiding instead:
 \end_layout
 
@@ -2196,182 +3053,6 @@ app.routes = {
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-A complete list of injected variables is available in the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet API documentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
-
-\end_inset
-
-, but we'll summarize them here:
-\end_layout
-
-\begin_layout Paragraph
-Data Attributes
-\end_layout
-
-\begin_layout Standard
-All these refer to the data (“entity”) sent by the client or that you are
- returning to the client.
- Lowercase is used for request attributes, uppercase for response attributes.
- We'll note these as pairs:
-\end_layout
-
-\begin_layout Itemize
-{es} or {ES}: entity size in bytes
-\end_layout
-
-\begin_layout Itemize
-{emt} or {EMT}: entity media type
-\end_layout
-
-\begin_layout Itemize
-{ecs} or {ECS}: entity character set
-\end_layout
-
-\begin_layout Itemize
-{el} or {EL}: entity language
-\end_layout
-
-\begin_layout Itemize
-{ee} or {EE}: entity encoding
-\end_layout
-
-\begin_layout Itemize
-{et} or {ET}: entity tag (HTTP ETag)
-\end_layout
-
-\begin_layout Itemize
-{eed} or {EED}: entity expiration date
-\end_layout
-
-\begin_layout Itemize
-{emd} or {EMD}: entity modification date
-\end_layout
-
-\begin_layout Paragraph
-Request Attributes
-\end_layout
-
-\begin_layout Itemize
-{d}: date (Unix timestamp)
-\end_layout
-
-\begin_layout Itemize
-{m}: the method (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
-\end_layout
-
-\begin_layout Itemize
-{cia}: client IP address
-\end_layout
-
-\begin_layout Itemize
-{ciua}: client upstream IP address (if the request reached us through an
- upstream load balancer)
-\end_layout
-
-\begin_layout Itemize
-{cig}: client agent name
-\end_layout
-
-\begin_layout Paragraph
-Response Attributes
-\end_layout
-
-\begin_layout Itemize
-{S}: the status code
-\end_layout
-
-\begin_layout Itemize
-{SIA}: server IP address
-\end_layout
-
-\begin_layout Itemize
-{SIP}: server port number
-\end_layout
-
-\begin_layout Itemize
-{SIG}: server agent name
-\end_layout
-
-\begin_layout Paragraph
-URIs
-\end_layout
-
-\begin_layout Standard
-We'll use a hyphen to show that you need to add one of the modifiers detailed
- after this list.
- For example, “{ri}” is the complete actual URI.
-\end_layout
-
-\begin_layout Itemize
-{p}: the protocol (“http,” “https,” “ftp,” etc.)
-\end_layout
-
-\begin_layout Itemize
-{r-} or {R-}: actual URI (the capital “R” here refers to the response, which
- may be different from the request if you're redirecting)
-\end_layout
-
-\begin_layout Itemize
-{h-}: virtual host URI
-\end_layout
-
-\begin_layout Itemize
-{o-}: the application's root URI on the virtual host
-\end_layout
-
-\begin_layout Itemize
-{f-}: the referring URI (usually means that the client clicked a hyperlink
- or was redirected here)
-\end_layout
-
-\begin_layout Standard
-Add the following modifiers to URI values above in order to access the various
- parts of the URI:
-\end_layout
-
-\begin_layout Itemize
-{-i}: the complete URI
-\end_layout
-
-\begin_layout Itemize
-{-a}: the authority (for URLs, this is the host or IP address)
-\end_layout
-
-\begin_layout Itemize
-{-h}: the host identifier (protocol + authority)
-\end_layout
-
-\begin_layout Itemize
-{-p}: the path
-\end_layout
-
-\begin_layout Itemize
-{-q}: the query
-\end_layout
-
-\begin_layout Itemize
-{-f}: the fragment
-\end_layout
-
-\begin_layout Itemize
-{-r}: the remaining part of the path
-\end_layout
-
-\begin_layout Itemize
-{-e}: the part of the path relative to the application's root URI
-\end_layout
-
-\begin_layout Standard
-Every URI also has a “base” URI, accessed via the “b” modifier.
- Usually, this is the application's root URI on the virtual host.
- You can add the URI modifiers above to this URI.
- For example: “{rbi}”.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2657,7 +3338,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	javascript: '/resources/'
+	javascript: '/manual-resources/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2675,7 +3356,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-/resources/
+/manual-resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -2692,7 +3373,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/resources.js
+/libraries/manual-resources.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -2846,8 +3527,8 @@ user
 \end_layout
 
 \begin_layout Standard
-As you can see, the resource.js file does not refer to URIs, but instead
- to dispatch IDs, which you can dispatch as you see fit.
+As you can see, the manual-resources.js file does not refer to URIs, but
+ instead to dispatch IDs, which you can dispatch as you see fit.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4522,6 +5203,10 @@ Client-Side Caching
 
 \begin_layout Subsubsection
 CSS and JavaScript
+\end_layout
+
+\begin_layout Subsubsection
+ZUSS
 \end_layout
 
 \begin_layout Subsection

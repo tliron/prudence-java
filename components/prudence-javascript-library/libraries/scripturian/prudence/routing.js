@@ -509,6 +509,10 @@ Prudence.Routing = Prudence.Routing || function() {
 					}*/
 					return new Module.Capture({uri: restlet}).create(this, uri)
 				}
+				else if (restlet[0] == '>') {
+					restlet = restlet.substring(1)
+					return new Module.Redirect({uri: restlet}).create(this, uri)
+				}
 				else if (restlet[0] == '@') {
 					restlet = restlet.substring(1)
 					var colon = restlet.indexOf(':')
@@ -520,6 +524,10 @@ Prudence.Routing = Prudence.Routing || function() {
 					else {
 						return new Module.Dispatch({id: restlet}).create(this, uri)
 					}
+				}
+				else if (restlet[0] == '$') {
+					restlet = restlet.substring(1)
+					return new Module.Resource({'class': restlet}).create(this, uri)
 				}
 				else {
 					var type = Module[Sincerity.Objects.capitalize(restlet)]
@@ -697,7 +705,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * A set of well-defined global functions (or closures in some languages) is used as entry points for Prudence
 	 * to hook into your resource implementation.
 	 * <p>
-	 * You will always want use a wildcard URI template with this class, because it will attempt to match
+	 * You will almost always want use a wildcard URI template with this class, because it will attempt to match
 	 * all URIs to files. However, only files with a ".m." pre-extension will be matched. For example:
 	 * "default.m.js", "service.m.js", "profile.m.py". Files without this pre-extension will not be
 	 * matched, and will return a 404 error even if they exist. It is thus possible to combine
@@ -828,9 +836,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * plain text. They combine "raw" textual output with specially delimited code segments
 	 * called "scriptlets" that are executed for every user request. This functionality
 	 * is identical in many ways to PHP, JSP and ASP, but Prudence goes beyond those
-	 * platforms by providing fine-tuned integrated caching.
+	 * platforms by providing fine-tuned integrated caching, and supporting several
+	 * programming and templating languages.
 	 * <p>
-	 * You will always want use a wildcard URI template with this class, because it will attempt to match
+	 * You will almost always want use a wildcard URI template with this class, because it will attempt to match
 	 * all URIs to files. However, only files with a ".s." pre-extension will be matched. For example:
 	 * "index.s.html", "sitemap.s.xml", "info.s.json". Files without this pre-extension will not be
 	 * matched, and will return a 404 error even if they exist. It is thus possible to combine
@@ -1093,12 +1102,13 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * hidden URIs. It thus allows you to "cloak" an existing URI while still allowing access to the resource via
 	 * a new one. A common use case is to expose a URI template instead of a URI that is not a template. 
 	 * <p>
-	 * If the target URI ends with a "!", it is specially interpreted to mean that the "hidden"
+	 * If the target URI template ends with a "!", it is specially interpreted to mean that the "hidden"
 	 * param is true (and the "!" is not actually include in the target). Hiding is actually
 	 * not handled by this class, but rather the {@link Prudence.Routing.Router}, but is available
 	 * here as convenient shortcut for the commonly used capture-and-hide paradigm. 
-	 * Note that you should not use the capture-and-hide trick with URI template targets, because
-	 * Prudence cannot know in advance which URIs to hide. Use explicit hiding instead.
+	 * Note that you should not use the capture-and-hide trick with targets that include URI template
+	 * variables, because Prudence can only hide exact URI matches. Use explicit hiding instead
+	 * for the URIs you want hidden.
 	 * <p>
 	 * Prudence supports a special short-form notation for configuring this class: a configuration
 	 * string starting with a "/" will be considered as a URI for a capture. For example, '/target/!'
@@ -1110,7 +1120,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * documentation for a complete list.
 	 * <p>
 	 * Optionally supports value injection via the "locals" param.
-	 * 
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CapturingRedirector.html">CapturingRedirector</a> instance.
 	 * If "locals" is defined, inserts an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a>
 	 * filter before the CapturingRedirector.
@@ -1169,6 +1179,25 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * Routes client requests according to URI templates.
+	 * <p>
+	 * The "routes" param is a dict mapping URI templates to nested route type configurations.
+	 * <p>
+	 * Prudence using this class (with its default configuration) for the basis of app.routes.
+	 * However, you may nest further router configratations under app.routes to gain more control
+	 * over routing.
+	 * <p>
+	 * By default, if multiple URI templates in the "routes" param match a request, the best one is
+	 * selected. Generally, URIs that do not use template variables will score higher than URI
+	 * templates. You can change the selection behavior via the "routingMode" param:
+	 * <ul>
+	 * <li><b>best</b>: select the best matching route</li>
+	 * <li><b>first</b>: select the first matching route</li>
+	 * <li><b>last</b>: select the last matching route</li>
+	 * <li><b>random</b>: randomly select one of the matching routes</li>
+	 * <li><b>next</b>: keep track of selected matching routes, and use the next one in order per each request (round-robbin)</li>
+	 * </ul>
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceRouter.html">PrudenceRouter</a> instance.
 	 *
 	 * @class
@@ -1176,7 +1205,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {Object} [routes]
-	 * @param {String} [routingMode='best']
+	 * @param {String} [routingMode='best'] Either 'best', 'first', 'last', 'random' or 'next'
 	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Router = Sincerity.Classes.define(function(Module) {
@@ -1275,6 +1304,23 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 	
 	/**
+	 * Tries multiple route types in order. The first route type that does not return a "not found" (404)
+	 * error will be used for the client request.
+	 * <p>
+	 * This class is often used with a wildcard URI template, but can be used with and URI template,
+	 * and even exact URIs.
+	 * <p> 
+	 * The route will be cached for each particular successful URI in to improve performance and scalability
+	 * by avoiding retrying the routes in order again. The duration of this cache can be configured via the
+	 * "cacheDuration" param. Note that caching is enabled by default, but this behavior may not always be
+	 * appropriate! For example, if resources may appear and disappear per request, you may want to disable
+	 * caching and try all chained routes in order for every request. In that case, set "cacheDuration"
+	 * to zero.  
+	 * <p>
+	 * Prudence supports a special short-form notation for configuring this class: JavaScript
+	 * arrays are considered as chains. For example, ['scriptlet', 'static'] is equivalent to
+	 * {type: 'chain': restlets: ['scriptlet', 'static']}.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Fallback.html">Fallback</a> instance.
 	 *
 	 * @class
@@ -1317,6 +1363,145 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 	
 	/**
+	 * Asks the client to redirect its request (repeat it) to another URI.
+	 * <p>
+	 * The target URI may be a URI template, in which case variables will be filled based on the request.
+	 * This allows you to elegantly configure dynamic redirection.
+	 * <p>
+	 * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+	 * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
+	 * Relative URIs are handled inconsistently by clients: some treat them as relative to
+	 * the requested URI, some relative to the domain name, and others may attempt to treat
+	 * any URI as if it was an absolute URI, leading to an error.
+	 * <p>
+	 * Dynamic redirection thus is especially useful if you want to redirect within your Prudence
+	 * component's URI-space, because you do not have to hardcode the absolute target URI. For example,
+	 * in a target URI such as '{oi}/new/uri/', '{oi}' may expand to 'http://mysite.org/myapp', giving
+	 * you a dynamically constructed absolute URI. This will work correctly even if your application is
+	 * attached to multiple virtual hosts.
+	 * <p>
+	 * The default redirection mode is 'permanent', which uses HTTP status code 301.
+	 * You can set the "mode" param to any of the following, either by string or by the
+	 * HTTP status code:
+	 * <ul>
+	 * <li>permanent: HTTP status code 301</li>
+	 * <li>found: HTTP status code 302</li>
+	 * <li>seeOther: HTTP status code 303</li>
+	 * <li>temporary: HTTP status code 307</li>
+	 * </ul> 
+	 * Note that you do not have control over whether the client will repeat its request:
+	 * most web browsers will honor this status, but some clients may not. 
+	 * Furthermore, clients may or may not cache the 'permament' (301) redirection
+	 * information.
+	 * <p>
+	 * Prudence supports a special short-form notation for configuring this class: any string
+	 * beginning with '>' followed by the target URI. For example, '>{oi}/new/uri/' is equivalent
+	 * to {type: 'redirect', 'uri': '{oi}/new/uri/'}.
+	 * <p>
+	 * Note that Prudence also supports programmatic redirection in manual and scriptlet resources
+	 * via the {@link conversation#redirectPermament}, {@link conversation#redirectSeeOther} and
+	 * {@link conversation#redirectTemporary}.
+	 * <p>
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ResolvingRedirector.html">ResolvingRedirector</a> instance.
+	 *
+	 * @class
+	 * @name Prudence.Routing.Redirect
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {String} uri
+	 * @param {String|Number} [mode='permanent'] Either 'permanent'/301, 'found'/302, 'seeOther'/303 or 'temporary'/307
+	 */
+	Public.Redirect = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Redirect */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['uri', 'mode']
+
+		Public.create = function(app, uri) {
+			importClass(
+				com.threecrickets.prudence.util.ResolvingRedirector)
+			
+			this.mode = Sincerity.Objects.ensure(this.mode, 'permanent')
+			if ((this.mode == 301) || (this.mode == 'permanent')) {
+				this.mode = ResolvingRedirector.MODE_CLIENT_PERMANENT
+			}
+			else if ((this.mode == 302) || (this.mode == 'found')) {
+				this.mode = ResolvingRedirector.MODE_CLIENT_FOUND
+			}
+			else if ((this.mode == 303) || (this.mode == 'seeOther')) {
+				this.mode = ResolvingRedirector.MODE_CLIENT_SEE_OTHER
+			}
+			else if ((this.mode == 307) || (this.mode == 'temporary')) {
+				this.mode = ResolvingRedirector.MODE_CLIENT_TEMPORARY
+			}
+			else if (this.mode == 'serverOutbound') {
+				this.mode = ResolvingRedirector.MODE_SERVER_OUTBOUND
+			}
+			else if (this.mode == 'serverInbound') {
+				this.mode = ResolvingRedirector.MODE_SERVER_INBOUND
+			}
+
+	   		var redirector = new ResolvingRedirector(app.context, this.uri, this.mode, false)
+
+			return redirector
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 * Asks the client to permanently redirect the request (repeat it) to the incoming URI with
+	 * a trailing slash added to it. This effect is identical to {type: 'redirect', uri: '{ri}/'}.
+	 * <p>
+	 * Commonly used as a courtesy for clients who may erroneously not include a trailing
+	 * slash even when a trailing slash is required by your URI-space.
+	 * <p>
+	 * Sends HTTP status code 301 to the client.
+	 * <p>
+	 * Note that you do not have control over whether the client will repeat its request:
+	 * most web browsers will honor this status, but some clients may not.
+	 * Furthermore, clients may or may not cache the permament redirection
+	 * information.
+	 * <p>
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
+	 * singleton instance shared by all usages in the application.
+	 * 
+	 * @class
+	 * @name Prudence.Routing.AddSlash
+	 * @augments Prudence.Routing.Restlet 
+	 */
+	Public.AddSlash = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.AddSlash */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		Public.create = function(app, uri) {
+			return app.addTrailingSlashRedirector
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 * This class lets you hook low-level implementations of Restlet resources to Prudence.
+	 * <p>
+	 * The "class" param (note that "class" is a reserved word in JavaScript and must be placed
+	 * in quotes for a dict key) must be the full classname of a JVM class that inherits
+	 * from <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>.
+	 * <p>
+	 * These classes are often written in Java, but can be written in any language that can
+	 * produce JVM classes, such as Groovy, Clojure, etc. 
+	 * <p>
+	 * Prudence supports a special short-form notation for configuring this class: any string
+	 * beginning with '$' followed by the class name. For example, '$org.myapp.PersonResource' is equivalent
+	 * to {type: 'resource', 'class': 'org.myapp.PersonResource'}.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 *
 	 * @class
@@ -1349,28 +1534,20 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
-	 * singleton instance shared by all usages in the application.
-	 * 
-	 * @class
-	 * @name Prudence.Routing.AddSlash
-	 * @augments Prudence.Routing.Restlet 
-	 */
-	Public.AddSlash = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.AddSlash */
-		var Public = {}
-		
-		/** @ignore */
-		Public._inherit = Module.Restlet
-
-		Public.create = function(app, uri) {
-			return app.addTrailingSlashRedirector
-		}
-		
-		return Public
-	}(Public))
-
-	/**
+	 * Filters execute arbitrary code for each request, potentially modifying the request and/or
+	 * the response, and can additionally control whether the request continues to the next route
+	 * type or not.
+	 * <p>
+	 * The "next" param <i>must</i> be provided and is a nested route type.
+	 * Several filters can be thus chained together.
+	 * <p>
+	 * The "library" param specifies the filter implementation, which is a document
+	 * name relative to the application's "/libraries/" subdirectory.
+	 * It is a text file containing code in one of the supported programming languages. The language
+	 * is determined by the extension: .js for JavaScript, .py for Python, .clj for Clojure, etc.
+	 * A set of well-defined global functions (or closures in some languages) is used as entry points for Prudence
+	 * to hook into your filter implementation.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedFilter.html">DelegatedFilter</a> instance.
 	 *
 	 * @class
@@ -1403,10 +1580,16 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * A simple {@link Prudence.Routing.Filter} that injects preset values into {@link conversation#locals}
+	 * before continuing to the next route type.
+	 * <p>
+	 * This is useful for Inversion of Control (IoC): you can use these conversation.locals
+	 * to alter the behavior of nested route types directly in your routing.js.
+	 * <p>
 	 * Implementation note: Internally handled by an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Filter
+	 * @name Prudence.Routing.Injector
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {Object} [locals]
@@ -1442,8 +1625,33 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * A powerful {@link Prudence.Routing.Filter} that unifies and optionally minifies
+	 * client-side JavaScript files on demand, allowing for improved performance
+	 * and scalability.
+	 * <p>
+	 * By default, JavaScript files are expected to be found under the "/resources/scripts/"
+	 * subdirectory of your application, as well as the "/libraries/web/scripts/" subdirectory
+	 * of your Sincerity container. These locations can be changed via the "roots" param.
+	 * <p>
+	 * Note that the first entry in the "roots" is special: it is where the unified/minified files
+	 * will be stored.
+	 * <p>
+	 * This class works by intercepting requested URIs. If the URI ends in ".js.min", then the
+	 * equivalent ".js" file will be minified. If the URI ends in "/all.js", then all ".js" files
+	 * in the directory will be unified (concatenated in filename alphabetical order). Finally,
+	 * "/all.js.min" both unifies and minifies. After doing this work, the request will continue
+	 * to the route type specified by the "next" param.
+	 * <p>
+	 * For the resulting file to actually be served to the client, you will likely want a
+	 * {@link Prudence.Routing.Static} nested in "next". 
+	 * <p>
+	 * Once a ".js.min" is created by this filter, it will not be recreated unless the source file(s)
+	 * have changed. Change is tracked according to the timestamp of files.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/JavaScriptUnifyMinifyFilter.html">JavaScriptUnifyMinifyFilter</a> instance.
-	 * 
+	 * Compression is done via <a href="http://www.inconspicuous.org/projects/jsmin/jsmin.java">John Reilly's Java port</a> of
+	 * Douglas Crockford's <a href="http://www.crockford.com/javascript/jsmin.html">JSMin</a>.
+	 *
 	 * @class
 	 * @name Prudence.Routing.JavaScriptUnifyMinify
 	 * @augments Prudence.Routing.Restlet
@@ -1499,7 +1707,31 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * A powerful {@link Prudence.Routing.Filter} that unifies and optionally minifies
+	 * CSS files on demand, allowing for improved performance
+	 * and scalability.
+	 * <p>
+	 * By default, CSS files are expected to be found under the "/resources/style/"
+	 * subdirectory of your application, as well as the "/libraries/web/style/" subdirectory
+	 * of your Sincerity container. These locations can be changed via the "roots" param.
+	 * <p>
+	 * Note that the first entry in the "roots" is special: it is where the unified/minified files
+	 * will be stored.
+	 * <p>
+	 * This class works by intercepting requested URIs. If the URI ends in ".css.min", then the
+	 * equivalent ".css" file will be minified. If the URI ends in "/all.css", then all ".css" files
+	 * in the directory will be unified (concatenated in filename alphabetical order). Finally,
+	 * "/all.css.min" both unifies and minifies. After doing this work, the request will continue
+	 * to the route type specified by the "next" param.
+	 * <p>
+	 * For the resulting file to actually be served to the client, you will likely want a
+	 * {@link Prudence.Routing.Static} nested in "next". 
+	 * <p>
+	 * Once a ".css.min" is created by this filter, it will not be recreated unless the source file(s)
+	 * have changed. Change is tracked according to the timestamp of files.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CssScriptUnifyMinifyFilter.html">CssUnifyMinifyFilter</a> instance.
+	 * Compression is done via <a href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.CssUnifyMinify
@@ -1507,6 +1739,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @param {String[]} roots
 	 * @param {Object} next
+	 * @see Prudence.Routing.Zuss
 	 */
 	Public.CssUnifyMinify = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.CssUnifyMinify */
@@ -1556,7 +1789,32 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * A powerful {@link Prudence.Routing.Filter} that compiles <a href="https://github.com/tomyeh/ZUSS">ZUSS</a>
+	 * files to CSS and optionally minifies them on demand. ZUSS is a powerful CSS meta-language, similar to
+	 * <a href="http://lesscss.org/">LESS</a> and <a href="http://sass-lang.com/">Sass</a>, that can greatly
+	 * improve the clarity and reusability of your CSS.
+	 * <p>
+	 * By default, ZUSS files are expected to be found under the "/resources/style/"
+	 * subdirectory of your application, as well as the "/libraries/web/style/" subdirectory
+	 * of your Sincerity container. These locations can be changed via the "roots" param.
+	 * <p>
+	 * Note that the first entry in the "roots" is special: it is where the compiled/minified files
+	 * will be stored.
+	 * <p>
+	 * This class works by intercepting requested URIs. If the URI ends in ".css", then it will
+	 * attempt to find a file with the same name but with a ".zuss" extension. If found, it will
+	 * be compiled to ".css". If the URI ends in ".css.min", then it will compile and then
+	 * minify the resulting CSS. After doing this work, the request will continue
+	 * to the route type specified by the "next" param.
+	 * <p>
+	 * For the resulting file to actually be served to the client, you will likely want a
+	 * {@link Prudence.Routing.Static} nested in "next". 
+	 * <p>
+	 * Once a ".css" or ".css.min" is created by this filter, it will not be recreated unless the source file
+	 * has changed. Change is tracked according to the timestamp of files.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ZussFilter.html">ZussFilter</a> instance.
+	 * Compression is done via <a href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.Zuss
@@ -1565,6 +1823,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String[]} roots
 	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>]
 	 * @param {Object} next
+	 * @see Prudence.Routing.CssUnifyMinify
 	 */
 	Public.Zuss = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Zuss */
@@ -1620,6 +1879,39 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
+	 * A filter {@link Prudence.Routing.Filter} that adds client-side cache control headers to
+	 * responses according to their media (MIME) types. These headers ask the client to
+	 * cache or not to cache the response. When cached, the client will not send <i>any</i> request
+	 * to the server (not even a conditional request), amounting to the best possible boost
+	 * for performance and scalability.  
+	 * <p>
+	 * It is common in web applications to ask the client to cache media resources (images such as PNG and
+	 * JPEG), as well as client-side JavaScript and CSS, because these files are not expected to change much
+	 * throughout the life of the application.
+	 * <p>
+	 * Note that clients are not guaranteed to honor these headers.
+	 * <p>
+	 * Though you can control these headers programmatically in manual and scriptlet resources
+	 * using the {@link conversation#maxAge} API, you cannot do the same for
+	 * static resources, which do not execute code.
+	 * <p>
+	 * By default, this filter will do nothing (which is safest). To enable it,
+	 * you can set the "mediaTypes" param to a dict mapping MIME types to a duration value.
+	 * The following duration values are supported:
+	 * <ul>
+	 * <li>Negative number: do nothing.</li>
+	 * <li>Zero: explicitly ask the client never to cache (useful as a security precaution
+	 * for sensitive data).</li>
+	 * <li>Positive integers: the maximum cache age in seconds.</li>
+	 * <li>'farFuture': a string constant that translates to 10 years maximum cache age (a common convention
+	 * implying that the response should be cached "indefinitely")</li>
+	 * </ul>
+	 * Example: {type: 'cacheControl', mediaTypes: {'image/png': 'farFuture', 'image/jpeg': 'farFuture',
+	 * 'text/css': 3600}, next: 'static'} 
+	 * <p>
+	 * You can also set the "default" param to one of these values. If the response MIME type
+	 * does not match anything in the "mediaTypes" param, then "default" will be used.
+	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CacheControlFilter.html">CacheControlFilter</a> instance.
 	 * 
 	 * @class

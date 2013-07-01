@@ -1231,6 +1231,92 @@ var Prudence = {}
  */
 
 /**
+ * Asks the client to redirect its request (repeat it) to another URI
+ * via HTTP status code 301 ("permanent redirection").
+ * <p>
+ * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+ * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
+ * Relative URIs are handled inconsistently by clients: some treat them as relative to
+ * the requested URI, some relative to the domain name, and others may attempt to treat
+ * any URI as if it was an absolute URI, leading to an error.
+ * <p>
+ * If you want to redirect within your Prudence component's URI-space, you may want to
+ * use {@link conversation#reference} in order to get the current reference, especially
+ * the "baseRef" attribute, which is usually the current application's root URI on
+ * the virtual host. For example:
+ * <code>
+ * conversation.redirectPermament(conversation.reference.baseRef + '/new/uri/')
+ * </code> 
+ * Note that you do not have control over whether the client will repeat its request:
+ * most web browsers will honor this status, but some clients may not. 
+ * Furthermore, clients may or may not cache the 'permament' redirection
+ * information.
+ * <p>
+ * Prudence also supports statically configured routing via routing.js.
+ * See {@link Prudence.Routing.Redirect}. 
+ * 
+ * @name conversation.redirectPermament
+ * @function
+ * @param {String} uri
+ */
+
+/**
+ * Asks the client to redirect its request (repeat it) to another URI
+ * via HTTP status code 303 ("see other").
+ * <p>
+ * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+ * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
+ * Relative URIs are handled inconsistently by clients: some treat them as relative to
+ * the requested URI, some relative to the domain name, and others may attempt to treat
+ * any URI as if it was an absolute URI, leading to an error.
+ * <p>
+ * If you want to redirect within your Prudence component's URI-space, you may want to
+ * use {@link conversation#reference} in order to get the current reference, especially
+ * the "baseRef" attribute, which is usually the current application's root URI on
+ * the virtual host. For example:
+ * <code>
+ * conversation.redirectSeeOther(conversation.reference.baseRef + '/new/uri/')
+ * </code> 
+ * Note that you do not have control over whether the client will repeat its request:
+ * most web browsers will honor this status, but some clients may not. 
+ * <p>
+ * Prudence also supports statically configured routing via routing.js.
+ * See {@link Prudence.Routing.Redirect}. 
+ * 
+ * @name conversation.redirectSeeOther
+ * @function
+ * @param {String} uri
+ */
+
+/**
+ * Asks the client to redirect its request (repeat it) to another URI
+ * via HTTP status code 307 ("temporary redirection").
+ * <p>
+ * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+ * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
+ * Relative URIs are handled inconsistently by clients: some treat them as relative to
+ * the requested URI, some relative to the domain name, and others may attempt to treat
+ * any URI as if it was an absolute URI, leading to an error.
+ * <p>
+ * If you want to redirect within your Prudence component's URI-space, you may want to
+ * use {@link conversation#reference} in order to get the current reference, especially
+ * the "baseRef" attribute, which is usually the current application's root URI on
+ * the virtual host. For example:
+ * <code>
+ * conversation.redirectTemporary(conversation.reference.baseRef + '/new/uri/')
+ * </code> 
+ * Note that you do not have control over whether the client will repeat its request:
+ * most web browsers will honor this status, but some clients may not. 
+ * <p>
+ * Prudence also supports statically configured routing via routing.js.
+ * See {@link Prudence.Routing.Redirect}. 
+ * 
+ * @name conversation.redirectTemporary
+ * @function
+ * @param {String} uri
+ */
+
+/**
  * Adds a server-supported media (MIME) type for content negotiation.
  * <p>
  * It is a shortcut, equivalent to calling: conversation.resource.variants.add(mediaType).

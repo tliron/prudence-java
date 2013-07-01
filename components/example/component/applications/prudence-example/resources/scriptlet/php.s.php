@@ -75,10 +75,8 @@ foreach($adapters as $adapter) {
 //   $document->include('/triple/php/');
 //
 
-// BROKEN: Prudence include tag :(
-
 ?>
-<? $document->include('/triple/php/'); ?>
+<?& '/triple/php/' ?>
 <?
 
 for($i = 0; $i < 10; $i++) {

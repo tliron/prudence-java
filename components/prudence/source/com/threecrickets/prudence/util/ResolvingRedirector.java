@@ -37,6 +37,7 @@ public class ResolvingRedirector extends Redirector
 	 * @param context
 	 * @param targetPattern
 	 * @param mode
+	 * @param isCleaning
 	 */
 	public ResolvingRedirector( Context context, String targetPattern, int mode, boolean isCleaning )
 	{
@@ -50,6 +51,7 @@ public class ResolvingRedirector extends Redirector
 	 * 
 	 * @param context
 	 * @param targetTemplate
+	 * @param isCleaning
 	 */
 	public ResolvingRedirector( Context context, String targetTemplate, boolean isCleaning )
 	{

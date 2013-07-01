@@ -414,6 +414,36 @@ public class ConversationService
 		return getRequest().getAttributes();
 	}
 
+	/**
+	 * Permanent client-side redirection.
+	 * 
+	 * @param uri
+	 */
+	public void redirectPermanent( String uri )
+	{
+		getResponse().redirectPermanent( uri );
+	}
+
+	/**
+	 * See-other client-side redirection.
+	 * 
+	 * @param uri
+	 */
+	public void redirectSeeOther( String uri )
+	{
+		getResponse().redirectSeeOther( uri );
+	}
+
+	/**
+	 * Temporary client-side redirection.
+	 * 
+	 * @param uri
+	 */
+	public void redirectTemporary( String uri )
+	{
+		getResponse().redirectTemporary( uri );
+	}
+
 	//
 	// Operations
 	//
