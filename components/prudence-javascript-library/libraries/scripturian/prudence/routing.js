@@ -92,7 +92,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {String} [settings.errors.contactEmail] Shows this contact email on the default error page
 	 * 
 	 * @property {Object} [settings.code] Programming language settings
-	 * @property {String[]} [settings.code.libraries=['libraries'] A list of base paths from which {@link document#execute} (and also
+	 * @property {String[]} [settings.code.libraries='libraries'] A list of base paths from which {@link document#execute} (and also
 	 *                      the programming languages' internal import facilities) will look for libraries;
 	 *                      the <i>first</i> library in this list is special: it is used to look for handlers and tasks;
 	 *                      paths are relative to the application directory
@@ -1972,6 +1972,53 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			return filter
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 *
+	 * <p>
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
+	 * 
+	 * @class
+	 * @name Prudence.Routing.HttpAuthenticator
+	 * @augments Prudence.Routing.Restlet
+	 * 
+	 * @param {Object} credentials
+	 * @param {String} realm
+	 * @param {Object} next
+	 */
+	Public.HttpAuthenticator = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.HttpAuthenticator */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['credentials', 'realm', 'next']
+
+		Public.create = function(app, uri) {
+			importClass(
+				org.restlet.security.ChallengeAuthenticator,
+				org.restlet.security.MapVerifier,
+				org.restlet.data.ChallengeScheme)
+			
+			var authenticator = new ChallengeAuthenticator(app.context, ChallengeScheme.HTTP_BASIC, this.realm)
+
+			// Credentials
+			var verifier = new MapVerifier()
+			for (var username in this.credentials) {
+				verifier.localSecrets.put(username, new java.lang.String(this.credentials[username]).toCharArray())
+			}
+			authenticator.verifier = verifier
+
+			this.next = app.createRestlet(this.next, uri)
+			authenticator.next = this.next
+			
+			return authenticator
 		}
 		
 		return Public

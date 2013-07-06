@@ -1527,6 +1527,26 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Inje
 \end_layout
 
 \begin_layout Paragraph
+httpAuthenticator
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.HttpAuthenticator"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.HttpAuthenticator"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
 cacheControl
 \end_layout
 
@@ -3912,15 +3932,340 @@ special
 \end_layout
 
 \begin_layout Subsection
-app.hosts
-\end_layout
-
-\begin_layout Subsection
 The Internal URI-space
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsection
-app.preheat
+Virtual Hosts
+\end_layout
+
+\begin_layout Standard
+Restlet has excellent virtual host support, and there is a many-to-many
+ relationship routing between almost anything.
+ So, you can easily have a single Prudence container (running in a single
+ JVM instance) managing several sites at once with several applications.
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of using a single container
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: a single base directory, and all configuration
+ is done by JavaScript inside the container, so it can be fully dynamic.
+\end_layout
+
+\begin_layout Enumerate
+Less memory use.
+\end_layout
+
+\begin_layout Enumerate
+You can use application.sharedGlobals to share state between applications.
+ (Note that if they are running in multiple containers, you can use application.d
+istributedGlobals instead.
+ Will also work on VMs running on separate machines in the cluster.
+ But distributed globals have to be serializable, of course.)
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of using multiple containers
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: several base directories can mean separate
+ code/distribution repositories, and configuration may happen at the reverse-pro
+xy level with your web frontend.
+\end_layout
+
+\begin_layout Enumerate
+Crashes/deadlocks/memory leaks in one VM won't affect others.
+\end_layout
+
+\begin_layout Enumerate
+You can restart the VM for one container without affecting others that are
+ running.
+\end_layout
+
+\begin_layout Standard
+There is no performance advantage in either scenario.
+ Everything is designed around high-concurrency and threading, and threads
+ are managed by the OS globally.
+ (Well, there are some caveats to this: Linux can group threads per running
+ process for purposes of prioritization, but this is only really done for
+ desktop applications.
+ But this could be possibly useful when running several containers, if you
+ want to guarantee high thread priority to one of the containers over the
+ others.
+ Any of this would only effect *very* high concurrency deployments, where
+ CPU usage is often high.)
+\end_layout
+
+\begin_layout Standard
+Here is documentation on managing routing in a single container.
+ Note that the Prudence Administration app shows all of this routing information
+ at runtime:
+\end_layout
+
+\begin_layout Subsubsection
+Servers
+\end_layout
+
+\begin_layout Standard
+Under /component/servers/ you can define as many servers as you want.
+ Just add a new file and assign a port for it.
+ There is actually routing done per server, too, so you can define which
+ IP address you want the server to bind to, in case your machine as several
+ IP addresses.
+ On AWS, this could be useful because machines can indeed have both a public
+ and “internal” IP address.
+\end_layout
+
+\begin_layout Paragraph
+Minimal definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var server = new Server(Protocol.HTTP, 8080)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.name = 'myserver'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.servers.add(server)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Routing
+\end_layout
+
+\begin_layout Standard
+server.address = [string]
+\end_layout
+
+\begin_layout Standard
+Defaults to null (which defaults to localhost), but you can filter on a
+ specific IP address.
+ “*” wildcards are supported.
+\end_layout
+
+\begin_layout Standard
+(This is how you would add a TLS https:// server, too, if you want it managed
+ by Prudence.
+ Though another option is to use a frontend, like Apache/nginx, with a reverse
+ proxy.
+ Which one is better would be another discussion.)
+\end_layout
+
+\begin_layout Subsubsection
+Hosts
+\end_layout
+
+\begin_layout Standard
+Under /component/hosts/ you can add as many virtual hosts as you want.
+ A virtual host signifies the basic domain name and port assignment.
+\end_layout
+
+\begin_layout Paragraph
+Minimal definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = new VirtualHost(component.context)
+\end_layout
+
+\begin_layout Plain Layout
+
+host.name = “privatehost” [used when attaching applications to the host]
+\end_layout
+
+\begin_layout Plain Layout
+
+component.hosts.add(component.defaultHost)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Routing
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+host.serverAddress = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourcePort = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default all of these are null, meaning that all incoming requests are
+ routed, but you can filter on specific incoming requests.
+ For example, you might want the virtual host to only accept a specific
+ port or server IP address.
+ “*” wildcards are supported for all of these.
+\end_layout
+
+\begin_layout Subsubsection
+Applications
+\end_layout
+
+\begin_layout Standard
+In each application's routing.js you have app.hosts by which you assign the
+ application to a base URI on that host.
+ By default we only use a single host, the default one, but you can assign
+ each app to one or more hosts, with different base URIs under each.
+ The app instance only runs *once* in such cases: all app.globals, etc., are
+ single.
+ It's only the routing that changes according to the requests coming in
+ from various servers and virtual hosts.
+ If you'd like the application to behave differently for each host, you
+ can do that in your code.
+\end_layout
+
+\begin_layout Paragraph
+Minimal definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/publicbaseuri/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Custom
+\end_layout
+
+\begin_layout Standard
+Here's an example of “attaching” the app to two different virtual hosts,
+ with different base URIs under each:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/publicbaseuri/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'privatehost': '/privatebaseuri'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+app.hosts
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsection
@@ -4408,8 +4753,12 @@ Plural vs.
  Singular
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
-Documentation
+Documenting Your URI-Space
 \end_layout
 
 \begin_layout Standard
@@ -4708,6 +5057,193 @@ status open
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Under the Hood
+\end_layout
+
+\begin_layout Standard
+In this final section, we'll describe in detail how routing works in Prudence.
+ It can be considered optional reading for advanced developers.
+\end_layout
+
+\begin_layout Standard
+In Prudence, “routing” refers to the decision-making process by which an
+ incoming client request reaches its server-side handler .
+ Usually, information in the request itself is used to make the decision,
+ such as the URI, cookies, the client type, capabilities and geolocation.
+ But routing can also take server-side and other circumstances into account.
+ For example, a round-robin load-balancing router might send each incoming
+ request to a different handler in sequence.
+\end_layout
+
+\begin_layout Standard
+A request normally goes through many route types before reaching its handler.
+ Filters along the way can change information in the request, which could
+ also affect routing, and indeed filters can be used as routing tools.
+\end_layout
+
+\begin_layout Standard
+This abstract, flexible routing mechanism is one of Prudence's most powerful
+ features, but it's important to understand these basic principles.
+ A common misconception is that routing is based on the hierarchical structure
+ of URIs, such that a child URI's routing is somehow affected by its parent
+ URI.
+ While it's possible to explicitly design your routes hiearchically, routing
+ is primarily to be understood in terms of the order of routers and filters
+ along the way.
+ A parent and child URI could thus use entirely different handlers.
+\end_layout
+
+\begin_layout Standard
+To give you a better understanding of how Prudence routing works, let's
+ follow the journey of a request, starting with routing at the server level.
+\end_layout
+
+\begin_layout Paragraph
+Step 1: Servers
+\end_layout
+
+\begin_layout Standard
+Requests come in from servers.
+ Prudence instances have at the minimum one server, but can have more than
+ one.
+ Each server listens at a particular HTTP port, and multiple servers may
+ in turn be restricted to particular network interfaces on your machine.
+ By default, Prudence has a single server that listens to HTTP requests
+ on port 8080 coming in from all network interfaces.
+\end_layout
+
+\begin_layout Standard
+Servers are configured in 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Step 2: The Component
+\end_layout
+
+\begin_layout Standard
+There is only one component per Prudence instance, and 
+\emph on
+all 
+\emph default
+servers route to it.
+ This allows Prudence a unified mechanism to deal with all incoming requests.
+\end_layout
+
+\begin_layout Paragraph
+Step 3: Virtual Hosts
+\end_layout
+
+\begin_layout Standard
+The component's router decides which virtual host should receive the request.
+ The decision is often made according to the domain name in the URL, but
+ can also take into account which server it came from.
+ Virtual hosting is a tool to let you host multiple sites on the same Prudence
+ instance, but it can be used for more subtle kinds of routing, too.
+\end_layout
+
+\begin_layout Standard
+At the minimum you must have one virtual host.
+ By default, Prudence has one that accepts all incoming requests from all
+ servers.
+ If you have multiple servers and want to treat them differently, you can
+ create a virtual host for each.
+\end_layout
+
+\begin_layout Standard
+Virtual hosts are configured in 
+\begin_inset Quotes eld
+\end_inset
+
+/component/hosts/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Step 4: Applications
+\end_layout
+
+\begin_layout Standard
+Using app.hosts, you can configure which virtual hosts your application will
+ be attached to, and the base URI for the application on each virtual host.
+ An application can accept requests from several virtual hosts at once.
+\end_layout
+
+\begin_layout Standard
+To put it another way, there's a many-to-many relationship between virtual
+ hosts and applications: one host can have many applications, and the same
+ application can be attached to many hosts.
+\end_layout
+
+\begin_layout Standard
+Note that you can create a “nested” URI scheme for your applications.
+ For example, one application might be attached at the root URI at a certain
+ virtual host, “/”, while other applications might be at different URIs
+ beneath the root, “/wackywiki” and “/wackywiki/support/forum”.
+ The root application will not “steal” requests from the other applications,
+ because the request is routed to the right application by the virtual host.
+ The fact that the latter URI is the hierarchical descendant of the former
+ makes no difference to the virtual host router.
+\end_layout
+
+\begin_layout Paragraph
+A Complete Route
+\end_layout
+
+\begin_layout Standard
+Let's assume a client from the Internet send a request to URI “http://www.wacky.or
+g/wackywicki/support/forum/thread/12/.”
+\end_layout
+
+\begin_layout Standard
+Our machine has two network interfaces, one facing the Internet and one
+ facing the intranet, and we have two servers to listen on each.
+ This particular request has come in through the external server.
+ The request reachers the component's router.
+\end_layout
+
+\begin_layout Standard
+We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
+ main site, and another to handle “support.wacky.org”, a secure site where
+ paying customers can open support tickets.
+\end_layout
+
+\begin_layout Standard
+Our forum application (in the 
+\begin_inset Quotes eld
+\end_inset
+
+/applications/forum/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory) is attached to both virtual hosts, but at different URIs.
+ It's at “www.wacky.org/wackywiki/support/forum” and at “support.wacky.org/forum”.
+ In this case, our request is routed to the first virtual host.
+ Though there are a few applications installed at this virtual host, our
+ request follows the route to the forum application.
+\end_layout
+
+\begin_layout Standard
+The remaining part of the URI, “/thread/12/” will be further routed inside
+ the forum application, according to route types installed in its routing.js.
+\end_layout
+
+\begin_layout Subsection
+app.preheat
 \end_layout
 
 \begin_layout Section
@@ -5290,31 +5826,1034 @@ Two options!
 \end_layout
 
 \begin_layout Subsection
+Managing State
+\end_layout
+
+\begin_layout Standard
+Prudence is designed to allow massive concurrency and scalability while
+ at the same time shielding you from the gorier details.
+ However, when it comes to sharing state between different parts of your
+ code, it's critical that you understand Prudence's state services.
+\end_layout
+
+\begin_layout Subsubsection
+conversation.locals
+\end_layout
+
+\begin_layout Standard
+These are not “local” in the same way that code scope locals are.
+ The term “local” here should be read as “local to the conversation.” They
+ are “global” in the sense that they can be accessed by any function in
+ your code, but are “local” in the sense that they persist only for the
+ duration of the user request.
+ (Compare with “thread locals” in the JVM, which are also “local” in a specific
+ sense.)
+\end_layout
+
+\begin_layout Standard
+You may ask, then, why you wouldn't want to just use your language globals,
+ which have similar scope and life.
+ 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ have three main uses in Prudence:
+\end_layout
+
+\begin_layout Enumerate
+To easily share conversation-scope state between scriptlets written in different
+ languages.
+\end_layout
+
+\begin_layout Enumerate
+To share state for deferred conversations---see 
+\bar under
+conversation.defer (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-defer"
+
+\end_inset
+
+)
+\bar default
+.
+ In such cases, your language's globals would not persist across the thread
+ boundaries.
+\end_layout
+
+\begin_layout Enumerate
+They are Prudence's general mechanism for sending state to your code in
+ a conversation.
+ For example, 
+\bar under
+captured URI segments are stored here (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|static-capturing"
+
+\end_inset
+
+)
+\bar default
+ as well as 
+\bar under
+document.cacheKeyPattern (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|document-cache-key-pattern"
+
+\end_inset
+
+)
+\bar default
+ variables.
+\end_layout
+
+\begin_layout Subsubsection
+Global Variables
+\begin_inset CommandInset label
+LatexCommand label
+name "../api/|global-variables"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You know how local variables work in your programming language: they exist
+ only for the duration of a function call, after which their state is discarded.
+ If you want state to persist beyond the function call, you use a global
+ variable (or a “static” local, which is really a global).
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+But in Prudence, you cannot expect global variables to persist beyond a
+ user request.
+
+\emph default
+ To put it another way, you should consider every single user request as
+ a separate “program” with its own global state.
+ See the “life” sections for 
+\bar under
+generating HTML (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../generating-html/|life"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../resources/|life"
+
+\end_inset
+
+)
+\bar default
+ for more information on when this global state is created and discarded.
+ If you need global variables to persist, you must use 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-globals"
+
+\end_inset
+
+)
+\bar default
+, 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ or even 
+\bar under
+application.distributedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-distributed-globals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Why does Prudence discard your language's globals? This has to do with allowing
+ for concurrency while shielding you from the complexity of having to guarantee
+ the thread-safety of your code.
+ By making each user request a separate “program,” you don't have to worry
+ about overlapping shared state, coordinating thread access, etc., for every
+ use of a variable.
+\end_layout
+
+\begin_layout Quote
+The exception to this is code in /resources/, in which language globals
+ 
+\emph on
+might
+\emph default
+ persist.
+ To improve performance, Prudence caches the global context for these in
+ memory, with the side effect that your language globals persist beyond
+ a single user request.
+ For various reasons, however, Prudence may reset this global context.
+ You should not rely on this side effect, and instead always use 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-globals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+application.globals vs.
+ application.sharedGlobals
+\end_layout
+
+\begin_layout Standard
+The rule of thumb is to always prefer to use
+\bar under
+ application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-globals"
+
+\end_inset
+
+)
+\bar default
+.
+ By doing so, you'll minimize interdependencies between applications, and
+ help make each application deployable on its own.
+\end_layout
+
+\begin_layout Standard
+Use for 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ (and possibly 
+\bar under
+application.distributedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-distributed-globals"
+
+\end_inset
+
+)
+\bar default
+---similar concerns apply to it) only when you explicitly need a bridge
+ 
+\emph on
+between 
+\emph default
+applications.
+ Examples:
+\end_layout
+
+\begin_layout Enumerate
+To save resources.
+ For example, if an application detects that a database connection has already
+ been opened by another application in the Prudence instance, and stored
+ in application.sharedGlobals, then it could use that connection rather than
+ create a new one.
+ This would only work, of course, if a few applications share the same database,
+ which is common in many deployments.
+\end_layout
+
+\begin_layout Enumerate
+To send messages between applications.
+ This would be necessary if operations in one application could affect another.
+ For example, you could place a task queue in application.sharedGlobals,
+ where applications could queue required operations.
+ A thread in another application would consume these and act accordingly.
+ Of course, you will have to plan for asynchronous behavior, and especially
+ allow for failure.
+ What happens if the consumer application is down? It may make more sense
+ in these cases to use a persistent storage, such as a database, for the
+ queue.
+\end_layout
+
+\begin_layout Standard
+Generally, if you find yourself having to rely on application.sharedGlobals,
+ ask yourself if your code would be better off encapsulated as a single
+ application.
+ Remember that Prudence has powerful URL routing, support for virtual hosting,
+ etc., letting you easily have one application work in several sites simultaneous
+ly.
+\end_layout
+
+\begin_layout Quote
+Note for Clojure flavor: All Clojure vars are VM-wide globals equivalent
+ in scope to executable.globals.
+ You usually work with namespaces that Prudence creates on the fly, so they
+ do not persist beyond the execution.
+ However, if you explicitly define a name space, then you can use it as
+ a place for shared state.
+ It will then be up to you to make sure that your namespace doesn't collide
+ with that of another application installed in the Prudence instance.
+ Though this approach might seem to break our rule of thumb here, of preferring
+ application.globals to application.sharedGlobals, it is more idiomatic to
+ Clojure and Lisps more generally.
+\end_layout
+
+\begin_layout Subsubsection
+application.sharedGlobals vs.
+ executable.globals
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+executable.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|executable-globals"
+
+\end_inset
+
+)
+\bar default
+ are in practice identical to 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+.
+ The latter is simply reserved for Prudence applications.
+ If you are running non-Prudence 
+\begin_inset CommandInset href
+LatexCommand href
+name "Scripturian"
+target "http://threecrickets.com/scripturian/"
+
+\end_inset
+
+ code on the same VM, and need to share state with Prudence, then executable.glob
+als are available for you.
+\end_layout
+
+\begin_layout Subsubsection
+Concurrency
+\begin_inset CommandInset label
+LatexCommand label
+name "../api/|concurrency"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Though 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-globals"
+
+\end_inset
+
+)
+\bar default
+, 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+, 
+\bar under
+application.distributedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-distributed-globals"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+executable.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|executable-globals"
+
+\end_inset
+
+)
+\bar default
+ are all thread safe, it's important to understand how to use them properly.
+\end_layout
+
+\begin_layout Quote
+Note for Clojure flavor: Though Clojure goes a long way towards simplifying
+ concurrent programming, it does not solve the problem of concurrent access
+ to global state.
+ You still need to read this section!
+\end_layout
+
+\begin_layout Standard
+For example, this code (Python flavor) is broken:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	data_source = application.globals['myapp.data.source']
+\end_layout
+
+\begin_layout Plain Layout
+
+	if data_source is None:
+\end_layout
+
+\begin_layout Plain Layout
+
+		data_source = data_source_factory.create()
+\end_layout
+
+\begin_layout Plain Layout
+
+		application.globals['myapp.data.source'] = data_source
+\end_layout
+
+\begin_layout Plain Layout
+
+	return data_source.get_connection()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The problem is that in the short interval between comparing the value in
+ the “if” statement and setting the global value in the “then” statement,
+ another thread may have already set the value.
+ Thus, the “data_source” instance you are referring to in the current thread
+ would be different from the “myapp.data.source” global used by other threads.
+ The value is not truly shared! In some cases, this would only result in
+ a few extra, unnecessary resources being created.
+ But in some cases, when you rely on the uniqueness of the global, this
+ can lead to subtle bugs.
+\end_layout
+
+\begin_layout Quote
+This may seem like a very rare occurrence to you: another thread would have
+ to set the value 
+\emph on
+exactly
+\emph default
+ between our comparison and our set.
+ If your application has many concurrent users, and your machine has many
+ CPU cores, it can actually happen quite frequently.
+ And, even if rare, your application has a chance of breaking if 
+\emph on
+just two users use it at the same time
+\emph default
+.
+ This is not a problem you can gloss over, even for simple applications.
+\end_layout
+
+\begin_layout Standard
+Use this code instead:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	data_source = application.globals['myapp.data.source']
+\end_layout
+
+\begin_layout Plain Layout
+
+	if data_source is None:
+\end_layout
+
+\begin_layout Plain Layout
+
+		data_source = data_source_factory.create()
+\end_layout
+
+\begin_layout Plain Layout
+
+		data_source = application.getGlobal('myapp.data.source', data_source)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return data_source.get_connection()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The getGlobal call is an atomic compare-and-set operation.
+ It guarantees that the returned value is the unique one.
+\end_layout
+
+\begin_layout Paragraph
+Optimizing for Performance
+\end_layout
+
+\begin_layout Standard
+You may have noticed, in the code above, that if another thread had already
+ set the global value, then our created data source would be discarded.
+ If data source creation is heavy and slow, then this could affect our performan
+ce.
+ The only way to guarantee that this would not happen would be to make the
+ entire operation atomic, by synchronizing it with a lock:
+\end_layout
+
+\begin_layout Standard
+Here's an example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	lock = application.getGlobal('myapp.data.source.lock', RLock())
+\end_layout
+
+\begin_layout Plain Layout
+
+	lock.acquire()
+\end_layout
+
+\begin_layout Plain Layout
+
+	try:
+\end_layout
+
+\begin_layout Plain Layout
+
+		data_source = application.globals['myapp.data.source']
+\end_layout
+
+\begin_layout Plain Layout
+
+		if data_source is None:
+\end_layout
+
+\begin_layout Plain Layout
+
+			data_source = data_source_factory.create()
+\end_layout
+
+\begin_layout Plain Layout
+
+			application.globals['myapp.data.source'] = data_source
+\end_layout
+
+\begin_layout Plain Layout
+
+		return data_source.get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	finally:
+\end_layout
+
+\begin_layout Plain Layout
+
+		lock.release()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we have to store our RLock as a unique global, too.
+\end_layout
+
+\begin_layout Standard
+Not only is the code above complicated, but synchronization has its own
+ performance penalties, which 
+\emph on
+might
+\emph default
+ make this apparent optimization actually perform worse.
+ It's definitely not a good idea to blindly apply this technique: attempt
+ it only if you are experiencing a problem with resource use or performance,
+ and then make sure that you're not making things worse with synchronization.
+\end_layout
+
+\begin_layout Standard
+Here's a final version of our get_connection function that lets you control
+ whether to lock access.
+ This can help you more easily compare which technique works better for
+ your application:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def get_connection(lock_access=False)
+\end_layout
+
+\begin_layout Plain Layout
+
+	if lock_access:
+\end_layout
+
+\begin_layout Plain Layout
+
+		lock = application.getGlobal('myapp.data.source.lock', RLock())
+\end_layout
+
+\begin_layout Plain Layout
+
+		lock.acquire()
+\end_layout
+
+\begin_layout Plain Layout
+
+	try:
+\end_layout
+
+\begin_layout Plain Layout
+
+		data_source = application.globals['myapp.data.source']
+\end_layout
+
+\begin_layout Plain Layout
+
+		if data_source is None:
+\end_layout
+
+\begin_layout Plain Layout
+
+			data_source = data_source_factory.create()
+\end_layout
+
+\begin_layout Plain Layout
+
+			if lock_access:
+\end_layout
+
+\begin_layout Plain Layout
+
+				application.globals['myapp.data.source'] = data_source
+\end_layout
+
+\begin_layout Plain Layout
+
+			else:
+\end_layout
+
+\begin_layout Plain Layout
+
+				data_source = application.getGlobal('myapp.data.source', data_source)
+\end_layout
+
+\begin_layout Plain Layout
+
+		return data_source.get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	finally:
+\end_layout
+
+\begin_layout Plain Layout
+
+		if lock_access:
+\end_layout
+
+\begin_layout Plain Layout
+
+			lock.release()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Complicated, isn't it? Unfortunately, complicated code and fine-tuning is
+ the price you must pay in order to support concurrent access, which is
+ the key to Prudence's scalability.
+\end_layout
+
+\begin_layout Standard
+But, don't be discouraged.
+ The standard protocol for using Prudence's globals will likely be good
+ enough for the vast majority of your state-sharing needs.
+\end_layout
+
+\begin_layout Subsection
 APIs
+\end_layout
+
+\begin_layout Standard
+Prudence provides you with an especially rich set of APIs.
+\end_layout
+
+\begin_layout Standard
+The core APIs required for using Prudence are multilingual, in that they
+ are implemented via standard JVM classes that can be called from all supported
+ programming languages: JavaScript, Python, Ruby, PHP, Groovy and Clojure.
+ Indeed, the entire JVM standard APIs can be access in this manner, in addition
+ to any JVM library installed in your container (under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/jars/
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Most of these languages additionally have a rich standard API of their own
+ which you can use, as well as an ecology of libraries.
+ JavaScript, however, stands out for having a very meager standard API.
+ To fill in this gap, Sincerity comes with a useful set of JavaScript Libraries,
+ which you are free to use.
+ Some of these are written pure JavaScript, offering new and useful functionalit
+y, while others provide JavaScript-friendly wrappers over standard JVM libraries.
+\end_layout
+
+\begin_layout Standard
+Furthermore, Prudence comes with JavaScript-friendly wrappers over the core
+ Prudence APIs.
+ Future versions of Prudence may provide similar friendly wrappers for the
+ other supported languages (please contribute!).
+ Until then, there's nothing that these wrappers can do that you can't do
+ with the core APIs.
+\end_layout
+
+\begin_layout Subsubsection
+Using the Documentation
+\end_layout
+
+\begin_layout Quote
+The Prudence team has spent a great amount of time on meticulously documenting
+ the APIs.
+ Please send us a 
+\begin_inset CommandInset href
+LatexCommand href
+name "bug report"
+target "http://code.google.com/p/prudence/issues/list"
+
+\end_inset
+
+ if you find a mistake, or think that the documentation can use some clarificati
+on!
+\end_layout
+
+\begin_layout Standard
+For the sake of coherence all these APIs are 
+\begin_inset CommandInset href
+LatexCommand href
+name "documented together online"
+target "http://threecrickets.com/api/javascript/"
+
+\end_inset
+
+ in their JavaScript format.
+ This includes both the multilingual as well as the JavaScript-specific
+ APIs.
+ For the multilingual APIs, just make sure to call the APIs using the appropriat
+e syntax for the programming language you are using.
+ For example, here is the same API call in all supported languages:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+JavaScript: conversation.redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+Python:     conversation.redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+Ruby:       $conversation.redirect_see_other 'http://newsite.org/'
+\end_layout
+
+\begin_layout Plain Layout
+
+PHP:        $conversation->redirectSeeOther('http://newsite.org/');
+\end_layout
+
+\begin_layout Plain Layout
+
+Groovy:     conversation.redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+Clojure:    (..
+ conversation redirectSeeOther "http://newsite.org/")
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The APIs are not fully documented here, but rather summarized to give you
+ a global view of what's available, with links to the full documentation
+ available online.
+ The documentation also lets you view the complete JavaScript source code.
+\end_layout
+
+\begin_layout Standard
+You may be further interested in Prudence's low-level API, which is also
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "fully documented online"
+target "http://threecrickets.com/api/java/prudence/"
+
+\end_inset
+
+.
+ As a final resort, sometimes the best documentation is the 
+\begin_inset CommandInset href
+LatexCommand href
+name "source code itself"
+target "http://code.google.com/p/prudence/source/browse/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A few more language-specific notes:
+\end_layout
+
+\begin_layout Paragraph
+JavaScript
+\end_layout
+
+\begin_layout Standard
+Prudence's current JavaScript engine, Rhino, does not provide dictionary
+ access to maps, so you must use get- and put- notation to access map attributes.
+ For example, use application.globals.get('myapp.data.name') rather than application.
+globals['myapp.data.name'].
+\end_layout
+
+\begin_layout Paragraph
+Python
+\end_layout
+
+\begin_layout Standard
+If you're using the Jepp engine, rather than the default Jython engine,
+ you will need to use get- and set- notation to access attributes.
+ For example, use application.getArguments() to access application.arguments
+ in Jepp.
+\end_layout
+
+\begin_layout Paragraph
+Ruby
+\end_layout
+
+\begin_layout Standard
+Prudence's Ruby engine, JRuby, conveniently lets you use the Ruby naming
+ style for API calls.
+ For example, you can use $application.get_global instead of $application.getGloba
+l.
+\end_layout
+
+\begin_layout Paragraph
+Clojure
+\end_layout
+
+\begin_layout Standard
+You will need to use get- and set- notation to access attributes.
+ For example, use 
+\begin_inset Quotes eld
+\end_inset
+
+(.getArguments application)
+\begin_inset Quotes erd
+\end_inset
+
+ to access application.arguments.
+ You can also use Clojure's bean form, for example 
+\begin_inset Quotes eld
+\end_inset
+
+(bean application)
+\begin_inset Quotes erd
+\end_inset
+
+, to create a read-only representation of Prudence services.
+\end_layout
+
+\begin_layout Subsubsection
+Prudence APIs
+\end_layout
+
+\begin_layout Standard
+These core APIs are implemented by the JVM and can be used by any support
+ programming language.
+ The APIs consist of three namespaces that are defined as global variables.
+\end_layout
+
+\begin_layout Paragraph
+\begin_inset CommandInset href
+LatexCommand href
+name "application"
+target "http://threecrickets.com/api/javascript/?namespace=application"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+\begin_inset CommandInset href
+LatexCommand href
+name "document"
+target "http://threecrickets.com/api/javascript/?namespace=document"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation"
+target "http://threecrickets.com/api/javascript/?namespace=conversation"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
 Scripturian API
 \end_layout
 
-\begin_layout Standard
-executable
-\end_layout
+\begin_layout Paragraph
+\begin_inset CommandInset href
+LatexCommand href
+name "executable"
+target "http://threecrickets.com/api/javascript/?namespace=executable"
 
-\begin_layout Subsubsection
-Resource API
-\end_layout
+\end_inset
 
-\begin_layout Standard
-application
-\end_layout
 
-\begin_layout Standard
-document
 \end_layout
 
 \begin_layout Subsubsection
 JavaScript Libraries
+\end_layout
+
+\begin_layout Standard
+The APIs are only available for JavaScript running within Scripturian.
 \end_layout
 
 \begin_layout Paragraph
@@ -5322,59 +6861,171 @@ Sincerity JavaScript Library
 \end_layout
 
 \begin_layout Itemize
-/sincerity/calendar/
+/sincerity/calendar/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Calendar"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Calendar"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/classes/
+/sincerity/classes/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Classes"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Classes"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/cryptography/
+/sincerity/cryptography/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Cryptography"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Cryptography"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/files/
+/sincerity/files/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Files"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Files"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/iterators/
+/sincerity/iterators/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Iterators"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Iterators"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/json/
+/sincerity/json/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.JSON"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.JSON"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/jvm/
+/sincerity/jvm/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.JVM"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.JVM"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/localization/
+/sincerity/localization/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Localization"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Localization"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/lucene/
+/sincerity/lucene/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Lucene"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Lucene"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/mail/
+/sincerity/mail/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Mail"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Mail"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/objects/
+/sincerity/objects/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Objects"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Objects"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/rhino/
+/sincerity/rhino/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Rhino"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Rhino"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/templates/
+/sincerity/templates/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Templates"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Templates"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/xml/
+/sincerity/xml/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.XML"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.XML"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -5382,23 +7033,63 @@ Prudence JavaScript Library
 \end_layout
 
 \begin_layout Itemize
-/prudence/blocks/
+/prudence/blocks/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Blocks"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Blocks"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/prudence/lazy/
+/prudence/lazy/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Lazy"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Lazy"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/prudence/logging/
+/prudence/logging/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Logging"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Logging"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/prudence/resources/
+/prudence/resources/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/prudence/tasks/
+/prudence/tasks/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Tasks"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Tasks"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -5406,19 +7097,55 @@ Libraries for Bootstrap and Configuration
 \end_layout
 
 \begin_layout Itemize
-/sincerity/annotations/
+/sincerity/annotations/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Annotations"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Annotations"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/sincerity/container/
+/sincerity/container/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Container"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Containter"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/prudence/routing/
+/prudence/routing/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Routing"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Routing"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
-/prudence/lazy/
+/prudence/lazy/: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Lazy"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Lazy"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Diligence
 \end_layout
 
 \begin_layout Section
