@@ -10,9 +10,7 @@ app.routes = {
 		{type: 'filter', library: '/filters/statistics/', next: 'scriptlet'},
 		{type: 'cacheControl', 'default': 10, mediaTypes: {'text/html': 15}, next:
 			{type: 'javaScriptUnifyMinify', next:
-				{type: 'zuss', next: [
-					'static',
-					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
+				{type: 'zuss', next: 'static'}}}
 	],
 	'/person/{id}/':        '@person',
 	'/pythonperson/{id}/':  '@python:person',

@@ -9,8 +9,5 @@ app.routes = {
 		'manual',
 		'scriptlet',
 		{type: 'javaScriptUnifyMinify', next:
-			{type: 'zuss', next: [
-				'static',
-				{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}
-	]
+			{type: 'zuss', next: 'static'}}]
 }

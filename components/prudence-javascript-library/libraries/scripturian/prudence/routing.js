@@ -655,9 +655,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {String[]|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>[]} [roots="resources" container "/libraries/web/" subdirectories] The paths from which files are searched
 	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
 	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
 	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Static = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Static */
@@ -667,30 +669,64 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'listingAllowed', 'negotiate', 'compress']
+		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'cacheDuration']
 
 		Public.create = function(app, uri) {
 			importClass(
-				org.restlet.resource.Directory,
-				com.threecrickets.prudence.util.DefaultEncoder,
-				java.io.File)
+				com.threecrickets.prudence.util.Fallback)
 			
-			this.root = Sincerity.Objects.ensure(this.root, 'resources')
-			if (!(this.root instanceof File)) {
-				this.root = new File(app.root, this.root).absoluteFile
+			if (Sincerity.Objects.exists(this.root)) {
+				this.roots = [this.root]
+			}
+			else {
+				this.roots = Sincerity.Objects.ensure(this.roots, ['resources', sincerity.container.getLibrariesFile('web')])
 			}
 			
-			var directory = new Directory(app.context, this.root.toURI())
-			directory.listingAllowed = Sincerity.Objects.ensure(this.listingAllowed, false)
-			directory.negotiatingContent = Sincerity.Objects.ensure(this.negotiate, true)
+			if (this.roots.length == 1) {
+				// Single directory
+				return createDirectory.call(this, app, this.roots[0])
+			}
+			else {
+				// Chained directories
+				this.cacheDuration = Sincerity.Objects.ensure(this.cacheDuration, app.settings.code.minimumTimeBetweenValidityChecks)
+				
+				var fallback = new Fallback(app.context, this.cacheDuration)
+				
+				for (var i in this.roots) {
+					var restlet = createDirectory.call(this, app, this.roots[i])
+					fallback.addTarget(restlet)					
+				}
+				
+				return fallback
+			}
+		}
+		
+		//
+		// Private
+		//
+		
+		function createDirectory(app, root) {
+			importClass(
+					org.restlet.resource.Directory,
+					com.threecrickets.prudence.util.DefaultEncoder,
+					java.io.File)
+
+			if (!(root instanceof File)) {
+				root = new File(app.root, root).absoluteFile
+			}
+
+			var restlet = new Directory(app.context, root.toURI())
+			restlet.listingAllowed = Sincerity.Objects.ensure(this.listingAllowed, false)
+			restlet.negotiatingContent = Sincerity.Objects.ensure(this.negotiate, true)
 			
 			if (Sincerity.Objects.ensure(this.compress, true)) {
+				// Put an encoder before the directory
 				var encoder = new DefaultEncoder(app.instance)
-				encoder.next = directory
-				directory = encoder
+				encoder.next = restlet
+				restlet = encoder
 			}
 			
-			return directory
+			return restlet
 		}
 		
 		return Public
@@ -1031,7 +1067,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * charge of forwarding entry point calls to the appropriate handlers.
 	 * <p>
 	 * This means that your application <i>must</i> have a {@link Prudence.Routing.Manual} configured for
-	 * it. If you try to configure a Dispatch without a Manual, you will get an error.
+	 * dispatching to work.
 	 * <p>
 	 * Prudence supports a special short-form notation for configuring this class: '@dispatcher:id'
 	 * or just '@id' (where "dispatcher" defaults to "javascript"). For example, "@clojure:record"
@@ -1072,10 +1108,10 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.prudence.util.Injector,
 				com.threecrickets.prudence.util.CapturingRedirector)
 				
-			if (!Sincerity.Objects.exists(app.delegatedResource)) {
+			/*if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				throw new SincerityException('A Manual must be attached before a Dispatch can be created')
-	   		}
-				
+	   		}*/
+
 			this.dispatcher = Sincerity.Objects.ensure(this.dispatcher, 'javascript')
 			var dispatcher = app.getDispatcher(this.dispatcher)
 	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.dispatcher + '?{rq}', false)
@@ -1292,7 +1328,7 @@ Prudence.Routing = Prudence.Routing || function() {
 						}
 					}
 					else {
-						throw new SincerityException('Unsupported restlet for "{0}"'.cast(uri))
+						throw new SincerityException('Unsupported route type for route "{0}"'.cast(uri))
 					}
 				}
 			}

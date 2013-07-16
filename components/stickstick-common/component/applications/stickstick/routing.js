@@ -7,9 +7,6 @@ app.routes = {
 	'/*': [
 		'manual',
 		'scriptlet',
-		{type: 'zuss', next: [
-			'static',
-			{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}
-	],
+		{type: 'zuss', next: 'static'}],
 	'/data/note/{id}/': '/data/note/!'
 }

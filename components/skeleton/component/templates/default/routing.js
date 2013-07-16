@@ -11,9 +11,7 @@ app.routes = {
 		// For our static files we'll cache all images on the client for the far future, and enable on-the-fly ZUSS support and JavaScript compression:
 		{type: 'cacheControl', mediaTypes: {'image/png': 'farFuture', 'image/jpeg': 'farFuture', 'image/gif': 'farFuture'}, next:
 			{type: 'javaScriptUnifyMinify', next:
-				{type: 'zuss', next: [
-					'static',
-					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
+				{type: 'zuss', next: 'static'}}}
 	],
 	// Dispatched resource
 	'/sample1/': '@sample', // see /libraries/manual-resources/sample.js
