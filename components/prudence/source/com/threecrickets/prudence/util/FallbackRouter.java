@@ -15,6 +15,7 @@ import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.routing.Route;
 import org.restlet.routing.Router;
+import org.restlet.routing.Template;
 import org.restlet.routing.TemplateRoute;
 
 /**
@@ -92,6 +93,31 @@ public class FallbackRouter extends CapturingRouter
 		this.cacheDuration = cacheDuration;
 	}
 
+	/**
+	 * The route matching mode required for fallback testing. Defaults to
+	 * {@link Template#MODE_STARTS_WITH}.
+	 * 
+	 * @return The fallback matching mode
+	 * @see #setfallbackMatchingMode
+	 */
+	public int getFallbackMatchingMode()
+	{
+		return fallbackMatchingMode;
+	}
+
+	/**
+	 * The route matching mode required for fallback testing. Defaults to
+	 * {@link Template#MODE_STARTS_WITH}.
+	 * 
+	 * @param fallbackMatchingMode
+	 *        The fallback matching mode
+	 * @see #getfallbackMatchingMode
+	 */
+	public void setFallbackMatchingMode( int fallbackMatchingMode )
+	{
+		this.fallbackMatchingMode = fallbackMatchingMode;
+	}
+
 	//
 	// Router
 	//
@@ -105,7 +131,7 @@ public class FallbackRouter extends CapturingRouter
 			if( route instanceof TemplateRoute )
 			{
 				TemplateRoute templateRoute = (TemplateRoute) route;
-				if( templateRoute.getTemplate().getPattern().equals( pathTemplate ) )
+				if( ( templateRoute.getMatchingMode() == fallbackMatchingMode ) && ( templateRoute.getTemplate().getPattern().equals( pathTemplate ) ) )
 				{
 					existingRoute = templateRoute;
 					break;
@@ -184,6 +210,11 @@ public class FallbackRouter extends CapturingRouter
 	 * milliseconds.
 	 */
 	private volatile int cacheDuration;
+
+	/**
+	 * The route matching mode required for fallback testing.
+	 */
+	private volatile int fallbackMatchingMode = Template.MODE_STARTS_WITH;
 
 	/**
 	 * Add description.
