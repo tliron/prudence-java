@@ -15,7 +15,6 @@ import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.routing.Route;
 import org.restlet.routing.Router;
-import org.restlet.routing.Template;
 import org.restlet.routing.TemplateRoute;
 
 /**
@@ -24,10 +23,7 @@ import org.restlet.routing.TemplateRoute;
  * a chance to handle a request, while "falling back" to subsequent restlets
  * when those "fail."
  * <p>
- * Both {@link Router#attach(String, Restlet)} and
- * {@link Router#detach(Restlet)} are overriden to support bunching and
- * un-bunching. Note that if you otherwise change the routes (say, via modifying
- * {@link Router#getRoutes()}, you will override this behavior.
+ * {@link Router#detach(Restlet)} is overriden to support un-bunching.
  * 
  * @author Tal Liron
  */
@@ -94,36 +90,14 @@ public class FallbackRouter extends CapturingRouter
 	}
 
 	/**
-	 * The route matching mode required for fallback testing. Defaults to
-	 * {@link Template#MODE_STARTS_WITH}.
-	 * 
-	 * @return The fallback matching mode
-	 * @see #setfallbackMatchingMode
+	 * @param pathTemplate
+	 *        The URI path template that must match the relative part of the
+	 *        resource URI.
+	 * @param target
+	 *        The target Restlet to attach.
+	 * @return The created route.
 	 */
-	public int getFallbackMatchingMode()
-	{
-		return fallbackMatchingMode;
-	}
-
-	/**
-	 * The route matching mode required for fallback testing. Defaults to
-	 * {@link Template#MODE_STARTS_WITH}.
-	 * 
-	 * @param fallbackMatchingMode
-	 *        The fallback matching mode
-	 * @see #getfallbackMatchingMode
-	 */
-	public void setFallbackMatchingMode( int fallbackMatchingMode )
-	{
-		this.fallbackMatchingMode = fallbackMatchingMode;
-	}
-
-	//
-	// Router
-	//
-
-	@Override
-	public TemplateRoute attach( String pathTemplate, Restlet target )
+	public TemplateRoute attachFallback( String pathTemplate, Restlet target )
 	{
 		TemplateRoute existingRoute = null;
 		for( Route route : getRoutes() )
@@ -131,7 +105,7 @@ public class FallbackRouter extends CapturingRouter
 			if( route instanceof TemplateRoute )
 			{
 				TemplateRoute templateRoute = (TemplateRoute) route;
-				if( ( templateRoute.getMatchingMode() == fallbackMatchingMode ) && ( templateRoute.getTemplate().getPattern().equals( pathTemplate ) ) )
+				if( templateRoute.getTemplate().getPattern().equals( pathTemplate ) )
 				{
 					existingRoute = templateRoute;
 					break;
@@ -157,8 +131,12 @@ public class FallbackRouter extends CapturingRouter
 			return existingRoute;
 		}
 
-		return super.attach( pathTemplate, target );
+		return attach( pathTemplate, target );
 	}
+
+	//
+	// Router
+	//
 
 	@Override
 	public void detach( Restlet target )
@@ -210,11 +188,6 @@ public class FallbackRouter extends CapturingRouter
 	 * milliseconds.
 	 */
 	private volatile int cacheDuration;
-
-	/**
-	 * The route matching mode required for fallback testing.
-	 */
-	private volatile int fallbackMatchingMode = Template.MODE_STARTS_WITH;
 
 	/**
 	 * Add description.
