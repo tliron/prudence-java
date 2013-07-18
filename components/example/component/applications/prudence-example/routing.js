@@ -1,17 +1,32 @@
 
 app.hosts = {
-	'default': '/prudence-example/',
-	internal: '/prudence-example/' // If not provided will default to the application subdirectory name
+	'default': '/prudence-example/'
 }
 
 app.routes = {
 	'/*': [
 		'manual',
-		{type: 'filter', library: '/filters/statistics/', next: 'scriptlet'},
-		{type: 'cacheControl', 'default': 10, mediaTypes: {'text/html': 15}, next:
-			{type: 'javaScriptUnifyMinify', next:
-				{type: 'zuss', next: 'static'}}}
+		{
+			type: 'filter',
+			library: '/filters/statistics/',
+			next: 'scriptlet'
+		},
+		{
+			type: 'cacheControl',
+			mediaTypes: {
+				'image/png': 'farFuture',
+				'image/gif': 'farFuture',
+				'image/jpeg': 'farFuture',
+				'text/css': 'farFuture',
+				'application/x-javascript': 'farFuture'
+			},
+			next: {
+				type: 'zuss',
+				next: 'static'
+			}
+		}
 	],
+
 	'/person/{id}/':        '@person',
 	'/pythonperson/{id}/':  '@python:person',
 	'/groovyperson/{id}/':  '@groovy:person',

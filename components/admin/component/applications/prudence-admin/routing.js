@@ -1,13 +1,25 @@
 
 app.hosts = {
-	'default': '/',
-	internal: '/prudence-admin/' // If not provided will default to the application subdirectory name
+	'default': '/'
 }
 
 app.routes = {
 	'/*': [
 		'manual',
 		'scriptlet',
-		{type: 'javaScriptUnifyMinify', next:
-			{type: 'zuss', next: 'static'}}]
+		{
+			type: 'cacheControl',
+			mediaTypes: {
+				'image/png': 'farFuture',
+				'image/gif': 'farFuture',
+				'image/jpeg': 'farFuture',
+				'text/css': 'farFuture',
+				'application/x-javascript': 'farFuture'
+			},
+			next: {
+				type: 'zuss',
+				next: 'static'
+			}
+		}
+	]
 }

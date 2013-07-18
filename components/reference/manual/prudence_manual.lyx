@@ -1174,11 +1174,19 @@ static
 \begin_inset Quotes erd
 \end_inset
 
+ subdirectory chained to the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/
+\begin_inset Quotes erd
+\end_inset
+
  subdirectory for its 
 \begin_inset Quotes eld
 \end_inset
 
-root
+roots
 \begin_inset Quotes erd
 \end_inset
 
@@ -1207,7 +1215,15 @@ scriptlet
 \begin_inset Quotes erd
 \end_inset
 
-, it should be the last entry in the chain.
+, then 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ should be the last entry in the chain.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href

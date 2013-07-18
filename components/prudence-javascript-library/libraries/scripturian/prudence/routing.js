@@ -636,6 +636,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * You will always want use a wildcard URI template with this class, because it will attempt to match
 	 * all URIs to files or directories.
 	 * <p>
+	 * The class behaves a bit differently according to the size of the "roots" array param. If more than
+	 * one element is in the array, then in fact a {@link Prudence.Routing.Chain} is automatically created
+	 * around multiple instances. If only one element is in the array, then the chain is avoided. Use
+	 * the "root" param as an alternative for specifying a single element. 
+	 * <p>
 	 * The mapped URI for each file will be its path (relative to the root) appended to the URI
 	 * template. For example, if the URI template is "/archive/*", and the root is "/usr/share/web/",
 	 * and the file is "/user/share/web/images/logo.png", then the final URI would be "/archive/images/logo.png".
