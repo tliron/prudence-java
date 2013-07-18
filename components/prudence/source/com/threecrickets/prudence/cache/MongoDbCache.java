@@ -33,7 +33,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 /**
@@ -66,46 +66,46 @@ public class MongoDbCache implements Cache
 	 */
 	public MongoDbCache() throws UnknownHostException, MongoException
 	{
-		this( new Mongo() );
+		this( new MongoClient() );
 	}
 
 	/**
 	 * Construction for database "prudence", collection "cache".
 	 * 
-	 * @param mongo
-	 *        The MongoDB connection
+	 * @param client
+	 *        The MongoDB client
 	 */
-	public MongoDbCache( Mongo mongo )
+	public MongoDbCache( MongoClient client )
 	{
-		this( mongo, "prudence" );
+		this( client, "prudence" );
 	}
 
 	/**
 	 * Construction for collection "cache".
 	 * 
-	 * @param mongo
-	 *        The MongoDB connection
+	 * @param client
+	 *        The MongoDB client
 	 * @param dbName
 	 *        The MongoDB database name
 	 */
-	public MongoDbCache( Mongo mongo, String dbName )
+	public MongoDbCache( MongoClient client, String dbName )
 	{
-		this( mongo.getDB( dbName ), "cache" );
+		this( client.getDB( dbName ), "cache" );
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param mongo
-	 *        The MongoDB connection
+	 * @param client
+	 *        The MongoDB client
 	 * @param dbName
 	 *        The MongoDB database name
 	 * @param collectionName
 	 *        The name of the collection to use for the cache
 	 */
-	public MongoDbCache( Mongo mongo, String dbName, String collectionName )
+	public MongoDbCache( MongoClient client, String dbName, String collectionName )
 	{
-		this( mongo.getDB( dbName ), collectionName );
+		this( client.getDB( dbName ), collectionName );
 	}
 
 	/**
