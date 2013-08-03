@@ -1,4 +1,8 @@
 
+//
+// Adds an HTTPS-based client.
+//
+
 importClass(
 	org.restlet.data.Protocol)
 

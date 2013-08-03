@@ -1,6 +1,12 @@
 
+//
+// Configures Hazelcast using either the "/configuration/hazelcast/" script
+// or the "/configuration/hazelcast.conf" file.
+//
+
 document.execute('/sincerity/container/')
 
+// Try "/configuration/hazelcast.conf" if it exists
 var config = sincerity.container.getConfigurationFile('hazelcast.conf')
 if (config.exists()) {
 	try {
@@ -14,6 +20,7 @@ if (config.exists()) {
 }
 else
 {
+	// Execute the "/configuration/hazelcast/" script
 	try {
 		importClass(
 			com.hazelcast.config.Config,

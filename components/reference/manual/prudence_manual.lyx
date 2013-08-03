@@ -573,28 +573,62 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		{type: 'cacheControl', mediaTypes: {'image/png': 'farFuture', 'image/jpeg':
- 'farFuture', 'image/gif': 'farFuture'}, next:
+		{
 \end_layout
 
 \begin_layout Plain Layout
 
-			{type: 'javaScriptUnifyMinify', next:
+			type: 'cacheControl',
 \end_layout
 
 \begin_layout Plain Layout
 
-				{type: 'zuss', next: [
+			mediaTypes: {
 \end_layout
 
 \begin_layout Plain Layout
 
-					'static',
+				'image/png': 'farFuture',
 \end_layout
 
 \begin_layout Plain Layout
 
-					{type: 'static', root: sincerity.container.getLibrariesFile('web')}]}}}
+				'image/jpeg': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/gif': 'farFuture'
+\end_layout
+
+\begin_layout Plain Layout
+
+			},
+\end_layout
+
+\begin_layout Plain Layout
+
+			next: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				type: 'zuss',
+\end_layout
+
+\begin_layout Plain Layout
+
+				next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
 \end_layout
 
 \begin_layout Plain Layout
@@ -688,8 +722,16 @@ Variables
 \end_inset
 
 .
- The variables will match [TODO].
- You can access the string values of there variables in your resource via
+ The variables will match any text until the next 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can access the string values of these variables in your resource via
  the conversation.locals API.
 \end_layout
 
@@ -1528,7 +1570,7 @@ next
 
  params to create an injector.
  An injector is a simple filter that injects preset valued into conversation.loca
-ls.
+ls, but otherwise has no effect on the conversation.
  This is useful for Inversion of Control (IoC): you can use these conversation.lo
 cals to alter the behavior of nested route types directly in your routing.js.
  Handled by the 
@@ -1547,11 +1589,43 @@ httpAuthenticator
 \end_layout
 
 \begin_layout Standard
-TODO
-\end_layout
+Use the 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-Handled by the 
+httpAuthenticator
+\begin_inset Quotes erd
+\end_inset
+
+ with the 
+\begin_inset Quotes eld
+\end_inset
+
+credentials
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+realm
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ params to require HTTP authentication before allow the request to go through.
+ This straightforward (but weak and inflexible) security mechanism is useful
+ for ensuring that robots, such as search engine crawlers, as well as unauthoriz
+ed users do not access a URI.
+ Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.HttpAuthenticator"
@@ -1876,7 +1950,7 @@ If you like, you can use Sincerity.Classes to create your class, and also
 \end_layout
 
 \begin_layout Standard
-Here's complete example in which we implement a route type that redirects
+Here's a complete example in which we implement a route type that redirects
  using HTTP status code 303 (
 \begin_inset Quotes eld
 \end_inset
@@ -1886,7 +1960,7 @@ see other
 \end_inset
 
 ).
- (Note this can also be achieved using the built-in 
+ (Note this same effect can be achieved using the built-in 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1986,7 +2060,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/original/': {type: 'see', uri: 'http://newsite.org/new/uri/'}
+	'/original-uri/': {type: 'see', uri: 'http://newsite.org/new-uri/'}
 \end_layout
 
 \begin_layout Plain Layout
@@ -3043,7 +3117,7 @@ POST
 \end_layout
 
 \begin_layout Standard
-You cannot use the 
+Not that you cannot use the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3579,8 +3653,8 @@ Object-oriented inheritance is one useful way to reuse code while allowing
 \end_layout
 
 \begin_layout Standard
-When defining the dispatch, you can also set conversation.locals to set values.
- You would need to use the long-form configuration for this:
+When defining the dispatch, you can also inject set values to conversation.locals.
+ You would need to use the long-form configuration to do this:
 \end_layout
 
 \begin_layout Standard

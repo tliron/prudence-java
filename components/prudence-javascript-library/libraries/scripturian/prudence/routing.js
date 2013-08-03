@@ -1920,7 +1920,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A filter {@link Prudence.Routing.Filter} that adds client-side cache control headers to
+	 * A {@link Prudence.Routing.Filter} that adds client-side cache control headers to
 	 * responses according to their media (MIME) types. These headers ask the client to
 	 * cache or not to cache the response. When cached, the client will not send <i>any</i> request
 	 * to the server (not even a conditional request), amounting to the best possible boost
@@ -2019,7 +2019,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 *
+	 * A {@link Prudence.Routing.Filter} that requires HTTP authentication before allowing
+	 * a request to go through.
+	 * <p>
+	 * This straightforward (but weak and inflexible) security mechanism is useful for ensuring that
+	 * robots, such as search engine crawlers, as well as unauthorized users do not access a URI.
+	 * <p>
+	 * The "realm" param is a text string that will be displayed to the user as a password prompt.
+	 * "credentials.username" and "credentials.password" are used for authentication. 
 	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
 	 * 
@@ -2028,6 +2035,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {Object} credentials
+	 * @param {String} credentials.username
+	 * @param {String} credentials.password
 	 * @param {String} realm
 	 * @param {Object} next
 	 */
