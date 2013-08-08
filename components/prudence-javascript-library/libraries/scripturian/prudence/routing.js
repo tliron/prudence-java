@@ -866,11 +866,10 @@ Prudence.Routing = Prudence.Routing || function() {
 					app.sourceViewableDocumentSources.addAll(app.libraryDocumentSources)
 				}
 
-				// Pass-through and hide dispatchers
+				// Pass-through dispatchers
 				for (var name in app.dispatchers) {
 					var dispatcher = app.getDispatcher(name)
 					delegatedResource.passThroughDocuments.add(dispatcher.dispatcher)
-					//app.hidden.push(dispatcher.uri)
 					if (sincerity.verbosity >= 2) {
 						println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcher.uri))
 					}
