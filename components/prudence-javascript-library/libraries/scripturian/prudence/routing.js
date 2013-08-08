@@ -186,7 +186,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Flatten globals
 			this.globals = Sincerity.Objects.flatten(this.globals)
 
-			// Ensure settings exist
+			// Ensure all settings exist
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
 			this.settings.code = Sincerity.Objects.ensure(this.settings.code, {})
@@ -418,9 +418,10 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Inbound root (a router)
 			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
 			
-			// Hidden
-			for (var uri in this.hidden) {
-				this.instance.inboundRoot.hide(uri)
+			// Internal access to DelegatedResource
+			if (Sincerity.Objects.exists(this.delegatedResource)) {
+				this.instance.inboundRoot.attachBase(this.delegatedResourceInternalUri, this.delegatedResource)
+				this.hidden.push(this.delegatedResourceInternalUri + '*')
 			}
 
 			// Source viewer
@@ -432,6 +433,28 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 			}
 
+			// Hidden URIs
+			if (this.hidden.length > 0) {
+				if (sincerity.verbosity >= 2) {
+					println('  Hidden routes:')
+				}
+				for (var h in this.hidden) {
+					var uri = this.hidden[h]
+					if (sincerity.verbosity >= 2) {
+						println('    "{0}"'.cast(uri))
+					}
+					var length = uri.length
+					var last = uri[length - 1]
+					if (last == '*') {
+						uri = uri.substring(0, length - 1)
+						this.instance.inboundRoot.hideBase(uri)
+					}
+					else {
+						this.instance.inboundRoot.hide(uri)
+					}
+				}
+			}
+			
 			// crontab
 			var crontab = new File(this.root, 'crontab').absoluteFile
 			if (crontab.exists() && !crontab.directory) {
@@ -587,8 +610,9 @@ Prudence.Routing = Prudence.Routing || function() {
 				dispatcher = {resources: dispatcher}
 			}
 			dispatcher.dispatcher = Sincerity.Objects.ensure(dispatcher.dispatcher, '/prudence/dispatchers/{0}/'.cast(name))
+			dispatcher.uri = Module.cleanUri(this.delegatedResourceInternalUri + dispatcher.dispatcher)
 			for (var key in dispatcher) {
-				if (key != 'dispatcher') {
+				if ((key != 'dispatcher') && (key != 'uri')) {
 					this.globals['prudence.dispatcher.{0}.{1}'.cast(name, key)] = dispatcher[key]
 				}
 			}
@@ -779,6 +803,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String[]} [passThroughs]
 	 * @param {String} [preExtension='m']
 	 * @param {Boolean} [trailingSlashRequired=true]
+	 * @param {String} [internalUri='/_manual/']
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Manual */
@@ -788,7 +813,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired']
+		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.delegatedResource)) {
@@ -804,6 +829,8 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
 				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
+				
+				app.delegatedResourceInternalUri = Sincerity.Objects.ensure(this.internalUri, '/_manual/')
 
 				if (sincerity.verbosity >= 2) {
 					println('    Manual:')
@@ -840,14 +867,12 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 
 				// Pass-through and hide dispatchers
-				var dispatcherBaseUri = Module.cleanBaseUri(uri)
 				for (var name in app.dispatchers) {
 					var dispatcher = app.getDispatcher(name)
 					delegatedResource.passThroughDocuments.add(dispatcher.dispatcher)
-					var dispatcherUri = dispatcherBaseUri + dispatcher.dispatcher
-					app.hidden.push(dispatcherUri)
+					//app.hidden.push(dispatcher.uri)
 					if (sincerity.verbosity >= 2) {
-						println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcherUri))
+						println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcher.uri))
 					}
 				}
 
@@ -859,7 +884,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				app.delegatedResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
 			}
-			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired)) {
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.internalUri)) {
 				throw new SincerityException('You can configure a Manual only once per application')
 			}
 
@@ -1119,7 +1144,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			this.dispatcher = Sincerity.Objects.ensure(this.dispatcher, 'javascript')
 			var dispatcher = app.getDispatcher(this.dispatcher)
-	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.dispatcher + '?{rq}', false)
+	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.uri + '?{rq}', false)
 			var injector = new Injector(app.context, capture)
 			injector.values.put('prudence.dispatcher.id', this.id)
 
@@ -1920,7 +1945,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A {@link Prudence.Routing.Filter} that adds client-side cache control headers to
+	 * A filter {@link Prudence.Routing.Filter} that adds client-side cache control headers to
 	 * responses according to their media (MIME) types. These headers ask the client to
 	 * cache or not to cache the response. When cached, the client will not send <i>any</i> request
 	 * to the server (not even a conditional request), amounting to the best possible boost
@@ -2019,14 +2044,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A {@link Prudence.Routing.Filter} that requires HTTP authentication before allowing
-	 * a request to go through.
-	 * <p>
-	 * This straightforward (but weak and inflexible) security mechanism is useful for ensuring that
-	 * robots, such as search engine crawlers, as well as unauthorized users do not access a URI.
-	 * <p>
-	 * The "realm" param is a text string that will be displayed to the user as a password prompt.
-	 * "credentials.username" and "credentials.password" are used for authentication. 
+	 *
 	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
 	 * 
@@ -2035,8 +2053,6 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {Object} credentials
-	 * @param {String} credentials.username
-	 * @param {String} credentials.password
 	 * @param {String} realm
 	 * @param {Object} next
 	 */

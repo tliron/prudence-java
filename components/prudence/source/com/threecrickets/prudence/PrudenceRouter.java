@@ -419,6 +419,22 @@ public class PrudenceRouter extends FallbackRouter
 		hiddenUris.add( uri );
 	}
 
+	/**
+	 * Sets URIs for which the beginning matches this URI to always return
+	 * {@link Status#CLIENT_ERROR_NOT_FOUND}. Note that if there really is a
+	 * resource at that URI, it might still be available via other routes.
+	 * <p>
+	 * Hiding is explicitly disabled for the RIAP protocol.
+	 * 
+	 * @param uri
+	 *        The URI path that must match the beginning of the remaining part
+	 *        of the resource URI
+	 */
+	public void hideBase( String uri )
+	{
+		hiddenBaseUris.add( uri );
+	}
+
 	//
 	// Router
 	//
@@ -435,6 +451,14 @@ public class PrudenceRouter extends FallbackRouter
 				response.setStatus( Status.CLIENT_ERROR_NOT_FOUND );
 				return;
 			}
+			for( String baseUri : hiddenBaseUris )
+			{
+				if( remaining.startsWith( baseUri ) )
+				{
+					response.setStatus( Status.CLIENT_ERROR_NOT_FOUND );
+					return;
+				}
+			}
 		}
 
 		super.handle( request, response );
@@ -449,6 +473,13 @@ public class PrudenceRouter extends FallbackRouter
 	 * @see #hide(String)
 	 */
 	private CopyOnWriteArraySet<String> hiddenUris = new CopyOnWriteArraySet<String>();
+
+	/**
+	 * Hidden base URIs.
+	 * 
+	 * @see #hideBase(String)
+	 */
+	private CopyOnWriteArraySet<String> hiddenBaseUris = new CopyOnWriteArraySet<String>();
 
 	/**
 	 * Add description.

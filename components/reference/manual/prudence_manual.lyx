@@ -1327,6 +1327,156 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manu
  [See Implementing Resources]
 \end_layout
 
+\begin_layout Quote
+The 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ is internally used by Prudence to handle the 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ type, via a server-side redirect.
+ This introduces two special limitations.
+ First, it means that you 
+\emph on
+must
+\emph default
+ have a 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ if you want to use 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch.
+\begin_inset Quotes erd
+\end_inset
+
+ Second, you must make sure the 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ always appears 
+\emph on
+before
+\emph default
+ any use of 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ in app.routes.
+ For example, if you attach the manual to 
+\begin_inset Quotes eld
+\end_inset
+
+/*
+\begin_inset Quotes erd
+\end_inset
+
+ in a chain (as in the default application template), and you also want
+ to add a 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ to that chain, you need to put the 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+before
+\emph default
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ in the chain.
+ Otherwise, you will cause an endless server-side redirect, leading to a
+ stack overflow error.
+ Example:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+		'@sample', // must appear after the manual
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+	],
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 scriptlet
 \end_layout

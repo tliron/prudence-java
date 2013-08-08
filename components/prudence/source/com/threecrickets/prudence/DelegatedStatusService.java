@@ -52,7 +52,7 @@ public class DelegatedStatusService extends StatusService
 	 * Constructor.
 	 * 
 	 * @param sourceCodeUri
-	 *        The source code URI or null
+	 *        The source code viewer URI or null
 	 */
 	public DelegatedStatusService( String sourceCodeUri )
 	{
@@ -62,7 +62,7 @@ public class DelegatedStatusService extends StatusService
 	}
 
 	/**
-	 * 
+	 * Constructor without support for source code viewing.
 	 */
 	public DelegatedStatusService()
 	{
