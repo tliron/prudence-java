@@ -11,19 +11,18 @@
 
 package com.threecrickets.prudence.service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import org.restlet.Application;
 
-import com.hazelcast.core.DistributedTask;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IExecutorService;
 import com.hazelcast.core.Member;
-import com.hazelcast.core.MultiTask;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.SerializableApplicationTask;
@@ -38,6 +37,21 @@ import com.threecrickets.prudence.SerializableApplicationTask;
  */
 public class DistributedApplicationService extends ApplicationService
 {
+	//
+	// Construction
+	//
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param application
+	 *        The application
+	 */
+	public DistributedApplicationService( Application application )
+	{
+		super( application );
+	}
+
 	//
 	// Attributes
 	//
@@ -128,15 +142,18 @@ public class DistributedApplicationService extends ApplicationService
 	 *        (the member key), or null to let Hazelcast decide
 	 * @param multi
 	 *        Whether the task should be executed on all members in the set
-	 * @return A future for the task
-	 * @see Hazelcast#getExecutorService()
+	 * @return A future or map of futures for the task
+	 * @see HazelcastInstance#getExecutorService(String)
 	 */
-	public <T> Future<T> distributedExecuteTask( String applicationName, String documentName, String entryPointName, Object context, Object where, boolean multi )
+	public <T> Object distributedExecuteTask( String applicationName, String documentName, String entryPointName, Object context, Object where, boolean multi )
 	{
 		if( applicationName == null )
 			applicationName = getApplication().getName();
 
-		return task( new SerializableApplicationTask<T>( applicationName, documentName, entryPointName, context ), where, multi );
+		if( multi )
+			return multiTask( new SerializableApplicationTask<T>( applicationName, documentName, entryPointName, context ), where );
+		else
+			return task( new SerializableApplicationTask<T>( applicationName, documentName, entryPointName, context ), where );
 	}
 
 	/**
@@ -154,29 +171,18 @@ public class DistributedApplicationService extends ApplicationService
 	 *        (the member key), or null to let Hazelcast decide
 	 * @param multi
 	 *        Whether the task should be executed on all members in the set
-	 * @return A future for the task
-	 * @see Hazelcast#getExecutorService()
+	 * @return A future or map of futures for the task
+	 * @see HazelcastInstance#getExecutorService(String)
 	 */
-	public <T> Future<T> distributedCodeTask( String applicationName, String code, Object context, Object where, boolean multi )
+	public <T> Object distributedCodeTask( String applicationName, String code, Object context, Object where, boolean multi )
 	{
 		if( applicationName == null )
 			applicationName = getApplication().getName();
 
-		return task( new SerializableApplicationTask<T>( applicationName, code, context ), where, multi );
-	}
-
-	// //////////////////////////////////////////////////////////////////////////
-	// Protected
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param application
-	 *        The application
-	 */
-	protected DistributedApplicationService( Application application )
-	{
-		super( application );
+		if( multi )
+			return multiTask( new SerializableApplicationTask<T>( applicationName, code, context ), where );
+		else
+			return task( new SerializableApplicationTask<T>( applicationName, code, context ), where );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -190,41 +196,47 @@ public class DistributedApplicationService extends ApplicationService
 	 * @param where
 	 *        A {@link Member}, an iterable of {@link Member}, any other object
 	 *        (the member key), or null to let Hazelcast decide
-	 * @param multi
-	 *        Whether the task should be executed on all members in the set
 	 * @return A future for the task
-	 * @see Hazelcast#getExecutorService()
+	 * @see HazelcastInstance#getExecutorService(String)
+	 */
+	private <T> Future<T> task( SerializableApplicationTask<T> task, Object where )
+	{
+		IExecutorService executor = getHazelcast().getExecutorService( "default" );
+
+		if( where == null )
+			return executor.submit( task );
+		else if( where instanceof Member )
+			return executor.submitToMember( task, (Member) where );
+		else
+			return executor.submitToKeyOwner( task, where );
+	}
+
+	/**
+	 * Submits a task on multiple members of the Hazelcast cluster.
+	 * 
+	 * @param task
+	 *        The task
+	 * @param where
+	 *        A {@link Member}, an iterable of {@link Member}, any other object
+	 *        (the member key), or null to let Hazelcast decide
+	 * @return Future for the task
+	 * @see HazelcastInstance#getExecutorService(String)
 	 */
 	@SuppressWarnings("unchecked")
-	private <T> Future<T> task( SerializableApplicationTask<T> task, Object where, boolean multi )
+	private <T> Map<Member, Future<T>> multiTask( SerializableApplicationTask<T> task, Object where )
 	{
-		ExecutorService executor = getHazelcast().getExecutorService();
+		IExecutorService executor = getHazelcast().getExecutorService( "default" );
 
-		DistributedTask<T> distributedTask;
-		if( where == null )
-			distributedTask = new DistributedTask<T>( task );
-		else if( where instanceof Member )
-			distributedTask = new DistributedTask<T>( task, (Member) where );
-		else if( where instanceof Set )
-		{
-			if( multi )
-				distributedTask = new MultiTask<T>( task, (Set<Member>) where );
-			else
-				distributedTask = new DistributedTask<T>( task, (Set<Member>) where );
-		}
+		if( where instanceof Collection )
+			return executor.submitToMembers( task, (Collection<Member>) where );
 		else if( where instanceof Iterable )
 		{
-			Set<Member> members = new HashSet<Member>();
+			ArrayList<Member> members = new ArrayList<Member>();
 			for( Member member : (Iterable<Member>) where )
 				members.add( member );
-			if( multi )
-				distributedTask = new MultiTask<T>( task, members );
-			else
-				distributedTask = new DistributedTask<T>( task, members );
+			return executor.submitToMembers( task, members );
 		}
 		else
-			distributedTask = new DistributedTask<T>( task, where );
-
-		return (Future<T>) executor.submit( distributedTask );
+			return null;
 	}
 }

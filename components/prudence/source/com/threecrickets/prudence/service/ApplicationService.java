@@ -67,12 +67,17 @@ public class ApplicationService
 	{
 		try
 		{
+			ApplicationService.class.getClassLoader().loadClass( "com.hazelcast.core.HazelcastInstance" );
 			return new DistributedApplicationService( application );
+		}
+		catch( ClassNotFoundException x )
+		{
 		}
 		catch( NoClassDefFoundError x )
 		{
-			return new ApplicationService( application );
 		}
+
+		return new ApplicationService( application );
 	}
 
 	//
