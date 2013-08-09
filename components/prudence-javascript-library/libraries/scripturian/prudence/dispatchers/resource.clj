@@ -11,7 +11,7 @@
 ; at http://threecrickets.com/
 ;
 
-(ns prudence.dispatcher.resource)
+(ns prudence.dispatchers.resource)
 
 (defprotocol Resource
   (handle-init [resource conversation])

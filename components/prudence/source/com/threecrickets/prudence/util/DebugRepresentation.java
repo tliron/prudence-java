@@ -12,10 +12,15 @@
 package com.threecrickets.prudence.util;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Application;
+import org.restlet.Component;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.CacheDirective;
@@ -78,45 +83,52 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<head>\n" );
 		html.append( "<title>Prudence Debug Page</title>\n" );
 		html.append( "<style>\n" );
-		html.append( "body { font-family: sans-serif; }\n" );
+		html.append( "body { font-family: sans-serif; font-size: small; }\n" );
 		html.append( ".name { font-weight: bold; font-style: italic; }\n" );
 		html.append( "</style>\n" );
 		html.append( "</head>\n" );
 		html.append( "<body>\n" );
 
-		html.append( "<h2>Prudence Debug Page</h2>" );
+		html.append( "<h1>Prudence Debug Page</h1>" );
 
 		Iterable<StackFrame> stack = null;
 
 		if( throwable instanceof ExecutionException )
 		{
-			html.append( "<h3>Scripturian Execution Error</h3>" );
+			html.append( "<h2>Scripturian Execution Error</h2>" );
 			ExecutionException executionException = (ExecutionException) throwable;
 			stack = executionException.getStack();
 		}
 		else if( throwable instanceof PreparationException )
 		{
-			html.append( "<h3>Scripturian Preparation Error</h3>" );
+			html.append( "<h2>Scripturian Preparation Error</h2>" );
 			PreparationException preparationException = (PreparationException) throwable;
 			stack = preparationException.getStack();
 		}
 		else if( throwable instanceof ParsingException )
 		{
-			html.append( "<h3>Scripturian Parsing Error</h3>" );
+			html.append( "<h2>Scripturian Parsing Error</h2>" );
 			ParsingException parsingException = (ParsingException) throwable;
 			stack = parsingException.getStack();
 		}
+		else
+		{
+			html.append( "<h2>Error: " );
+			appendSafe( html, throwable.getClass().getName() );
+			html.append( "</h2>" );
+		}
 
+		html.append( "<div id=\"error\">" );
 		html.append( "<h3>" );
 		appendSafe( html, throwable.getMessage() );
 		html.append( "</h3>" );
 
 		if( stack != null )
 		{
-			html.append( "<div id=\"error\">" );
 			for( StackFrame stackFrame : stack )
 			{
 				int lineNumber = stackFrame.getLineNumber();
+				html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
 				appendName( html, "At" );
 				if( ( sourceCodeUri != null ) && sourceCodeUri.length() > 0 )
 				{
@@ -151,11 +163,33 @@ public class DebugRepresentation extends StringRepresentation
 					html.append( "</a>" );
 				html.append( "<br />" );
 			}
+		}
+
+		html.append( "</div>" );
+
+		if( !request.getWarnings().isEmpty() )
+		{
+			html.append( "<h2>Warnings</h2>" );
+			html.append( "<div id=\"warnings\">" );
+			for( Warning warning : request.getWarnings() )
+			{
+				appendName( html, warning.getDate() );
+				appendValue( html, warning.getText(), " from ", warning.getAgent(), " (", warning.getStatus(), ")" );
+			}
 			html.append( "</div>" );
 		}
 
-		html.append( "<h3>References</h3>" );
-		html.append( "<div id=\"references\">" );
+		html.append( "<h2>Request</h2>" );
+
+		appendName( html, "Time" );
+		appendValue( html, request.getDate() );
+		appendName( html, "Protocol" );
+		appendValue( html, request.getProtocol() );
+		appendName( html, "Method" );
+		appendValue( html, request.getMethod() );
+
+		html.append( "<h3>URIs</h3>" );
+		html.append( "<div id=\"uris\">" );
 		appendName( html, "Resource" );
 		appendValue( html, request.getResourceRef() );
 		appendName( html, "Original" );
@@ -180,9 +214,9 @@ public class DebugRepresentation extends StringRepresentation
 		Form form = request.getResourceRef().getQueryAsForm();
 		if( !form.isEmpty() )
 		{
-			html.append( "<h3>Query</h3>" );
-			html.append( "<div id=\"query\">" );
-			for( Map.Entry<String, String> entry : form.getValuesMap().entrySet() )
+			html.append( "<h3>Query Parameters</h3>" );
+			html.append( "<div id=\"query-parameters\">" );
+			for( Map.Entry<String, String> entry : sortedMap( form.getValuesMap() ).entrySet() )
 			{
 				appendName( html, entry.getKey() );
 				appendValue( html, entry.getValue() );
@@ -190,29 +224,8 @@ public class DebugRepresentation extends StringRepresentation
 			html.append( "</div>" );
 		}
 
-		if( !request.getCookies().isEmpty() )
-		{
-			html.append( "<h3>Cookies</h3>" );
-			html.append( "<div id=\"cookies\">" );
-			for( Cookie cookie : request.getCookies() )
-			{
-				appendName( html, cookie.getName() );
-				if( cookie.getDomain() != null )
-					appendValue( html, cookie.getValue(), " (", cookie.getVersion(), ") for ", cookie.getDomain(), " ", cookie.getPath() );
-				else
-					appendValue( html, cookie.getValue(), " (", cookie.getVersion(), ")" );
-			}
-			html.append( "</div>" );
-		}
-
-		html.append( "<h3>Request</h3>" );
-		html.append( "<div id=\"request\">" );
-		appendName( html, "Time" );
-		appendValue( html, request.getDate() );
-		appendName( html, "Method" );
-		appendValue( html, request.getMethod() );
-		appendName( html, "Protocol" );
-		appendValue( html, request.getProtocol() );
+		html.append( "<h3>Preferences</h3>" );
+		html.append( "<div id=\"preferences\">" );
 		appendName( html, "Media Types" );
 		appendValue( html, clientInfo.getAcceptedMediaTypes() );
 		appendName( html, "Encodings" );
@@ -257,14 +270,6 @@ public class DebugRepresentation extends StringRepresentation
 				appendName( html, "Range Tag" );
 				appendValue( html, conditions.getRangeTag() );
 			}
-			html.append( "</div>" );
-		}
-
-		if( request.isEntityAvailable() )
-		{
-			html.append( "<h3>Entity</h3>" );
-			html.append( "<div id=\"entity\">" );
-			appendSafe( html, request.getEntity() );
 			html.append( "</div>" );
 		}
 
@@ -326,12 +331,35 @@ public class DebugRepresentation extends StringRepresentation
 		}
 		html.append( "</div>" );
 
+		if( !request.getCookies().isEmpty() )
+		{
+			html.append( "<h3>Cookies</h3>" );
+			html.append( "<div id=\"cookies\">" );
+			for( Cookie cookie : request.getCookies() )
+			{
+				appendName( html, cookie.getName() );
+				if( cookie.getDomain() != null )
+					appendValue( html, cookie.getValue(), " (", cookie.getVersion(), ") for ", cookie.getDomain(), " ", cookie.getPath() );
+				else
+					appendValue( html, cookie.getValue(), " (", cookie.getVersion(), ")" );
+			}
+			html.append( "</div>" );
+		}
+
+		if( request.isEntityAvailable() )
+		{
+			html.append( "<h3>Payload</h3>" );
+			html.append( "<div id=\"payload\">" );
+			appendSafe( html, request.getEntity() );
+			html.append( "</div>" );
+		}
+
 		ConcurrentMap<String, Object> attributes = request.getAttributes();
 		if( !attributes.isEmpty() )
 		{
-			html.append( "<h3>Attributes</h3>" );
-			html.append( "<div id=\"attributes\">" );
-			for( Map.Entry<String, Object> attribute : attributes.entrySet() )
+			html.append( "<h2>conversation.locals</h2>" );
+			html.append( "<div id=\"conversation-locals\">" );
+			for( Map.Entry<String, Object> attribute : sortedMap( attributes ).entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )
@@ -357,28 +385,17 @@ public class DebugRepresentation extends StringRepresentation
 			html.append( "</div>" );
 		}
 
-		if( !request.getWarnings().isEmpty() )
-		{
-			html.append( "<h3>Warnings</h3>" );
-			html.append( "<div id=\"warnings\">" );
-			for( Warning warning : request.getWarnings() )
-			{
-				appendName( html, warning.getDate() );
-				appendValue( html, warning.getText(), " from ", warning.getAgent(), " (", warning.getStatus(), ")" );
-			}
-			html.append( "</div>" );
-		}
-
 		Application application = Application.getCurrent();
 		if( application != null )
 		{
 			String name = application.getName();
 			if( name != null )
-				html.append( "<h3>Application: " + name + "</h3>" );
+				html.append( "<h2>application.globals for \"" + name + "\"</h2>" );
 			else
-				html.append( "<h3>Application</h3>" );
+				html.append( "<h2>applications.globals</h2>" );
+			html.append( "<div id=\"application-globals\">" );
 
-			for( Map.Entry<String, Object> attribute : application.getContext().getAttributes().entrySet() )
+			for( Map.Entry<String, Object> attribute : sortedMap( application.getContext().getAttributes() ).entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )
@@ -393,15 +410,40 @@ public class DebugRepresentation extends StringRepresentation
 				else
 					appendValue( html, attribute.getValue() );
 			}
+			html.append( "</div>" );
+		}
+
+		Component component = InstanceUtil.getComponent();
+		if( component != null )
+		{
+			html.append( "<h2>application.sharedGlobals</h2>" );
+			html.append( "<div id=\"application-shared-globals\">" );
+
+			for( Map.Entry<String, Object> attribute : sortedMap( component.getContext().getAttributes() ).entrySet() )
+			{
+				appendName( html, attribute.getKey() );
+				if( attribute.getValue() instanceof Collection<?> )
+				{
+					html.append( "<br />" );
+					for( Object o : (Collection<?>) attribute.getValue() )
+					{
+						html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
+						appendValue( html, o );
+					}
+				}
+				else
+					appendValue( html, attribute.getValue() );
+			}
+			html.append( "</div>" );
 		}
 
 		if( throwable.getStackTrace() != null )
 		{
-			html.append( "<h3>Machine Stack Trace</h3>" );
-			html.append( "<div id=\"stack-trace\">" );
-			html.append( "<h4>" );
+			html.append( "<h2>Machine Stack Trace</h2>" );
+			html.append( "<div id=\"machine-stack-trace\">" );
+			html.append( "<h3>" );
 			appendSafe( html, throwable.getClass().getCanonicalName() );
-			html.append( "</h4>" );
+			html.append( "</h3>" );
 			for( StackTraceElement stackTraceElement : throwable.getStackTrace() )
 			{
 				appendSafe( html, stackTraceElement.getClassName() );
@@ -472,5 +514,29 @@ public class DebugRepresentation extends StringRepresentation
 		for( Object string : strings )
 			appendSafe( html, string );
 		html.append( "</span><br />" );
+	}
+
+	/**
+	 * Sort a map by the natural order of its keys.
+	 * 
+	 * @param map
+	 *        The map
+	 * @return The sorted map
+	 */
+	public static <K extends Comparable<? super K>, V> LinkedHashMap<K, V> sortedMap( Map<K, V> map )
+	{
+		LinkedList<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>( map.entrySet() );
+		Collections.sort( list, new Comparator<Map.Entry<K, V>>()
+		{
+			public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
+			{
+				return ( o1.getKey() ).compareTo( o2.getKey() );
+			}
+		} );
+
+		LinkedHashMap<K, V> result = new LinkedHashMap<K, V>();
+		for( Map.Entry<K, V> entry : list )
+			result.put( entry.getKey(), entry.getValue() );
+		return result;
 	}
 }

@@ -13,10 +13,10 @@
 
 $resources = {}
 
-$document.execute_once $application.globals['prudence.dispatcher.ruby.resources']
+$document.execute_once $application.globals['com.threecrickets.prudence.dispatcher.ruby.resources']
 
 def handle conversation, method
-  id = conversation.locals['prudence.dispatcher.id']
+  id = conversation.locals['com.threecrickets.prudence.dispatcher.id']
   if !id.nil?
     id = '' + id # force into Ruby string
   end

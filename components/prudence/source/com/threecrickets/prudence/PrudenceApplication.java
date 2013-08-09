@@ -76,7 +76,7 @@ public class PrudenceApplication extends Application
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName();
+		return getClass().getSimpleName() + ( getName() != null ? ": " + getName() : "" );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -90,6 +90,6 @@ public class PrudenceApplication extends Application
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
 		setName( getClass().getSimpleName() );
-		setDescription( "A an application that does not route requests when it is stopped" );
+		setDescription( "An application that does not route requests when it is stopped" );
 	}
 }

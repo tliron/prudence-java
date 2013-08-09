@@ -13,10 +13,10 @@
 
 resources = [:]
 
-document.executeOnce(application.globals['prudence.dispatcher.groovy.resources'])
+document.executeOnce(application.globals['com.threecrickets.prudence.dispatcher.groovy.resources'])
 
 handle = { conversation, method ->
-	id = conversation.locals['prudence.dispatcher.id']
+	id = conversation.locals['com.threecrickets.prudence.dispatcher.id']
 	resource = resources[id]
 	if (resource == null) {
 		conversation.statusCode = 404

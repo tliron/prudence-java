@@ -15,11 +15,11 @@
 
 (def resources {})
 
-(.executeOnce document (.. application (getGlobals) (get "prudence.dispatcher.clojure.resources")))
+(.executeOnce document (.. application (getGlobals) (get "com.threecrickets.prudence.dispatcher.clojure.resources")))
 
 (defn get-resource [conversation]
   (let
-    [id (.. conversation (getLocals) (get "prudence.dispatcher.id"))]
+    [id (.. conversation (getLocals) (get "com.threecrickets.prudence.dispatcher.id"))]
     (resources id)))
 
 (defn handle-init [conversation]

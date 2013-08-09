@@ -114,6 +114,12 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @property {Object} [settings.mediaTypes] A dict matching filename extensions to media (MIME) types
 	 * 
+	 * @property {Object} [settings.distributed] Distributed settings
+	 * @property {Object} [settings.distributed.hazelcast] Hazelcast settings
+	 * @property {String} [settings.distributed.hazelcast.instance='com.threecrickets.prudence'] Hazelcast instance name
+	 * @property {String} [settings.distributed.hazelcast.map='com.threecrickets.prudence.distributedGlobals'] Hazelcast distributed globals map name
+	 * @property {String} [settings.distributed.hazelcast.executor='default'] Hazelcast executor name
+	 * 
 	 * @property {String} [settings.logger=root.name]
 	 * 
 	 * @property {Object} [settings.scriptletPlugins]
@@ -193,6 +199,8 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
 			this.settings.mediaTypes = Sincerity.Objects.ensure(this.settings.mediaTypes, {})
 			this.settings.scriptletPlugins = Sincerity.Objects.ensure(this.settings.scriptletPlugins, {})
+			this.settings.distributed = Sincerity.Objects.ensure(this.settings.distributed, {})
+			this.settings.distributed.hazelcast = Sincerity.Objects.ensure(this.settings.distributed.hazelcast, {})
 			
 			// Sensible default settings
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Objects.ensure(this.settings.code.minimumTimeBetweenValidityChecks, 1000)
@@ -200,6 +208,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.code.defaultExtension = Sincerity.Objects.ensure(this.settings.code.defaultExtension, 'js')
 			this.settings.code.defaultLanguageTag = Sincerity.Objects.ensure(this.settings.code.defaultLanguageTag, 'javascript')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
+			this.settings.distributed.hazelcast.instance = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.instance, 'com.threecrickets.prudence')
+			this.settings.distributed.hazelcast.map = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.map, 'com.threecrickets.prudence.distributedGlobals')
+			this.settings.distributed.hazelcast.executor = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.executor, 'default')
 
 			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
 			this.settings.scriptletPlugins['{{'] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['{{'], prudenceScriptletPlugin)
@@ -211,6 +222,11 @@ Prudence.Routing = Prudence.Routing || function() {
 			if (!(this.settings.uploads.root instanceof File)) {
 				this.settings.uploads.root = new File(this.root, this.settings.uploads.root).absoluteFile
 			}
+			
+			// Hazelcast
+			this.globals['com.threecrickets.prudence.hazelcastInstanceName'] = this.settings.distributed.hazelcast.instance
+			this.globals['com.threecrickets.prudence.hazelcastMapName'] = this.settings.distributed.hazelcast.map
+			this.globals['com.threecrickets.prudence.hazelcastExecutorName'] = this.settings.distributed.hazelcast.executor
 
 			// Create instance
 			this.context = component.context.createChildContext()
@@ -310,11 +326,11 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.libraryDocumentSources = new CopyOnWriteArrayList()
 
 			// Container library
-			var containerLibraryDocumentSource = component.context.attributes.get('prudence.containerLibraryDocumentSource')
+			var containerLibraryDocumentSource = component.context.attributes.get('com.threecrickets.prudence.containerLibraryDocumentSource')
 			if (!Sincerity.Objects.exists(containerLibraryDocumentSource)) {
 				var library = sincerity.container.getLibrariesFile('scripturian')
 				containerLibraryDocumentSource = this.createDocumentSource(library)
-				var existing = component.context.attributes.put('prudence.containerLibraryDocumentSource', containerLibraryDocumentSource)
+				var existing = component.context.attributes.put('com.threecrickets.prudence.containerLibraryDocumentSource', containerLibraryDocumentSource)
 				if (Sincerity.Objects.exists(existing)) {
 					containerLibraryDocumentSource = existing
 				}
@@ -387,11 +403,11 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.libraryDocumentSources.add(containerLibraryDocumentSource)
 
 			// Sincerity library
-			var sincerityLibraryDocumentSource = component.context.attributes.get('prudence.sincerityLibraryDocumentSource')
+			var sincerityLibraryDocumentSource = component.context.attributes.get('com.threecrickets.prudence.sincerityLibraryDocumentSource')
 			if (!Sincerity.Objects.exists(sincerityLibraryDocumentSource)) {
 				var library = sincerity.getHomeFile('libraries', 'scripturian')
 				sincerityLibraryDocumentSource = this.createDocumentSource(library)
-				var existing = component.context.attributes.put('prudence.sincerityLibraryDocumentSource', sincerityLibraryDocumentSource)
+				var existing = component.context.attributes.put('com.threecrickets.prudence.sincerityLibraryDocumentSource', sincerityLibraryDocumentSource)
 				if (Sincerity.Objects.exists(existing)) {
 					sincerityLibraryDocumentSource = existing
 				}
@@ -605,6 +621,13 @@ Prudence.Routing = Prudence.Routing || function() {
 		}
 		
 		Public.getDispatcher = function(name) {
+			if (!Sincerity.Objects.exists(name)) {
+				name = this.dispatchers['default']
+				if (!Sincerity.Objects.exists(name)) {
+					name = 'javascript'
+				}
+			}
+			
 			var dispatcher = Sincerity.Objects.ensure(this.dispatchers[name], {})
 			if (Sincerity.Objects.isString(dispatcher)) {
 				dispatcher = {resources: dispatcher}
@@ -613,7 +636,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			dispatcher.uri = Module.cleanUri(this.delegatedResourceInternalUri + dispatcher.dispatcher)
 			for (var key in dispatcher) {
 				if ((key != 'dispatcher') && (key != 'uri')) {
-					this.globals['prudence.dispatcher.{0}.{1}'.cast(name, key)] = dispatcher[key]
+					this.globals['com.threecrickets.prudence.dispatcher.{0}.{1}'.cast(name, key)] = dispatcher[key]
 				}
 			}
 			this.dispatchers[name] = dispatcher
@@ -868,10 +891,12 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				// Pass-through dispatchers
 				for (var name in app.dispatchers) {
-					var dispatcher = app.getDispatcher(name)
-					delegatedResource.passThroughDocuments.add(dispatcher.dispatcher)
-					if (sincerity.verbosity >= 2) {
-						println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcher.uri))
+					if (name != 'default') {
+						var dispatcher = app.getDispatcher(name)
+						delegatedResource.passThroughDocuments.add(dispatcher.dispatcher)
+						if (sincerity.verbosity >= 2) {
+							println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcher.uri))
+						}
 					}
 				}
 
@@ -1119,7 +1144,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String} id
-	 * @param {String} [dispatcher='javascript']
+	 * @param {String} [dispatcher]
 	 * @param {Object} [locals]
 	 */
 	Public.Dispatch = Sincerity.Classes.define(function(Module) {
@@ -1141,11 +1166,10 @@ Prudence.Routing = Prudence.Routing || function() {
 				throw new SincerityException('A Manual must be attached before a Dispatch can be created')
 	   		}*/
 
-			this.dispatcher = Sincerity.Objects.ensure(this.dispatcher, 'javascript')
 			var dispatcher = app.getDispatcher(this.dispatcher)
 	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.uri + '?{rq}', false)
 			var injector = new Injector(app.context, capture)
-			injector.values.put('prudence.dispatcher.id', this.id)
+			injector.values.put('com.threecrickets.prudence.dispatcher.id', this.id)
 
 			// Extra locals
 			if (Sincerity.Objects.exists(this.locals)) {

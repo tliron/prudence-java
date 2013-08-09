@@ -38,6 +38,25 @@ import com.threecrickets.prudence.SerializableApplicationTask;
 public class DistributedApplicationService extends ApplicationService
 {
 	//
+	// Constants
+	//
+
+	/**
+	 * Hazelcast instance name attribute for an {@link Application}.
+	 */
+	public static final String HAZELCAST_INSTANCE_NAME = "com.threecrickets.prudence.hazelcastInstanceName";
+
+	/**
+	 * Hazelcast instance name attribute for an {@link Application}.
+	 */
+	public static final String HAZELCAST_MAP_NAME = "com.threecrickets.prudence.hazelcastMapName";
+
+	/**
+	 * Hazelcast instance name attribute for an {@link Application}.
+	 */
+	public static final String HAZELCAST_EXECUTOR_NAME = "com.threecrickets.prudence.hazelcastExecutorName";
+
+	//
 	// Construction
 	//
 
@@ -57,7 +76,11 @@ public class DistributedApplicationService extends ApplicationService
 	//
 
 	/**
-	 * The Hazelcast instance
+	 * The Hazelcast instance.
+	 * <p>
+	 * The name can be configured via the
+	 * "com.threecrickets.prudence.hazelcastInstanceName" application context
+	 * attribute, and defaults to "com.threecrickets.prudence".
 	 * 
 	 * @return The Hazelcast instance
 	 * @throws RuntimeException
@@ -65,23 +88,50 @@ public class DistributedApplicationService extends ApplicationService
 	 */
 	public HazelcastInstance getHazelcast()
 	{
-		HazelcastInstance hazelcast = Hazelcast.getHazelcastInstanceByName( "com.threecrickets.prudence" );
+		String hazelcastInstanceName = getHazelcastInstanceName();
+		HazelcastInstance hazelcast = Hazelcast.getHazelcastInstanceByName( hazelcastInstanceName );
 		if( hazelcast == null )
-			throw new RuntimeException( "Cannot find a Hazelcast instance named \"com.threecrickets.prudence\"" );
+			throw new RuntimeException( "Cannot find a Hazelcast instance named \"" + hazelcastInstanceName + "\"" );
 		return hazelcast;
+	}
+
+	/**
+	 * The Hazelcast executor service.
+	 * <p>
+	 * The name can be configured via the
+	 * "com.threecrickets.prudence.hazelcastExecutorName" application context
+	 * attribute, and defaults to "default".
+	 * 
+	 * @return The Hazelcast executor service
+	 * @throws RuntimeException
+	 *         If the Hazelcast executor service has not been found
+	 */
+	public IExecutorService getHazelcastExecutorService()
+	{
+		String hazelcastExecutorName = getHazelcastExecutorName();
+		IExecutorService executor = getHazelcast().getExecutorService( hazelcastExecutorName );
+		if( executor == null )
+			throw new RuntimeException( "Cannot find a Hazelcast executor service named \"" + hazelcastExecutorName + "\"" );
+		return executor;
 	}
 
 	/**
 	 * A map of all values global to the Prudence Hazelcast cluster.
 	 * <p>
-	 * This is simply the "com.threecrickets.prudence.distributedGlobals"
-	 * Hazelcast map.
+	 * This is a Hazelcast distributed map, the name of which can be configured
+	 * via the "com.threecrickets.prudence.hazelcastMapName" application context
+	 * attribute, and defaults to
+	 * "com.threecrickets.prudence.distributedGlobals".
 	 * 
 	 * @return The distributed globals or null
 	 */
 	public ConcurrentMap<String, Object> getDistributedGlobals()
 	{
-		return getHazelcast().getMap( "com.threecrickets.prudence.distributedGlobals" );
+		String hazelcastMapName = getHazelcastMapName();
+		ConcurrentMap<String, Object> map = getHazelcast().getMap( hazelcastMapName );
+		if( map == null )
+			throw new RuntimeException( "Cannot find a Hazelcast map named \"" + hazelcastMapName + "\"" );
+		return map;
 	}
 
 	/**
@@ -99,10 +149,6 @@ public class DistributedApplicationService extends ApplicationService
 	public Object getDistributedGlobal( String name, Object defaultValue )
 	{
 		ConcurrentMap<String, Object> globals = getDistributedGlobals();
-
-		if( globals == null )
-			return null;
-
 		Object value = globals.get( name );
 
 		if( value == null )
@@ -138,20 +184,22 @@ public class DistributedApplicationService extends ApplicationService
 	 * @param context
 	 *        The context made available to the task (must be serializable)
 	 * @param where
-	 *        A {@link Member}, an iterable of {@link Member}, any other object
-	 *        (the member key), or null to let Hazelcast decide
+	 *        When multi is false: A {@link Member}, a collection of
+	 *        {@link Member}, any other object (the member key), or null to let
+	 *        Hazelcast decide; When multi is true:
 	 * @param multi
-	 *        Whether the task should be executed on all members in the set
+	 *        Whether the task should be executed on multiple members
 	 * @return A future or map of futures for the task
 	 * @see HazelcastInstance#getExecutorService(String)
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> Object distributedExecuteTask( String applicationName, String documentName, String entryPointName, Object context, Object where, boolean multi )
 	{
 		if( applicationName == null )
 			applicationName = getApplication().getName();
 
 		if( multi )
-			return multiTask( new SerializableApplicationTask<T>( applicationName, documentName, entryPointName, context ), where );
+			return multiTask( new SerializableApplicationTask<T>( applicationName, documentName, entryPointName, context ), (Iterable<Member>) where );
 		else
 			return task( new SerializableApplicationTask<T>( applicationName, documentName, entryPointName, context ), where );
 	}
@@ -167,20 +215,24 @@ public class DistributedApplicationService extends ApplicationService
 	 * @param context
 	 *        The context made available to the task (must be serializable)
 	 * @param where
-	 *        A {@link Member}, an iterable of {@link Member}, any other object
-	 *        (the member key), or null to let Hazelcast decide
+	 *        A {@link Member}, a collection of {@link Member}, any other object
+	 *        (the member key), or null to let Hazelcast decide A collection of
+	 *        {@link Member}, an iterable of {@link Member}, or null for all
+	 *        members
 	 * @param multi
-	 *        Whether the task should be executed on all members in the set
-	 * @return A future or map of futures for the task
+	 *        Whether the task should be executed on multiple members
+	 * @return A future (multi=false) or map of members to futures (multi=true)
+	 *         for the task
 	 * @see HazelcastInstance#getExecutorService(String)
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> Object distributedCodeTask( String applicationName, String code, Object context, Object where, boolean multi )
 	{
 		if( applicationName == null )
 			applicationName = getApplication().getName();
 
 		if( multi )
-			return multiTask( new SerializableApplicationTask<T>( applicationName, code, context ), where );
+			return multiTask( new SerializableApplicationTask<T>( applicationName, code, context ), (Iterable<Member>) where );
 		else
 			return task( new SerializableApplicationTask<T>( applicationName, code, context ), where );
 	}
@@ -188,20 +240,62 @@ public class DistributedApplicationService extends ApplicationService
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
+	private volatile String hazelcastInstanceName;
+
+	private volatile String hazelcastMapName;
+
+	private volatile String hazelcastExecutorName;
+
+	private String getHazelcastInstanceName()
+	{
+		ConcurrentMap<String, Object> globals = getGlobals();
+		if( hazelcastInstanceName == null )
+		{
+			hazelcastInstanceName = (String) globals.get( HAZELCAST_INSTANCE_NAME );
+			if( hazelcastInstanceName == null )
+				hazelcastInstanceName = "com.threecrickets.prudence";
+		}
+		return hazelcastInstanceName;
+	}
+
+	private String getHazelcastMapName()
+	{
+		ConcurrentMap<String, Object> globals = getGlobals();
+		if( hazelcastMapName == null )
+		{
+			hazelcastMapName = (String) globals.get( HAZELCAST_MAP_NAME );
+			if( hazelcastMapName == null )
+				hazelcastMapName = "com.threecrickets.prudence.distributedGlobals";
+		}
+		return hazelcastMapName;
+	}
+
+	private String getHazelcastExecutorName()
+	{
+		ConcurrentMap<String, Object> globals = getGlobals();
+		if( hazelcastExecutorName == null )
+		{
+			hazelcastExecutorName = (String) globals.get( HAZELCAST_EXECUTOR_NAME );
+			if( hazelcastExecutorName == null )
+				hazelcastExecutorName = "default";
+		}
+		return hazelcastExecutorName;
+	}
+
 	/**
 	 * Submits a task on the Hazelcast cluster.
 	 * 
 	 * @param task
 	 *        The task
 	 * @param where
-	 *        A {@link Member}, an iterable of {@link Member}, any other object
-	 *        (the member key), or null to let Hazelcast decide
+	 *        A {@link Member}, any other object (the member key), or null to
+	 *        let Hazelcast decide
 	 * @return A future for the task
 	 * @see HazelcastInstance#getExecutorService(String)
 	 */
 	private <T> Future<T> task( SerializableApplicationTask<T> task, Object where )
 	{
-		IExecutorService executor = getHazelcast().getExecutorService( "default" );
+		IExecutorService executor = getHazelcastExecutorService();
 
 		if( where == null )
 			return executor.submit( task );
@@ -217,19 +311,18 @@ public class DistributedApplicationService extends ApplicationService
 	 * @param task
 	 *        The task
 	 * @param where
-	 *        A {@link Member}, an iterable of {@link Member}, any other object
-	 *        (the member key), or null to let Hazelcast decide
-	 * @return Future for the task
+	 *        A collection of {@link Member}, an iterable of {@link Member}, or
+	 *        null for all members
+	 * @return A map of members to futures for the task
 	 * @see HazelcastInstance#getExecutorService(String)
 	 */
-	@SuppressWarnings("unchecked")
-	private <T> Map<Member, Future<T>> multiTask( SerializableApplicationTask<T> task, Object where )
+	private <T> Map<Member, Future<T>> multiTask( SerializableApplicationTask<T> task, Iterable<Member> where )
 	{
-		IExecutorService executor = getHazelcast().getExecutorService( "default" );
+		IExecutorService executor = getHazelcastExecutorService();
 
 		if( where instanceof Collection )
 			return executor.submitToMembers( task, (Collection<Member>) where );
-		else if( where instanceof Iterable )
+		else if( where != null )
 		{
 			ArrayList<Member> members = new ArrayList<Member>();
 			for( Member member : (Iterable<Member>) where )
@@ -237,6 +330,6 @@ public class DistributedApplicationService extends ApplicationService
 			return executor.submitToMembers( task, members );
 		}
 		else
-			return null;
+			return executor.submitToAllMembers( task );
 	}
 }

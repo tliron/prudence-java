@@ -13,10 +13,10 @@
 
 resources = {}
 
-document.executeOnce(application.globals['prudence.dispatcher.python.resources'])
+document.executeOnce(application.globals['com.threecrickets.prudence.dispatcher.python.resources'])
 
 def handle(conversation, method):
-    id = conversation.locals['prudence.dispatcher.id']
+    id = conversation.locals['com.threecrickets.prudence.dispatcher.id']
     resource = resources.get(id, None)
     if resource is None:
         conversation.statusCode = 404
