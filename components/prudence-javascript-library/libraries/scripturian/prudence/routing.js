@@ -105,6 +105,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 *                    not specified in the scriptlet tag
 	 * @property {Boolean} [settings.code.sourceViewable=false] When true enabled the source code viewing facility
 	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
+	 * @property {String} [settings.code.sourceViewer='/source-code/'] Only used when settings.code.sourceViewable=true
 	 * 
 	 * @property {Object} [settings.uploads] File upload settings
 	 * @property {String} [settings.uploads.root='uploads'] Path in which to store uploaded files; the path is relative to the
@@ -207,6 +208,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.code.defaultDocumentName = Sincerity.Objects.ensure(this.settings.code.defaultDocumentName, 'default')
 			this.settings.code.defaultExtension = Sincerity.Objects.ensure(this.settings.code.defaultExtension, 'js')
 			this.settings.code.defaultLanguageTag = Sincerity.Objects.ensure(this.settings.code.defaultLanguageTag, 'javascript')
+			this.settings.code.sourceViewer = Sincerity.Objects.ensure(this.settings.code.sourceViewer, '/source-code/')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
 			this.settings.distributed.hazelcast.instance = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.instance, 'com.threecrickets.prudence')
 			this.settings.distributed.hazelcast.map = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.map, 'com.threecrickets.prudence.distributedGlobals')
@@ -298,7 +300,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			if (sincerity.verbosity >= 2) {
 				println('  Status service:')
 			}
-			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? '/source/' : null)
+			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? this.settings.code.sourceViewer : null)
 			this.instance.statusService.debugging = true == this.settings.errors.debug
 			if (Sincerity.Objects.exists(this.settings.errors.homeUrl)) {
 				if (sincerity.verbosity >= 2) {
@@ -443,9 +445,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Source viewer
 			if (true == this.settings.code.sourceViewable) {
 				var sourceViewer = new Finder(this.context, Sincerity.JVM.getClass('com.threecrickets.prudence.SourceCodeResource'))
-				this.instance.inboundRoot.attach('/source/', sourceViewer).matchingMode = Template.MODE_EQUALS
+				this.instance.inboundRoot.attach(this.settings.code.sourceViewer, sourceViewer).matchingMode = Template.MODE_EQUALS
 				if (sincerity.verbosity >= 2) {
-					println('    "/source/" -> "{0}"'.cast(sourceViewer['class'].simpleName))
+					println('    "{0}" -> "{1}"'.cast(this.settings.code.sourceViewer, sourceViewer['class'].simpleName))
 				}
 			}
 

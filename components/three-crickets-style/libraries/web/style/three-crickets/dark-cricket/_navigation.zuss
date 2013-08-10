@@ -1,0 +1,93 @@
+/*******************
+ * Navigation Menu *
+ *******************/
+
+/* Adapted from: http://css.maxdesign.com.au/listamatic2/vertical07.htm */
+
+div.navigation {
+	a, .heading {
+		-moz-box-sizing: content-box !important; /* To counteract Ext JS css */
+		display: block;
+		color: @navigation-link;
+		background-color: @navigation-background;
+		text-decoration: none;
+		width: @eval(@navigation-width - @navigation-highlight);
+		padding: 2px @navigation-highlight 2px 10px;
+		border-left: 1px solid @navigation-line;
+		border-top: 1px solid @navigation-line;
+		line-height: 120%;
+	}
+	a:hover {
+		background-color: @navigation-link-hover;
+		border-right: @navigation-highlight solid @navigation-line;
+		padding: 2px 0px 2px 10px;
+	}
+	ul {
+		margin: 0px;
+		padding: 0px;
+		list-style-type: none;
+		line-height: 100%;
+		ul {
+			margin-left: @navigation-indent;
+			list-style-type: none;
+		}
+	}
+	li {
+		list-style-type: none;
+		font-size: @navigation-font-size;
+		li a {
+			width: @eval(@navigation-width - @navigation-indent - @navigation-highlight);
+			border-top: none;
+			border-bottom: none;
+		}
+	}
+	.heading {
+		color: @navigation-heading;
+	}
+	.closed, .heading {
+		border-bottom: 1px solid @navigation-line;
+	}
+}
+
+/*********
+ * Brand *
+ *********/
+ 
+div#brand {
+	float: right;
+	margin: 12px 12px;
+	padding: 6px 6px;
+	background-color: @navigation-background;
+	color: @navigation-link;
+	a {
+		color: @navigation-heading;
+	}
+}
+
+/****************
+ * Floating TOC *
+ ****************/
+
+div#toc {
+	position: absolute;
+	display: none;
+	padding: 16px;
+	margin: 12px 0px;
+	div.title {
+		font-weight: bold;
+		margin-bottom: 6px;
+	}
+	div.subsection {
+		margin-top: 6px;
+	}
+	div.subsubsection {
+		margin-left: 12px;
+	}
+	a {
+		font-size: @navigation-font-size !important;
+		color: @navigation-background;
+	}
+	a:hover {
+		color: black;
+	}
+}

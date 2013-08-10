@@ -1,42 +1,34 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
-var base = conversation.pathToBase
 var version = application.sharedGlobals.get('com.threecrickets.prudence.version')
 %>
 <html>
 <head>
 	<title>Prudence - Three Crickets</title>
-	<link rel="stylesheet" type="text/css" href="<%= base %>/style/three-crickets/soft-cricket.min.css" />
-	<link rel="shortcut icon" href="<%= base %>/media/three-crickets/prudence.ico"/>
-	<script type="text/javascript" src="<%= base %>/scripts/jquery/jquery.core.min.js"></script>
-	<script type="text/javascript" src="<%= base %>/scripts/jquery/jquery.json.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
+	<script type="text/javascript" src="<%= conversation.base %>/scripts/jquery/jquery.core.min.js"></script>
+	<script type="text/javascript" src="<%= conversation.base %>/scripts/jquery/jquery.json.min.js"></script>
 </head>
 <body>
-	<table width="100%" cellspacing="20">
-		<tr valign="top">
-			<td width="25%">
 
-				<h1>Prudence Examples</h1>
+<div style="float: left; margin-bottom: 12px;">
+	<a href="<%= conversation.base %>/prudence/">
+		<h2 style="margin-top: 12px;">Prudence Examples<br /><span style="font-size: 13px;">Version <%= version %></span></h2>
+	</a>
 
-				<div class="navigation">
-					<ul>
-						<li><a href="<%= base %>">About</a></li>
-						<li><a href="<%= base %>/manual/">Manual Resources</a></li>
-						<li><a href="<%= base %>/dispatched/">Dispatched Manual Resources</a></li>
-						<li><a href="<%= base %>/scriptlet/">Scriptlet Resources</a></li>
-						<li><a href="<%= base %>/external/">External Resources</a></li>
-						<li><a href="<%= base %>/forms/">Forms with File Uploads</a></li>
-						<li><a href="<%= base %>/filters/">Filters</a></li>
-						<li><a href="<%= base %>/errors/">Error Handling</a></li>
-						<li><a href="<%= base %>/tasks/" class="closed">Background Tasks</a></li>
-					</ul>
-				</div>
-				<p>
-					<a href="http://threecrickets.com/prudence/" class="neutral"><img src="<%= base %>/media/three-crickets/prudence-small.png" border="0"></a>
-				</p>
-				<p>
-					Running on Prudence version <%= version %>.
-				</p>
-				
-			</td>
-			<td width="50%" id="main">
+	<div class="navigation">
+		<ul>
+			<li><a href="<%= conversation.base %>">About</a></li>
+			<li><a href="<%= conversation.base %>/manual/">Manual Resources</a></li>
+			<li><a href="<%= conversation.base %>/dispatched/">Dispatched Manual Resources</a></li>
+			<li><a href="<%= conversation.base %>/scriptlet/">Scriptlet Resources</a></li>
+			<li><a href="<%= conversation.base %>/external/">External Resources</a></li>
+			<li><a href="<%= conversation.base %>/forms/">Forms with File Uploads</a></li>
+			<li><a href="<%= conversation.base %>/filters/">Filters</a></li>
+			<li><a href="<%= conversation.base %>/errors/">Error Handling</a></li>
+			<li><a href="<%= conversation.base %>/tasks/" class="closed">Background Tasks</a></li>
+		</ul>
+	</div>
+</div>
+<div id="main"><div id="main-content">
+	<img style="float: right; padding: 6px 6px 6px 6px;" src="<%= conversation.base %>/media/three-crickets/prudence-small.png" alt="Prudence logo: bullfinch in flight" />

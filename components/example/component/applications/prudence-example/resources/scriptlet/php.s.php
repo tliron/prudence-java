@@ -1,9 +1,11 @@
 <html>
 <head>
-	<title>PHP Scriptlets Demo</title>
-	<link rel="stylesheet" type="text/css" href="../../style/three-crickets/soft-cricket.min.css" />
+	<title>PHP Scriptlet Example</title>
+	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
 </head>
 <body>
+<div id="main"><div id="main-content">
+<h1>PHP Scriptlet Example</h1>
 <table width="100%"><tr valign="top"><td>
 <?php
 
@@ -91,5 +93,6 @@ A multiple of three:
 ?>
 </p>
 </td></tr></table>
+</div></div>
 </body>
 <html>

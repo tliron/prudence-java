@@ -12,10 +12,6 @@
 package com.threecrickets.prudence.util;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
@@ -83,8 +79,12 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<head>\n" );
 		html.append( "<title>Prudence Debug Page</title>\n" );
 		html.append( "<style>\n" );
-		html.append( "body { font-family: sans-serif; font-size: small; }\n" );
-		html.append( ".name { font-weight: bold; font-style: italic; }\n" );
+		html.append( "  body { font-family: sans-serif; font-size: small; }\n" );
+		html.append( "  h1, h2, h3 { font-family: serif; }\n" );
+		html.append( "  h1, h2 { color: #994 }\n" );
+		html.append( "  h1 { text-align: center; }\n" );
+		html.append( "  span.name { font-weight: bold; font-style: italic; }\n" );
+		html.append( "  div.value { padding-left: 22px; }\n" );
 		html.append( "</style>\n" );
 		html.append( "</head>\n" );
 		html.append( "<body>\n" );
@@ -95,25 +95,25 @@ public class DebugRepresentation extends StringRepresentation
 
 		if( throwable instanceof ExecutionException )
 		{
-			html.append( "<h2>Scripturian Execution Error</h2>" );
+			html.append( "<h2>Cause: Scripturian Execution Error</h2>" );
 			ExecutionException executionException = (ExecutionException) throwable;
 			stack = executionException.getStack();
 		}
 		else if( throwable instanceof PreparationException )
 		{
-			html.append( "<h2>Scripturian Preparation Error</h2>" );
+			html.append( "<h2>Cause: Scripturian Preparation Error</h2>" );
 			PreparationException preparationException = (PreparationException) throwable;
 			stack = preparationException.getStack();
 		}
 		else if( throwable instanceof ParsingException )
 		{
-			html.append( "<h2>Scripturian Parsing Error</h2>" );
+			html.append( "<h2>Cause: Scripturian Parsing Error</h2>" );
 			ParsingException parsingException = (ParsingException) throwable;
 			stack = parsingException.getStack();
 		}
 		else
 		{
-			html.append( "<h2>Error: " );
+			html.append( "<h2>Cause: " );
 			appendSafe( html, throwable.getClass().getName() );
 			html.append( "</h2>" );
 		}
@@ -128,7 +128,6 @@ public class DebugRepresentation extends StringRepresentation
 			for( StackFrame stackFrame : stack )
 			{
 				int lineNumber = stackFrame.getLineNumber();
-				html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
 				appendName( html, "At" );
 				if( ( sourceCodeUri != null ) && sourceCodeUri.length() > 0 )
 				{
@@ -192,23 +191,27 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<div id=\"uris\">" );
 		appendName( html, "Resource" );
 		appendValue( html, request.getResourceRef() );
-		appendName( html, "Original" );
-		appendValue( html, request.getOriginalRef() );
-		appendName( html, "Root" );
-		appendValue( html, request.getRootRef() );
 		if( request.getReferrerRef() != null )
 		{
 			appendName( html, "Referrer" );
 			appendValue( html, request.getReferrerRef() );
 		}
-		appendName( html, "Host" );
-		appendValue( html, request.getHostRef() );
+		html.append( "<br />" );
 		Reference captiveReference = CapturingRedirector.getCapturedReference( request );
 		if( captiveReference != null )
 		{
 			appendName( html, "Captive" );
 			appendValue( html, captiveReference );
 		}
+		if( !request.getResourceRef().equals( request.getOriginalRef() ) )
+		{
+			appendName( html, "Original" );
+			appendValue( html, request.getOriginalRef() );
+		}
+		appendName( html, "Root" );
+		appendValue( html, request.getRootRef() );
+		appendName( html, "Host" );
+		appendValue( html, request.getHostRef() );
 		html.append( "</div>" );
 
 		Form form = request.getResourceRef().getQueryAsForm();
@@ -216,7 +219,7 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h3>Query Parameters</h3>" );
 			html.append( "<div id=\"query-parameters\">" );
-			for( Map.Entry<String, String> entry : sortedMap( form.getValuesMap() ).entrySet() )
+			for( Map.Entry<String, String> entry : CollectionUtil.sortedMap( form.getValuesMap() ).entrySet() )
 			{
 				appendName( html, entry.getKey() );
 				appendValue( html, entry.getValue() );
@@ -315,10 +318,8 @@ public class DebugRepresentation extends StringRepresentation
 		appendValue( html, clientInfo.getAgentName(), " ", clientInfo.getAgentVersion() );
 		html.append( "<br />" );
 		appendName( html, "Products" );
-		html.append( "<br />" );
 		for( Product product : clientInfo.getAgentProducts() )
 		{
-			html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
 			if( product.getComment() != null )
 				appendValue( html, product.getName(), " ", product.getVersion(), " (", product.getComment(), ")" );
 			else
@@ -359,15 +360,13 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h2>conversation.locals</h2>" );
 			html.append( "<div id=\"conversation-locals\">" );
-			for( Map.Entry<String, Object> attribute : sortedMap( attributes ).entrySet() )
+			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( attributes ).entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )
 				{
-					html.append( "<br />" );
 					for( Object o : (Collection<?>) attribute.getValue() )
 					{
-						html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
 						if( o instanceof Parameter )
 						{
 							Parameter parameter = (Parameter) o;
@@ -388,24 +387,44 @@ public class DebugRepresentation extends StringRepresentation
 		Application application = Application.getCurrent();
 		if( application != null )
 		{
+			html.append( "<h2>applications.globals</h2>" );
+
 			String name = application.getName();
 			if( name != null )
-				html.append( "<h2>application.globals for \"" + name + "\"</h2>" );
-			else
-				html.append( "<h2>applications.globals</h2>" );
-			html.append( "<div id=\"application-globals\">" );
+			{
+				appendName( html, "Name" );
+				appendValue( html, name );
+			}
+			String description = application.getDescription();
+			if( description != null )
+			{
+				appendName( html, "Description" );
+				appendValue( html, description );
+			}
+			String owner = application.getOwner();
+			if( owner != null )
+			{
+				appendName( html, "Owner" );
+				appendValue( html, owner );
+			}
+			String author = application.getAuthor();
+			if( author != null )
+			{
+				appendName( html, "Author" );
+				appendValue( html, author );
+			}
+			appendName( html, "Class" );
+			appendValue( html, application.getClass().getName() );
 
-			for( Map.Entry<String, Object> attribute : sortedMap( application.getContext().getAttributes() ).entrySet() )
+			html.append( "<br />" );
+			html.append( "<div id=\"application-globals\">" );
+			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( application.getContext().getAttributes() ).entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )
 				{
-					html.append( "<br />" );
 					for( Object o : (Collection<?>) attribute.getValue() )
-					{
-						html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
 						appendValue( html, o );
-					}
 				}
 				else
 					appendValue( html, attribute.getValue() );
@@ -419,17 +438,13 @@ public class DebugRepresentation extends StringRepresentation
 			html.append( "<h2>application.sharedGlobals</h2>" );
 			html.append( "<div id=\"application-shared-globals\">" );
 
-			for( Map.Entry<String, Object> attribute : sortedMap( component.getContext().getAttributes() ).entrySet() )
+			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( component.getContext().getAttributes() ).entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )
 				{
-					html.append( "<br />" );
 					for( Object o : (Collection<?>) attribute.getValue() )
-					{
-						html.append( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" );
 						appendValue( html, o );
-					}
 				}
 				else
 					appendValue( html, attribute.getValue() );
@@ -497,7 +512,7 @@ public class DebugRepresentation extends StringRepresentation
 	{
 		html.append( "<span class=\"name\">" );
 		appendSafe( html, string );
-		html.append( ":</span> " );
+		html.append( "</span> " );
 	}
 
 	/**
@@ -510,33 +525,9 @@ public class DebugRepresentation extends StringRepresentation
 	 */
 	private static void appendValue( StringBuilder html, Object... strings )
 	{
-		html.append( "<span class=\"value\">" );
+		html.append( "<div class=\"value\">" );
 		for( Object string : strings )
 			appendSafe( html, string );
-		html.append( "</span><br />" );
-	}
-
-	/**
-	 * Sort a map by the natural order of its keys.
-	 * 
-	 * @param map
-	 *        The map
-	 * @return The sorted map
-	 */
-	public static <K extends Comparable<? super K>, V> LinkedHashMap<K, V> sortedMap( Map<K, V> map )
-	{
-		LinkedList<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>( map.entrySet() );
-		Collections.sort( list, new Comparator<Map.Entry<K, V>>()
-		{
-			public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
-			{
-				return ( o1.getKey() ).compareTo( o2.getKey() );
-			}
-		} );
-
-		LinkedHashMap<K, V> result = new LinkedHashMap<K, V>();
-		for( Map.Entry<K, V> entry : list )
-			result.put( entry.getKey(), entry.getValue() );
-		return result;
+		html.append( "</div>" );
 	}
 }
