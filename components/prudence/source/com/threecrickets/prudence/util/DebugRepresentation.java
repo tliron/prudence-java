@@ -79,8 +79,8 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<head>\n" );
 		html.append( "<title>Prudence Debug Page</title>\n" );
 		html.append( "<style>\n" );
-		html.append( "  body { font-family: sans-serif; font-size: small; }\n" );
-		html.append( "  h1, h2, h3 { font-family: serif; }\n" );
+		html.append( "  body { font-family: Ubuntu, Lucida Sans Unicode, Lucida Grande, Verdana, Geneva, Tahoma, Arial, Helvetica, sans-serif; font-size: small; }\n" );
+		html.append( "  h1, h2, h3 { font-family: Georgia, Utopia, Palatino, Times New Roman, Times, serif; }\n" );
 		html.append( "  h1, h2 { color: #994 }\n" );
 		html.append( "  h1 { text-align: center; }\n" );
 		html.append( "  span.name { font-weight: bold; font-style: italic; }\n" );
@@ -387,8 +387,7 @@ public class DebugRepresentation extends StringRepresentation
 		Application application = Application.getCurrent();
 		if( application != null )
 		{
-			html.append( "<h2>applications.globals</h2>" );
-
+			html.append( "<h2>Application</h2>" );
 			String name = application.getName();
 			if( name != null )
 			{
@@ -416,7 +415,7 @@ public class DebugRepresentation extends StringRepresentation
 			appendName( html, "Class" );
 			appendValue( html, application.getClass().getName() );
 
-			html.append( "<br />" );
+			html.append( "<h2>application.globals</h2>" );
 			html.append( "<div id=\"application-globals\">" );
 			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( application.getContext().getAttributes() ).entrySet() )
 			{

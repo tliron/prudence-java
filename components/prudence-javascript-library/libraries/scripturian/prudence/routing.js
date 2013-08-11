@@ -318,6 +318,10 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Errors
 			for (var code in this.errors) {
 				var uri = this.errors[code]
+				if (uri.endsWith('!')) {
+					uri = uri.substring(0, uri.length - 1)
+					this.hidden.push(uri)
+				}
 				if (sincerity.verbosity >= 2) {
 					println('    Capturing error code {0} to "{1}"'.cast(code, uri))
 				}
