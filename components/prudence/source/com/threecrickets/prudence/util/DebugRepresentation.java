@@ -34,6 +34,7 @@ import org.restlet.representation.StringRepresentation;
 
 import com.threecrickets.prudence.DelegatedStatusService;
 import com.threecrickets.prudence.SourceCodeResource;
+import com.threecrickets.scripturian.GlobalScope;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
 import com.threecrickets.scripturian.exception.PreparationException;
@@ -415,29 +416,52 @@ public class DebugRepresentation extends StringRepresentation
 			appendName( html, "Class" );
 			appendValue( html, application.getClass().getName() );
 
-			html.append( "<h2>application.globals</h2>" );
-			html.append( "<div id=\"application-globals\">" );
-			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( application.getContext().getAttributes() ).entrySet() )
+			if( !application.getContext().getAttributes().isEmpty() )
 			{
-				appendName( html, attribute.getKey() );
-				if( attribute.getValue() instanceof Collection<?> )
+				html.append( "<h2>application.globals</h2>" );
+				html.append( "<div id=\"application-globals\">" );
+				for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( application.getContext().getAttributes() ).entrySet() )
 				{
-					for( Object o : (Collection<?>) attribute.getValue() )
-						appendValue( html, o );
+					appendName( html, attribute.getKey() );
+					if( attribute.getValue() instanceof Collection<?> )
+					{
+						for( Object o : (Collection<?>) attribute.getValue() )
+							appendValue( html, o );
+					}
+					else
+						appendValue( html, attribute.getValue() );
 				}
-				else
-					appendValue( html, attribute.getValue() );
+				html.append( "</div>" );
 			}
-			html.append( "</div>" );
 		}
 
 		Component component = InstanceUtil.getComponent();
 		if( component != null )
 		{
-			html.append( "<h2>application.sharedGlobals</h2>" );
-			html.append( "<div id=\"application-shared-globals\">" );
+			if( !component.getContext().getAttributes().isEmpty() )
+			{
+				html.append( "<h2>application.sharedGlobals</h2>" );
+				html.append( "<div id=\"application-shared-globals\">" );
+				for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( component.getContext().getAttributes() ).entrySet() )
+				{
+					appendName( html, attribute.getKey() );
+					if( attribute.getValue() instanceof Collection<?> )
+					{
+						for( Object o : (Collection<?>) attribute.getValue() )
+							appendValue( html, o );
+					}
+					else
+						appendValue( html, attribute.getValue() );
+				}
+				html.append( "</div>" );
+			}
+		}
 
-			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( component.getContext().getAttributes() ).entrySet() )
+		if( !GlobalScope.getInstance().getAttributes().isEmpty() )
+		{
+			html.append( "<h2>executable.globals</h2>" );
+			html.append( "<div id=\"executable-globals\">" );
+			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( GlobalScope.getInstance().getAttributes() ).entrySet() )
 			{
 				appendName( html, attribute.getKey() );
 				if( attribute.getValue() instanceof Collection<?> )
