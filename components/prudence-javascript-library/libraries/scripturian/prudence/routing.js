@@ -315,19 +315,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.instance.statusService.contactEmail = this.settings.errors.contactEmail
 			}
 			
-			// Errors
-			for (var code in this.errors) {
-				var uri = this.errors[code]
-				if (uri.endsWith('!')) {
-					uri = uri.substring(0, uri.length - 1)
-					this.hidden.push(uri)
-				}
-				if (sincerity.verbosity >= 2) {
-					println('    Capturing error code {0} to "{1}"'.cast(code, uri))
-				}
-				this.instance.statusService.capture(code, this.internalName, uri, this.context)
-			}
-
 			// Libraries
 			this.libraryDocumentSources = new CopyOnWriteArrayList()
 
@@ -434,16 +421,29 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.sourceViewableDocumentSources = new CopyOnWriteArrayList()
 				this.globals['com.threecrickets.prudence.SourceCodeResource.documentSources'] = this.sourceViewableDocumentSources
 			}
-			
+
 			this.hidden = []
-			
+
 			// Inbound root (a router)
 			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
-			
+
 			// Internal access to DelegatedResource
 			if (Sincerity.Objects.exists(this.delegatedResource)) {
 				this.instance.inboundRoot.attachBase(this.delegatedResourceInternalUri, this.delegatedResource)
 				this.hidden.push(this.delegatedResourceInternalUri + '*')
+			}
+
+			// Errors
+			for (var code in this.errors) {
+				var uri = this.errors[code]
+				if (uri.endsWith('!')) {
+					uri = uri.substring(0, uri.length - 1)
+					this.hidden.push(uri)
+				}
+				if (sincerity.verbosity >= 2) {
+					println('    Capturing error code {0} to "{1}"'.cast(code, uri))
+				}
+				this.instance.statusService.capture(code, this.internalName, uri, this.context)
 			}
 
 			// Source viewer
