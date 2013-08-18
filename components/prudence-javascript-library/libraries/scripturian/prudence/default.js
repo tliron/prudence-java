@@ -563,7 +563,7 @@ var Prudence = {}
  * 
  * @name document.include
  * @function
- * @param {String} documentName The document URI relative to the application's "/mapped/" or "/fragments/" subdirectories
+ * @param {String} documentName The document URI relative to the application's "/resources/" or "/libraries/scriptlet-resources/" subdirectories
  * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} The representation
  */
 

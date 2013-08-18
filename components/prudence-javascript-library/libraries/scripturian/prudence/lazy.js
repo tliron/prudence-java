@@ -185,7 +185,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 		}
 		fn += 'return new ' + config.name + '('
 		if (config.config) {
-			fn += 'Sincerity.JSON.from(' + Sincerity.JSON.to(config.config, true) + ')'
+			fn += Sincerity.JSON.to(config.config)
 		}
 		fn += ');\n}'
 		return fn
