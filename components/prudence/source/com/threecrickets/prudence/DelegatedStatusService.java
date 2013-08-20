@@ -39,8 +39,8 @@ public class DelegatedStatusService extends StatusService
 	//
 
 	/**
-	 * Attribute to signify to upstream instances that the status has already
-	 * been handled for a {@link Request}.
+	 * Response attribute to signify to upstream instances that the status has
+	 * already been handled for a {@link Response}.
 	 */
 	public static final String PASSTHROUGH_ATTRIBUTE = "com.threecrickets.prudence.DelegatedStatusService.passThrough";
 
@@ -194,12 +194,14 @@ public class DelegatedStatusService extends StatusService
 	{
 		if( isEnabled() )
 		{
-			ConcurrentMap<String, Object> attributes = request.getAttributes();
+			ConcurrentMap<String, Object> attributes = response.getAttributes();
 
 			Object passthrough = attributes.get( PASSTHROUGH_ATTRIBUTE );
 			if( ( passthrough != null ) && (Boolean) passthrough )
+			{
 				// Pass through
 				return response.getEntity();
+			}
 
 			Restlet errorHandler = errorHandlers.get( status.getCode() );
 
@@ -209,8 +211,8 @@ public class DelegatedStatusService extends StatusService
 				response.setStatus( Status.SUCCESS_OK );
 				response.setEntity( null );
 
-				// Clean up for generated text resource
-				attributes.remove( GeneratedTextResource.DOCUMENT_NAME_ATTRIBUTE );
+				// Clean up cached document name for generated text resource
+				request.getAttributes().remove( GeneratedTextResource.DOCUMENT_NAME_ATTRIBUTE );
 
 				// Delegate
 				errorHandler.handle( request, response );
@@ -222,7 +224,7 @@ public class DelegatedStatusService extends StatusService
 				if( representation != null )
 				{
 					// Avoid caching, which could require other interchanges
-					// with client that we can't handle from here
+					// with the client, which we can't handle from here
 					representation.setExpirationDate( null );
 					representation.setModificationDate( null );
 					representation.setTag( null );
@@ -234,6 +236,7 @@ public class DelegatedStatusService extends StatusService
 
 			if( isDebugging() && ( status.getThrowable() != null ) )
 			{
+				// Use the debug representation for exceptions
 				attributes.put( PASSTHROUGH_ATTRIBUTE, true );
 				return new DebugRepresentation( status, request, response, sourceCodeUri );
 			}

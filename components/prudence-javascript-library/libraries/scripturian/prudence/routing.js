@@ -42,12 +42,6 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Always at the beginning
 			uri = '/' + uri
 		}
-		/*
-		if ((uri != '/') && (uri[uri.length - 1] != '/')) {
-			// Always at the end
-			uri += '/'
-		}
-		*/
 		return uri
 	}
 
@@ -285,6 +279,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 				var uri = Module.cleanBaseUri(this.hosts[name])
 				if (name == 'internal') {
+					// Internal should not have a slash at the beginning
 					this.internalName = uri.substring(1)
 				}
 				if (sincerity.verbosity >= 2) {

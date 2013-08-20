@@ -79,12 +79,12 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The context
 	 * @param targetTemplate
 	 *        The target template
-	 * @param hostRoot
-	 *        Whether to set the base reference to the host root URI
+	 * @param alwaysUseHostRoot
+	 *        Whether to always set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetTemplate, boolean hostRoot )
+	public CapturingRedirector( Context context, String targetTemplate, boolean alwaysUseHostRoot )
 	{
-		this( context, targetTemplate, hostRoot, MODE_SERVER_OUTBOUND );
+		this( context, targetTemplate, alwaysUseHostRoot, MODE_SERVER_OUTBOUND );
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The target pattern
 	 * @param mode
 	 *        The redirection mode
-	 * @param hostRoot
-	 *        Whether to set the base reference to the host root URI
+	 * @param alwaysUseHostRoot
+	 *        Whether to always set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetPattern, boolean hostRoot, int mode )
+	public CapturingRedirector( Context context, String targetPattern, boolean alwaysUseHostRoot, int mode )
 	{
 		super( context, targetPattern, mode, false );
 		describe();
-		this.hostRoot = hostRoot;
+		this.alwaysUseHostRoot = alwaysUseHostRoot;
 	}
 
 	//
@@ -115,7 +115,7 @@ public class CapturingRedirector extends ResolvingRedirector
 	{
 		Reference resourceRef = request.getResourceRef();
 
-		Reference rootRef = hostRoot ? null : request.getRootRef();
+		Reference rootRef = alwaysUseHostRoot ? null : request.getRootRef();
 		if( rootRef == null )
 			// The root reference could be null (e.g. in RIAP)
 			rootRef = new Reference( resourceRef.getHostIdentifier() + "/" );
@@ -130,9 +130,9 @@ public class CapturingRedirector extends ResolvingRedirector
 	// Private
 
 	/**
-	 * Whether to set the base reference to the host root URI.
+	 * Whether to always set the base reference to the host root URI.
 	 */
-	private final boolean hostRoot;
+	private final boolean alwaysUseHostRoot;
 
 	/**
 	 * Add description.

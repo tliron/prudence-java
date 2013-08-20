@@ -220,10 +220,10 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h3>Query Parameters</h3>" );
 			html.append( "<div id=\"query-parameters\">" );
-			for( Map.Entry<String, String> entry : CollectionUtil.sortedMap( form.getValuesMap() ).entrySet() )
+			for( Parameter parameter : form )
 			{
-				appendName( html, entry.getKey() );
-				appendValue( html, entry.getValue() );
+				appendName( html, parameter.getName() );
+				appendValue( html, parameter.getValue() );
 			}
 			html.append( "</div>" );
 		}
@@ -361,27 +361,16 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h2>conversation.locals</h2>" );
 			html.append( "<div id=\"conversation-locals\">" );
-			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( attributes ).entrySet() )
-			{
-				appendName( html, attribute.getKey() );
-				if( attribute.getValue() instanceof Collection<?> )
-				{
-					for( Object o : (Collection<?>) attribute.getValue() )
-					{
-						if( o instanceof Parameter )
-						{
-							Parameter parameter = (Parameter) o;
-							appendValue( html, parameter.getName(), " = ", parameter.getValue() );
-						}
-						else
-							appendValue( html, o );
-					}
-				}
-				else
-				{
-					appendValue( html, attribute.getValue() );
-				}
-			}
+			appendMap( html, attributes );
+			html.append( "</div>" );
+		}
+
+		attributes = response.getAttributes();
+		if( !attributes.isEmpty() )
+		{
+			html.append( "<h2>Response Attributes</h2>" );
+			html.append( "<div id=\"response-attributes\">" );
+			appendMap( html, attributes );
 			html.append( "</div>" );
 		}
 
@@ -420,18 +409,7 @@ public class DebugRepresentation extends StringRepresentation
 			{
 				html.append( "<h2>application.globals</h2>" );
 				html.append( "<div id=\"application-globals\">" );
-				for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( application.getContext().getAttributes() ).entrySet() )
-				{
-					appendName( html, attribute.getKey() );
-					if( attribute.getValue() instanceof Collection<?> )
-					{
-						for( Object o : (Collection<?>) attribute.getValue() )
-							appendValue( html, o );
-					}
-					else
-						appendValue( html, attribute.getValue() );
-				}
-				html.append( "</div>" );
+				appendMap( html, application.getContext().getAttributes() );
 			}
 		}
 
@@ -442,17 +420,7 @@ public class DebugRepresentation extends StringRepresentation
 			{
 				html.append( "<h2>application.sharedGlobals</h2>" );
 				html.append( "<div id=\"application-shared-globals\">" );
-				for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( component.getContext().getAttributes() ).entrySet() )
-				{
-					appendName( html, attribute.getKey() );
-					if( attribute.getValue() instanceof Collection<?> )
-					{
-						for( Object o : (Collection<?>) attribute.getValue() )
-							appendValue( html, o );
-					}
-					else
-						appendValue( html, attribute.getValue() );
-				}
+				appendMap( html, component.getContext().getAttributes() );
 				html.append( "</div>" );
 			}
 		}
@@ -461,17 +429,7 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h2>executable.globals</h2>" );
 			html.append( "<div id=\"executable-globals\">" );
-			for( Map.Entry<String, Object> attribute : CollectionUtil.sortedMap( GlobalScope.getInstance().getAttributes() ).entrySet() )
-			{
-				appendName( html, attribute.getKey() );
-				if( attribute.getValue() instanceof Collection<?> )
-				{
-					for( Object o : (Collection<?>) attribute.getValue() )
-						appendValue( html, o );
-				}
-				else
-					appendValue( html, attribute.getValue() );
-			}
+			appendMap( html, GlobalScope.getInstance().getAttributes() );
 			html.append( "</div>" );
 		}
 
@@ -552,5 +510,38 @@ public class DebugRepresentation extends StringRepresentation
 		for( Object string : strings )
 			appendSafe( html, string );
 		html.append( "</div>" );
+	}
+
+	/**
+	 * Appends all values in a map.
+	 * 
+	 * @param html
+	 *        The HTML builder
+	 * @param map
+	 *        The map to append
+	 */
+	private static void appendMap( StringBuilder html, Map<String, Object> map )
+	{
+		for( Map.Entry<String, Object> entry : CollectionUtil.sortedMap( map ).entrySet() )
+		{
+			appendName( html, entry.getKey() );
+			if( entry.getValue() instanceof Collection<?> )
+			{
+				for( Object o : (Collection<?>) entry.getValue() )
+				{
+					if( o instanceof Parameter )
+					{
+						Parameter parameter = (Parameter) o;
+						appendValue( html, parameter.getName(), " = ", parameter.getValue() );
+					}
+					else
+						appendValue( html, o );
+				}
+			}
+			else
+			{
+				appendValue( html, entry.getValue() );
+			}
+		}
 	}
 }

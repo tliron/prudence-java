@@ -189,7 +189,7 @@ public class ConversationService
 	 */
 	public boolean getStatusPassthrough()
 	{
-		Boolean passthrough = (Boolean) getRequest().getAttributes().get( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE );
+		Boolean passthrough = (Boolean) getResponse().getAttributes().get( DelegatedStatusService.PASSTHROUGH_ATTRIBUTE );
 		return passthrough != null ? passthrough : false;
 	}
 

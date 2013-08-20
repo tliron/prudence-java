@@ -137,6 +137,8 @@ public class Fallback extends Restlet
 
 	/**
 	 * Replaces one target restlet with another.
+	 * <p>
+	 * Note: this is <i>not</i> an atomic operation, though it is thread-safe.
 	 * 
 	 * @param originalTarget
 	 *        The target restlet to replace
@@ -146,8 +148,6 @@ public class Fallback extends Restlet
 	 */
 	public boolean replaceTarget( Restlet originalTarget, Restlet newTarget )
 	{
-		// Note: this is not a true atomic replace, but it is thread-safe
-
 		ArrayList<Restlet> targetsCopy = new ArrayList<Restlet>( targets );
 		int index = targetsCopy.indexOf( originalTarget );
 		if( index != -1 )
