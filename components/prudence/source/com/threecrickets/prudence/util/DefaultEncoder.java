@@ -48,14 +48,29 @@ public class DefaultEncoder extends Encoder
 	//
 
 	/**
-	 * Constructor.
+	 * Constructor that encodes responses.
 	 * 
 	 * @param application
 	 *        The application
 	 */
 	public DefaultEncoder( Application application )
 	{
-		this( application.getContext(), false, false, application.getEncoderService() );
+		this( application, false, true );
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param application
+	 *        The application
+	 * @param encodingRequest
+	 *        Indicates if the request entities should be encoded
+	 * @param encodingResponse
+	 *        Indicates if the response entities should be encoded
+	 */
+	public DefaultEncoder( Application application, boolean encodingRequest, boolean encodingResponse )
+	{
+		this( application.getContext(), encodingRequest, encodingResponse, application.getEncoderService() );
 	}
 
 	/**
