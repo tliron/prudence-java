@@ -561,19 +561,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	}
 
 	/**
-	 * @return The cache expiration timestamp for the executable
-	 */
-	private static long getExpirationTimestamp( Executable executable )
-	{
-		Long cacheDurationLong = (Long) executable.getAttributes().get( CACHE_DURATION_ATTRIBUTE );
-		long cacheDuration = cacheDurationLong == null ? 0 : cacheDurationLong;
-		if( cacheDuration <= 0 )
-			return 0;
-		else
-			return executable.getLastExecutedTimestamp() + cacheDuration;
-	}
-
-	/**
 	 * Adds encoding to a cache key.
 	 * 
 	 * @param cacheKey
@@ -588,6 +575,30 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			return cacheKey + "|" + encoding.getName();
 		else
 			return cacheKey;
+	}
+
+	/**
+	 * The cache expiration timestamp for the executable.
+	 * <p>
+	 * Considers
+	 * {@link GeneratedTextResourceAttributes#getMaxClientCachingDuration()}.
+	 * 
+	 * @return The cache expiration timestamp
+	 */
+	private long getExpirationTimestamp( Executable executable )
+	{
+		Long cacheDurationLong = (Long) executable.getAttributes().get( CACHE_DURATION_ATTRIBUTE );
+		long cacheDuration = cacheDurationLong == null ? 0 : cacheDurationLong;
+		if( cacheDuration <= 0 )
+			return 0;
+		else
+		{
+			long maxClientCachingDuration = attributes.getMaxClientCachingDuration();
+			if( maxClientCachingDuration != -1L )
+				// Limit the cache duration
+				cacheDuration = Math.min( cacheDuration, maxClientCachingDuration );
+			return executable.getLastExecutedTimestamp() + cacheDuration;
+		}
 	}
 
 	/**

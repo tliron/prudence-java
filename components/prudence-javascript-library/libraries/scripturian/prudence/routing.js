@@ -977,6 +977,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String} [defaultDocumentName='index']
 	 * @param {String} [defaultExtension='html']
 	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
+	 * @param {String} [maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
 	 * @param {Object} [plugins]
 	 */
 	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
@@ -987,11 +988,12 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins']
+		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins', 'maxClientCachingDuration']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
 				importClass(
+					com.threecrickets.prudence.GeneratedTextResource,
 					com.threecrickets.prudence.util.PhpExecutionController,
 					org.restlet.resource.Finder,
 					java.util.concurrent.CopyOnWriteArrayList,
@@ -1011,22 +1013,23 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				if (Sincerity.Objects.isString(this.clientCachingMode)) {
 					if (this.clientCachingMode == 'disabled') {
-						this.clientCachingMode = 0
+						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_DISABLED
 					}
 					else if (this.clientCachingMode == 'conditional') {
-						this.clientCachingMode = 1
+						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_CONDITIONAL
 					}
 					else if (this.clientCachingMode == 'offline') {
-						this.clientCachingMode = 2
+						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_OFFLINE
 					}
 					else {
 						throw new SavoryException('Unsupported clientCachingMode: ' + this.clientCachingMode)
 					}
 				}
 				else if (!Sincerity.Objects.exists(this.clientCachingMode)) {
-					this.clientCachingMode = 1
+					this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_CONDITIONAL
 				}
 
+				this.maxClientCachingDuration = Sincerity.Objects.ensure(this.maxClientCachingDuration, -1)
 				this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
 				this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
@@ -1046,6 +1049,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					cacheKeyPatternHandlers: new ConcurrentHashMap(),
 					scriptletPlugins: new ConcurrentHashMap(),
 					clientCachingMode: this.clientCachingMode,
+					maxClientCachingDuration: this.maxClientCachingDuration, 
 					defaultIncludedName: this.defaultDocumentName,
 					executionController: new PhpExecutionController(), // Adds PHP predefined variables
 					languageManager: executable.manager,
@@ -1107,7 +1111,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				
 				app.generatedTextResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
 			}
-			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.includeRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode)) {
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.includeRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode) || Sincerity.Objects.exists(thismaxClientCachingDuration)) {
 				throw new SincerityException('You can configure a Scriptlet only once per application')
 			}
 			
