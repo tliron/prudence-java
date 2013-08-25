@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
@@ -33,10 +34,11 @@ import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
-import org.restlet.data.Form;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Metadata;
+import org.restlet.engine.header.Header;
+import org.restlet.util.Series;
 
 import com.threecrickets.prudence.util.InProcessMemoryLockSource;
 import com.threecrickets.prudence.util.LockSource;
@@ -231,7 +233,7 @@ public class SqlCache implements Cache
 					statement.setString( 3, entry.getLanguage() != null ? entry.getLanguage().getName() : null );
 					statement.setString( 4, entry.getCharacterSet() != null ? entry.getCharacterSet().getName() : null );
 					statement.setString( 5, entry.getEncoding() != null ? entry.getEncoding().getName() : null );
-					statement.setString( 6, entry.getHeaders() == null ? "" : entry.getHeaders().getQueryString() );
+					statement.setString( 6, entry.getHeaders() == null ? "" : serializeHeaders( entry.getHeaders() ) );
 					statement.setTimestamp( 7, new Timestamp( entry.getDocumentModificationDate().getTime() ) );
 					statement.setTimestamp( 8, new Timestamp( entry.getExpirationDate().getTime() ) );
 					statement.setString( 9, key );
@@ -280,7 +282,7 @@ public class SqlCache implements Cache
 						statement.setString( 4, getName( entry.getLanguage() ) );
 						statement.setString( 5, getName( entry.getCharacterSet() ) );
 						statement.setString( 6, getName( entry.getEncoding() ) );
-						statement.setString( 7, entry.getHeaders() == null ? "" : entry.getHeaders().getQueryString() );
+						statement.setString( 7, entry.getHeaders() == null ? "" : serializeHeaders( entry.getHeaders() ) );
 						statement.setTimestamp( 8, new Timestamp( entry.getDocumentModificationDate().getTime() ) );
 						statement.setTimestamp( 9, new Timestamp( entry.getExpirationDate().getTime() ) );
 						statement.execute();
@@ -370,7 +372,7 @@ public class SqlCache implements Cache
 							CharacterSet characterSet = CharacterSet.valueOf( rs.getString( 4 ) );
 							Encoding encoding = Encoding.valueOf( rs.getString( 5 ) );
 							String rawHeaders = rs.getString( 6 );
-							Form headers = ( rawHeaders != null ) && ( rawHeaders.length() > 0 ) ? new Form( rawHeaders ) : null;
+							Series<Header> headers = ( rawHeaders != null ) && ( rawHeaders.length() > 0 ) ? deserializeHeaders( rawHeaders ) : null;
 							Timestamp documentModificationDate = rs.getTimestamp( 7 );
 							Timestamp expirationDate = rs.getTimestamp( 8 );
 
@@ -743,5 +745,45 @@ public class SqlCache implements Cache
 	private static String getName( Metadata metadata )
 	{
 		return metadata == null ? null : metadata.getName();
+	}
+
+	/**
+	 * TODO: this can't be good! needs proper escaping!
+	 * 
+	 * @param headers
+	 * @return
+	 */
+	private static String serializeHeaders( Series<Header> headers )
+	{
+		StringBuilder s = new StringBuilder();
+		for( Iterator<Header> i = headers.iterator(); i.hasNext(); )
+		{
+			Header header = i.next();
+			s.append( header.getName() );
+			s.append( "=" );
+			s.append( header.getValue() );
+			if( i.hasNext() )
+				s.append( '&' );
+		}
+		return s.toString();
+	}
+
+	/**
+	 * TODO: this can't be good! needs proper escaping!
+	 * 
+	 * @param string
+	 * @return
+	 */
+	private Series<Header> deserializeHeaders( String string )
+	{
+		Series<Header> headers = new Series<Header>( Header.class );
+		String[] headerStrings = string.split( "&" );
+		for( String headerString : headerStrings )
+		{
+			String[] split = headerString.split( "=" );
+			if( split.length == 2 )
+				headers.add( new Header( split[0], split[1] ) );
+		}
+		return headers;
 	}
 }

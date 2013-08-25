@@ -184,6 +184,27 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	/**
+	 * Whether or not to enable cache debugging. Defaults to false.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>cacheDebug</code> in the application's {@link Context}.
+	 * 
+	 * @return Whether to allow cache debugging
+	 */
+	public boolean isCacheDebug()
+	{
+		if( cacheDebug == null )
+		{
+			cacheDebug = (Boolean) getAttributes().get( prefix + ".cacheDebug" );
+
+			if( cacheDebug == null )
+				cacheDebug = false;
+		}
+
+		return cacheDebug;
+	}
+
+	/**
 	 * Whether or not to send information to the client about cache expiration.
 	 * Defaults to {@link GeneratedTextResource#CLIENT_CACHING_MODE_CONDITIONAL}
 	 * .
@@ -391,6 +412,11 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	 * Whether or not to negotiate encoding by default.
 	 */
 	private Boolean negotiateEncoding;
+
+	/**
+	 * Whether or not to enable cache debugging.
+	 */
+	private Boolean cacheDebug;
 
 	/**
 	 * Whether or not to send information to the client about cache expiration.

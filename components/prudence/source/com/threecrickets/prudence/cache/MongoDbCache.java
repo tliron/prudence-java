@@ -23,10 +23,10 @@ import org.bson.BSONObject;
 import org.bson.types.Binary;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
-import org.restlet.data.Form;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
-import org.restlet.data.Parameter;
+import org.restlet.engine.header.Header;
+import org.restlet.util.Series;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -234,11 +234,11 @@ public class MongoDbCache implements Cache
 			if( characterSet != null )
 				set.put( "characterSet", characterSet.getName() );
 
-			Form headers = entry.getHeaders();
+			Series<Header> headers = entry.getHeaders();
 			if( headers != null )
 			{
 				BasicDBList list = new BasicDBList();
-				for( Parameter header : headers )
+				for( Header header : headers )
 				{
 					BasicDBObject object = new BasicDBObject();
 					object.put( "name", header.getName() );
@@ -298,11 +298,11 @@ public class MongoDbCache implements Cache
 						Encoding encoding = Encoding.valueOf( (String) document.get( "encoding" ) );
 						CharacterSet characterSet = CharacterSet.valueOf( (String) document.get( "characterSet" ) );
 
-						Form headers = null;
+						Series<Header> headers = null;
 						Object storedHeaders = document.get( "headers" );
 						if( storedHeaders instanceof Collection )
 						{
-							headers = new Form();
+							headers = new Series<Header>( Header.class );
 							for( Object storedHeader : (Collection<?>) storedHeaders )
 							{
 								if( storedHeader instanceof BSONObject )
@@ -311,7 +311,7 @@ public class MongoDbCache implements Cache
 									Object name = storedHeaderBson.get( "name" );
 									Object value = storedHeaderBson.get( "value" );
 									if( ( name != null ) && ( value != null ) )
-										headers.add( name.toString(), value.toString() );
+										headers.add( new Header( name.toString(), value.toString() ) );
 								}
 							}
 						}

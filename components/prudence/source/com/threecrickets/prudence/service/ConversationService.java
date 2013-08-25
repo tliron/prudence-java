@@ -27,6 +27,8 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
+import org.restlet.engine.header.Header;
+import org.restlet.util.Series;
 
 import com.threecrickets.prudence.DelegatedStatusService;
 import com.threecrickets.prudence.util.CapturingRedirector;
@@ -391,13 +393,14 @@ public class ConversationService
 	 * 
 	 * @return The headers
 	 */
-	public Form getHeaders()
+	public Series<Header> getHeaders()
 	{
 		ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
-		Form headers = (Form) attributes.get( HEADERS_ATTRIBUTES );
+		@SuppressWarnings("unchecked")
+		Series<Header> headers = (Series<Header>) attributes.get( HEADERS_ATTRIBUTES );
 		if( headers == null )
 		{
-			headers = new Form();
+			headers = new Series<Header>( Header.class );
 			attributes.put( HEADERS_ATTRIBUTES, headers );
 		}
 

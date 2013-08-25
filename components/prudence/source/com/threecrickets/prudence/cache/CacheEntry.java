@@ -23,15 +23,15 @@ import java.util.Date;
 
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
-import org.restlet.data.Form;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Metadata;
-import org.restlet.data.Parameter;
+import org.restlet.engine.header.Header;
 import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.RepresentationInfo;
 import org.restlet.representation.StringRepresentation;
+import org.restlet.util.Series;
 
 import com.threecrickets.prudence.util.IoUtil;
 
@@ -108,7 +108,7 @@ public class CacheEntry implements Externalizable
 	 *        The expiration date
 	 * @throws IOException
 	 */
-	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Form headers, Date documentModificationDate, Date expirationDate ) throws IOException
+	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Date documentModificationDate, Date expirationDate ) throws IOException
 	{
 		this.mediaType = mediaType;
 		this.language = language;
@@ -144,7 +144,7 @@ public class CacheEntry implements Externalizable
 	 * @param expirationDate
 	 *        The expiration date
 	 */
-	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Form headers, Date documentModificationDate, Date expirationDate )
+	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Date documentModificationDate, Date expirationDate )
 	{
 		this.bytes = bytes;
 		this.mediaType = mediaType;
@@ -177,7 +177,8 @@ public class CacheEntry implements Externalizable
 	 *        The expiration timestamp or 0 for no expiration
 	 * @throws IOException
 	 */
-	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Form headers, long docmuentModificationTimestamp, long expirationTimestamp ) throws IOException
+	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long docmuentModificationTimestamp, long expirationTimestamp )
+		throws IOException
 	{
 		this( string, mediaType, language, characterSet, encoding, headers, new Date( docmuentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
 	}
@@ -203,7 +204,7 @@ public class CacheEntry implements Externalizable
 	 *        The expiration timestamp or 0 for no expiration
 	 * @throws IOException
 	 */
-	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Form headers, long docmuentModificationTimestamp, long expirationTimestamp )
+	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long docmuentModificationTimestamp, long expirationTimestamp )
 	{
 		this( bytes, mediaType, language, characterSet, encoding, headers, new Date( docmuentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
 	}
@@ -313,7 +314,7 @@ public class CacheEntry implements Externalizable
 	/**
 	 * @return The headers
 	 */
-	public Form getHeaders()
+	public Series<Header> getHeaders()
 	{
 		return headers;
 	}
@@ -446,12 +447,12 @@ public class CacheEntry implements Externalizable
 		int headersLength = in.readInt();
 		if( headersLength > 0 )
 		{
-			headers = new Form();
+			headers = new Series<Header>( Header.class );
 			for( int i = 0; i < headersLength; i++ )
 			{
 				String name = IoUtil.readUtf8( in );
 				String value = IoUtil.readUtf8( in );
-				headers.add( name, value );
+				headers.add( new Header( name, value ) );
 			}
 		}
 
@@ -493,7 +494,7 @@ public class CacheEntry implements Externalizable
 		else
 		{
 			out.writeInt( headers.size() );
-			for( Parameter header : headers )
+			for( Header header : headers )
 			{
 				IoUtil.writeUtf8( out, header.getName() );
 				IoUtil.writeUtf8( out, header.getValue() );
@@ -548,7 +549,7 @@ public class CacheEntry implements Externalizable
 	/**
 	 * The headers.
 	 */
-	private Form headers;
+	private Series<Header> headers;
 
 	/**
 	 * The document modification date.

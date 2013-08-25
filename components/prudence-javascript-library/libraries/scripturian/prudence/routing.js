@@ -1049,6 +1049,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					trailingSlashRequired: this.trailingSlashRequired,
 					cacheKeyPatternHandlers: new ConcurrentHashMap(),
 					scriptletPlugins: new ConcurrentHashMap(),
+					cacheDebug: app.settings.errors.debug,
 					clientCachingMode: this.clientCachingMode,
 					maxClientCachingDuration: this.maxClientCachingDuration, 
 					defaultIncludedName: this.defaultDocumentName,

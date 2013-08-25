@@ -932,8 +932,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name conversation.headers
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
- * @see <a href="http://restlet.org/learn/javadocs/2.1/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.1/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
  */
 
 /**

@@ -1324,7 +1324,21 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manu
 \end_inset
 
  class.
- [See Implementing Resources]
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+Implementing Resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Quote
@@ -5491,6 +5505,12 @@ Implementing Resources
 \end_layout
 
 \begin_layout Subsection
+\begin_inset CommandInset label
+LatexCommand label
+name "implementing-resources"
+
+\end_inset
+
 Comparison Table
 \end_layout
 
@@ -5877,6 +5897,13 @@ Can be added with CacheControlFilter
 
 \begin_layout Subsection
 Manual Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "manual-resources"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection

@@ -15,12 +15,14 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,12 +31,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Encoding;
-import org.restlet.data.Form;
 import org.restlet.data.Reference;
+import org.restlet.engine.header.Header;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.representation.Variant;
 import org.restlet.routing.Template;
+import org.restlet.util.Series;
 
 import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
 import com.threecrickets.prudence.GeneratedTextResource;
@@ -453,6 +456,16 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	private static final String CACHE_ENTRY_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheEntry";
 
 	/**
+	 * Cache key header.
+	 */
+	private static final String CACHE_KEY_HEADER = "X-Cache-Key";
+
+	/**
+	 * Cache expiration header.
+	 */
+	private static final String CACHE_EXPIRATION_HEADER = "X-Cache-Expiration";
+
+	/**
 	 * The conversation service.
 	 */
 	private final GeneratedTextResourceConversationService conversationService;
@@ -781,11 +794,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			Cache cache = attributes.getCache();
 			if( cache != null )
 			{
-				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+				cacheKey = getCacheKeyForEncoding( cacheKey, encoding );
 				Set<String> cacheTags = getCacheTags( executable, false );
 				if( cacheTags != null )
 					cacheEntry.setTags( cacheTags.toArray( new String[] {} ) );
-				cache.store( cacheKeyForEncoding, cacheEntry );
+				cache.store( cacheKey, cacheEntry );
 			}
 		}
 
@@ -794,7 +807,29 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			writer.write( cacheEntry.getString() );
 
 		// Apply headers
-		Form headers = cacheEntry.getHeaders();
+		Series<Header> headers = cacheEntry.getHeaders();
+
+		// Cache debug header
+		if( attributes.isCacheDebug() )
+		{
+			if( headers == null )
+				headers = new Series<Header>( Header.class );
+			else
+			{
+				// Copy headers
+				Series<Header> newHeaders = new Series<Header>( Header.class );
+				for( Header header : headers )
+					newHeaders.add( header );
+				headers = newHeaders;
+			}
+
+			SimpleDateFormat format = new SimpleDateFormat( "EEE, dd MMM yyyy HH:mm:ss z" );
+			format.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+
+			headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
+			headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
+		}
+
 		if( headers != null )
 			this.resource.getResponse().getAttributes().put( ConversationService.HEADERS_ATTRIBUTES, headers );
 
