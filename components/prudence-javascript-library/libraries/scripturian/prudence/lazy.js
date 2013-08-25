@@ -214,7 +214,46 @@ Prudence.Lazy = Prudence.Lazy || function() {
 		
 		return r
 	}
+
+	/**
+	 * Identical to {@link Sincerity.Objects#flatten}, but also builds lazy entries if their
+	 * key is equal to double the 'separator'.
+	 * 
+	 * @param value The value
+	 * @param {String} [separator='.'] The path separator
+	 * @returns A flattened dict
+	 */
+	Public.flatten = function(value, separator, baseKey, flat, nonFlat) {
+		flat = flat || {}
+		nonFlat = nonFlat || {}
+
+		if (Sincerity.Objects.isDict(value, true)) {
+			separator = separator || '.'
+
+			for (var key in value) {
+				var v = value[key]
+				if (key == separator) {
+					nonFlat[baseKey] = v
+				}
+				else if (key == (separator + separator)) {
+					nonFlat[baseKey] = Public.build(v)
+				}
+				else {
+					if (baseKey) {
+						key = baseKey + separator + key
+					}
+					Public.flatten(v, separator, key, flat, nonFlat)
+				}
+			}
+		}
+		else if (baseKey) {
+			flat[baseKey] = value
+		}
 		
+		Sincerity.Objects.merge(flat, nonFlat)
+		return flat
+	}
+
 	/**
 	 * A trivial wrapper over a value. Exists to allow for a common interface with
 	 * {@link Prudence.Lazy.LazyEntry}.

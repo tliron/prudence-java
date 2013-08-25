@@ -525,8 +525,13 @@ public class GeneratedTextResource extends ServerResource
 							long maxAge = ( expirationDate.getTime() - System.currentTimeMillis() );
 							if( maxAge > 0 )
 							{
+								long maxClientCachingDuration = this.attributes.getMaxClientCachingDuration();
+								if( maxClientCachingDuration != -1L )
+									// Limit the cache duration
+									maxAge = Math.min( maxAge, maxClientCachingDuration );
+
 								cacheDirectives.clear();
-								cacheDirectives.add( CacheDirective.maxAge( (int) maxAge / 1000 ) );
+								cacheDirectives.add( CacheDirective.maxAge( (int) ( maxAge / 1000L ) ) );
 							}
 						}
 						break;

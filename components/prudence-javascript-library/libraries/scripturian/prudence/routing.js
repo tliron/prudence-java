@@ -11,6 +11,7 @@
 // at http://threecrickets.com/
 //
 
+document.executeOnce('/prudence/lazy/')
 document.executeOnce('/sincerity/classes/')
 document.executeOnce('/sincerity/objects/')
 document.executeOnce('/sincerity/templates/')
@@ -185,7 +186,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.component = component
 
 			// Flatten globals
-			this.globals = Sincerity.Objects.flatten(this.globals)
+			this.globals = Prudence.Lazy.flatten(this.globals)
 
 			// Ensure all settings exist
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
