@@ -18,7 +18,7 @@ Sincerity.Objects.merge(app.settings, {
 	code: {
 		libraries: ['libraries'],
 		defrost: true,
-		minimumTimeBetweenValidityChecks: 1000,
+		minimumTimeBetweenValidityChecks: '1s',
 		defaultDocumentName: 'default',
 		defaultExtension: 'js',
 		defaultLanguageTag: 'javascript',

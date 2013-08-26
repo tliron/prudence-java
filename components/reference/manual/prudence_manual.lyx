@@ -6033,6 +6033,352 @@ Introduction: Integrated Caching
 \end_layout
 
 \begin_layout Subsection
+Two Caching Strategies
+\end_layout
+
+\begin_layout Subsubsection
+Simple
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+			clientCachingMode: 'conditional' // this is actually the default
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'cacheControl',
+\end_layout
+
+\begin_layout Plain Layout
+
+			mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/png': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/gif': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/jpeg': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'text/css': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'application/x-javascript': 'farFuture'
+\end_layout
+
+\begin_layout Plain Layout
+
+			},
+\end_layout
+
+\begin_layout Plain Layout
+
+			next: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				type: 'zuss',
+\end_layout
+
+\begin_layout Plain Layout
+
+				next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Aggressive
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+			clientCachingMode: 'offline',
+\end_layout
+
+\begin_layout Plain Layout
+
+			maxClientCachingDuration: '5m'.toMilliseconds()
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'cacheControl',
+\end_layout
+
+\begin_layout Plain Layout
+
+			mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/png': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/gif': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'image/jpeg': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'text/css': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+				'application/x-javascript': 'farFuture'
+\end_layout
+
+\begin_layout Plain Layout
+
+			},
+\end_layout
+
+\begin_layout Plain Layout
+
+			next: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				type: 'zuss',
+\end_layout
+
+\begin_layout Plain Layout
+
+				next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Paranoid: No Caching
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+			clientCachingMode: 'disabled'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'zuss',
+\end_layout
+
+\begin_layout Plain Layout
+
+			next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Server-Side Caching
 \end_layout
 

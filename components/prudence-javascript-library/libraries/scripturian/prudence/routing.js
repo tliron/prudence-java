@@ -15,6 +15,7 @@ document.executeOnce('/prudence/lazy/')
 document.executeOnce('/sincerity/classes/')
 document.executeOnce('/sincerity/objects/')
 document.executeOnce('/sincerity/templates/')
+document.executeOnce('/sincerity/localization/')
 document.executeOnce('/sincerity/jvm/')
 document.executeOnce('/restlet/')
 
@@ -91,7 +92,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 *                      the programming languages' internal import facilities) will look for libraries;
 	 *                      the <i>first</i> library in this list is special: it is used to look for handlers and tasks;
 	 *                      paths are relative to the application directory
-	 * @property {Number} [settings.code.minimumTimeBetweenValidityChecks=1000] Time in milliseconds between validity checks on files
+	 * @property {Number|String} [settings.code.minimumTimeBetweenValidityChecks=1000] Time in milliseconds between validity checks on files
 	 *                    containing source code (libraries, manual resources and scriptlet resources)
 	 * @property {String} [settings.code.defaultDocumentName='default'] Used for {@link document#execute} when a directory name is given
 	 * @property {String} [settings.code.defaultExtension='js'] Used for {@link document#execute} as the preference when multiple documents
@@ -105,7 +106,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {Object} [settings.uploads] File upload settings
 	 * @property {String} [settings.uploads.root='uploads'] Path in which to store uploaded files; the path is relative to the
 	 *                    application directory
-	 * @property {Number} [settings.uploads.sizeThreshold=0] The size in bytes beyond which uploaded files are
+	 * @property {Number|String} [settings.uploads.sizeThreshold=0] The size in bytes beyond which uploaded files are
 	 *                    permanently stored; below this threshold they are simply stored in memory
 	 * 
 	 * @property {Object} [settings.mediaTypes] A dict matching filename extensions to media (MIME) types
@@ -219,7 +220,10 @@ Prudence.Routing = Prudence.Routing || function() {
 			if (!(this.settings.uploads.root instanceof File)) {
 				this.settings.uploads.root = new File(this.root, this.settings.uploads.root).absoluteFile
 			}
-			
+
+			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Localization.toMilliseconds(this.settings.code.minimumTimeBetweenValidityChecks)
+			this.settings.uploads.sizeThreshold = Sincerity.Localization.toBytes(this.settings.uploads.sizeThreshold)
+
 			// Hazelcast
 			this.globals['com.threecrickets.prudence.hazelcastInstanceName'] = this.settings.distributed.hazelcast.instance
 			this.globals['com.threecrickets.prudence.hazelcastMapName'] = this.settings.distributed.hazelcast.map
@@ -978,7 +982,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String} [defaultDocumentName='index']
 	 * @param {String} [defaultExtension='html']
 	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
-	 * @param {String} [maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
+	 * @param {Number|String} [maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
 	 * @param {Object} [plugins]
 	 */
 	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
@@ -1035,6 +1039,8 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
 				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
+
+				this.maxClientCachingDuration = Sincerity.Localization.toMilliseconds(this.maxClientCachingDuration)
 
 				if (sincerity.verbosity >= 2) {
 					println('    Scriptlet:')
@@ -2055,6 +2061,9 @@ Prudence.Routing = Prudence.Routing || function() {
 					var maxAge = this.mediaTypes[mediaType]
 					if (maxAge == 'farFuture') {
 						maxAge = CacheControlFilter.FAR_FUTURE
+					}
+					else if (Sincerity.Objects.isString(maxAge)) {
+						maxAge = Sincerity.Localization.toMilliseconds(maxAge) / 1000
 					}
 					mediaType = MediaType.valueOf(mediaType)
 					filter.maxAgeForMediaType.put(mediaType, maxAge)

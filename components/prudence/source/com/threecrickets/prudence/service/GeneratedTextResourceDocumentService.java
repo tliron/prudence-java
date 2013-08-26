@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -461,9 +462,19 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	private static final String CACHE_KEY_HEADER = "X-Cache-Key";
 
 	/**
+	 * Cache tags header.
+	 */
+	private static final String CACHE_TAGS_HEADER = "X-Cache-Tags";
+
+	/**
 	 * Cache expiration header.
 	 */
 	private static final String CACHE_EXPIRATION_HEADER = "X-Cache-Expiration";
+
+	/**
+	 * Cache expiration header date-time format.
+	 */
+	private static final String CACHE_EXPIRATION_HEADER_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
 
 	/**
 	 * The conversation service.
@@ -806,7 +817,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		if( ( writer != null ) && ( cacheEntry.getString() != null ) )
 			writer.write( cacheEntry.getString() );
 
-		// Apply headers
 		Series<Header> headers = cacheEntry.getHeaders();
 
 		// Cache debug header
@@ -823,13 +833,27 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				headers = newHeaders;
 			}
 
-			SimpleDateFormat format = new SimpleDateFormat( "EEE, dd MMM yyyy HH:mm:ss z" );
+			SimpleDateFormat format = new SimpleDateFormat( CACHE_EXPIRATION_HEADER_FORMAT );
 			format.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
 
 			headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
 			headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
+
+			Set<String> cacheTags = getCacheTags( executable, false );
+			if( cacheTags != null )
+			{
+				StringBuilder s = new StringBuilder();
+				for( Iterator<String> i = cacheTags.iterator(); i.hasNext(); )
+				{
+					s.append( i.next() );
+					if( i.hasNext() )
+						s.append( ',' );
+				}
+				headers.add( new Header( CACHE_TAGS_HEADER, s.toString() ) );
+			}
 		}
 
+		// Apply headers
 		if( headers != null )
 			this.resource.getResponse().getAttributes().put( ConversationService.HEADERS_ATTRIBUTES, headers );
 
