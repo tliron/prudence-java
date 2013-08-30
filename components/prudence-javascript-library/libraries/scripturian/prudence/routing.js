@@ -469,7 +469,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					var last = uri[length - 1]
 					if (last == '*') {
 						uri = uri.substring(0, length - 1)
-						this.instance.inboundRoot.hideBase(uri)
+						this.instance.inboundRoot.hide(uri, Template.MODE_STARTS_WITH)
 					}
 					else {
 						this.instance.inboundRoot.hide(uri)
@@ -1269,9 +1269,6 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			if (true == this.hidden) {
 				app.hidden.push(uri)
-				if (sincerity.verbosity >= 2) {
-					println('    "{0}" hidden'.cast(uri))
-				}
 			}
    
 			return capture
@@ -1323,6 +1320,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public.create = function(app, uri) {
 			importClass(
 				com.threecrickets.prudence.PrudenceRouter,
+				org.restlet.routing.Template,
 				org.restlet.routing.Router)
 			
 			this.cacheDuration = Sincerity.Objects.ensure(this.cacheDuration, app.settings.code.minimumTimeBetweenValidityChecks)
@@ -1378,7 +1376,15 @@ Prudence.Routing = Prudence.Routing || function() {
 							if (sincerity.verbosity >= 2) {
 								println('    "{0}" hidden'.cast(uri))
 							}
-							router.hide(uri)
+							var length = uri.length
+							var last = uri[length - 1]
+							if (last == '*') {
+								uri = uri.substring(0, length - 1)
+								router.hide(uri, Template.MODE_STARTS_WITH)
+							}
+							else {
+								router.hide(uri)
+							}
 						}
 						else if (attachBase) {
 							if (sincerity.verbosity >= 2) {

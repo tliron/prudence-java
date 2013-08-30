@@ -404,35 +404,38 @@ public class PrudenceRouter extends FallbackRouter
 	}
 
 	/**
-	 * Sets the URI to always return {@link Status#CLIENT_ERROR_NOT_FOUND}. Note
-	 * that if there really is a resource at that URI, it might still be
-	 * available via other routes.
+	 * Sets the URI template to always return
+	 * {@link Status#CLIENT_ERROR_NOT_FOUND}. Note that if there really is a
+	 * restlet attached to the URI template, it might still be available via
+	 * other routes.
 	 * <p>
-	 * Hiding is explicitly disabled for the RIAP protocol.
+	 * Hiding purposely <i>does not affect</i> the RIAP protocol.
 	 * 
-	 * @param uri
-	 *        The URI path that must match the remaining part of the resource
-	 *        URI
+	 * @param uriTemplate
+	 *        The URI path template that must match the resource URI
 	 */
-	public void hide( String uri )
+	public void hide( String uriTemplate )
 	{
-		hiddenUris.add( uri );
+		hiddenUriTemplates.add( new Template( uriTemplate ) );
 	}
 
 	/**
-	 * Sets URIs for which the beginning matches this URI to always return
+	 * Sets the URI template to always return
 	 * {@link Status#CLIENT_ERROR_NOT_FOUND}. Note that if there really is a
-	 * resource at that URI, it might still be available via other routes.
+	 * restlet attached to the URI template, it might still be available via
+	 * other routes.
 	 * <p>
-	 * Hiding is explicitly disabled for the RIAP protocol.
+	 * Hiding purposely <i>does not affect</i> the RIAP protocol.
 	 * 
-	 * @param uri
-	 *        The URI path that must match the beginning of the remaining part
-	 *        of the resource URI
+	 * @param uriTemplate
+	 *        The URI path template that must match the resource URI
+	 * @param mode
+	 *        The matching mode ({@link Template#MODE_EQUALS} or
+	 *        {@link Template#MODE_STARTS_WITH})
 	 */
-	public void hideBase( String uri )
+	public void hide( String uriTemplate, int mode )
 	{
-		hiddenBaseUris.add( uri );
+		hiddenUriTemplates.add( new Template( uriTemplate, mode ) );
 	}
 
 	//
@@ -445,15 +448,10 @@ public class PrudenceRouter extends FallbackRouter
 		// RIAP ignores hide
 		if( request.getProtocol() != Protocol.RIAP )
 		{
-			String remaining = request.getResourceRef().getRemainingPart();
-			if( hiddenUris.contains( remaining ) )
+			String remainingPart = request.getResourceRef().getRemainingPart();
+			for( Template hiddenUriTemplate : hiddenUriTemplates )
 			{
-				response.setStatus( Status.CLIENT_ERROR_NOT_FOUND );
-				return;
-			}
-			for( String baseUri : hiddenBaseUris )
-			{
-				if( remaining.startsWith( baseUri ) )
+				if( hiddenUriTemplate.match( remainingPart ) != -1 )
 				{
 					response.setStatus( Status.CLIENT_ERROR_NOT_FOUND );
 					return;
@@ -468,18 +466,11 @@ public class PrudenceRouter extends FallbackRouter
 	// Private
 
 	/**
-	 * Hidden URIs.
+	 * Hidden URI templates.
 	 * 
 	 * @see #hide(String)
 	 */
-	private CopyOnWriteArraySet<String> hiddenUris = new CopyOnWriteArraySet<String>();
-
-	/**
-	 * Hidden base URIs.
-	 * 
-	 * @see #hideBase(String)
-	 */
-	private CopyOnWriteArraySet<String> hiddenBaseUris = new CopyOnWriteArraySet<String>();
+	private CopyOnWriteArraySet<Template> hiddenUriTemplates = new CopyOnWriteArraySet<Template>();
 
 	/**
 	 * Add description.

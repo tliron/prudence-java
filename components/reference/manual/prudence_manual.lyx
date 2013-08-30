@@ -1115,7 +1115,7 @@ hidden
 \begin_inset Quotes erd
 \end_inset
 
- string values to hide a URI.
+ string values to hide a URI template.
  Prudence will always return a 404 error (
 \begin_inset Quotes eld
 \end_inset
@@ -1130,11 +1130,6 @@ not found
  URI-space but not the public one.
  This special value is not actually handled by a class, but rather is configured
  into the current router.
- Furthermore, 
-\emph on
-you cannot hide URI templates
-\emph default
-, only exact URI matches.
 \end_layout
 
 \begin_layout Paragraph
@@ -2239,6 +2234,13 @@ app.routes = {
 
 \begin_layout Subsection
 Injecting Conversation Attributes
+\begin_inset CommandInset label
+LatexCommand label
+name "injecting-conversation-attributes"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3191,8 +3193,27 @@ single
 \emph on
 also
 \emph default
- a URI template, and can include any of the conversation attributes (see
- above).
+ a URI template, and can include any of the conversation attributes discussed
+ in 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+Injecting Conversation Attributes
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-conversation-attributes"
+
+\end_inset
+
+)
+\bar default
+.
  For example:
 \end_layout
 
@@ -3277,11 +3298,15 @@ POST
 \begin_inset Quotes erd
 \end_inset
 
- subdirectory to handle different kinds of requests.
+ subdirectory to handle different request methods.
+\end_layout
+
+\begin_layout Paragraph
+Dynamic Capture-and-Hide
 \end_layout
 
 \begin_layout Standard
-Not that you cannot use the 
+Note that if you use the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3289,9 +3314,12 @@ Not that you cannot use the
 \begin_inset Quotes erd
 \end_inset
 
- capture-and-hide trick with dynamic capturing, because Prudence can only
- hide exact matches of URIs.
- Use explicit hiding instead:
+ capture-and-hide trick with dynamic capturing, Prudence will hide 
+\emph on
+any
+\emph default
+ URI that matches the template.
+ For example:
 \end_layout
 
 \begin_layout Standard
@@ -3307,6 +3335,63 @@ app.routes = {
 \begin_layout Plain Layout
 
 	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/preferences/': '/database/preferences/{m}/!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here, 
+\begin_inset Quotes eld
+\end_inset
+
+/database/preferences/GET/
+\begin_inset Quotes erd
+\end_inset
+
+ is hidden, but also 
+\begin_inset Quotes eld
+\end_inset
+
+/database/preferences/anything/
+\begin_inset Quotes erd
+\end_inset
+
+, etc.
+ If you do not want this behavior, then you should explicitly hide specific
+ URIs instead:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/preferences/': '/database/preferences/{m}/',
 \end_layout
 
 \begin_layout Plain Layout
@@ -6036,8 +6121,61 @@ Introduction: Integrated Caching
 Two Caching Strategies
 \end_layout
 
+\begin_layout Standard
+The default Prudence application template is configured for very minimal
+ caching, which is suitable for development deployments.
+ However, once you are ready to move your application to production or staging,
+ you will likely want a more robust caching strategy.
+\end_layout
+
+\begin_layout Standard
+We will here present two common strategies, and discuss the pros and cons
+ of each.
+\end_layout
+
 \begin_layout Subsubsection
-Simple
+Cautious: Short-Term Caching
+\end_layout
+
+\begin_layout Standard
+This is a great strategy if you're 
+\emph on
+not
+\emph default
+ feeling very confident about managing caching in your application logic.
+ Perhaps you have too many different kinds of pages requiring different
+ caching strategies.
+ Perhaps you can't maintain the strict discipline required for more aggressive
+ caching, due to a quickly changing application structure (
+\begin_inset Quotes eld
+\end_inset
+
+agile
+\begin_inset Quotes erd
+\end_inset
+
+?) or third-party constraints.
+\end_layout
+
+\begin_layout Standard
+If you're in that boat, short-term caching is recommended over no caching
+ at all, because it would still offer better performance and scalability.
+ Because caching is short-term, any mistakes you make won't last for very
+ long, and can quickly be fixed.
+\end_layout
+
+\begin_layout Standard
+How short a term depends on two factors: 1) usage patterns for your web
+ site, and 2) the content update frequency.
+\end_layout
+
+\begin_layout Standard
+If a user tends to spend about an hour browsing your site, then a one-hour
+ duration
+\end_layout
+
+\begin_layout Standard
+routing.js:
 \end_layout
 
 \begin_layout Standard
@@ -6102,27 +6240,27 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				'image/png': 'farFuture',
+				'image/png': '1h',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'image/gif': 'farFuture',
+				'image/gif': '1h',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'image/jpeg': 'farFuture',
+				'image/jpeg': '1h',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'text/css': 'farFuture',
+				'text/css': '1h',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'application/x-javascript': 'farFuture'
+				'application/x-javascript': '1h'
 \end_layout
 
 \begin_layout Plain Layout
@@ -6165,8 +6303,55 @@ app.routes = {
 
 \end_layout
 
+\begin_layout Standard
+settings.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.executeOnce('/sincerity/localization/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	cacheDuration = '1m'.toMilliseconds()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Selectively Disabling Caching
+\end_layout
+
 \begin_layout Subsubsection
-Aggressive
+Confident: Indefinite Caching
 \end_layout
 
 \begin_layout Standard
