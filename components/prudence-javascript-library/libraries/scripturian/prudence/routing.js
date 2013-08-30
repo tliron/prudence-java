@@ -1268,7 +1268,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			if (true == this.hidden) {
-				app.hidden.push(uri)
+				app.hidden.push(this.uri)
 			}
    
 			return capture

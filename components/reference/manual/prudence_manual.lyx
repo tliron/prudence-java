@@ -3003,8 +3003,126 @@ Specifically, URI templates can be captured to mapped resources.
 \begin_inset Quotes erd
 \end_inset
 
-.
- Furthermore, you want to make sure that 
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/profile/{userId}/': '/user/profile/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/user/profile/4431/
+\begin_inset Quotes erd
+\end_inset
+
+ would then be internally redirected to the 
+\begin_inset Quotes eld
+\end_inset
+
+/user/profile/
+\begin_inset Quotes erd
+\end_inset
+
+ URI.
+ Within your 
+\begin_inset Quotes eld
+\end_inset
+
+profile.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ file, you could then access the captured value via the conversation.locals
+ API:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+User profile for user <%= conversation.locals.get('userId') %>.
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We've used a scriptlet resource in this example, but capturing can be used
+ for both scriptlet and manual resources.
+ The same conversation.locals API is used in both cases.
+\end_layout
+
+\begin_layout Paragraph
+Capture-and-Hide
+\end_layout
+
+\begin_layout Standard
+You may also want to make sure that 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3097,87 +3215,6 @@ app.routes = {
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-A URI such as 
-\begin_inset Quotes eld
-\end_inset
-
-/user/profile/4431/
-\begin_inset Quotes erd
-\end_inset
-
- would then be internally redirected to the 
-\begin_inset Quotes eld
-\end_inset
-
-/user/profile/
-\begin_inset Quotes erd
-\end_inset
-
- URI.
- Within your 
-\begin_inset Quotes eld
-\end_inset
-
-profile.s.html
-\begin_inset Quotes erd
-\end_inset
-
- file, you could then access the captured value via the conversation.locals
- API:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<html>
-\end_layout
-
-\begin_layout Plain Layout
-
-<body>
-\end_layout
-
-\begin_layout Plain Layout
-
-<p>
-\end_layout
-
-\begin_layout Plain Layout
-
-User profile for user <%= conversation.locals.get('userId') %>.
-\end_layout
-
-\begin_layout Plain Layout
-
-</p>
-\end_layout
-
-\begin_layout Plain Layout
-
-</body>
-\end_layout
-
-\begin_layout Plain Layout
-
-</html>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We've used a scriptlet resource in this example, but capturing can be used
- for both scriptlet and manual resources.
- The same conversation.locals API is used in both cases.
 \end_layout
 
 \begin_layout Subsubsection
