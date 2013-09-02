@@ -353,6 +353,7 @@ public class MongoDbCache implements Cache
 		try
 		{
 			cacheCollection.remove( query );
+			logger.fine( "Invalidated: " + tag );
 			up();
 		}
 		catch( com.mongodb.MongoException.Network x )
@@ -366,11 +367,12 @@ public class MongoDbCache implements Cache
 		DBObject query = new BasicDBObject();
 		DBObject lt = new BasicDBObject();
 		query.put( "$lt", lt );
-
 		lt.put( "expirationDate", new Date() );
+
 		try
 		{
 			cacheCollection.remove( query );
+			logger.fine( "Pruned" );
 		}
 		catch( com.mongodb.MongoException.Network x )
 		{

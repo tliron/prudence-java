@@ -751,7 +751,8 @@ public class SqlCache implements Cache
 	 * TODO: this can't be good! needs proper escaping!
 	 * 
 	 * @param headers
-	 * @return
+	 *        The headers
+	 * @return The serialized headers
 	 */
 	private static String serializeHeaders( Series<Header> headers )
 	{
@@ -772,7 +773,8 @@ public class SqlCache implements Cache
 	 * TODO: this can't be good! needs proper escaping!
 	 * 
 	 * @param string
-	 * @return
+	 *        The serialized headers
+	 * @return The headers
 	 */
 	private Series<Header> deserializeHeaders( String string )
 	{

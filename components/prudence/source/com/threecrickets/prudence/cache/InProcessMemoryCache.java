@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 
 /**
  * An in-process (heap) memory cache. Internally uses {@link ConcurrentHashMap}
@@ -97,8 +98,7 @@ public class InProcessMemoryCache implements Cache
 	{
 		int entrySize = entry.getSize();
 
-		if( debug )
-			System.out.println( "Store: " + key );
+		logger.fine( "Store: " + key );
 
 		CacheEntry removed = cache.put( key, entry );
 		if( removed != null )
@@ -121,9 +121,7 @@ public class InProcessMemoryCache implements Cache
 				if( removed != null )
 					size.addAndGet( -entrySize );
 
-				if( debug )
-					System.out.println( "No room in cache for " + entrySize + " (" + size.get() + ", " + maxSize + ")" );
-
+				logger.fine( "No room in cache for " + entrySize + " (" + size.get() + ", " + maxSize + ")" );
 				return;
 			}
 		}
@@ -153,9 +151,7 @@ public class InProcessMemoryCache implements Cache
 		{
 			if( new Date().after( entry.getExpirationDate() ) )
 			{
-				if( debug )
-					System.out.println( "Stale entry: " + key );
-
+				logger.fine( "Stale entry: " + key );
 				entry = cache.remove( key );
 				if( entry != null )
 					size.addAndGet( -entry.getSize() );
@@ -164,14 +160,12 @@ public class InProcessMemoryCache implements Cache
 			}
 			else
 			{
-				if( debug )
-					System.out.println( "Fetched: " + key );
+				logger.fine( "Fetched: " + key );
 				return entry;
 			}
 		}
 
-		if( debug )
-			System.out.println( "Did not fetch: " + key );
+		logger.fine( "Did not fetch: " + key );
 		return null;
 	}
 
@@ -182,9 +176,7 @@ public class InProcessMemoryCache implements Cache
 		{
 			for( String key : tagged )
 			{
-				if( debug )
-					System.out.println( "Invalidate " + tag + ": " + key );
-
+				logger.fine( "Invalidate " + tag + ": " + key );
 				CacheEntry removed = cache.remove( key );
 				if( removed != null )
 					size.addAndGet( -removed.getSize() );
@@ -202,9 +194,7 @@ public class InProcessMemoryCache implements Cache
 				CacheEntry removed = cache.remove( entry.getKey() );
 				if( removed != null )
 				{
-					if( debug )
-						System.out.println( "Pruned " + entry.getKey() );
-
+					logger.fine( "Pruned " + entry.getKey() );
 					size.addAndGet( -removed.getSize() );
 				}
 			}
@@ -221,6 +211,11 @@ public class InProcessMemoryCache implements Cache
 
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
+
+	/**
+	 * The logger.
+	 */
+	private final Logger logger = Logger.getLogger( this.getClass().getCanonicalName() );
 
 	/**
 	 * The cached entries.
@@ -241,9 +236,4 @@ public class InProcessMemoryCache implements Cache
 	 * The current max cache size.
 	 */
 	private volatile long maxSize;
-
-	/**
-	 * Whether to print debug messages to standard out.
-	 */
-	private volatile boolean debug = false;
 }
