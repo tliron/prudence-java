@@ -9,7 +9,7 @@
 
 /* Our fonts (we prefer wider ones) */
 
-@serif: @serif-wide @serif-narrow serif;
+@serif: @serif-wide "," @serif-narrow "," serif;
 @sans-serif: Ubuntu "," Lucida Sans Unicode "," Lucida Grande "," @sans-serif-wide "," @sans-serif-narrow "," sans-serif;
 
 /* (Note: Lucida Sans Unicode looks bad in bold) */

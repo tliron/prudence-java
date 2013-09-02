@@ -1,5 +1,5 @@
 /***********************
- *  Dark Cricket 1.01  *
+ *  Dark Cricket 1.02  *
  *                     *
  *    By: Tal Liron    *
  **********************/
@@ -47,8 +47,6 @@ div#main {
 	width: 60%;
 	margin-left: auto;
 	margin-right: auto;
-	_padding-left: 22px;
-	_padding-right: 22px;
 	background-color: @fringe;
 }
 div#main-content {
@@ -113,7 +111,6 @@ h1 {
 	font-size: @font-size + 16px;
 	font-style: italic;
 	margin: 18px 0px;
-	color: @heading;
 }
 
 h2 {
