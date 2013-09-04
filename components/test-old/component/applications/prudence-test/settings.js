@@ -25,7 +25,7 @@ Sincerity.Objects.merge(app.settings, {
 	
 	uploads: {
 		root: 'uploads',
-		sizeThreshold: 0
+		sizeThreshold: '0kb'
 	},
 	
 	mediaTypes: {

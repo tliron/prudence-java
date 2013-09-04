@@ -125,7 +125,7 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 
 	/**
 	 * The default cache key pattern to use if the executable doesn't specify
-	 * one. Defaults to "{ri}|{dn}|{ptb}".
+	 * one. Defaults to "{ri}|{dn}".
 	 * <p>
 	 * This setting can be configured by setting an attribute named
 	 * <code>defaultCacheKeyPattern</code> in the application's {@link Context}.
@@ -139,7 +139,7 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 			defaultCacheKeyPattern = (String) getAttributes().get( prefix + ".defaultCacheKeyPattern" );
 
 			if( defaultCacheKeyPattern == null )
-				defaultCacheKeyPattern = "{ri}|{dn}|{ptb}";
+				defaultCacheKeyPattern = "{ri}|{dn}";
 		}
 
 		return defaultCacheKeyPattern;

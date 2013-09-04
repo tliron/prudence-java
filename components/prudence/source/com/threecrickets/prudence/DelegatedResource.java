@@ -94,9 +94,6 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.DelegatedResource.applicationServiceName</code>
  * : Defaults to "application".</li>
  * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.commonLibraryDocumentSource:</code>
- * {@link DocumentSource}.</li>
- * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCharacterSet:</code>
  * {@link CharacterSet}, defaults to {@link CharacterSet#UTF_8}.</li>
  * <li>
@@ -146,8 +143,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.DelegatedResource.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>
  * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.libraryDocumentSource:</code>
- * {@link DocumentSource}.</li>
+ * <code>com.threecrickets.prudence.DelegatesResource.libraryDocumentSources:</code>
+ * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>

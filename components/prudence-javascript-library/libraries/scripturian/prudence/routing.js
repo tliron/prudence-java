@@ -1054,7 +1054,6 @@ Prudence.Routing = Prudence.Routing || function() {
 					passThroughDocuments: new CopyOnWriteArraySet(),
 					trailingSlashRequired: this.trailingSlashRequired,
 					cacheKeyPatternHandlers: new ConcurrentHashMap(),
-					scriptletPlugins: new ConcurrentHashMap(),
 					cacheDebug: app.settings.errors.debug,
 					clientCachingMode: this.clientCachingMode,
 					maxClientCachingDuration: this.maxClientCachingDuration, 
@@ -1124,6 +1123,68 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			return app.generatedTextResource
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 * This powerful (and dangerous) resource executes all POST payloads as Scripturian text-with-scriptlets
+	 * documents. The standard output of the script will be returned as a response.
+	 * <p>
+	 * Because it always execution of arbitrary code, you very likely do not want this resource publicly
+	 * exposed. If you use it, make sure to protect its URL on publicly available machines!
+	 * <p>
+	 * Example use with curl command line:
+	 * <pre>
+	 * curl -d "<% println(1+2) %>" "http://localhost:8081/myapp/execute/"
+	 * </pre>
+	 * Note that if you use curl with a file, you need to send it as binary, otherwise curl
+	 * will strip your newlines:
+	 * <pre>
+	 * curl --data-binary @myscriptfile "http://localhost:8081/myapp/execute/"
+	 * </pre>
+	 * <p>
+	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ExecutionResource.html">ExecutionResource</a>
+	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * 
+	 * @class
+	 * @name Prudence.Routing.Execute
+	 * @augments Prudence.Routing.Restlet
+	 */
+	Public.Execute = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.Execute */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		Public.create = function(app, uri) {
+			if (!Sincerity.Objects.exists(app.executionResource)) {
+				importClass(
+					com.threecrickets.prudence.util.PhpExecutionController,
+					org.restlet.resource.Finder)
+					
+				var executionResource = {
+					documentSource: app.libraryDocumentSources.get(0),
+					libraryDocumentSources: app.libraryDocumentSources,
+					defaultName: app.settings.code.defaultDocumentName,
+					defaultLanguageTag: app.settings.code.defaultLanguageTag,
+					trailingSlashRequired: this.trailingSlashRequired,
+					executionController: new PhpExecutionController(), // Adds PHP predefined variables
+					languageManager: executable.manager,
+					sourceViewable: app.settings.code.sourceViewable,
+					fileUploadDirectory: app.settings.uploads.root,
+					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
+				}
+
+				// Merge globals
+				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.ExecutionResource': executionResource}))
+				
+				app.executionResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.ExecutionResource'))
+			}
+			
+			return app.executionResource
 		}
 		
 		return Public

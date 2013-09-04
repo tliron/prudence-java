@@ -29,7 +29,11 @@ import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
 
 /**
+ * All contextual attributes are here use standard JVM storage, making instances
+ * of this class <i>not</i> thread-safe.
+ * 
  * @author Tal Liron
+ * @see VolatileContextualAttributes
  */
 public abstract class NonVolatileContextualAttributes extends ContextualAttributes
 {

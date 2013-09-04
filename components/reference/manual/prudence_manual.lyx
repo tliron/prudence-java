@@ -853,117 +853,6 @@ Routing
 \end_layout
 
 \begin_layout Paragraph
-dispatch
-\end_layout
-
-\begin_layout Standard
-Use the 
-\begin_inset Quotes eld
-\end_inset
-
-dispatch
-\begin_inset Quotes erd
-\end_inset
-
- type with an 
-\begin_inset Quotes eld
-\end_inset
-
-id
-\begin_inset Quotes erd
-\end_inset
-
- param, or any string starting with the 
-\begin_inset Quotes eld
-\end_inset
-
-@
-\begin_inset Quotes erd
-\end_inset
-
- character, to configure a dispatch mapping.
- For example, {type: 'dispatch', id: 'person'} is identical to '@person'.
- If you use 
-\begin_inset Quotes eld
-\end_inset
-
-@
-\begin_inset Quotes erd
-\end_inset
-
-, you can also optionally use a 
-\begin_inset Quotes eld
-\end_inset
-
-:
-\begin_inset Quotes erd
-\end_inset
-
- to specify the 
-\begin_inset Quotes eld
-\end_inset
-
-dispatcher
-\begin_inset Quotes erd
-\end_inset
-
- param, for example: 
-\begin_inset Quotes eld
-\end_inset
-
-@profile:person
-\begin_inset Quotes erd
-\end_inset
-
- is identical to {type: 'dispatch', dispatcher: 'profile', id: 'person'}.
- If 
-\begin_inset Quotes eld
-\end_inset
-
-dispatcher
-\begin_inset Quotes erd
-\end_inset
-
- is not specified, it defaults to 
-\begin_inset Quotes eld
-\end_inset
-
-javascript
-\begin_inset Quotes erd
-\end_inset
-
-.
- The unique ID should match a manual resource handle by your dispatcher,
- otherwise a 404 error (
-\begin_inset Quotes eld
-\end_inset
-
-not found
-\begin_inset Quotes erd
-\end_inset
-
-) will result.
- The 
-\begin_inset Quotes eld
-\end_inset
-
-dispatcher
-\begin_inset Quotes erd
-\end_inset
-
- param's value can be any key from the app.dispatchers dict.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Dispatch"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Dispatch"
-
-\end_inset
-
- class.
-\end_layout
-
-\begin_layout Paragraph
 capture
 \end_layout
 
@@ -1132,59 +1021,6 @@ not found
  into the current router.
 \end_layout
 
-\begin_layout Paragraph
-resource
-\end_layout
-
-\begin_layout Standard
-Use the 
-\begin_inset Quotes eld
-\end_inset
-
-resource
-\begin_inset Quotes erd
-\end_inset
-
- type with a 
-\begin_inset Quotes eld
-\end_inset
-
-class
-\begin_inset Quotes erd
-\end_inset
-
- param, or any string starting with the 
-\begin_inset Quotes eld
-\end_inset
-
-$
-\begin_inset Quotes erd
-\end_inset
-
- character, to attach a Restlet 
-\begin_inset CommandInset href
-LatexCommand href
-name "ServerResource"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html"
-
-\end_inset
-
-.
- For example, {type: 'resource', 'class': 'org.myorg.PersonResource'} is identical
- to '$org.myorg.PersonResource'.
- This is an easy way to combine Java-written Restlet libraries into your
- Prudence applications.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Resource"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Resource"
-
-\end_inset
-
- class.
-\end_layout
-
 \begin_layout Subsubsection
 Mapping
 \end_layout
@@ -1322,9 +1158,9 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manu
 \end_layout
 
 \begin_layout Standard
-See 
+See the 
 \bar under
-Implementing Resources (page 
+manual resource guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "manual-resources"
@@ -1533,7 +1369,235 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Scri
 \end_inset
 
  class.
- [See Implementing Resources]
+\end_layout
+
+\begin_layout Standard
+See the 
+\bar under
+scriptlet resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
+\end_layout
+
+\begin_layout Subsubsection
+Resources
+\end_layout
+
+\begin_layout Paragraph
+dispatch
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ type with an 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+ param, or any string starting with the 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+ character, to configure a dispatch mapping.
+ For example, {type: 'dispatch', id: 'person'} is identical to '@person'.
+ If you use 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+, you can also optionally use a 
+\begin_inset Quotes eld
+\end_inset
+
+:
+\begin_inset Quotes erd
+\end_inset
+
+ to specify the 
+\begin_inset Quotes eld
+\end_inset
+
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ param, for example: 
+\begin_inset Quotes eld
+\end_inset
+
+@profile:person
+\begin_inset Quotes erd
+\end_inset
+
+ is identical to {type: 'dispatch', dispatcher: 'profile', id: 'person'}.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ is not specified, it defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+javascript
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The unique ID should match a manual resource handled by your dispatcher,
+ otherwise a 404 error (
+\begin_inset Quotes eld
+\end_inset
+
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) will result.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+dispatcher
+\begin_inset Quotes erd
+\end_inset
+
+ param's value can be any key from the app.dispatchers dict.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Dispatch"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Dispatch"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Standard
+See the 
+\bar under
+manual resource guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
+\end_layout
+
+\begin_layout Paragraph
+resource
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+resource
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+class
+\begin_inset Quotes erd
+\end_inset
+
+ param, or any string starting with the 
+\begin_inset Quotes eld
+\end_inset
+
+$
+\begin_inset Quotes erd
+\end_inset
+
+ character, to attach a Restlet 
+\begin_inset CommandInset href
+LatexCommand href
+name "ServerResource"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html"
+
+\end_inset
+
+.
+ For example, {type: 'resource', 'class': 'org.myorg.PersonResource'} is identical
+ to '$org.myorg.PersonResource'.
+ This is an easy way to combine Java-written Restlet libraries into your
+ Prudence applications.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Resource"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Resource"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+execute
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ type to attach a code execution resource.
+ This powerful (and dangerous) resource executes all POST payloads as Scripturia
+n text-with-scriptlets documents.
+ The standard output of the script will be returned as a response.
+ Because it always execution of arbitrary code, you very likely do not want
+ this resource publicly exposed.
+ If you use it, make sure to protect its URL on publicly available machines!
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Execute"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Executeh"
+
+\end_inset
+
+ class.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1695,7 +1759,21 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filt
 \end_inset
 
  class.
- [See Filtering]
+\end_layout
+
+\begin_layout Standard
+See the 
+\bar under
+filtering guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filtering"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
@@ -5624,15 +5702,16 @@ app.preheat
 
 \begin_layout Section
 Implementing Resources
-\end_layout
-
-\begin_layout Subsection
 \begin_inset CommandInset label
 LatexCommand label
 name "implementing-resources"
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Subsection
 Comparison Table
 \end_layout
 
@@ -6075,6 +6154,13 @@ Integrating Textual Resources
 
 \begin_layout Subsection
 Scriptlet Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "scriptlet-resources"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -8017,6 +8103,13 @@ TODO
 
 \begin_layout Section
 Filtering
+\begin_inset CommandInset label
+LatexCommand label
+name "filtering"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

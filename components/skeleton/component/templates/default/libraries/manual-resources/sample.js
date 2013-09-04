@@ -2,7 +2,7 @@
 document.executeOnce('/sincerity/classes/')
 document.executeOnce('/sincerity/templates/')
 
-SampleResource = Sincerity.Classes.define(function() {
+ExampleResource = Sincerity.Classes.define(function() {
 	var Public = {}
 	
 	Public.handleInit = function(conversation) {
@@ -12,10 +12,10 @@ SampleResource = Sincerity.Classes.define(function() {
 
 	Public.handleGet = function(conversation) {
 		if (conversation.mediaTypeName == 'text/html') {
-			return '<html><body><p>This is a sample manual resource</p></body></html>'
+			return '<html><body><p>This is a manual resource example</p></body></html>'
 		}
 		else {
-			return 'This is a sample manual resource'
+			return 'This is a manual resource example'
 		}
 	}
 

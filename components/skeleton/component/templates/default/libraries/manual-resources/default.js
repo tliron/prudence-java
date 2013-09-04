@@ -1,6 +1,6 @@
 
-document.executeOnce('/manual-resources/sample/')
+document.executeOnce('/manual-resources/example/')
 
 resources = {
-	sample: new SampleResource()
+	example: new ExampleResource()
 }

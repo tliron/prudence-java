@@ -23,8 +23,8 @@ app.routes = {
 		}
 	],
 
-	'/sample1/': '@sample', // see /libraries/manual-resources/sample.js
-	'/sample2/': '/sample/'  // see /libraries/scriptlet-resources/sample.html
+	'/example1/': '@example', // see /libraries/manual-resources/example.js
+	'/example2/': '/example/'  // see /libraries/scriptlet-resources/example.html
 }
 
 app.dispatchers = {

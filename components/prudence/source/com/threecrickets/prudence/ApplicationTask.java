@@ -56,9 +56,6 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.ApplicationTask.applicationServiceName</code>
  * : Defaults to "application".</li>
  * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.commonLibraryDocumentSource:</code>
- * {@link DocumentSource}.</li>
- * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
  * <li><code>com.threecrickets.prudence.ApplicationTask.defaultName:</code>
@@ -76,8 +73,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.ApplicationTask.executionController:</code>
  * {@link ExecutionController}.</li>
  * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.libraryDocumentSource:</code>
- * {@link DocumentSource}.</li>
+ * <code>com.threecrickets.prudence.ApplicationTask.libraryDocumentSources:</code>
+ * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>

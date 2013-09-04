@@ -97,14 +97,12 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.clientCachingMode:</code>
  * {@link Integer}, defaults to {@link #CLIENT_CACHING_MODE_CONDITIONAL}.</li>
  * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.commonLibraryDocumentSource:</code>
- * {@link DocumentSource}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyPattern:</code>
- * {@link String}, defaults to "{ri}|{dn}|{ptb}".</li>
+ * {@link String}, defaults to "{ri}|{dn}".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCharacterSet:</code>
  * {@link CharacterSet}, defaults to {@link CharacterSet#UTF_8}.</li>
@@ -142,8 +140,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
  * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.libraryDocumentSource:</code>
- * {@link DocumentSource}.</li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.libraryDocumentSources:</code>
+ * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
