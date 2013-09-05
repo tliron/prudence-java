@@ -829,7 +829,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
-	 * @param {String[]} [passThroughs]
+	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
 	 * @param {String} [preExtension='m']
 	 * @param {Boolean} [trailingSlashRequired=true]
 	 * @param {String} [internalUri='/_manual/']
@@ -976,14 +976,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/scriptlet-resources']
-	 * @param {String[]} [passThroughs]
+	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
 	 * @param {String} [preExtension='s']
 	 * @param {Boolean} [trailingSlashRequired=true]
 	 * @param {String} [defaultDocumentName='index']
 	 * @param {String} [defaultExtension='html']
 	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
 	 * @param {Number|String} [maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
-	 * @param {Object} [plugins]
+	 * @param {Object} [plugins] Scriptlet plugins
 	 */
 	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Scriptlet */

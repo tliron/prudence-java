@@ -534,12 +534,7 @@ app.hosts = {
 
 \begin_layout Plain Layout
 
-	'default': '/myapp/',
-\end_layout
-
-\begin_layout Plain Layout
-
-	internal: '/myapp/'
+	'default': '/myapp/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -588,17 +583,17 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				'image/png': 'farFuture',
+				'image/png': '1s',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'image/jpeg': 'farFuture',
+				'image/jpeg': '1s',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'image/gif': 'farFuture'
+				'image/gif': '1s'
 \end_layout
 
 \begin_layout Plain Layout
@@ -638,12 +633,12 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/sample1/': '@sample', // (dispatched)
+	'/example1/': '@example', // (dispatched)
 \end_layout
 
 \begin_layout Plain Layout
 
-	'/sample2/': '/sample/' // (captured)
+	'/example2/': '/example/' // (captured)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1155,12 +1150,9 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manu
 \end_inset
 
  class.
-\end_layout
-
-\begin_layout Standard
-See the 
+ See the 
 \bar under
-manual resource guide (page 
+manual resources guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "manual-resources"
@@ -1190,7 +1182,7 @@ dispatch
 \end_inset
 
  type, via a server-side redirect.
- This introduces two special limitations.
+ This introduces two special limitations on its use.
  First, it means that you 
 \emph on
 must
@@ -1270,9 +1262,9 @@ dispatch
 \end_inset
 
  in the chain.
- Otherwise, you will cause an endless server-side redirect, leading to a
- stack overflow error.
- Example:
+ Otherwise, you might cause an endless server-side redirect, leading to
+ a stack overflow error.
+ Example of correct use:
 \begin_inset listings
 inline false
 status open
@@ -1294,7 +1286,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		'@sample', // must appear after the manual
+		'@example', // must appear after the manual
 \end_layout
 
 \begin_layout Plain Layout
@@ -1369,10 +1361,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Scri
 \end_inset
 
  class.
-\end_layout
-
-\begin_layout Standard
-See the 
+ See the 
 \bar under
 scriptlet resources guide (page 
 \begin_inset CommandInset ref
@@ -1499,10 +1488,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Disp
 \end_inset
 
  class.
-\end_layout
-
-\begin_layout Standard
-See the 
+ See the 
 \bar under
 manual resource guide (page 
 \begin_inset CommandInset ref
@@ -1593,7 +1579,7 @@ n text-with-scriptlets documents.
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Execute"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Executeh"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Execute"
 
 \end_inset
 
@@ -1759,10 +1745,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filt
 \end_inset
 
  class.
-\end_layout
-
-\begin_layout Standard
-See the 
+ See the 
 \bar under
 filtering guide (page 
 \begin_inset CommandInset ref
@@ -4386,35 +4369,34 @@ special
 \end_layout
 
 \begin_layout Subsection
-The Internal URI-space
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
 Virtual Hosts
 \end_layout
 
 \begin_layout Standard
 Restlet has excellent virtual host support, and there is a many-to-many
- relationship routing between almost anything.
+ relationship routing between almost servers, hosts and application.
  So, you can easily have a single Prudence container (running in a single
- JVM instance) managing several sites at once with several applications.
+ JVM instance) managing several sites at once with several applications
+ on several domains on several servers.
+\end_layout
+
+\begin_layout Standard
+First, though, it's worth considering whether, despite its ease, it's worth
+ using a single container for everything.
 \end_layout
 
 \begin_layout Subsubsection
-Advantages of using a single container
+Advantages of Using a Single Container
 \end_layout
 
 \begin_layout Enumerate
-Possibly simpler deployment: a single base directory, and all configuration
- is done by JavaScript inside the container, so it can be fully dynamic.
+Possibly simpler deployment: you are using a single base directory, and
+ because all configuration is done by JavaScript inside the container it
+ can be fully dynamic.
 \end_layout
 
 \begin_layout Enumerate
-Less memory use.
+Less memory use that running multiple JVMs.
 \end_layout
 
 \begin_layout Enumerate
@@ -4426,42 +4408,47 @@ istributedGlobals instead.
 \end_layout
 
 \begin_layout Subsubsection
-Advantages of using multiple containers
+Advantages of Using Multiple Containers
 \end_layout
 
 \begin_layout Enumerate
 Possibly simpler deployment: several base directories can mean separate
  code/distribution repositories, and configuration may happen at the reverse-pro
 xy level with your web frontend.
+ It may even worth having each application running in its own JVM/container.
 \end_layout
 
 \begin_layout Enumerate
-Crashes/deadlocks/memory leaks in one VM won't affect others.
+Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
 \end_layout
 
 \begin_layout Enumerate
-You can restart the VM for one container without affecting others that are
- running.
+Run-time flexibility: you can restart the JVM for one container without
+ affecting others that are running.
 \end_layout
 
 \begin_layout Standard
 There is no performance advantage in either scenario.
- Everything is designed around high-concurrency and threading, and threads
- are managed by the OS globally.
- (Well, there are some caveats to this: Linux can group threads per running
- process for purposes of prioritization, but this is only really done for
- desktop applications.
+ Everything in Prudence is designed around high-concurrency and threading,
+ and threads are managed by the OS globally.
+ (Well, there are caveats to this statements: Linux can group threads per
+ running process for purposes of prioritization, but this is only really
+ done for desktop applications.
  But this could be possibly useful when running several containers, if you
  want to guarantee high thread priority to one of the containers over the
  others.
- Any of this would only effect *very* high concurrency deployments, where
- CPU usage is often high.)
+ Any of this would only effect 
+\emph on
+very
+\emph default
+ high concurrency deployments, where CPU usage is often high.)
 \end_layout
 
 \begin_layout Standard
-Here is documentation on managing routing in a single container.
- Note that the Prudence Administration app shows all of this routing information
- at runtime:
+Assuming you do decide to use a single container, we'll explain below how
+ it's done.
+ (Note that the Prudence Administration applcation shows all of this routing
+ information at runtime).
 \end_layout
 
 \begin_layout Subsubsection
@@ -4469,17 +4456,23 @@ Servers
 \end_layout
 
 \begin_layout Standard
-Under /component/servers/ you can define as many servers as you want.
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/
+\begin_inset Quotes erd
+\end_inset
+
+ you can define your servers.
  Just add a new file and assign a port for it.
  There is actually routing done per server, too, so you can define which
  IP address you want the server to bind to, in case your machine as several
  IP addresses.
- On AWS, this could be useful because machines can indeed have both a public
- and “internal” IP address.
 \end_layout
 
-\begin_layout Paragraph
-Minimal definition
+\begin_layout Standard
+A minimal server definition:
 \end_layout
 
 \begin_layout Standard
@@ -4507,26 +4500,30 @@ component.servers.add(server)
 
 \end_layout
 
-\begin_layout Paragraph
-Routing
+\begin_layout Standard
+To control routing for the server:
 \end_layout
 
-\begin_layout Standard
+\begin_layout LyX-Code
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
 server.address = [string]
 \end_layout
 
-\begin_layout Standard
-Defaults to null (which defaults to localhost), but you can filter on a
- specific IP address.
- “*” wildcards are supported.
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-(This is how you would add a TLS https:// server, too, if you want it managed
- by Prudence.
- Though another option is to use a frontend, like Apache/nginx, with a reverse
- proxy.
- Which one is better would be another discussion.)
+The server.address defaults to null (which in turn defaults to localhost),
+ but you can limit routing to a specific IP address.
+ Furthermore, “*” wildcards are supported for accepting all or parts of
+ an IP address.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4534,12 +4531,20 @@ Hosts
 \end_layout
 
 \begin_layout Standard
-Under /component/hosts/ you can add as many virtual hosts as you want.
- A virtual host signifies the basic domain name and port assignment.
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/hosts/
+\begin_inset Quotes erd
+\end_inset
+
+ you can define your virtual hosts.
+ A virtual host routes according to domain name and port assignment.
 \end_layout
 
-\begin_layout Paragraph
-Minimal definition
+\begin_layout Standard
+A minimal host definition:
 \end_layout
 
 \begin_layout Standard
@@ -4554,12 +4559,12 @@ var host = new VirtualHost(component.context)
 
 \begin_layout Plain Layout
 
-host.name = “privatehost” [used when attaching applications to the host]
+host.name = 'privatehost' // this name is used in app.hosts
 \end_layout
 
 \begin_layout Plain Layout
 
-component.hosts.add(component.defaultHost)
+component.hosts.add(host)
 \end_layout
 
 \end_inset
@@ -4567,8 +4572,8 @@ component.hosts.add(component.defaultHost)
 
 \end_layout
 
-\begin_layout Paragraph
-Routing
+\begin_layout Standard
+To control routing for the host:
 \end_layout
 
 \begin_layout Standard
@@ -4623,27 +4628,45 @@ host.resourcePort = [string]
 
 \begin_layout Standard
 By default all of these are null, meaning that all incoming requests are
- routed, but you can filter on specific incoming requests.
+ routed, but you can limit routing to specific incoming requests.
  For example, you might want the virtual host to only accept a specific
  port or server IP address.
  “*” wildcards are supported for all of these.
 \end_layout
 
-\begin_layout Subsubsection
-Applications
+\begin_layout Standard
+Note that 
+\emph on
+all
+\emph default
+ servers route to 
+\emph on
+all
+\emph default
+ hosts.
+ If you don't want a host to support all servers, you must limit its routing
+ accordingly.
+\end_layout
+
+\begin_layout Subsection
+app.hosts
 \end_layout
 
 \begin_layout Standard
-In each application's routing.js you have app.hosts by which you assign the
- application to a base URI on that host.
+TODO
+\end_layout
+
+\begin_layout Standard
+Use app.hosts in routing.js to assign the application to a base URI on that
+ host.
  By default we only use a single host, the default one, but you can assign
  each app to one or more hosts, with different base URIs under each.
- The app instance only runs *once* in such cases: all app.globals, etc., are
- single.
- It's only the routing that changes according to the requests coming in
- from various servers and virtual hosts.
- If you'd like the application to behave differently for each host, you
- can do that in your code.
+ The application instance only runs 
+\emph on
+once
+\emph default
+ in such cases: all application.globals are shared no matter which host a
+ request is routed from.
 \end_layout
 
 \begin_layout Paragraph
@@ -4715,11 +4738,15 @@ app.hosts = {
 \end_layout
 
 \begin_layout Subsection
-app.hosts
+The Internal URI-space
 \end_layout
 
 \begin_layout Standard
 TODO
+\end_layout
+
+\begin_layout Standard
+app.hosts internal
 \end_layout
 
 \begin_layout Subsection
@@ -6696,6 +6723,18 @@ Client-Side Caching
 
 \begin_layout Subsubsection
 Content Negotiation
+\end_layout
+
+\begin_layout Section
+Executing Tasks
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+crontab
 \end_layout
 
 \begin_layout Section

@@ -209,17 +209,17 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 * {@link #addDependency(String)}, any file can be added here. The contents
 	 * of the file are never read.
 	 * 
-	 * @param documentName
+	 * @param path
 	 *        The document name
 	 * @throws ParsingException
 	 * @throws DocumentException
 	 */
-	public void addFileDependency( String documentName ) throws ParsingException, DocumentException
+	public void addFileDependency( String path ) throws ParsingException, DocumentException
 	{
 		// Add dependency
 		DocumentDescriptor<Executable> currentDocumentDescriptor = getDescriptor();
 		if( currentDocumentDescriptor != null )
-			currentDocumentDescriptor.getDependencies().add( getFileDocumentDescriptor( documentName ) );
+			currentDocumentDescriptor.getDependencies().add( getFileDocumentDescriptor( path ) );
 	}
 
 	/**
@@ -260,7 +260,8 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 		if( !resourceUri.startsWith( "/" ) )
 			resourceUri = "/" + resourceUri;
 		ClientResource clientResource = new ClientResource( LocalReference.createRiapReference( LocalReference.RIAP_APPLICATION, resourceUri ) );
-		clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
+		if( mediaTypeName != null )
+			clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
 		return clientResource;
 	}
 
@@ -279,9 +280,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	{
 		if( !resourceUri.startsWith( "/" ) )
 			resourceUri = "/" + resourceUri;
-
 		ClientResource clientResource = new ClientResource( LocalReference.createRiapReference( LocalReference.RIAP_COMPONENT, "/" + applicationInternalName + resourceUri ) );
-		clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
+		if( mediaTypeName != null )
+			clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
 		return clientResource;
 	}
 
@@ -297,7 +298,8 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	public ClientResource external( String uri, String mediaTypeName )
 	{
 		ClientResource clientResource = new ClientResource( uri );
-		clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
+		if( mediaTypeName != null )
+			clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
 
 		// The following is a workaround for a Restlet bug:
 		// http://restlet.tigris.org/ds/viewMessage.do?dsForumId=4447&dsMessageId=2738502

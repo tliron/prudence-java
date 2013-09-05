@@ -51,9 +51,9 @@ public class ConversationService
 	//
 
 	/**
-	 * The headers response attributes.
+	 * The headers response attribute.
 	 */
-	public static final String HEADERS_ATTRIBUTES = "org.restlet.http.headers";
+	public static final String HEADERS_ATTRIBUTE = "org.restlet.http.headers";
 
 	//
 	// Construction
@@ -397,11 +397,11 @@ public class ConversationService
 	{
 		ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
 		@SuppressWarnings("unchecked")
-		Series<Header> headers = (Series<Header>) attributes.get( HEADERS_ATTRIBUTES );
+		Series<Header> headers = (Series<Header>) attributes.get( HEADERS_ATTRIBUTE );
 		if( headers == null )
 		{
 			headers = new Series<Header>( Header.class );
-			attributes.put( HEADERS_ATTRIBUTES, headers );
+			attributes.put( HEADERS_ATTRIBUTE, headers );
 		}
 
 		return headers;

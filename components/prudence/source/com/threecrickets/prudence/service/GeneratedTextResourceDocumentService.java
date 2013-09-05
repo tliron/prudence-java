@@ -855,7 +855,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 
 		// Apply headers
 		if( headers != null )
-			this.resource.getResponse().getAttributes().put( ConversationService.HEADERS_ATTRIBUTES, headers );
+			this.resource.getResponse().getAttributes().put( ConversationService.HEADERS_ATTRIBUTE, headers );
 
 		return cacheEntry.represent();
 	}

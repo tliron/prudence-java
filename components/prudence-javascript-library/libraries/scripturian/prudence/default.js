@@ -387,7 +387,7 @@ var Prudence = {}
  * this namespace is for accessing <i>any</i> document, e.g. {@link document#executeOnce}, {@link document#markExecuted}.
  * Prudence combines these two uses into one semantic namespace, but it's useful to understand that they are functionally separate.
  * <p>
- * Note that in the case of textual resources, the term "this document" is meant include all scriptlets on the page, even if they are
+ * Note that in the case of scriptlet resources, the term "this document" is meant include all scriptlets on the page, even if they are
  * written in different languages.
  * <p>
  * Implementation note: All the properties and methods in the "document" namespace always know which document they are accessed from.
@@ -403,94 +403,166 @@ var Prudence = {}
  */
 
 /**
+ * Executes a Scripturian document in the current thread.
+ * <p>
+ * Once executed, the document becomes a "dependent" of the current document, such that if the
+ * dependent file is updated, it would cause the current file to be seen as updated, too. This
+ * recursive mechanism ensures that documents are re-executed if any file in their dependency
+ * tree is changed. The {@link document#addDependency} and {@link document#invalidate} APIs give
+ * you manual control over this mechanism.
+ * <p>
+ * The document can be in any supported language, to be determined by its filename extension.
+ * <p>
+ * By default, the URI is relative to either the application's "/libraries/" subdirectory, the container's "/libraries/scripturian/"
+ * directory, or the Sincerity installation's "/libraries/scripturian/" directory. You can furthermore configure
+ * additional paths in the application's "settings.js" file, in app.settings.code.libraries.
+ * <p>
+ * By default, URIs do not include the filename extension and must end in a trailing slash. For example:
+ * "/sincerity/json/" could refer to "/libraries/scripturian/sincerity/json.js" in the Sincerity installation.
+ * If the URI refers to a directory, a file named "default.*" in that directory will be used. The "default"
+ * file can be in any supported language. 
+ * <p>
+ * Will throw an exception if the document is not found.
+ * 
  * @name document.execute
  * @function
- * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
+ * @param {String} documentName The document URI
+ * @see document#executeOnce
  */
 
 /**
+ * Identical to {@link document#execute}, except that it will not execute the document if it was already
+ * executed in the current thread.
+ * <p>
+ * This behavior is identical to "import" or "require" mechanisms in many programming languages.
+ * <p>
+ * You can use {@link document#markExecuted} to change the internal flag used to mark execution.
+ * 
  * @name document.executeOnce
  * @function
- * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
+ * @param {String} documentName The document URI
  */
 
 /**
+ * Allows you to change the value of the internal flag marking whether a document was executed in
+ * this thread or not.
+ * <p>
+ * See {@link document#execute} for a discussion of how the document URI is interpreted.
+ * 
  * @name document.markExecuted
- * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
  * @function
+ * @param {String} documentName The document URI
+ * @param {Boolean} flag Whether the document will be marked as executed
+ * @see document#executeOnce
  */
 
 /**
+ * Manually makes a document a dependant of the current document, such that if the
+ * that file is updated, it would cause the current file to be seen as updated, too.
+ * <p>
+ * This allows you to affect the dependency tree without executing the document.
+ * <p>
+ * See {@link document#execute} for a discussion of how the document URI is interpreted.
+ * 
  * @name document.addDependency
  * @function
- * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
+ * @param {String} documentName The document URI
+ * @see document#addFileDependency
  */
 
 /**
+ * Similar {@link document#addDependency}, except that the argument is not a document URI,
+ * but rather a relative file path. Thus the full filename extension should be used,
+ * without a trailling slash.
+ * 
  * @name document.addFileDependency
  * @function
- * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
+ * @param {String} path The relative file path
  */
 
 /**
+ * Marks a document as invalid, affecting any dependency trees that include that document.
+ * <p>
+ * See {@link document#execute} for a discussion of how the document URI is interpreted.
+ * 
  * @name document.invalidate
  * @function
- * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
+ * @param {String} documentName The document URI
  */
 
 /**
+ * Like {@link document#invalidate}, but invalidates the current document.
+ * 
  * @name document.invalidateCurrent
  * @function
  */
 
 /**
+ * Initializes a low-level RESTful client request to any URI.
+ * <p>
+ * To use a specific protocol you need a client connector to support it, as defined in your 
+ * "/component/clients/" directory. The internal Restlet "riap" and "clap" are automatically
+ * supported, though you may prefer to use {@link document#internal} instead for such requests.
  * <p>
  * If you're using JavaScript, you may prefer to use {@link Prudence.Resources#request} instead, which
  * adds some JavaScript sugar to this low-level function.
  * 
  * @name document.external
  * @function
- * @param {String} uri
- * @param {String} mediaTypeName
+ * @param {String} uri The full URI
+ * @param {String} mediaTypeName The preferred MIME type or null
  * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
+ * Initializes a low-level RESTful client request to internal URIs for the current application.
+ * Use {@link document#internalOther} to access other applications in the component.
  * <p>
  * If you're using JavaScript, you may prefer to use {@link Prudence.Resources#request} instead, which
  * adds some JavaScript sugar to this low-level function.
  *
  * @name document.internal
  * @function
- * @param {String} resourceUri
- * @param {String} mediaTypeName
+ * @param {String} uri The relative URI
+ * @param {String} mediaTypeName The preferred MIME type or null
  * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
+ * Initializes a low-level RESTful client request to internal URIs for any application in the component.
+ * For the current application, you can use {@link document#internal} instead.
  * <p>
  * If you're using JavaScript, you may prefer to use {@link Prudence.Resources#request} instead, which
  * adds some JavaScript sugar to this low-level function.
  * 
  * @name document.internalOther
  * @function
- * @param {String} applicationInternalName
- * @param {String} resourceUri
- * @param {String} mediaTypeName
+ * @param {String} applicationInternalName The internal name of the application (defaults to its subdirectory name)
+ * @param {String} uri The relative URI
+ * @param {String} mediaTypeName The preferred MIME type or null
  * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
+ * Low-level access the Scripturian document source for the current document.
+ * 
  * @name document.source
  * @type <a href="http://threecrickets.com/api/java/scripturian/index.html?com/threecrickets/scripturian/document/DocumentSource.html">com.threecrickets.scripturian.document.DocumentSource</a><com.threecrickets.scripturian.Executable>
  */
 
 /**
+ * Low-level access the Scripturian document descriptor for the current document.
+ *
  * @name document.descriptor
  * @type <a href="http://threecrickets.com/api/java/scripturian/index.html?com/threecrickets/scripturian/document/DocumentDescriptor.html">com.threecrickets.scripturian.document.DocumentDescriptor</a>&lt;<a href="http://threecrickets.com/api/java/scripturian/index.html?com/threecrickets/scripturian/Executable.html">com.threecrickets.scripturian.Executable</a>&gt;
  */
 
 /**
+ * Pass-through documents are normally configured in your application's "routing.js", but can
+ * also be accessed and manipulated at runtime via this API.
+ * 
+ * <i>Availability: only available for manual and scriptlet resources.</i>
+ *
  * @name document.passThroughDocuments
  * @function
  * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Set.html">java.util.Set</a>&ltString&gt;
@@ -506,42 +578,72 @@ var Prudence = {}
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * This is the amount of time in milliseconds that the current document will be cached.
+ * If this value is zero (the default), caching is disabled.
+ * 
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.cacheDuration
  * @type Number
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * The cache key pattern is used to generate the cache key for the current document
+ * by injecting attributes based on the current conversation. See {@link document#cacheKey} to
+ * see the actually generate cache key. Defaults to "{ri}|{dn}".
+ * <p>
+ * See <a href="http://threecrickets.com/prudence/manual/uri-space/#injecting-conversation-attributes">the Prudence Manual</a>
+ * for a list of possible injected attributes.
+ * <p>
+ * You can additionally inject your own special values via {@link document#cacheKeyPatternHandlers}.
+ * <p>
+ * This value has no effect if {@link document#cacheDuration} is zero.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.cacheKeyPattern
  * @type String
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * This read-only value contains the actual cache key used for the current
+ * document in the current conversation. You do not set the cache key directly,
+ * but instead you can set the {@link document#cacheKeyPattern}.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.cacheKey
  * @type String
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * Lets you add any number of cache tags to the current document.
+ * You can then invalidate all cache entry with a certain tag using
+ * {@link document#cache}.invalidate().
+ * <p>
+ * This value has no effect if {@link document#cacheDuration} is zero.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.cacheTags
  * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Set.html">java.util.Set</a>&lt;String&gt;
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * Direct access to the cache backend.
+ * <p>
+ * Useful for calling invalidate(), reset() or prune() on the cache.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.cache
  * @type <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/Cache.html">com.threecrickets.prudence.cache.Cache</a>
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * Low-level access to the cache entry for a specific cache key.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.getCacheEntry
  * @function
@@ -550,25 +652,57 @@ var Prudence = {}
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * Cache key pattern handlers let you inject your own attributes into
+ * the {@link document#cacheKeyPattern}.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.cacheKeyPatternHandlers
  * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, String&gt;
  */
 
 /**
+ * Similar in some respects to {@link document#execute}, except that
+ * is specifically meant for scriptlet resources, and will
+ * include the output of those resources into the current location.
+ * <p>
+ * Calling this API is identical to using the "&lt;%& .. %&gt;" Scripturian tag.
+ * <p>
+ * By default, the URI is relative to either the application's "/libraries/scriptlet-resources/" subdirectory
+ * or the container's "/libraries/prudence-scriptlet-resources/" directory.
+ * <p>
+ * By default, URIs do not include the filename extension and must end in a trailing slash. For example:
+ * "/site/header/" could refer to "/libraries/scriptlet-resources/site/header.html" in the current application.
+ * If the URI refers to a directory, a file named "index.*" in that directory will be used.
+ * <p>
  * Will throw an exception if the document is not found.
  * <p>
- * <i>Availability: only available for textual resources.</i>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.include
  * @function
- * @param {String} documentName The document URI relative to the application's "/resources/" or "/libraries/scriptlet-resources/" subdirectories
+ * @param {String} uri The document URI
  * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} The representation
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * Redirects the output of the scriptlet resource to a {@link conversation#locals} string variable.
+ * Redirection will continue until {@link document#endCapture} is called.
+ * <p>
+ * Calling this API is identical to using the "&lt;%{{ .. %&gt;" Scripturian tag.
+ * <p>
+ * Captures are very useful for creating page templates: first all the different blocks can be captured,
+ * and then they can be assembled together using "&lt;%== .. %&gt;" tags.
+ * For example:
+ * <pre>
+ * &lt;%{{ title }}%&gt;
+ * This is my title!
+ * &lt;%}}%&gt;
+ * 
+ * &lt;h1&gt;&lt;== title %&gt;&lt;/h1&gt;
+ * </pre>
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.startCapture
  * @function
@@ -576,7 +710,12 @@ var Prudence = {}
  */
 
 /**
- * <i>Availability: only available for textual resources.</i>
+ * See {@link document#startCapture}.
+ * <p>
+ * Calling this API is identical to using the "&lt;%}}%&gt;" Scripturian tag, though when used as
+ * a tag use the return value is discarded.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
  * 
  * @name document.endCapture
  * @function
@@ -594,7 +733,7 @@ var Prudence = {}
  * In the namespace you can access various aspects of the request: the URI, formatting preferences, client information, and the payload
  * sent with the request (the "entity"). You can likewise set response characteristics.
  * 
- * Note that in textual resources "conversation" is available as a global namespace. In manual resources and handlers it is sent to the
+ * Note that in scriptlet resources "conversation" is available as a global namespace. In manual resources and handlers it is sent to the
  * handling entry points (handleGet, handlePost, etc.) as an argument. Usage is however identical in both cases.
  * 
  * @name conversation
@@ -801,12 +940,12 @@ var Prudence = {}
  * The response encoding. Will initially be set according to content negotiation between the client and the server.
  * Supported values are "zip", "gzip", "deflate", "compress" and "identity".
  * <p>
- * This property is used different in manual and textual resources.
+ * This property is used different in manual and scriptlet resources.
  * <p>
  * In manual resources, you can modify this value, and it will set the appropriate response header. However, it is up to you to
  * return a value that is properly encoded.
  * <p>
- * In textual resources, this value is read-only. Prudence will automatically compress the output text in the appropriate
+ * In scriptlet resources, this value is read-only. Prudence will automatically compress the output text in the appropriate
  * encoding, and moreover cache the compressed output to avoid re-compression. This powerful feature can help boost
  * scalability. 
  * 
@@ -1072,7 +1211,7 @@ var Prudence = {}
 /**
  * Abruptly ends the conversation, returning whatever is left of the response to the client.
  * <p>
- * Especially useful in textual resources as a way to avoid execution of the rest of the scriptlet code.
+ * Especially useful in scriptlet resources as a way to avoid execution of the rest of the scriptlet code.
  * <p>
  * Implementation note: This method works by throwing a special <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/service/ConversationStoppedException.html">com.threecrickets.prudence.service.ConversationStoppedException</a>
  * which is caught and specially handled by Prudence.
@@ -1448,7 +1587,7 @@ var Prudence = {}
  * <p>
  * Some useful attributes:
  * <ul>
- * <li>executable.context.writer: direct access to the output writer (writes to a memory buffer in textual resources, and to standard output otherwise)</li>
+ * <li>executable.context.writer: direct access to the output writer (writes to a memory buffer in scriptlet resources, and to standard output otherwise)</li>
  * <li>executable.context.exposedVariables: access to the namespaces ("application", "document", "executable", "conversation")</li>
  * <li>executable.context.attributes: for internal use by the language engines</li>
  * </ul>
