@@ -302,7 +302,7 @@ Manual Resources
 \end_layout
 
 \begin_layout Section
-Managing the URI-space
+The URI-space
 \end_layout
 
 \begin_layout Standard
@@ -332,6 +332,7 @@ not found
 \end_inset
 
 ) error.
+ In other words, they are not in the URI-space.
 \end_layout
 
 \begin_layout Standard
@@ -365,14 +366,46 @@ infinite
 \begin_inset Quotes erd
 \end_inset
 
+, etc., and 
+\begin_inset Quotes eld
+\end_inset
+
+/film/*
+\begin_inset Quotes erd
+\end_inset
+
+ can match 
+\begin_inset Quotes eld
+\end_inset
+
+/film/documentary/mongolia/
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+/film/cinema/
+\begin_inset Quotes erd
+\end_inset
+
 , etc.
- All matched URIs belong to your URI-space.
+ All URIs that matched these templates belong to your URI-space.
 \end_layout
 
 \begin_layout Standard
-The URI-space is mostly configured in the application's routing.js.
- However, the resource implementations can add their own special handling.
- For example, in the above example we can make sure in code that 
+The URI-space is mostly configured in the application's routing.js file.
+ However, your resource implementations can add their own special handling.
+ For example, for 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ URI template we can make sure in code that 
 \begin_inset Quotes eld
 \end_inset
 
@@ -380,7 +413,8 @@ The URI-space is mostly configured in the application's routing.js.
 \begin_inset Quotes erd
 \end_inset
 
- would always be a decimal integer, thus limiting the extent of the URI-space.
+ would always be a decimal integer (returning 404 otherwise), thus effectively
+ limiting the extent of the URI-space.
  More generally, Prudence supports 
 \begin_inset Quotes eld
 \end_inset
@@ -391,98 +425,6 @@ wildcard
 
  URI templates, allowing you to delegate the parsing of the URI entirely
  to your resource code.
-\end_layout
-
-\begin_layout Subsection
-Routing Paradigms
-\end_layout
-
-\begin_layout Standard
-Prudence offers three built-in techniques for you to support a URI or a
- URI template, reflecting two different routing paradigms:
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Resource mapping
-\series default
-: The filesystem hierarchy under an application's 
-\begin_inset Quotes eld
-\end_inset
-
-/resources/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory is directly mapped to URIs (but not URI templates).
- Both directory- and file-names are mapped in order of depth.
- By default, Prudence hides filename extensions from the published URIs,
- but uses these extensions to extracts MIME-type information for the resources.
- Also, mapping adds trailing slashes by default, by redirecting URIs without
- trailing slash to include them (on the client's side).
- Filesystem mapping provides the most 
-\begin_inset Quotes eld
-\end_inset
-
-transparent
-\begin_inset Quotes erd
-\end_inset
-
- management of your URI-space, because you do not need to edit any configuration
- file: to change URIs, you simply move or rename files and directories.
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-URI/resource separation:
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-
-\series bold
-URI capturing
-\series default
-: Capturing lets you map URI templates to fixed URIs, as well as perform
- other kinds of internal URI rewrites that are invisible to clients, allowing
- you to provide a published URI-space, which is different from your internal
- mapping structure.
- (Note that another common use for capturing is to add support for URI templates
- in resource mapping, as is explained under Resource Mapping.
- This use case does not belong to the URI/resource separation paradigm.)
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Resource dispatching
-\series default
-: In your application's routing.js you can map URIs or URI templates to a
- custom ID, which is then dispatched to your resource handling code.
- Dispatching provides the cleanest and most flexible separation between
- URIs and their implementation.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-When embarking on a new project, you may want to give some thought as to
- whether you should organize your code around 
-\emph on
-resource mapping 
-\emph default
-or
-\emph on
- URI/resource separation
-\emph default
-.
- Generally, URI/resource separation is preferred for larger applications
- because it allows you full control over you code organization.
- However, it does add an extra layer of configuration and is not as transparent
- as resource mapping.
- It may make sense to use both paradigms.
- Read on, and make sure you understand how to use all three routing techniques.
 \end_layout
 
 \begin_layout Subsection
@@ -687,7 +629,11 @@ app.routes
 \end_layout
 
 \begin_layout Standard
-The keys of this dict are 
+The 
+\emph on
+keys
+\emph default
+ of this dict are 
 \emph on
 URI templates
 \emph default
@@ -727,7 +673,18 @@ Variables
 
 .
  You can access the string values of these variables in your resource via
- the conversation.locals API.
+ the 
+\bar under
+conversation.locals API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Itemize
@@ -767,17 +724,13 @@ non
 \end_layout
 
 \begin_layout Standard
-The possible values of the 
-\begin_inset Quotes eld
-\end_inset
-
-app.routes
-\begin_inset Quotes erd
-\end_inset
-
- dict are 
+The 
 \emph on
-route type 
+values
+\emph default
+ of the app.routes dict are route
+\emph on
+ 
 \emph default
 configurations.
  These are usually defined as JavaScript dicts, where the 
@@ -793,7 +746,8 @@ type
  During the application's bootstrap process, these dicts are turned in instances
  of classes in the Prudence.Routing API namespace (note that the class names
  have the first character of the type capitalized).
- The values set in the dict are sent to the class constructor.
+ The values set in the route type configuration dict are sent to the class
+ constructor.
 \end_layout
 
 \begin_layout Standard
@@ -844,11 +798,23 @@ We will summarize all the route types briefly here, arranged according to
 \end_layout
 
 \begin_layout Subsubsection
-Routing
+Resource Route Types
+\end_layout
+
+\begin_layout Standard
+These are routes to a single resource implementation.
 \end_layout
 
 \begin_layout Paragraph
-capture
+dispatch or 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -856,15 +822,15 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-capture
+dispatch
 \begin_inset Quotes erd
 \end_inset
 
- type with a 
+ type with an 
 \begin_inset Quotes eld
 \end_inset
 
-uri
+id
 \begin_inset Quotes erd
 \end_inset
 
@@ -872,135 +838,64 @@ uri
 \begin_inset Quotes eld
 \end_inset
 
-/
+@
 \begin_inset Quotes erd
 \end_inset
 
- character, to configure a capture.
- For example, {type: 'capture', uri: '/user/profile/'} is identical to '/user/pr
-ofile/'.
- Note that adding a 
+ character, to configure a dispatch mapping.
+ For example, {type: 'dispatch', id: 'person'} is identical to '@person'.
+ If you use 
 \begin_inset Quotes eld
 \end_inset
 
-!
+@
 \begin_inset Quotes erd
 \end_inset
 
- character at the end of the URI (not considered as part of the actual target
- URI) is a shortcut for 
-\emph on
-also
-\emph default
- hiding the target URI.
- Capturing-and-hiding is a common use case.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Capture"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Capture"
-
-\end_inset
-
- class.
-\end_layout
-
-\begin_layout Paragraph
-redirect
-\end_layout
-
-\begin_layout Standard
-Use the 
+, you can also optionally use a 
 \begin_inset Quotes eld
 \end_inset
 
-redirect
+:
 \begin_inset Quotes erd
 \end_inset
 
- type with a 
+ to specify the 
 \begin_inset Quotes eld
 \end_inset
 
-uri
+dispatcher
 \begin_inset Quotes erd
 \end_inset
 
- param, or any string starting with the 
+ param, for example: 
 \begin_inset Quotes eld
 \end_inset
 
->
+@profile:person
 \begin_inset Quotes erd
 \end_inset
 
- character, to asks the client to redirect (repeat its request) to a new
- URI.
- For example, {type: 'redirect', uri: 'http://newsite.org/user/profile/'}
- is identical to '>http://newsite.org/user/profile/'.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Redirect"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Redirect"
-
-\end_inset
-
- class.
-\end_layout
-
-\begin_layout Paragraph
-addSlash
-\end_layout
-
-\begin_layout Standard
-Use the 
+ is identical to {type: 'dispatch', dispatcher: 'profile', id: 'person'}.
+ If 
 \begin_inset Quotes eld
 \end_inset
 
-addSlash
+dispatcher
 \begin_inset Quotes erd
 \end_inset
 
- type for a permanent client redirect from the URI template to the original
- URI with a trailing slash added.
- An easy way to enforce trailing slashes in your application.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.AddSlash"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddSlash"
-
-\end_inset
-
- class.
-\end_layout
-
-\begin_layout Paragraph
-
-\series bold
-hidden
-\end_layout
-
-\begin_layout Standard
-Use the 
+ is not specified, it defaults to 
 \begin_inset Quotes eld
 \end_inset
 
-!
+javascript
 \begin_inset Quotes erd
 \end_inset
 
- or 
-\begin_inset Quotes eld
-\end_inset
-
-hidden
-\begin_inset Quotes erd
-\end_inset
-
- string values to hide a URI template.
- Prudence will always return a 404 error (
+.
+ The unique ID should match a manual resource handled by your dispatcher,
+ otherwise a 404 error (
 \begin_inset Quotes eld
 \end_inset
 
@@ -1008,151 +903,28 @@ not found
 \begin_inset Quotes erd
 \end_inset
 
-) for this match.
- Note that internal requests always bypass this limitation, and so this
- functionality is useful if you want some URIs available in the internal
- URI-space but not the public one.
- This special value is not actually handled by a class, but rather is configured
- into the current router.
-\end_layout
-
-\begin_layout Subsubsection
-Mapping
-\end_layout
-
-\begin_layout Paragraph
-static
-\end_layout
-
-\begin_layout Standard
-Use the 
+) will result.
+ The 
 \begin_inset Quotes eld
 \end_inset
 
-static
+dispatcher
 \begin_inset Quotes erd
 \end_inset
 
- type to create a static resource handler.
- By default uses the application's 
-\begin_inset Quotes eld
-\end_inset
-
-/resources/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory chained to the container's 
-\begin_inset Quotes eld
-\end_inset
-
-/libraries/web/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory for its 
-\begin_inset Quotes eld
-\end_inset
-
-roots
-\begin_inset Quotes erd
-\end_inset
-
-.
- Note that if you include it in a 
-\begin_inset Quotes eld
-\end_inset
-
-chain
-\begin_inset Quotes erd
-\end_inset
-
- with 
-\begin_inset Quotes eld
-\end_inset
-
-manual
-\begin_inset Quotes erd
-\end_inset
-
- and/or 
-\begin_inset Quotes eld
-\end_inset
-
-scriptlet
-\begin_inset Quotes erd
-\end_inset
-
-, then 
-\begin_inset Quotes eld
-\end_inset
-
-static
-\begin_inset Quotes erd
-\end_inset
-
- should be the last entry in the chain.
+ param's value can be any key from the app.dispatchers dict.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Static"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Static"
-
-\end_inset
-
- class.
-\end_layout
-
-\begin_layout Paragraph
-manual
-\end_layout
-
-\begin_layout Standard
-Use the 
-\begin_inset Quotes eld
-\end_inset
-
-manual
-\begin_inset Quotes erd
-\end_inset
-
- type to create a static resource handler.
- By default uses the application's 
-\begin_inset Quotes eld
-\end_inset
-
-/resources/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory for its 
-\begin_inset Quotes eld
-\end_inset
-
-root
-\begin_inset Quotes erd
-\end_inset
-
-.
- Important limitation: 
-\emph on
-All
-\emph default
- uses of this class in the same application share the same configuration.
- Only the first found configuration will take hold and will be shared by
- other instances.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Manual"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manual"
+name "Prudence.Routing.Dispatch"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Dispatch"
 
 \end_inset
 
  class.
  See the 
 \bar under
-manual resources guide (page 
+manual resource guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "manual-resources"
@@ -1166,6 +938,8 @@ reference "manual-resources"
 
 \begin_layout Quote
 The 
+\bar under
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -1173,6 +947,15 @@ manual
 \begin_inset Quotes erd
 \end_inset
 
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-route-type"
+
+\end_inset
+
+)
+\bar default
  is internally used by Prudence to handle the 
 \begin_inset Quotes eld
 \end_inset
@@ -1181,7 +964,7 @@ dispatch
 \begin_inset Quotes erd
 \end_inset
 
- type, via a server-side redirect.
+ route type, via a server-side redirect.
  This introduces two special limitations on its use.
  First, it means that you 
 \emph on
@@ -1315,6 +1098,334 @@ app.routes = {
 \end_layout
 
 \begin_layout Paragraph
+
+\series bold
+hidden or 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+!
+\begin_inset Quotes erd
+\end_inset
+
+ string values to hide a URI template.
+ Prudence will always return a 404 error (
+\begin_inset Quotes eld
+\end_inset
+
+not found
+\begin_inset Quotes erd
+\end_inset
+
+) for this match.
+ Note that internal requests always bypass this limitation, and so this
+ functionality is useful if you want some URIs available in the internal
+ URI-space but not the public one.
+ This special value is not actually handled by a class, but rather is configured
+ into the current router.
+\end_layout
+
+\begin_layout Paragraph
+resource or 
+\begin_inset Quotes eld
+\end_inset
+
+$\SpecialChar \ldots{}
+
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+resource
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+class
+\begin_inset Quotes erd
+\end_inset
+
+ param, or any string starting with the 
+\begin_inset Quotes eld
+\end_inset
+
+$
+\begin_inset Quotes erd
+\end_inset
+
+ character, to attach a Restlet 
+\begin_inset CommandInset href
+LatexCommand href
+name "ServerResource"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html"
+
+\end_inset
+
+.
+ For example, {type: 'resource', 'class': 'org.myorg.PersonResource'} is identical
+ to '$org.myorg.PersonResource'.
+ This is an easy way to combine Java-written Restlet libraries into your
+ Prudence applications.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Resource"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Resource"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+execute
+\begin_inset CommandInset label
+LatexCommand label
+name "execute-route-type"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ type to attach a code execution resource.
+ This powerful (and dangerous) resource executes all POST payloads as Scripturia
+n text-with-scriptlets documents.
+ The standard output of the script will be returned as a response.
+ Because it always execution of arbitrary code, you very likely do not want
+ this resource publicly exposed.
+ If you use it, make sure to protect its URL on publicly available machines!
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ resource is very useful for 
+\bar under
+debugging (
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "live-execution"
+
+\end_inset
+
+)
+\bar default
+.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Execute"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Execute"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Subsubsection
+Mapping Route Types
+\end_layout
+
+\begin_layout Standard
+You should use a wildcard URI template for all of these route types, because
+ they work by processing the URI remainder.
+\end_layout
+
+\begin_layout Paragraph
+static
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ type to create a static resource handler.
+ By default uses the application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory chained to the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory for its 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Note that if you include it in a 
+\begin_inset Quotes eld
+\end_inset
+
+chain
+\begin_inset Quotes erd
+\end_inset
+
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ and/or 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet
+\begin_inset Quotes erd
+\end_inset
+
+, then 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ should be the last entry in the chain.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Static"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Static"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+manual
+\begin_inset CommandInset label
+LatexCommand label
+name "manual-route-type"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ type to create a static resource handler.
+ By default uses the application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory for its 
+\begin_inset Quotes eld
+\end_inset
+
+root
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Important limitation: 
+\emph on
+All
+\emph default
+ uses of this class in the same application share the same configuration.
+ Only the first found configuration will take hold and will be shared by
+ other instances.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Manual"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manual"
+
+\end_inset
+
+ class.
+ See the 
+\bar under
+manual resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
+\end_layout
+
+\begin_layout Paragraph
 scriptlet
 \end_layout
 
@@ -1376,11 +1487,20 @@ reference "scriptlet-resources"
 \end_layout
 
 \begin_layout Subsubsection
-Resources
+Redirecting Route Types
 \end_layout
 
 \begin_layout Paragraph
-dispatch
+capture or 
+\begin_inset Quotes eld
+\end_inset
+
+/\SpecialChar \ldots{}
+
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1388,130 +1508,7 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-dispatch
-\begin_inset Quotes erd
-\end_inset
-
- type with an 
-\begin_inset Quotes eld
-\end_inset
-
-id
-\begin_inset Quotes erd
-\end_inset
-
- param, or any string starting with the 
-\begin_inset Quotes eld
-\end_inset
-
-@
-\begin_inset Quotes erd
-\end_inset
-
- character, to configure a dispatch mapping.
- For example, {type: 'dispatch', id: 'person'} is identical to '@person'.
- If you use 
-\begin_inset Quotes eld
-\end_inset
-
-@
-\begin_inset Quotes erd
-\end_inset
-
-, you can also optionally use a 
-\begin_inset Quotes eld
-\end_inset
-
-:
-\begin_inset Quotes erd
-\end_inset
-
- to specify the 
-\begin_inset Quotes eld
-\end_inset
-
-dispatcher
-\begin_inset Quotes erd
-\end_inset
-
- param, for example: 
-\begin_inset Quotes eld
-\end_inset
-
-@profile:person
-\begin_inset Quotes erd
-\end_inset
-
- is identical to {type: 'dispatch', dispatcher: 'profile', id: 'person'}.
- If 
-\begin_inset Quotes eld
-\end_inset
-
-dispatcher
-\begin_inset Quotes erd
-\end_inset
-
- is not specified, it defaults to 
-\begin_inset Quotes eld
-\end_inset
-
-javascript
-\begin_inset Quotes erd
-\end_inset
-
-.
- The unique ID should match a manual resource handled by your dispatcher,
- otherwise a 404 error (
-\begin_inset Quotes eld
-\end_inset
-
-not found
-\begin_inset Quotes erd
-\end_inset
-
-) will result.
- The 
-\begin_inset Quotes eld
-\end_inset
-
-dispatcher
-\begin_inset Quotes erd
-\end_inset
-
- param's value can be any key from the app.dispatchers dict.
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Dispatch"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Dispatch"
-
-\end_inset
-
- class.
- See the 
-\bar under
-manual resource guide (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "manual-resources"
-
-\end_inset
-
-)
-\bar default
- for a complete discussion.
-\end_layout
-
-\begin_layout Paragraph
-resource
-\end_layout
-
-\begin_layout Standard
-Use the 
-\begin_inset Quotes eld
-\end_inset
-
-resource
+capture
 \begin_inset Quotes erd
 \end_inset
 
@@ -1519,7 +1516,7 @@ resource
 \begin_inset Quotes eld
 \end_inset
 
-class
+uri
 \begin_inset Quotes erd
 \end_inset
 
@@ -1527,28 +1524,33 @@ class
 \begin_inset Quotes eld
 \end_inset
 
-$
+/
 \begin_inset Quotes erd
 \end_inset
 
- character, to attach a Restlet 
-\begin_inset CommandInset href
-LatexCommand href
-name "ServerResource"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html"
-
+ character, to configure a capture.
+ For example, {type: 'capture', uri: '/user/profile/'} is identical to '/user/pr
+ofile/'.
+ Note that adding a 
+\begin_inset Quotes eld
 \end_inset
 
-.
- For example, {type: 'resource', 'class': 'org.myorg.PersonResource'} is identical
- to '$org.myorg.PersonResource'.
- This is an easy way to combine Java-written Restlet libraries into your
- Prudence applications.
+!
+\begin_inset Quotes erd
+\end_inset
+
+ character at the end of the URI (not considered as part of the actual target
+ URI) is a shortcut for 
+\emph on
+also
+\emph default
+ hiding the target URI.
+ Capturing-and-hiding is a common use case.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Resource"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Resource"
+name "Prudence.Routing.Capture"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Capture"
 
 \end_inset
 
@@ -1556,7 +1558,16 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Reso
 \end_layout
 
 \begin_layout Paragraph
-execute
+redirect or 
+\begin_inset Quotes eld
+\end_inset
+
+>\SpecialChar \ldots{}
+
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1564,22 +1575,62 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-execute
+redirect
 \begin_inset Quotes erd
 \end_inset
 
- type to attach a code execution resource.
- This powerful (and dangerous) resource executes all POST payloads as Scripturia
-n text-with-scriptlets documents.
- The standard output of the script will be returned as a response.
- Because it always execution of arbitrary code, you very likely do not want
- this resource publicly exposed.
- If you use it, make sure to protect its URL on publicly available machines!
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+uri
+\begin_inset Quotes erd
+\end_inset
+
+ param, or any string starting with the 
+\begin_inset Quotes eld
+\end_inset
+
+>
+\begin_inset Quotes erd
+\end_inset
+
+ character, to asks the client to redirect (repeat its request) to a new
+ URI.
+ For example, {type: 'redirect', uri: 'http://newsite.org/user/profile/'}
+ is identical to '>http://newsite.org/user/profile/'.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Execute"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Execute"
+name "Prudence.Routing.Redirect"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Redirect"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Paragraph
+addSlash
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+addSlash
+\begin_inset Quotes erd
+\end_inset
+
+ type for a permanent client redirect from the URI template to the original
+ URI with a trailing slash added.
+ An easy way to enforce trailing slashes in your application.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.AddSlash"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddSlash"
 
 \end_inset
 
@@ -1587,11 +1638,20 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Exec
 \end_layout
 
 \begin_layout Subsubsection
-Combining
+Combining Route Types
 \end_layout
 
 \begin_layout Paragraph
-chain
+chain or 
+\begin_inset Quotes eld
+\end_inset
+
+[\SpecialChar \ldots{}
+]
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1678,7 +1738,19 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Rout
 \end_layout
 
 \begin_layout Subsubsection
-Filtering
+Filtering Route Types
+\end_layout
+
+\begin_layout Standard
+All these route types require a 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ param for nesting into another route type.
 \end_layout
 
 \begin_layout Paragraph
@@ -2112,8 +2184,8 @@ Custom Route Types
 \end_layout
 
 \begin_layout Standard
-If you know how to use the Restlet library, then you can easily create your
- own custom route types for Prudence:
+With some knowledge of the Restlet library, you can easily create your own
+ custom route types for Prudence:
 \end_layout
 
 \begin_layout Enumerate
@@ -2360,7 +2432,16 @@ Redirection URI targets
 \end_layout
 
 \begin_layout Itemize
-Cache keys (see caching)
+
+\bar under
+Cache keys (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Standard
@@ -2891,7 +2972,117 @@ Additionally, all the entity attributes can be used in uppercase to correspond
 \end_layout
 
 \begin_layout Subsection
+Routing Paradigms
+\end_layout
+
+\begin_layout Standard
+Prudence offers three built-in techniques for you to support a URI or a
+ URI template, reflecting two different routing paradigms:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Resource mapping
+\series default
+: The filesystem hierarchy under an application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory is directly mapped to URIs (but not URI templates).
+ Both directory- and file-names are mapped in order of depth.
+ By default, Prudence hides filename extensions from the published URIs,
+ but uses these extensions to extracts MIME-type information for the resources.
+ Also, mapping adds trailing slashes by default, by redirecting URIs without
+ trailing slash to include them (on the client's side).
+ Filesystem mapping provides the most 
+\begin_inset Quotes eld
+\end_inset
+
+transparent
+\begin_inset Quotes erd
+\end_inset
+
+ management of your URI-space, because you do not need to edit any configuration
+ file: to change URIs, you simply move or rename files and directories.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+URI/resource separation:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+
+\series bold
+Resource capturing
+\series default
+: Capturing lets you map URI templates to fixed URIs, as well as perform
+ other kinds of internal URI rewrites that are invisible to clients, allowing
+ you to provide a published URI-space, which is different from your internal
+ mapping structure.
+ Note that another common use for capturing is to add support for URI templates
+ in resource mapping, as is explained in 
+\bar under
+resource mapping (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-mapping"
+
+\end_inset
+
+)
+\bar default
+.
+ This use case does not belong to the URI/resource separation paradigm.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Resource dispatching
+\series default
+: In your application's routing.js you can map URIs or URI templates to a
+ custom ID, which is then dispatched to your resource handling code.
+ Dispatching provides the cleanest and most flexible separation between
+ URIs and their implementation.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+When embarking on a new project, you may want to give some thought as to
+ whether you should organize your code around 
+\emph on
+resource mapping 
+\emph default
+or
+\emph on
+ URI/resource separation
+\emph default
+.
+ Generally, URI/resource separation is preferred for larger applications
+ because it allows you full control over you code organization.
+ However, it does add an extra layer of configuration and is not as transparent
+ as resource mapping.
+ It may make sense to use both paradigms.
+ Read on, and make sure you understand how to use all three routing techniques.
+\end_layout
+
+\begin_layout Subsection
 Resource Mapping
+\begin_inset CommandInset label
+LatexCommand label
+name "resource-mapping"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3023,23 +3214,23 @@ app.routes = {
 \end_layout
 
 \begin_layout Enumerate
-This mapped URI-space can be manipulated using URI hiding and URI capturing,
+This mapped URI-space can be manipulated using URI hiding and capturing,
  allowing you to support URI templates and rewrite URIs.
 \end_layout
 
 \begin_layout Subsubsection
 Capturing URI Templates
+\begin_inset CommandInset label
+LatexCommand label
+name "capturing-uri-templates"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Later on we'll present URI capturing as an alternative paradigm to resource
- mapping.
- However, capturing also has a specific use case in conjunction with resource
- mapping, which we'll present here.
-\end_layout
-
-\begin_layout Standard
-Specifically, URI templates can be captured to mapped resources.
+URI templates can be captured into mapped resources.
  For example, let's say you have a scriptlet resource file at 
 \begin_inset Quotes eld
 \end_inset
@@ -3123,8 +3314,18 @@ profile.s.html
 \begin_inset Quotes erd
 \end_inset
 
- file, you could then access the captured value via the conversation.locals
- API:
+ file, you could then access the captured value via the 
+\bar under
+conversation.locals API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+:
 \end_layout
 
 \begin_layout Standard
@@ -3564,72 +3765,37 @@ These problems might not be relevant to your application.
 \end_layout
 
 \begin_layout Subsection
-URI Capturing
+Resource Capturing
+\begin_inset CommandInset label
+LatexCommand label
+name "resource-capturing"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-URI capturing, for the purpose of the URI/resource separation paradigm,
+Resource capturing, for the purpose of the URI/resource separation paradigm,
  only makes sense for scriptlet resources.
- For manual resources, use resource dispatching (explained below) instead.
+ For manual resources, 
+\bar under
+resource dispatching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-dispatching"
+
+\end_inset
+
+)
+\bar default
+ provides a similar structural function.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Quotes eld
-\end_inset
-
-URI capturing
-\begin_inset Quotes erd
-\end_inset
-
- is implemented as server-side redirection (also called 
-\begin_inset Quotes eld
-\end_inset
-
-URI rewriting
-\begin_inset Quotes erd
-\end_inset
-
-), 
-\emph on
-with the added ability to use hidden URIs as the destination
-\emph default
-.
- It's this added ability which makes URI capturing useful for URI/resource
- separation: hidden URIs include both scriptlet resource files in your applicati
-on's 
-\begin_inset Quotes eld
-\end_inset
-
-/libraries/scriptlet-resources/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory as well as URIs routed to the 
-\begin_inset Quotes eld
-\end_inset
-
-hidden
-\begin_inset Quotes erd
-\end_inset
-
- route type.
-\end_layout
-
-\begin_layout Standard
-The effect is that you can put your scriptlet resources under 
-\begin_inset Quotes eld
-\end_inset
-
-/libraries/scriptlet-resources/
-\begin_inset Quotes erd
-\end_inset
-
-, using any directory structure that makes sense to you, and capture the
- public-facing URI in your routing.js.
-\end_layout
-
-\begin_layout Standard
-For example, let's assume that you have the following files in 
+Resource capturing lets you use any public URI for any library scriptlet
+ resource.
+ For example, let's assume that you have the following files in 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3706,17 +3872,72 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-Note how the URI-space is organized completely differently from your filesystem.
+Note how the URI-space is organized completely differently from your filesystem:
+ we have full URI/resource separation.
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Under the hood
+\series default
+: Prudence's capturing mechanism is implemented as server-side redirection
+ (sometimes called 
+\begin_inset Quotes eld
+\end_inset
+
+URI rewriting
+\begin_inset Quotes erd
+\end_inset
+
+), with the added ability to use hidden URIs as the destination.
+ It's this added ability that makes capturing useful for URI/resource separation
+: hidden URIs include both scriptlet resource files in your application's
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scriptlet-resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory as well as URIs routed to the 
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ route type.
 \end_layout
 
 \begin_layout Subsection
 Resource Dispatching
+\begin_inset CommandInset label
+LatexCommand label
+name "resource-dispatching"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Resource dispatching, for the purpose of the URI/resource separation paradigm,
  only makes sense for manual resources.
- For scriptlet resources, use URI capturing (explained above) instead.
+ For scriptlet resources, 
+\bar under
+Resource capturing (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
+ provides a similar structural function.
 \end_layout
 
 \begin_layout Standard
@@ -4369,286 +4590,6 @@ special
 \end_layout
 
 \begin_layout Subsection
-Virtual Hosts
-\end_layout
-
-\begin_layout Standard
-Restlet has excellent virtual host support, and there is a many-to-many
- relationship routing between almost servers, hosts and application.
- So, you can easily have a single Prudence container (running in a single
- JVM instance) managing several sites at once with several applications
- on several domains on several servers.
-\end_layout
-
-\begin_layout Standard
-First, though, it's worth considering whether, despite its ease, it's worth
- using a single container for everything.
-\end_layout
-
-\begin_layout Subsubsection
-Advantages of Using a Single Container
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: you are using a single base directory, and
- because all configuration is done by JavaScript inside the container it
- can be fully dynamic.
-\end_layout
-
-\begin_layout Enumerate
-Less memory use that running multiple JVMs.
-\end_layout
-
-\begin_layout Enumerate
-You can use application.sharedGlobals to share state between applications.
- (Note that if they are running in multiple containers, you can use application.d
-istributedGlobals instead.
- Will also work on VMs running on separate machines in the cluster.
- But distributed globals have to be serializable, of course.)
-\end_layout
-
-\begin_layout Subsubsection
-Advantages of Using Multiple Containers
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: several base directories can mean separate
- code/distribution repositories, and configuration may happen at the reverse-pro
-xy level with your web frontend.
- It may even worth having each application running in its own JVM/container.
-\end_layout
-
-\begin_layout Enumerate
-Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
-\end_layout
-
-\begin_layout Enumerate
-Run-time flexibility: you can restart the JVM for one container without
- affecting others that are running.
-\end_layout
-
-\begin_layout Standard
-There is no performance advantage in either scenario.
- Everything in Prudence is designed around high-concurrency and threading,
- and threads are managed by the OS globally.
- (Well, there are caveats to this statements: Linux can group threads per
- running process for purposes of prioritization, but this is only really
- done for desktop applications.
- But this could be possibly useful when running several containers, if you
- want to guarantee high thread priority to one of the containers over the
- others.
- Any of this would only effect 
-\emph on
-very
-\emph default
- high concurrency deployments, where CPU usage is often high.)
-\end_layout
-
-\begin_layout Standard
-Assuming you do decide to use a single container, we'll explain below how
- it's done.
- (Note that the Prudence Administration applcation shows all of this routing
- information at runtime).
-\end_layout
-
-\begin_layout Subsubsection
-Servers
-\end_layout
-
-\begin_layout Standard
-Under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/servers/
-\begin_inset Quotes erd
-\end_inset
-
- you can define your servers.
- Just add a new file and assign a port for it.
- There is actually routing done per server, too, so you can define which
- IP address you want the server to bind to, in case your machine as several
- IP addresses.
-\end_layout
-
-\begin_layout Standard
-A minimal server definition:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var server = new Server(Protocol.HTTP, 8080)
-\end_layout
-
-\begin_layout Plain Layout
-
-server.name = 'myserver'
-\end_layout
-
-\begin_layout Plain Layout
-
-component.servers.add(server)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-To control routing for the server:
-\end_layout
-
-\begin_layout LyX-Code
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-server.address = [string]
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The server.address defaults to null (which in turn defaults to localhost),
- but you can limit routing to a specific IP address.
- Furthermore, “*” wildcards are supported for accepting all or parts of
- an IP address.
-\end_layout
-
-\begin_layout Subsubsection
-Hosts
-\end_layout
-
-\begin_layout Standard
-Under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/hosts/
-\begin_inset Quotes erd
-\end_inset
-
- you can define your virtual hosts.
- A virtual host routes according to domain name and port assignment.
-\end_layout
-
-\begin_layout Standard
-A minimal host definition:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var host = new VirtualHost(component.context)
-\end_layout
-
-\begin_layout Plain Layout
-
-host.name = 'privatehost' // this name is used in app.hosts
-\end_layout
-
-\begin_layout Plain Layout
-
-component.hosts.add(host)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-To control routing for the host:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-host.serverAddress = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.serverPort = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostScheme = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostPort = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourceScheme = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourceDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourcePort = [string]
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-By default all of these are null, meaning that all incoming requests are
- routed, but you can limit routing to specific incoming requests.
- For example, you might want the virtual host to only accept a specific
- port or server IP address.
- “*” wildcards are supported for all of these.
-\end_layout
-
-\begin_layout Standard
-Note that 
-\emph on
-all
-\emph default
- servers route to 
-\emph on
-all
-\emph default
- hosts.
- If you don't want a host to support all servers, you must limit its routing
- accordingly.
-\end_layout
-
-\begin_layout Subsection
 app.hosts
 \end_layout
 
@@ -4747,6 +4688,10 @@ TODO
 
 \begin_layout Standard
 app.hosts internal
+\end_layout
+
+\begin_layout Subsection
+app.preheat
 \end_layout
 
 \begin_layout Subsection
@@ -5540,193 +5485,6 @@ status open
 
 \end_layout
 
-\begin_layout Subsection
-Under the Hood
-\end_layout
-
-\begin_layout Standard
-In this final section, we'll describe in detail how routing works in Prudence.
- It can be considered optional reading for advanced developers.
-\end_layout
-
-\begin_layout Standard
-In Prudence, “routing” refers to the decision-making process by which an
- incoming client request reaches its server-side handler .
- Usually, information in the request itself is used to make the decision,
- such as the URI, cookies, the client type, capabilities and geolocation.
- But routing can also take server-side and other circumstances into account.
- For example, a round-robin load-balancing router might send each incoming
- request to a different handler in sequence.
-\end_layout
-
-\begin_layout Standard
-A request normally goes through many route types before reaching its handler.
- Filters along the way can change information in the request, which could
- also affect routing, and indeed filters can be used as routing tools.
-\end_layout
-
-\begin_layout Standard
-This abstract, flexible routing mechanism is one of Prudence's most powerful
- features, but it's important to understand these basic principles.
- A common misconception is that routing is based on the hierarchical structure
- of URIs, such that a child URI's routing is somehow affected by its parent
- URI.
- While it's possible to explicitly design your routes hiearchically, routing
- is primarily to be understood in terms of the order of routers and filters
- along the way.
- A parent and child URI could thus use entirely different handlers.
-\end_layout
-
-\begin_layout Standard
-To give you a better understanding of how Prudence routing works, let's
- follow the journey of a request, starting with routing at the server level.
-\end_layout
-
-\begin_layout Paragraph
-Step 1: Servers
-\end_layout
-
-\begin_layout Standard
-Requests come in from servers.
- Prudence instances have at the minimum one server, but can have more than
- one.
- Each server listens at a particular HTTP port, and multiple servers may
- in turn be restricted to particular network interfaces on your machine.
- By default, Prudence has a single server that listens to HTTP requests
- on port 8080 coming in from all network interfaces.
-\end_layout
-
-\begin_layout Standard
-Servers are configured in 
-\begin_inset Quotes eld
-\end_inset
-
-/component/servers/
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph
-Step 2: The Component
-\end_layout
-
-\begin_layout Standard
-There is only one component per Prudence instance, and 
-\emph on
-all 
-\emph default
-servers route to it.
- This allows Prudence a unified mechanism to deal with all incoming requests.
-\end_layout
-
-\begin_layout Paragraph
-Step 3: Virtual Hosts
-\end_layout
-
-\begin_layout Standard
-The component's router decides which virtual host should receive the request.
- The decision is often made according to the domain name in the URL, but
- can also take into account which server it came from.
- Virtual hosting is a tool to let you host multiple sites on the same Prudence
- instance, but it can be used for more subtle kinds of routing, too.
-\end_layout
-
-\begin_layout Standard
-At the minimum you must have one virtual host.
- By default, Prudence has one that accepts all incoming requests from all
- servers.
- If you have multiple servers and want to treat them differently, you can
- create a virtual host for each.
-\end_layout
-
-\begin_layout Standard
-Virtual hosts are configured in 
-\begin_inset Quotes eld
-\end_inset
-
-/component/hosts/
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph
-Step 4: Applications
-\end_layout
-
-\begin_layout Standard
-Using app.hosts, you can configure which virtual hosts your application will
- be attached to, and the base URI for the application on each virtual host.
- An application can accept requests from several virtual hosts at once.
-\end_layout
-
-\begin_layout Standard
-To put it another way, there's a many-to-many relationship between virtual
- hosts and applications: one host can have many applications, and the same
- application can be attached to many hosts.
-\end_layout
-
-\begin_layout Standard
-Note that you can create a “nested” URI scheme for your applications.
- For example, one application might be attached at the root URI at a certain
- virtual host, “/”, while other applications might be at different URIs
- beneath the root, “/wackywiki” and “/wackywiki/support/forum”.
- The root application will not “steal” requests from the other applications,
- because the request is routed to the right application by the virtual host.
- The fact that the latter URI is the hierarchical descendant of the former
- makes no difference to the virtual host router.
-\end_layout
-
-\begin_layout Paragraph
-A Complete Route
-\end_layout
-
-\begin_layout Standard
-Let's assume a client from the Internet send a request to URI “http://www.wacky.or
-g/wackywicki/support/forum/thread/12/.”
-\end_layout
-
-\begin_layout Standard
-Our machine has two network interfaces, one facing the Internet and one
- facing the intranet, and we have two servers to listen on each.
- This particular request has come in through the external server.
- The request reachers the component's router.
-\end_layout
-
-\begin_layout Standard
-We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
- main site, and another to handle “support.wacky.org”, a secure site where
- paying customers can open support tickets.
-\end_layout
-
-\begin_layout Standard
-Our forum application (in the 
-\begin_inset Quotes eld
-\end_inset
-
-/applications/forum/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory) is attached to both virtual hosts, but at different URIs.
- It's at “www.wacky.org/wackywiki/support/forum” and at “support.wacky.org/forum”.
- In this case, our request is routed to the first virtual host.
- Though there are a few applications installed at this virtual host, our
- request follows the route to the forum application.
-\end_layout
-
-\begin_layout Standard
-The remaining part of the URI, “/thread/12/” will be further routed inside
- the forum application, according to route types installed in its routing.js.
-\end_layout
-
-\begin_layout Subsection
-app.preheat
-\end_layout
-
 \begin_layout Section
 Implementing Resources
 \begin_inset CommandInset label
@@ -6260,7 +6018,42 @@ Other Restlets
 \end_layout
 
 \begin_layout Section
+Executing Tasks
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+crontab
+\end_layout
+
+\begin_layout Section
+Accepting Uploads
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Section
+Cookies
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Section
 Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "caching"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -6726,7 +6519,14 @@ Content Negotiation
 \end_layout
 
 \begin_layout Section
-Executing Tasks
+Filtering
+\begin_inset CommandInset label
+LatexCommand label
+name "filtering"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6734,7 +6534,714 @@ TODO
 \end_layout
 
 \begin_layout Subsection
-crontab
+How Routing Works
+\end_layout
+
+\begin_layout Subsection
+Injection
+\end_layout
+
+\begin_layout Subsection
+Built-in Filters
+\end_layout
+
+\begin_layout Section
+Configuring Applications
+\end_layout
+
+\begin_layout Subsection
+settings.js
+\end_layout
+
+\begin_layout Subsubsection
+app.settings
+\end_layout
+
+\begin_layout Subsubsection
+app.settings.description
+\end_layout
+
+\begin_layout Subsubsection
+app.settings.errors
+\end_layout
+
+\begin_layout Subsubsection
+app.settings.code
+\end_layout
+
+\begin_layout Subsubsection
+app.settings.uploads
+\end_layout
+
+\begin_layout Subsubsection
+app.settings.mediaTypes
+\end_layout
+
+\begin_layout Subsubsection
+app.globals
+\end_layout
+
+\begin_layout Subsection
+routing.js
+\end_layout
+
+\begin_layout Subsubsection
+app.hosts
+\end_layout
+
+\begin_layout Subsubsection
+app.routes
+\end_layout
+
+\begin_layout Subsubsection
+app.errors
+\end_layout
+
+\begin_layout Subsubsection
+app.dispatchers
+\end_layout
+
+\begin_layout Subsection
+Scheduling Tasks (Cron)
+\end_layout
+
+\begin_layout Subsection
+Default Directories
+\end_layout
+
+\begin_layout Standard
+/resources/
+\end_layout
+
+\begin_layout Standard
+/libraries/
+\end_layout
+
+\begin_layout Standard
+/libraries/
+\end_layout
+
+\begin_layout Standard
+/uploads/
+\end_layout
+
+\begin_layout Section
+Configuring the Component
+\end_layout
+
+\begin_layout Standard
+Order: applications, services, starts component, then runs initialization
+ tasks
+\end_layout
+
+\begin_layout Subsection
+/component/servers/
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+configuring servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "servers"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+/component/clients/
+\end_layout
+
+\begin_layout Subsection
+/component/hosts/
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+configuring hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+/component/services/
+\end_layout
+
+\begin_layout Standard
+Run 
+\emph on
+after
+\emph default
+ the component is configured but 
+\emph on
+before
+\emph default
+ it is started.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/caching
+\end_layout
+
+\begin_layout Standard
+Configure the caching backend
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/distributed
+\end_layout
+
+\begin_layout Standard
+Load the Hazelcast configuration
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/executor
+\end_layout
+
+\begin_layout Standard
+Configures thread pools for task execution.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/log
+\end_layout
+
+\begin_layout Standard
+Configures the component's log service, which is used for logging client
+ requests.
+ (By default web.log)
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/singleton
+\end_layout
+
+\begin_layout Standard
+Prudence assumes a single Restlet Component instance.
+ If for some reason you have a more complex setup, you can configure Prudence's
+ initialization here.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/scheduler
+\end_layout
+
+\begin_layout Standard
+Configure the cron scheduler (cron4j)
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/status
+\end_layout
+
+\begin_layout Standard
+Configures Restlet's status service to use Prudence's implementation.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/version
+\end_layout
+
+\begin_layout Standard
+Provides access to Prudence and Restlet versions.
+\end_layout
+
+\begin_layout Subsection
+/component/templates/
+\end_layout
+
+\begin_layout Section
+Servers and Hosts
+\end_layout
+
+\begin_layout Standard
+Restlet has excellent virtual host support, and there is a many-to-many
+ relationship routing between almost servers, hosts and application.
+ So, you can easily have a single Prudence container (running in a single
+ JVM instance) managing several sites at once with several applications
+ on several domains on several servers.
+\end_layout
+
+\begin_layout Subsection
+Strategies
+\end_layout
+
+\begin_layout Standard
+First, though, it's worth considering whether, despite its ease, it's worth
+ using a single container for everything.
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of Using a Single Container
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: you are using a single base directory, and
+ because all configuration is done by JavaScript inside the container it
+ can be fully dynamic.
+\end_layout
+
+\begin_layout Enumerate
+Less memory use that running multiple JVMs.
+\end_layout
+
+\begin_layout Enumerate
+You can use application.sharedGlobals to share state between applications.
+ (Note that if they are running in multiple containers, you can use application.d
+istributedGlobals instead.
+ Will also work on VMs running on separate machines in the cluster.
+ But distributed globals have to be serializable, of course.)
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of Using Multiple Containers
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: several base directories can mean separate
+ code/distribution repositories, and configuration may happen at the reverse-pro
+xy level with your web frontend.
+ It may even worth having each application running in its own JVM/container.
+\end_layout
+
+\begin_layout Enumerate
+Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
+\end_layout
+
+\begin_layout Enumerate
+Run-time flexibility: you can restart the JVM for one container without
+ affecting others that are running.
+\end_layout
+
+\begin_layout Standard
+There is no performance advantage in either scenario.
+ Everything in Prudence is designed around high-concurrency and threading,
+ and threads are managed by the OS globally.
+ (Well, there are caveats to this statements: Linux can group threads per
+ running process for purposes of prioritization, but this is only really
+ done for desktop applications.
+ But this could be possibly useful when running several containers, if you
+ want to guarantee high thread priority to one of the containers over the
+ others.
+ Any of this would only effect 
+\emph on
+very
+\emph default
+ high concurrency deployments, where CPU usage is often high.)
+\end_layout
+
+\begin_layout Standard
+Assuming you do decide to use a single container, we'll explain below how
+ it's done.
+ (Note that the Prudence Administration applcation shows all of this routing
+ information at runtime).
+\end_layout
+
+\begin_layout Subsection
+Configuring Servers
+\begin_inset CommandInset label
+LatexCommand label
+name "servers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/
+\begin_inset Quotes erd
+\end_inset
+
+ you can define your servers.
+ Just add a new file and assign a port for it.
+ There is actually routing done per server, too, so you can define which
+ IP address you want the server to bind to, in case your machine as several
+ IP addresses.
+\end_layout
+
+\begin_layout Standard
+A minimal server definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var server = new Server(Protocol.HTTP, 8080)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.name = 'myserver'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.servers.add(server)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To control routing for the server:
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.address = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The server.address defaults to null (which in turn defaults to localhost),
+ but you can limit routing to a specific IP address.
+ Furthermore, “*” wildcards are supported for accepting all or parts of
+ an IP address.
+\end_layout
+
+\begin_layout Subsection
+Configuring Hosts
+\begin_inset CommandInset label
+LatexCommand label
+name "hosts"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/hosts/
+\begin_inset Quotes erd
+\end_inset
+
+ you can define your virtual hosts.
+ A virtual host routes according to domain name and port assignment.
+\end_layout
+
+\begin_layout Standard
+A minimal host definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = new VirtualHost(component.context)
+\end_layout
+
+\begin_layout Plain Layout
+
+host.name = 'privatehost' // this name is used in app.hosts
+\end_layout
+
+\begin_layout Plain Layout
+
+component.hosts.add(host)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To control routing for the host:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+host.serverAddress = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourcePort = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default all of these are null, meaning that all incoming requests are
+ routed, but you can limit routing to specific incoming requests.
+ For example, you might want the virtual host to only accept a specific
+ port or server IP address.
+ “*” wildcards are supported for all of these.
+\end_layout
+
+\begin_layout Standard
+Note that 
+\emph on
+all
+\emph default
+ servers route to 
+\emph on
+all
+\emph default
+ hosts.
+ If you don't want a host to support all servers, you must limit its routing
+ accordingly.
+\end_layout
+
+\begin_layout Subsection
+Routing In-Depth
+\begin_inset CommandInset label
+LatexCommand label
+name "routing-in-depth"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this final section, we'll describe in detail how routing works in Prudence.
+ It can be considered optional, advanced reading.
+\end_layout
+
+\begin_layout Standard
+In Prudence, “routing” refers to the decision-making process by which an
+ incoming client request reaches its server-side handler .
+ Usually, information in the request itself is used to make the decision,
+ such as the URI, cookies, the client type, capabilities and geolocation.
+ But routing can also take server-side and other circumstances into account.
+ For example, a round-robin load-balancing router might send each incoming
+ request to a different handler in sequence.
+\end_layout
+
+\begin_layout Standard
+A request normally goes through many route types before reaching its handler.
+ Filters along the way can change information in the request, which could
+ also affect routing, and indeed filters can be used as routing tools.
+\end_layout
+
+\begin_layout Standard
+This abstract, flexible routing mechanism is one of Prudence's most powerful
+ features, but it's important to understand these basic principles.
+ A common misconception is that routing is based on the hierarchical structure
+ of URIs, such that a child URI's routing is somehow affected by its parent
+ URI.
+ While it's possible to explicitly design your routes hierarchically, routing
+ is primarily to be understood in terms of the order of routers and filters
+ along the way.
+ A parent and child URI could thus use entirely different handlers.
+\end_layout
+
+\begin_layout Standard
+To give you a better understanding of how Prudence routing works, let's
+ follow the journey of a request, starting with routing at the server level.
+\end_layout
+
+\begin_layout Paragraph
+Step 1: Servers
+\end_layout
+
+\begin_layout Standard
+Requests come in from servers.
+ Prudence instances have at the minimum one server, but can have more than
+ one.
+ Each server listens at a particular HTTP port, and multiple servers may
+ in turn be restricted to particular network interfaces on your machine.
+ By default, Prudence has a single server that listens to HTTP requests
+ on port 8080 coming in from all network interfaces.
+\end_layout
+
+\begin_layout Paragraph
+Step 2: The Component
+\end_layout
+
+\begin_layout Standard
+There is only one component per Prudence instance, and 
+\emph on
+all 
+\emph default
+servers route to it.
+ This allows Prudence a unified mechanism to deal with all incoming requests.
+\end_layout
+
+\begin_layout Paragraph
+Step 3: Virtual Hosts
+\end_layout
+
+\begin_layout Standard
+The component's router decides which virtual host should receive the request.
+ The decision is often made according to the domain name in the URL, but
+ can also take into account which server it came from.
+ Virtual hosting is a tool to let you host multiple sites on the same Prudence
+ instance, but it can be used for more subtle kinds of routing, too.
+\end_layout
+
+\begin_layout Standard
+At the minimum you must have one virtual host.
+ By default, Prudence has one that accepts all incoming requests from all
+ servers.
+ If you have multiple servers and want to treat them differently, you can
+ create a virtual host for each.
+\end_layout
+
+\begin_layout Paragraph
+Step 4: Applications
+\end_layout
+
+\begin_layout Standard
+Using app.hosts, you can configure which virtual hosts your application will
+ be attached to, and the base URI for the application on each virtual host.
+ An application can accept requests from several virtual hosts at once.
+\end_layout
+
+\begin_layout Standard
+To put it another way, there's a many-to-many relationship between virtual
+ hosts and applications: one host can have many applications, and the same
+ application can be attached to many hosts.
+\end_layout
+
+\begin_layout Standard
+Note that you can create a “nested” URI scheme for your applications.
+ For example, one application might be attached at the root URI at a certain
+ virtual host, “/”, while other applications might be at different URIs
+ beneath the root, “/wackywiki” and “/wackywiki/support/forum”.
+ The root application will not “steal” requests from the other applications,
+ because the request is routed to the right application by the virtual host.
+ The fact that the latter URI is the hierarchical descendant of the former
+ makes no difference to the virtual host router.
+\end_layout
+
+\begin_layout Paragraph
+A Complete Route
+\end_layout
+
+\begin_layout Standard
+Let's assume a client from the Internet send a request to URI “http://www.wacky.or
+g/wackywicki/support/forum/thread/12/.”
+\end_layout
+
+\begin_layout Standard
+Our machine has two network interfaces, one facing the Internet and one
+ facing the intranet, and we have two servers to listen on each.
+ This particular request has come in through the external server.
+ The request reachers the component's router.
+\end_layout
+
+\begin_layout Standard
+We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
+ main site, and another to handle “support.wacky.org”, a secure site where
+ paying customers can open support tickets.
+\end_layout
+
+\begin_layout Standard
+Our forum application (in the 
+\begin_inset Quotes eld
+\end_inset
+
+/applications/forum/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory) is attached to both virtual hosts, but at different URIs.
+ It's at “www.wacky.org/wackywiki/support/forum” and at “support.wacky.org/forum”.
+ In this case, our request is routed to the first virtual host.
+ Though there are a few applications installed at this virtual host, our
+ request follows the route to the forum application.
+\end_layout
+
+\begin_layout Standard
+The remaining part of the URI, “/thread/12/” will be further routed inside
+ the forum application, according to route types installed in its routing.js.
+\end_layout
+
+\begin_layout Section
+Working in a Cluster
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+Distributed Globals
+\end_layout
+
+\begin_layout Subsection
+Task Farming
 \end_layout
 
 \begin_layout Section
@@ -6798,6 +7305,13 @@ Prudence is designed to allow massive concurrency and scalability while
 
 \begin_layout Subsubsection
 conversation.locals
+\begin_inset CommandInset label
+LatexCommand label
+name "conversation-locals"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6881,7 +7395,7 @@ reference "../api/|document-cache-key-pattern"
 Global Variables
 \begin_inset CommandInset label
 LatexCommand label
-name "../api/|global-variables"
+name "global-variables"
 
 \end_inset
 
@@ -7143,7 +7657,7 @@ als are available for you.
 Concurrency
 \begin_inset CommandInset label
 LatexCommand label
-name "../api/|concurrency"
+name "concurrency"
 
 \end_inset
 
@@ -8109,259 +8623,11 @@ Diligence
 \end_layout
 
 \begin_layout Section
-Working in a Cluster
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
-Shared Globals
-\end_layout
-
-\begin_layout Subsection
-Task Farming
-\end_layout
-
-\begin_layout Section
-Accepting Uploads
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Section
-Cookies
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Section
-Filtering
-\begin_inset CommandInset label
-LatexCommand label
-name "filtering"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
-How Routing Works
-\end_layout
-
-\begin_layout Subsection
-Injection
-\end_layout
-
-\begin_layout Subsection
-Built-in Filters
-\end_layout
-
-\begin_layout Section
-Configuring Applications
-\end_layout
-
-\begin_layout Subsection
-settings.js
-\end_layout
-
-\begin_layout Subsubsection
-app.settings
-\end_layout
-
-\begin_layout Subsubsection
-app.settings.description
-\end_layout
-
-\begin_layout Subsubsection
-app.settings.errors
-\end_layout
-
-\begin_layout Subsubsection
-app.settings.code
-\end_layout
-
-\begin_layout Subsubsection
-app.settings.uploads
-\end_layout
-
-\begin_layout Subsubsection
-app.settings.mediaTypes
-\end_layout
-
-\begin_layout Subsubsection
-app.globals
-\end_layout
-
-\begin_layout Subsection
-routing.js
-\end_layout
-
-\begin_layout Subsubsection
-app.hosts
-\end_layout
-
-\begin_layout Subsubsection
-app.routes
-\end_layout
-
-\begin_layout Subsubsection
-app.errors
-\end_layout
-
-\begin_layout Subsubsection
-app.dispatchers
-\end_layout
-
-\begin_layout Subsection
-Scheduling Tasks (Cron)
-\end_layout
-
-\begin_layout Subsection
-Default Directories
-\end_layout
-
-\begin_layout Standard
-/resources/
-\end_layout
-
-\begin_layout Standard
-/libraries/
-\end_layout
-
-\begin_layout Standard
-/libraries/
-\end_layout
-
-\begin_layout Standard
-/uploads/
-\end_layout
-
-\begin_layout Section
-Configuring the Component
-\end_layout
-
-\begin_layout Standard
-Order: applications, services, starts component, then runs initialization
- tasks
-\end_layout
-
-\begin_layout Subsection
-/component/servers/
-\end_layout
-
-\begin_layout Subsection
-/component/clients/
-\end_layout
-
-\begin_layout Subsection
-/component/hosts/
-\end_layout
-
-\begin_layout Standard
-See virtual hosts in managing URI space.
-\end_layout
-
-\begin_layout Subsection
-/component/services/
-\end_layout
-
-\begin_layout Standard
-Run 
-\emph on
-after
-\emph default
- the component is configured but 
-\emph on
-before
-\emph default
- it is started.
-\end_layout
-
-\begin_layout Subsubsection
-caching
-\end_layout
-
-\begin_layout Standard
-Configure the caching backend
-\end_layout
-
-\begin_layout Subsubsection
-distributed
-\end_layout
-
-\begin_layout Standard
-Load the Hazelcast configuration
-\end_layout
-
-\begin_layout Subsubsection
-executor
-\end_layout
-
-\begin_layout Standard
-Configures thread pools for task execution.
-\end_layout
-
-\begin_layout Subsubsection
-log
-\end_layout
-
-\begin_layout Standard
-Configures the component's log service, which is used for logging client
- requests.
- (By default web.log)
-\end_layout
-
-\begin_layout Subsubsection
-singleton
-\end_layout
-
-\begin_layout Standard
-Prudence assumes a single Restlet Component instance.
- If for some reason you have a more complex setup, you can configure Prudence's
- initialization here.
-\end_layout
-
-\begin_layout Subsubsection
-scheduler
-\end_layout
-
-\begin_layout Standard
-Configure the cron scheduler (cron4j)
-\end_layout
-
-\begin_layout Subsubsection
-status
-\end_layout
-
-\begin_layout Standard
-Configures Restlet's status service to use Prudence's implementation.
-\end_layout
-
-\begin_layout Subsubsection
-version
-\end_layout
-
-\begin_layout Standard
-Provides access to Prudence and Restlet versions.
-\end_layout
-
-\begin_layout Subsection
-/component/templates/
-\end_layout
-
-\begin_layout Section
 Debugging
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsection
@@ -8390,6 +8656,40 @@ See Sincerity Manual
 
 \begin_layout Subsection
 Debug Page
+\end_layout
+
+\begin_layout Subsection
+Live Execution
+\begin_inset CommandInset label
+LatexCommand label
+name "live-execution"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ route type (
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "execute-route-type"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Section
