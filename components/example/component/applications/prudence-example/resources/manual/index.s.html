@@ -101,6 +101,9 @@ function seeMainSource() {
 <% if (executable.manager.getAdapterByTag('quercus')) { %>
 		<input type="radio" name="resource" value="php/">PHP</input><br />
 <% } %>
+<% if (executable.manager.getAdapterByTag('lua')) { %>
+		<input type="radio" name="resource" value="lua/">Lua</input><br />
+<% } %>
 	</p>
 	<p>
 		<input type="button" onclick="seeMainSource()" value="See source code" />

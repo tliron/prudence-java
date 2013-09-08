@@ -88,6 +88,17 @@ n/a
 <% } %>
 </p>
 </td><td>
+<h3>Lua</h3>
+<p>
+<% if (executable.manager.getAdapterByTag('lua')) { %>
+<a href="lua/?id=hello">caching mode</a><br />
+<a href="lua/?id=hello&defer=true">deferred mode</a><br />
+<a href="lua/?source=true">source</a>
+<% } else { %>
+n/a
+<% } %>
+</p>
+</td></tr valign="top"><tr><td>
 <h3>Velocity</h3>
 <p>
 <% if (executable.manager.getAdapterByTag('velocity')) { %>
@@ -98,7 +109,7 @@ n/a
 n/a
 <% } %>
 </p>
-</td>
+</td><td></td>
 </tr></table>
 
 <%& '/footer/' %>

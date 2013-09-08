@@ -1,0 +1,105 @@
+<html>
+<head>
+	<title>Lua Scriptlet Example</title>
+	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
+	<link href="http://fonts.googleapis.com/css?family=Ubuntu|Ubuntu:italic|Ubuntu:bold|Ubuntu:bolditalic" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="main"><div id="main-content">
+<h1>Lua Scriptlet Example</h1>
+<table width="100%"><tr valign="top"><td>
+<%lua
+
+--
+-- Defer this page
+--
+
+if conversation:getQuery():get('defer') == 'true' then
+	if conversation:defer() then
+		conversation:stop()
+	end
+end
+
+--
+-- Cache this page
+--
+
+document:setCacheDuration(5000)
+
+--
+-- Calling Java
+--
+
+system = luajava.bindClass('java.lang.System')
+print(string.format('<p>This page was dynamically generated at %s</p>', system:currentTimeMillis()))
+
+--
+-- An example of a function
+--
+
+function print_adapter (adapter)
+%>
+<p>
+	<i>Adapter:</i> <%= adapter:getAttributes():get('name') %> version <%= adapter:getAttributes():get('version') %><br />
+	<i>Language:</i> <%= adapter:getAttributes():get('language.name') %> version <%= adapter:getAttributes():get('language.version') %><br />
+	<i>Tags:</i> 
+<%
+	local tags = adapter:getAttributes():get('tags'):toArray()
+	for i = 1, #tags do
+		io.write(tags[i])
+		if i < #tags then
+			io.write(', ')
+		end
+	end
+%>
+</p>
+<%
+end
+
+%>
+<h3>Language used:</h3>
+<%
+print_adapter(executable:getContext():getAdapter())
+%>
+</p>
+<h3>Available languages:</h3>
+<%
+adapters = executable:getManager():getAdapters():toArray()
+for i = 1, #adapters do
+	print_adapter(adapters[i])
+end
+%>
+</td><td>
+<h3>The "id" attribute in the URL query is:</h3>
+<p><%= conversation:getQuery():get('id') or '' %></p>
+<h3>A few tests:</h3>
+<p>
+<%
+
+--
+-- Including a document
+--
+-- This is identical to:
+--
+--   document:include('/triple/lua/')
+--
+
+%>
+<%& '/triple/lua/' %>
+<%
+
+for i = 0, 9 do
+%>
+A multiple of three: 
+<%
+	print_triple(i)
+%>
+<br />
+<%
+end
+%>
+</p>
+</td></tr></table>
+</div></div>
+</body>
+<html>

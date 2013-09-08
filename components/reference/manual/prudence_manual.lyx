@@ -1243,10 +1243,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Exec
 \end_inset
 
  class.
-\end_layout
-
-\begin_layout Standard
-The 
+ The 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1256,7 +1253,7 @@ execute
 
  resource is very useful for 
 \bar under
-debugging (
+debugging (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "live-execution"
