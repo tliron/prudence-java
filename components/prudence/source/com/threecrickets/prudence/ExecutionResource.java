@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.data.CharacterSet;
+import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
@@ -193,6 +194,9 @@ public class ExecutionResource extends ServerResource
 			attributes.addLibraryLocations( executionContext );
 
 			ExecutionResourceConversationService conversationService = new ExecutionResourceConversationService( this, entity, variant, attributes.getDefaultCharacterSet() );
+
+			// Default media type
+			conversationService.setMediaType( MediaType.TEXT_PLAIN );
 
 			executionContext.getServices().put( attributes.getDocumentServiceName(), new ExecutionResourceDocumentService( this, documentDescriptor ) );
 			executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create() );

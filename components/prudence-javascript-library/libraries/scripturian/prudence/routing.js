@@ -1132,17 +1132,19 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * This powerful (and dangerous) resource executes all POST payloads as Scripturian text-with-scriptlets
 	 * documents. The standard output of the script will be returned as a response.
 	 * <p>
-	 * Because it always execution of arbitrary code, you very likely do not want this resource publicly
+	 * Because it allows execution of arbitrary code, you very likely do not want this resource publicly
 	 * exposed. If you use it, make sure to protect its URL on publicly available machines!
+	 * <p>
+	 * The default response media type is "text/plain", but you can modify it with the {@link conversation#mediaType} API.
 	 * <p>
 	 * Example use with curl command line:
 	 * <pre>
-	 * curl -d "<% println(1+2) %>" "http://localhost:8081/myapp/execute/"
+	 * curl -d "<% println(1+2) %>" "http://localhost:8080/myapp/execute/"
 	 * </pre>
 	 * Note that if you use curl with a file, you need to send it as binary, otherwise curl
 	 * will strip your newlines:
 	 * <pre>
-	 * curl --data-binary @myscriptfile "http://localhost:8081/myapp/execute/"
+	 * curl --data-binary @myscriptfile "http://localhost:8080/myapp/execute/"
 	 * </pre>
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ExecutionResource.html">ExecutionResource</a>

@@ -1234,7 +1234,19 @@ n text-with-scriptlets documents.
  Because it always execution of arbitrary code, you very likely do not want
  this resource publicly exposed.
  If you use it, make sure to protect its URL on publicly available machines!
- The 
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Execute"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Execute"
+
+\end_inset
+
+ class.
+\end_layout
+
+\begin_layout Standard
+The 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1254,15 +1266,6 @@ reference "live-execution"
 )
 \bar default
 .
- Handled by the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Routing.Execute"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Execute"
-
-\end_inset
-
- class.
 \end_layout
 
 \begin_layout Subsubsection
@@ -5981,6 +5984,335 @@ Client-Side Caching
 Scriptlet Plugins
 \end_layout
 
+\begin_layout Subsubsection
+On-the-Fly Scriptlet Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "on-the-fly-scriptlet-resources"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can add support for on-the-fly scriptlet resources to your application
+ via the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "execute-route-type"
+
+\end_inset
+
+)
+\bar default
+.
+ This powerful (and dangerous) resource executes all POST payloads as if
+ they were scriptlet resources in the application, and is very useful for
+ 
+\bar under
+debugging (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "live-execution"
+
+\end_inset
+
+)
+\bar default
+ and maintenance.
+\end_layout
+
+\begin_layout Standard
+To install it, modify your application's routing.js and create a route for
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ type:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/execute/': 'execute'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+Because it allows execution of arbitrary code, you very likely do not want
+ its URL publicly exposed.
+ If you use it, make sure to protect its URL on publicly available machines!
+\end_layout
+
+\begin_layout Standard
+Example use with 
+\begin_inset CommandInset href
+LatexCommand href
+name "cURL"
+target "http://curl.haxx.se/"
+
+\end_inset
+
+ command line:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl -v -d "<% println(1+2) %>" "http://localhost:8080/myapp/execute/"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if you use cURL with a file, you need to send it as binary, otherwise
+ curl will strip your newlines:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl -v --data-binary @myscriptfile "http://localhost:8080/myapp/execute/"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Quotes eld
+\end_inset
+
+myscriptfile
+\begin_inset Quotes erd
+\end_inset
+
+ would like like a scriptlet resource:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.executeOnce('/sincerity/templates/')
+\end_layout
+
+\begin_layout Plain Layout
+
+println(Hello, {0}'.cast('Linus'))
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Almost all the usual scriptlet resource APIs work (with the exception of
+ caching, which isn't supported):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.executeOnce('/sincerity/templates/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var name = conversation.query.get('name') || 'Linus'
+\end_layout
+
+\begin_layout Plain Layout
+
+println('Hello, {0}'.cast(name))
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the above, you could then POST with a query param:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl -v --data-binary @myscriptfile "http://localhost:8080/myapp/execute/?name=R
+ichard"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that you can, as usual, use scriptlets in any supported programming
+ language:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+name = conversation.query['name'] or 'Linus'
+\end_layout
+
+\begin_layout Plain Layout
+
+print 'Hello, %s' % name
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also note that the default response MIME type is 
+\begin_inset Quotes eld
+\end_inset
+
+text/plain
+\begin_inset Quotes erd
+\end_inset
+
+, but you can modify it with the conversation.mediaType API:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.executeOnce('/sincerity/json/')
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.mediaTypeName = 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+println(Sincerity.JSON.to({greeting: 'Hello'}, true))
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Static Resources
 \end_layout
@@ -6006,7 +6338,7 @@ ZUSS
 \end_layout
 
 \begin_layout Subsection
-Integrating Java
+Java Resources
 \end_layout
 
 \begin_layout Standard
@@ -6017,8 +6349,94 @@ Resources
 Other Restlets
 \end_layout
 
+\begin_layout Subsection
+Tricks
+\end_layout
+
+\begin_layout Subsubsection
+Browser Downloads
+\end_layout
+
+\begin_layout Standard
+You can create browser-friendly downloadable responses using the conversation.dis
+position API:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Item,Cost,Sold,Profit
+\end_layout
+
+\begin_layout Plain Layout
+
+Keyboard,$10.00,$16.00,$6.00
+\end_layout
+
+\begin_layout Plain Layout
+
+Monitor,$80.00,$120.00,$40.00
+\end_layout
+
+\begin_layout Plain Layout
+
+Mouse,$5.00,$7.00,$2.00
+\end_layout
+
+\begin_layout Plain Layout
+
+,,Total,$48.00
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.mediaTypeName = 'text/csv'
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.disposition.type = 'attachment'
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.disposition.filename = bill.csv'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Most web browsers would recognize the MIME type and offer the user to either
+ download the file with the suggested 
+\begin_inset Quotes eld
+\end_inset
+
+bill.csv
+\begin_inset Quotes erd
+\end_inset
+
+ filename.
+\end_layout
+
 \begin_layout Section
-Executing Tasks
+Background Tasks
 \end_layout
 
 \begin_layout Standard
@@ -6027,6 +6445,32 @@ TODO
 
 \begin_layout Subsection
 crontab
+\begin_inset CommandInset label
+LatexCommand label
+name "crontab"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+Task API
+\begin_inset CommandInset label
+LatexCommand label
+name "task-api"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Section
@@ -7281,7 +7725,11 @@ Manual Resources and Handlers
 \end_layout
 
 \begin_layout Subsubsection
-Textual Resources
+Scriptlet Resources
+\end_layout
+
+\begin_layout Subsubsection
+Execute Resource
 \end_layout
 
 \begin_layout Subsubsection
@@ -8624,6 +9072,13 @@ Diligence
 
 \begin_layout Section
 Debugging
+\begin_inset CommandInset label
+LatexCommand label
+name "debugging"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -8672,18 +9127,10 @@ name "live-execution"
 \begin_layout Standard
 See the 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-execute
-\begin_inset Quotes erd
-\end_inset
-
- route type (
+on-the-fly scriptlet resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "execute-route-type"
+reference "on-the-fly-scriptlet-resources"
 
 \end_inset
 
