@@ -29,9 +29,10 @@ app.routes = {
 
 	'/person/{id}/':        '@person',
 	'/pythonperson/{id}/':  '@python:person',
-	'/groovyperson/{id}/':  '@groovy:person',
-	'/phpperson/{id}/':     '@php:person',
 	'/rubyperson/{id}/':    '@ruby:person',
+	'/phpperson/{id}/':     '@php:person',
+	'/luaperson/{id}/':     '@lua:person',
+	'/groovyperson/{id}/':  '@groovy:person',
 	'/clojureperson/{id}/': '@clojure:person'
 }
 
@@ -39,9 +40,10 @@ app.dispatchers = {
 	javascript: '/manual-resources/javascript/',
 	python:     '/manual-resources/python/',
 	ruby:       '/manual-resources/ruby/',
+	php:        '/manual-resources/php/',
+	lua:        '/manual-resources/lua/',
 	groovy:     '/manual-resources/groovy/',
-	clojure:    '/manual-resources/clojure/',
-	php:        '/manual-resources/php/'
+	clojure:    '/manual-resources/clojure/'
 }
 
 //
@@ -58,20 +60,25 @@ if (null !== executable.manager.getAdapterByTag('jython')) {
 	app.preheat.push('/manual/python/')
 	app.preheat.push('/pythonperson/1/')
 }
-if (null !== executable.manager.getAdapterByTag('groovy')) {
-	app.preheat.push('/scriptlet/groovy/')
-	app.preheat.push('/manual/groovy/')
-	app.preheat.push('/groovyperson/1/')
+if (null !== executable.manager.getAdapterByTag('ruby')) {
+	app.preheat.push('/scriptlet/ruby/')
+	app.preheat.push('/manual/ruby/')
+	app.preheat.push('/rubyperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('php')) {
 	app.preheat.push('/scriptlet/php/')
 	app.preheat.push('/manual/php/')
 	app.preheat.push('/phpperson/1/')
 }
-if (null !== executable.manager.getAdapterByTag('ruby')) {
-	app.preheat.push('/scriptlet/ruby/')
-	app.preheat.push('/manual/ruby/')
-	app.preheat.push('/rubyperson/1/')
+if (null !== executable.manager.getAdapterByTag('lua')) {
+	app.preheat.push('/scriptlet/lua/')
+	app.preheat.push('/manual/lua/')
+	app.preheat.push('/luaperson/1/')
+}
+if (null !== executable.manager.getAdapterByTag('groovy')) {
+	app.preheat.push('/scriptlet/groovy/')
+	app.preheat.push('/manual/groovy/')
+	app.preheat.push('/groovyperson/1/')
 }
 if (null !== executable.manager.getAdapterByTag('clojure')) {
 	app.preheat.push('/scriptlet/clojure/')

@@ -1,6 +1,6 @@
 
 require 'data/lua'
-json = require 'data/dkjson'
+json = require 'dkjson'
 
 function get_state ()
 	return json.decode(get_global('lua.state', function ()

@@ -19,6 +19,24 @@ n/a
 <% } %>
 </p>
 </td><td>
+<h3>Python (Jython)</h3>
+<p>
+<% if (executable.manager.getAdapterByTag('jython')) { %>
+<a href="../pythonperson/17/">Person #17</a>
+<% } else { %>
+n/a
+<% } %>
+</p>
+</td></tr><tr valign="top"><td>
+<h3>Ruby</h3>
+<p>
+<% if (executable.manager.getAdapterByTag('ruby')) { %>
+<a href="../rubyperson/17/">Person #17</a>
+<% } else { %>
+n/a
+<% } %>
+</p>
+</td><td>
 <h3>PHP</h3>
 <p>
 <% if (executable.manager.getAdapterByTag('php')) { %>
@@ -28,28 +46,10 @@ n/a
 <% } %>
 </p>
 </td></tr><tr valign="top"><td>
-<h3>Python (Jython)</h3>
+<h3>Lua</h3>
 <p>
-<% if (executable.manager.getAdapterByTag('jython')) { %>
-<a href="../pythonperson/17/">Person #17</a>
-<% } else { %>
-n/a
-<% } %>
-</p>
-</td><td>
-<h3>Python (Jepp)</h3>
-<p>
-<% if (executable.manager.getAdapterByTag('jep')) { %>
-<a href="../jeppperson/17/">Person #17</a>
-<% } else { %>
-n/a
-<% } %>
-</p>
-</td></tr valign="top"><tr><td>
-<h3>Ruby</h3>
-<p>
-<% if (executable.manager.getAdapterByTag('ruby')) { %>
-<a href="../rubyperson/17/">Person #17</a>
+<% if (executable.manager.getAdapterByTag('lua')) { %>
+<a href="../luaperson/17/">Person #17</a>
 <% } else { %>
 n/a
 <% } %>
@@ -72,6 +72,17 @@ n/a
 n/a
 <% } %>
 </p>
+<!--
+<h3>Python (Jepp)</h3>
+<p>
+<% if (executable.manager.getAdapterByTag('jep')) { %>
+<a href="../jeppperson/17/">Person #17</a>
+<% } else { %>
+n/a
+<% } %>
+</p>
+-->
+</td><td>
 </td></tr></table>
 
 <%& '/footer/' %>
