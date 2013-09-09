@@ -88,21 +88,21 @@ function seeMainSource() {
 <% if (executable.manager.getAdapterByTag('jepp')) { %>
 		<input type="radio" name="resource" value="python-jepp/">Python (Jepp)</input><br />
 <% } %>
- -->
+-->
 <% if (executable.manager.getAdapterByTag('ruby')) { %>
 		<input type="radio" name="resource" value="ruby/">Ruby</input><br />
-<% } %>
-<% if (executable.manager.getAdapterByTag('groovy')) { %>
-		<input type="radio" name="resource" value="groovy/">Groovy</input><br />
-<% } %>
-<% if (executable.manager.getAdapterByTag('clojure')) { %>
-		<input type="radio" name="resource" value="clojure/">Clojure</input><br />
 <% } %>
 <% if (executable.manager.getAdapterByTag('quercus')) { %>
 		<input type="radio" name="resource" value="php/">PHP</input><br />
 <% } %>
 <% if (executable.manager.getAdapterByTag('lua')) { %>
 		<input type="radio" name="resource" value="lua/">Lua</input><br />
+<% } %>
+<% if (executable.manager.getAdapterByTag('groovy')) { %>
+		<input type="radio" name="resource" value="groovy/">Groovy</input><br />
+<% } %>
+<% if (executable.manager.getAdapterByTag('clojure')) { %>
+		<input type="radio" name="resource" value="clojure/">Clojure</input><br />
 <% } %>
 	</p>
 	<p>

@@ -22,17 +22,6 @@ n/a
 <% } %>
 </p>
 </td><td>
-<h3>PHP</h3>
-<p>
-<% if (executable.manager.getAdapterByTag('php')) { %>
-<a href="php/?id=hello">caching mode</a><br />
-<a href="php/?id=hello&defer=true">deferred mode</a><br />
-<a href="php/?source=true">source</a>
-<% } else { %>
-n/a
-<% } %>
-</p>
-</td></tr><tr valign="top"><td>
 <h3>Python (Jython)</h3>
 <p>
 <% if (executable.manager.getAdapterByTag('jython')) { %>
@@ -43,7 +32,7 @@ n/a
 n/a
 <% } %>
 </p>
-</td><td>
+<!--
 <h3>Python (Jepp)</h3>
 <p>
 <% if (executable.manager.getAdapterByTag('jep')) { %>
@@ -54,13 +43,36 @@ n/a
 n/a
 <% } %>
 </p>
-</td></tr valign="top"><tr><td>
+-->
+</td></tr><tr valign="top"><td>
 <h3>Ruby</h3>
 <p>
 <% if (executable.manager.getAdapterByTag('ruby')) { %>
 <a href="ruby/?id=hello">caching mode</a><br />
 <a href="ruby/?id=hello&defer=true">deferred mode</a><br />
 <a href="ruby/?source=true">source</a>
+<% } else { %>
+n/a
+<% } %>
+</p>
+</td><td>
+<h3>PHP</h3>
+<p>
+<% if (executable.manager.getAdapterByTag('php')) { %>
+<a href="php/?id=hello">caching mode</a><br />
+<a href="php/?id=hello&defer=true">deferred mode</a><br />
+<a href="php/?source=true">source</a>
+<% } else { %>
+n/a
+<% } %>
+</p>
+</td></tr valign="top"><tr><td>
+<h3>Lua</h3>
+<p>
+<% if (executable.manager.getAdapterByTag('lua')) { %>
+<a href="lua/?id=hello">caching mode</a><br />
+<a href="lua/?id=hello&defer=true">deferred mode</a><br />
+<a href="lua/?source=true">source</a>
 <% } else { %>
 n/a
 <% } %>
@@ -88,17 +100,6 @@ n/a
 <% } %>
 </p>
 </td><td>
-<h3>Lua</h3>
-<p>
-<% if (executable.manager.getAdapterByTag('lua')) { %>
-<a href="lua/?id=hello">caching mode</a><br />
-<a href="lua/?id=hello&defer=true">deferred mode</a><br />
-<a href="lua/?source=true">source</a>
-<% } else { %>
-n/a
-<% } %>
-</p>
-</td></tr valign="top"><tr><td>
 <h3>Velocity</h3>
 <p>
 <% if (executable.manager.getAdapterByTag('velocity')) { %>

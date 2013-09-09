@@ -4309,8 +4309,8 @@ Other Programming Languages
 \end_layout
 
 \begin_layout Standard
-Resource dispatching is also supported for Groovy, Python, Ruby, PHP and
- Clojure.
+Resource dispatching is also supported for Python, Ruby, PHP, Lua, Groovy
+ and Clojure.
  To use them, you must specify the dispatcher together with the dispatch
  ID in routing.js, and configure that specific dispatcher.
  For example:
@@ -8508,7 +8508,7 @@ Prudence provides you with an especially rich set of APIs.
 \begin_layout Standard
 The core APIs required for using Prudence are multilingual, in that they
  are implemented via standard JVM classes that can be called from all supported
- programming languages: JavaScript, Python, Ruby, PHP, Groovy and Clojure.
+ programming languages: JavaScript, Python, Ruby, PHP, Lua, Groovy and Clojure.
  Indeed, the entire JVM standard APIs can be access in this manner, in addition
  to any JVM library installed in your container (under 
 \begin_inset Quotes eld
@@ -8603,6 +8603,11 @@ PHP:        $conversation->redirectSeeOther('http://newsite.org/');
 
 \begin_layout Plain Layout
 
+Lua:        conversation:redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
 Groovy:     conversation.redirectSeeOther('http://newsite.org/')
 \end_layout
 
@@ -8657,8 +8662,23 @@ JavaScript
 \begin_layout Standard
 Prudence's current JavaScript engine, Rhino, does not provide dictionary
  access to maps, so you must use get- and put- notation to access map attributes.
- For example, use application.globals.get('myapp.data.name') rather than application.
-globals['myapp.data.name'].
+ For example, use 
+\begin_inset Quotes eld
+\end_inset
+
+application.globals.get('myapp.data.name')
+\begin_inset Quotes erd
+\end_inset
+
+ rather than 
+\begin_inset Quotes eld
+\end_inset
+
+application.globals['myapp.data.name']
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -8668,8 +8688,15 @@ Python
 \begin_layout Standard
 If you're using the Jepp engine, rather than the default Jython engine,
  you will need to use get- and set- notation to access attributes.
- For example, use application.getArguments() to access application.arguments
- in Jepp.
+ For example, use 
+\begin_inset Quotes eld
+\end_inset
+
+application.getArguments()
+\begin_inset Quotes erd
+\end_inset
+
+ to access application.arguments in Jepp.
 \end_layout
 
 \begin_layout Paragraph
@@ -8681,6 +8708,23 @@ Prudence's Ruby engine, JRuby, conveniently lets you use the Ruby naming
  style for API calls.
  For example, you can use $application.get_global instead of $application.getGloba
 l.
+\end_layout
+
+\begin_layout Paragraph
+Lua
+\end_layout
+
+\begin_layout Standard
+You will need to use the get- and set- notation to access attributes.
+ For example, you must use 
+\begin_inset Quotes eld
+\end_inset
+
+conversation:getEntity()
+\begin_inset Quotes erd
+\end_inset
+
+ to access conversation.entity.
 \end_layout
 
 \begin_layout Paragraph
