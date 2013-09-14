@@ -526,8 +526,12 @@ Prudence.Routing = Prudence.Routing || function() {
 			applications.add(this.instance)
 			
 			// Startup task
-			var applicationService = ApplicationService.create(this.instance)
-			applicationService.executeTask(null, '/startup/', null, 'initial', 0, 0, false)
+			if (new File(new File(this.root, 'libraries'), 'startup').exists()) {
+				var applicationService = ApplicationService.create(this.instance)
+				initializers.push(function() {
+					applicationService.executeTask(null, '/startup/', null, 'initial', 0, 0, false)
+				})
+			}
 
 			return this.instance
 		}
