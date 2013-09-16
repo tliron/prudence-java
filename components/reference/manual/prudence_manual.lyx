@@ -614,6 +614,13 @@ app.dispatchers = {
 
 \begin_layout Subsection
 app.routes
+\begin_inset CommandInset label
+LatexCommand label
+name "app-routes"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4591,6 +4598,13 @@ special
 
 \begin_layout Subsection
 app.hosts
+\begin_inset CommandInset label
+LatexCommand label
+name "app-hosts"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -7218,7 +7232,7 @@ Restlet has excellent virtual host support, and there is a many-to-many
 \end_layout
 
 \begin_layout Subsection
-Strategies
+Containment Strategies
 \end_layout
 
 \begin_layout Standard
@@ -7288,7 +7302,7 @@ very
 \begin_layout Standard
 Assuming you do decide to use a single container, we'll explain below how
  it's done.
- (Note that the Prudence Administration applcation shows all of this routing
+ (Note that the Prudence Administration application shows all of this routing
  information at runtime).
 \end_layout
 
@@ -7349,10 +7363,10 @@ component.servers.add(server)
 \end_layout
 
 \begin_layout Standard
-To control routing for the server:
+To bind the server to a specific IP address:
 \end_layout
 
-\begin_layout LyX-Code
+\begin_layout Standard
 \begin_inset listings
 inline false
 status open
@@ -7367,11 +7381,274 @@ server.address = [string]
 
 \end_layout
 
+\begin_layout Subsubsection
+Secure Servers (HTTPS)
+\begin_inset CommandInset label
+LatexCommand label
+name "secure-servers"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
-The server.address defaults to null (which in turn defaults to localhost),
- but you can limit routing to a specific IP address.
- Furthermore, “*” wildcards are supported for accepting all or parts of
- an IP address.
+If you are using a 
+\bar under
+load balancer or another kind of proxy (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../http-proxy/"
+
+\end_inset
+
+)
+\bar default
+, it may make sense to handle secure connections there.
+ 
+\end_layout
+
+\begin_layout Standard
+Prudence can also handle secure connections itself.
+ Here's an example configuration for 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/secure.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var server = new Server(Protocol.HTTPS, 443)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.name = 'secure'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.servers.add(server)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// Configure it to use our security keys
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('keystorePath', '/path/prudence.jks')
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('keystorePassword', 'mykeystorepassword')
+\end_layout
+
+\begin_layout Plain Layout
+
+//server.context.parameters.add('keyPassword', 'mykeypassword')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// Add support for the X-FORWARDED-FOR header used by proxies
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('useForwardedForHeader', 'true')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet Jetty HttpServerHelper documentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?org/restlet/ext/ssl/DefaultSslContextFactory.html"
+
+\end_inset
+
+ for more configuration parameters.
+\end_layout
+
+\begin_layout Standard
+The above configuration assumes the you have a JKS (“Java keystore”) file
+ at “/path/prudence.jks” with your security keys.
+ You can create one with the 
+\begin_inset CommandInset href
+LatexCommand href
+name "“keytool” utility"
+target "http://docs.oracle.com/javase/1.5.0/docs/tooldocs/index.html#security"
+
+\end_inset
+
+ that is bundled with most JVMs.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+keytool -keystore /path/prudence.jks -alias mykey -genkey -keyalg RSA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When creating the keystore, you will be asked provide a password for it,
+ and you may optionally provide a different password for your key, in which
+ case you need to comment out the relevant line in the “servers.js” above.
+ (The key alias and key password would be transferred together with the
+ key if you move it to a different keystore.)
+\end_layout
+
+\begin_layout Standard
+Such self-created keys may be useful for controlled intranet environments,
+ in which you can provide clients with the public key, but for Internet
+ applications you will likely want a key created by one of the “certificate
+ authorities” trusted by major browsers.
+ Some of these certificate authorities may let you download a key in JKS
+ format.
+ Otherwise, if they support PKCS12 format, you can use keytool again (since
+ JVM version 6) to convert it to JKS.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+keytool -importkeystore -srcstoretype PKCS12 -srckeystore /path/prudence.pkcs12
+ -destkeystore /path/prudence.jks
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If your certificate authority won't even let you download PKCS12 file, you
+ can create one from your “.key” and “.crt” (or “.pem”) files using 
+\begin_inset CommandInset href
+LatexCommand href
+name "OpenSSL"
+target "http://www.openssl.org/"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+openssl pkcs12 -inkey /path/mykey.key -in /path/mykey.crt -export -out /path/prude
+nce.pkcs12 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Note that you must give your PKCS12 a non-empty password, or else keytool
+ will fail with an unhelpful error message.)
+\end_layout
+
+\begin_layout Paragraph
+Handling HTTPS
+\end_layout
+
+\begin_layout Standard
+It's sometimes necessary to support HTTPS specially in your applications.
+ One useful strategy is to create separate applications for HTTP and HTTPS,
+ and then attach them to different 
+\bar under
+virtual hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+, one for each protocol.
+ However, if the application behaves mostly the same for HTTP and HTTPS,
+ but differs only in a few specific resources, it may be useful to check
+ for HTTPS programatically.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if (conversation.reference.schemeProtocol.name == 'HTTPS') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -7425,6 +7702,29 @@ component.hosts.add(host)
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+host.name
+\begin_inset Quotes erd
+\end_inset
+
+ param exactly matches the string used in 
+\bar under
+app.hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-hosts"
+
+\end_inset
+
+)
+\bar default
+ per each application.
 \end_layout
 
 \begin_layout Standard
@@ -7482,25 +7782,67 @@ host.resourcePort = [string]
 \end_layout
 
 \begin_layout Standard
-By default all of these are null, meaning that all incoming requests are
- routed, but you can limit routing to specific incoming requests.
- For example, you might want the virtual host to only accept a specific
- port or server IP address.
- “*” wildcards are supported for all of these.
+“*” wildcards are supported for all of these properties.
+\end_layout
+
+\begin_layout Subsubsection
+The Hungry Host
 \end_layout
 
 \begin_layout Standard
-Note that 
+The 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ host that comes with the Prudence skeleton doesn't configure any routing
+ limitations, meaning that 
 \emph on
 all
 \emph default
- servers route to 
+ incoming requests are routed.
+ We call such a host 
+\begin_inset Quotes eld
+\end_inset
+
+hungry.
+\begin_inset Quotes erd
+\end_inset
+
+ Thus, if you want to use more than one host, you have to make sure that
+ the hungry host is the 
 \emph on
-all
+last
 \emph default
- hosts.
- If you don't want a host to support all servers, you must limit its routing
- accordingly.
+ one, so that it acts as a fallback for when other hosts don't match incoming
+ requests.
+ Otherwise, it would 
+\begin_inset Quotes eld
+\end_inset
+
+eat
+\begin_inset Quotes erd
+\end_inset
+
+ requests from other hosts.
+ Because host files are executed in alphabetical order, a good way to ensure
+ that the hungry host is last is to number your host filenames.
+ For example:
+\end_layout
+
+\begin_layout Itemize
+1-public.js
+\end_layout
+
+\begin_layout Itemize
+2-private.js
+\end_layout
+
+\begin_layout Itemize
+3-default.js (this is the hungry host)
 \end_layout
 
 \begin_layout Subsection
