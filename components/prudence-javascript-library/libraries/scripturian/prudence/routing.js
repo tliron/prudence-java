@@ -16,6 +16,7 @@ document.executeOnce('/sincerity/classes/')
 document.executeOnce('/sincerity/objects/')
 document.executeOnce('/sincerity/templates/')
 document.executeOnce('/sincerity/localization/')
+document.executeOnce('/sincerity/files/')
 document.executeOnce('/sincerity/jvm/')
 document.executeOnce('/restlet/')
 
@@ -218,7 +219,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.uploads.sizeThreshold = Sincerity.Objects.ensure(this.settings.uploads.sizeThreshold, 0)
 			this.settings.uploads.root = Sincerity.Objects.ensure(this.settings.uploads.root, 'uploads')
 			if (!(this.settings.uploads.root instanceof File)) {
-				this.settings.uploads.root = new File(this.root, this.settings.uploads.root).absoluteFile
+				this.settings.uploads.root = Sincerity.Files.build(this.root, this.settings.uploads.root).absoluteFile
 			}
 
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Localization.toMilliseconds(this.settings.code.minimumTimeBetweenValidityChecks)
@@ -337,7 +338,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					var library = this.settings.code.libraries[i]
 					
 					if (!(library instanceof File)) {
-						library = new File(this.root, library).absoluteFile
+						library = Sincerity.Files.build(this.root, library).absoluteFile
 					}
 					
 					if (sincerity.verbosity >= 2) {
@@ -478,7 +479,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 			// crontab
-			var crontab = new File(this.root, 'crontab').absoluteFile
+			var crontab = Sincerity.Files.build(this.root, 'crontab').absoluteFile
 			if (crontab.exists() && !crontab.directory) {
 				if (sincerity.verbosity >= 2) {
 					println('  Crontab:')
@@ -526,7 +527,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			applications.add(this.instance)
 			
 			// Startup task
-			if (new File(new File(this.root, 'libraries'), 'startup').exists()) {
+			if (Sincerity.Files.build(this.root, 'libraries', 'startup').exists()) {
 				var applicationService = ApplicationService.create(this.instance)
 				initializers.push(function() {
 					applicationService.executeTask(null, '/startup/', null, 'initial', 0, 0, false)
@@ -584,7 +585,15 @@ Prudence.Routing = Prudence.Routing || function() {
 						return this.createRestlet({type: restlet}, uri)
 					}
 					else {
-						return new Module.Dispatch({id: restlet}).create(this, uri)
+						var colon = restlet.indexOf(':')
+						if (colon != -1) {
+							var dispatcher = restlet.substring(0, colon)
+							var id = restlet.substring(colon + 1)
+							return new Module.Dispatch({id: id, dispatcher: dispatcher}).create(this, uri)
+						}
+						else {
+							return new Module.Dispatch({id: restlet}).create(this, uri)
+						}
 					}
 				}
 			}
@@ -774,7 +783,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					java.io.File)
 
 			if (!(root instanceof File)) {
-				root = new File(app.root, root).absoluteFile
+				root = Sincerity.Files.build(app.root, root).absoluteFile
 			}
 
 			var restlet = new Directory(app.context, root.toURI())
@@ -857,7 +866,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				this.root = Sincerity.Objects.ensure(this.root, 'resources')
 				if (!(this.root instanceof File)) {
-					this.root = new File(app.root, this.root).absoluteFile
+					this.root = Sincerity.Files.build(app.root, this.root).absoluteFile
 				}
 
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
@@ -1012,12 +1021,12 @@ Prudence.Routing = Prudence.Routing || function() {
 					
 				this.root = Sincerity.Objects.ensure(this.root, 'resources')
 				if (!(this.root instanceof File)) {
-					this.root = new File(app.root, this.root).absoluteFile
+					this.root = Sincerity.Files.build(app.root, this.root).absoluteFile
 				}
 				
-				this.includeRoot = Sincerity.Objects.ensure(this.includeRoot, 'libraries' + File.separator + 'scriptlet-resources')
+				this.includeRoot = Sincerity.Objects.ensure(this.includeRoot, ['libraries', 'scriptlet-resources'])
 				if (!(this.includeRoot instanceof File)) {
-					this.includeRoot = new File(app.root, this.includeRoot).absoluteFile
+					this.includeRoot = Sincerity.Files.build(app.root, this.includeRoot).absoluteFile
 				}
 
 				if (Sincerity.Objects.isString(this.clientCachingMode)) {
@@ -1851,11 +1860,11 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [new File(new File(app.root, 'resources'), 'scripts'), sincerity.container.getLibrariesFile('web', 'scripts')]
+				this.roots = [Sincerity.Files.build(app.root, 'resources', 'scripts').absoluteFile, sincerity.container.getLibrariesFile('web', 'scripts')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
-				target = new File(app.root, target).absoluteFile
+				target = Sincerity.Files.build(app.root, target).absoluteFile
 			}
 
 			this.next = app.createRestlet(this.next, uri)
@@ -1867,7 +1876,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			for (var r in this.roots) {
 				var root = this.roots[r]
 				if (!(root instanceof File)) {
-					root = new File(app.root, root).absoluteFile
+					root = Sincerity.Files.build(app.root, root).absoluteFile
 				}
 				filter.sourceDirectories.add(root)
 				if (sincerity.verbosity >= 2) {
@@ -1933,11 +1942,11 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [new File(new File(app.root, 'resources'), 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+				this.roots = [Sincerity.Files.build(app.root, 'resources', 'style').absoluteFile, sincerity.container.getLibrariesFile('web', 'style')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
-				target = new File(app.root, target).absoluteFile
+				target = Sincerity.Files.build(app.root, target).absoluteFile
 			}
 
 			this.next = app.createRestlet(this.next, uri)
@@ -1949,7 +1958,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			for (var r in this.roots) {
 				var root = this.roots[r]
 				if (!(root instanceof File)) {
-					root = new File(app.root, root).absoluteFile
+					root = Sincerity.Files.build(app.root, root).absoluteFile
 				}
 				filter.sourceDirectories.add(root)
 				if (sincerity.verbosity >= 2) {
@@ -2017,11 +2026,11 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [new File(new File(app.root, 'resources'), 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+				this.roots = [Sincerity.Files.build(app.root, 'resources', 'style').absoluteFile, sincerity.container.getLibrariesFile('web', 'style')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
-				target = new File(app.root, target).absoluteFile
+				target = Sincerity.Files.build(app.root, target).absoluteFile
 			}
 
 			this.next = app.createRestlet(this.next, uri)
@@ -2039,7 +2048,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			for (var r in this.roots) {
 				var root = this.roots[r]
 				if (!(root instanceof File)) {
-					root = new File(app.root, root).absoluteFile
+					root = Sincerity.Files.build(app.root, root).absoluteFile
 				}
 				filter.sourceDirectories.add(root)
 				if (sincerity.verbosity >= 2) {
@@ -2115,7 +2124,7 @@ Prudence.Routing = Prudence.Routing || function() {
    
 			this.root = Sincerity.Objects.ensure(this.root, 'resources')
 			if (!(this.root instanceof File)) {
-				this.root = new File(app.root, this.root).absoluteFile
+				this.root = Sincerity.Files.build(app.root, this.root).absoluteFile
 			}
 			
 			this['default'] = Sincerity.Objects.ensure(this['default'], -1)

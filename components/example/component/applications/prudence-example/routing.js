@@ -27,13 +27,13 @@ app.routes = {
 		}
 	],
 
-	'/person/{id}/':        '@person',
-	'/pythonperson/{id}/':  '@python:person',
-	'/rubyperson/{id}/':    '@ruby:person',
-	'/phpperson/{id}/':     '@php:person',
-	'/luaperson/{id}/':     '@lua:person',
-	'/groovyperson/{id}/':  '@groovy:person',
-	'/clojureperson/{id}/': '@clojure:person'
+	'/person/{id}/':        'person',
+	'/pythonperson/{id}/':  'python:person',
+	'/rubyperson/{id}/':    'ruby:person',
+	'/phpperson/{id}/':     'php:person',
+	'/luaperson/{id}/':     'lua:person',
+	'/groovyperson/{id}/':  'groovy:person',
+	'/clojureperson/{id}/': 'clojure:person'
 }
 
 app.dispatchers = {

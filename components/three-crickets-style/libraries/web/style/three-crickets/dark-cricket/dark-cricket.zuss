@@ -38,7 +38,7 @@
 
 body {
 	margin: 0px 8px; /* To counteract Ext JS css */
-	background: url(/media/three-crickets/dark-cricket/background.png); /* From: http://www.eosdev.com/Backgrounds/Back_Tilework/EosTilework2h.htm */
+	background: url(../../../media/three-crickets/dark-cricket/background.png); /* From: http://www.eosdev.com/Backgrounds/Back_Tilework/EosTilework2h.htm */
 	font-family: @sans-serif !important;
 	font-size: @font-size !important;
 }
