@@ -7318,7 +7318,7 @@ name "servers"
 \end_layout
 
 \begin_layout Standard
-Under 
+Define your servers under 
 \begin_inset Quotes eld
 \end_inset
 
@@ -7326,15 +7326,9 @@ Under
 \begin_inset Quotes erd
 \end_inset
 
- you can define your servers.
- Just add a new file and assign a port for it.
- There is actually routing done per server, too, so you can define which
- IP address you want the server to bind to, in case your machine as several
- IP addresses.
-\end_layout
-
-\begin_layout Standard
-A minimal server definition:
+.
+ At the simplest, you just add a new file and assign a port for it.
+ A minimal server definition for HTTP:
 \end_layout
 
 \begin_layout Standard
@@ -7363,7 +7357,8 @@ component.servers.add(server)
 \end_layout
 
 \begin_layout Standard
-To bind the server to a specific IP address:
+You can also bind a server to a specific IP address, in case your machine
+ has more than one IP address:
 \end_layout
 
 \begin_layout Standard
@@ -7379,6 +7374,43 @@ server.address = [string]
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+There are also many configuration parameters for Jetty, the HTTP engine,
+ which you can set in the server's context:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('type', 1) // blocking NIO
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('minThreads', 10)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See Jetty's 
+\begin_inset CommandInset href
+LatexCommand href
+name "HttpServerHelper"
+target "http://restlet.org/learn/javadocs/2.1/jse/ext/org/restlet/ext/jetty/HttpServerHelper.html"
+
+\end_inset
+
+ as well as all inherited parameters from the parent classes.
 \end_layout
 
 \begin_layout Subsubsection
@@ -7398,23 +7430,19 @@ If you are using a
 load balancer or another kind of proxy (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../http-proxy/"
+reference "proxying"
 
 \end_inset
 
 )
 \bar default
 , it may make sense to handle secure connections there.
- 
-\end_layout
-
-\begin_layout Standard
-Prudence can also handle secure connections itself.
+ But Prudence can also handle secure (HTTPS) connections itself.
  Here's an example configuration for 
 \begin_inset Quotes eld
 \end_inset
 
-/component/servers/secure.js
+/component/servers/https.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -7494,13 +7522,17 @@ target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?org/restlet/ext
 
 \end_inset
 
- for more configuration parameters.
+ for all secuirty configuration parameters.
+\end_layout
+
+\begin_layout Paragraph
+Security Keys
 \end_layout
 
 \begin_layout Standard
-The above configuration assumes the you have a JKS (“Java keystore”) file
- at “/path/prudence.jks” with your security keys.
- You can create one with the 
+The above configuration assumes the you have a Java KeyStore (JKS) file
+ at “/path/prudence.jks” containing your security key.
+ You can create a key using the 
 \begin_inset CommandInset href
 LatexCommand href
 name "“keytool” utility"
@@ -7530,21 +7562,21 @@ keytool -keystore /path/prudence.jks -alias mykey -genkey -keyalg RSA
 
 \begin_layout Standard
 When creating the keystore, you will be asked provide a password for it,
- and you may optionally provide a different password for your key, in which
- case you need to comment out the relevant line in the “servers.js” above.
+ and you may optionally provide a password for your key, too, in which case
+ you need to comment out the relevant line in the example above.
  (The key alias and key password would be transferred together with the
  key if you move it to a different keystore.)
 \end_layout
 
 \begin_layout Standard
-Such self-created keys may be useful for controlled intranet environments,
+Such self-created keys are useful for controlled intranet environments,
  in which you can provide clients with the public key, but for Internet
  applications you will likely want a key created by one of the “certificate
- authorities” trusted by major browsers.
- Some of these certificate authorities may let you download a key in JKS
- format.
- Otherwise, if they support PKCS12 format, you can use keytool again (since
- JVM version 6) to convert it to JKS.
+ authorities” trusted by most web browsers.
+ Some of these certificate authorities may conveniently let you download
+ a key in JKS format.
+ Otherwise, if they support PKCS12 format, you can use keytool (only JVM
+ version 6 and later) to convert PKCS12 to JKS.
  For example:
 \end_layout
 
@@ -7596,8 +7628,12 @@ nce.pkcs12
 \end_layout
 
 \begin_layout Standard
-(Note that you must give your PKCS12 a non-empty password, or else keytool
- will fail with an unhelpful error message.)
+(Note that in this case you 
+\emph on
+must
+\emph default
+ give your new PKCS12 a non-empty password, or else keytool will fail with
+ an unhelpful error message.)
 \end_layout
 
 \begin_layout Paragraph
@@ -7605,7 +7641,7 @@ Handling HTTPS
 \end_layout
 
 \begin_layout Standard
-It's sometimes necessary to support HTTPS specially in your applications.
+It's sometimes necessary to support HTTPS specially in your implementation.
  One useful strategy is to create separate applications for HTTP and HTTPS,
  and then attach them to different 
 \bar under
@@ -7618,7 +7654,15 @@ reference "hosts"
 
 )
 \bar default
-, one for each protocol.
+, one for each protocol (the 
+\begin_inset Quotes eld
+\end_inset
+
+resourceScheme
+\begin_inset Quotes erd
+\end_inset
+
+ parameter).
  However, if the application behaves mostly the same for HTTP and HTTPS,
  but differs only in a few specific resources, it may be useful to check
  for HTTPS programatically.
@@ -7663,7 +7707,7 @@ name "hosts"
 \end_layout
 
 \begin_layout Standard
-Under 
+Define you virtual hosts under 
 \begin_inset Quotes eld
 \end_inset
 
@@ -7671,12 +7715,8 @@ Under
 \begin_inset Quotes erd
 \end_inset
 
- you can define your virtual hosts.
- A virtual host routes according to domain name and port assignment.
-\end_layout
-
-\begin_layout Standard
-A minimal host definition:
+.
+ A minimal host definition:
 \end_layout
 
 \begin_layout Standard
@@ -7691,7 +7731,7 @@ var host = new VirtualHost(component.context)
 
 \begin_layout Plain Layout
 
-host.name = 'privatehost' // this name is used in app.hosts
+host.name = 'privatehost'
 \end_layout
 
 \begin_layout Plain Layout
@@ -7728,13 +7768,29 @@ reference "app-hosts"
 \end_layout
 
 \begin_layout Standard
-To control routing for the host:
+A virtual host can route according to domain name, and incoming server IP
+ address and port assignment:
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
 inline false
 status open
+
+\begin_layout Plain Layout
+
+host.resourceScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourcePort = [string]
+\end_layout
 
 \begin_layout Plain Layout
 
@@ -7761,21 +7817,6 @@ host.hostDomain = [string]
 host.hostPort = [string]
 \end_layout
 
-\begin_layout Plain Layout
-
-host.resourceScheme = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourceDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourcePort = [string]
-\end_layout
-
 \end_inset
 
 
@@ -7783,6 +7824,91 @@ host.resourcePort = [string]
 
 \begin_layout Standard
 “*” wildcards are supported for all of these properties.
+ Some notes:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+resourceScheme
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+resourceDomain
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+resourcePort
+\begin_inset Quotes erd
+\end_inset
+
+ refer to the actual incoming URI.
+ Thus 
+\begin_inset Quotes eld
+\end_inset
+
+resourcePort
+\begin_inset Quotes erd
+\end_inset
+
+ would be meaningful 
+\emph on
+only if
+\emph default
+ URIs explicitly include a port number.
+ To match a host to a specific server you would likely want to use 
+\begin_inset Quotes eld
+\end_inset
+
+serverPort
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+hostScheme
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+hostDomain
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+hostPort
+\begin_inset Quotes erd
+\end_inset
+
+ are for matching the 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ HTTP header used by some proxies.
 \end_layout
 
 \begin_layout Subsubsection
@@ -9648,6 +9774,13 @@ Database and other services
 
 \begin_layout Subsection
 Proxying
+\begin_inset CommandInset label
+LatexCommand label
+name "proxying"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
