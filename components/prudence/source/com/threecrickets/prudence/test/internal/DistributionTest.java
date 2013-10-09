@@ -175,7 +175,7 @@ public abstract class DistributionTest extends MultiTest
 	{
 		System.out.println( "Starting Prudence instance in this process..." );
 
-		System.setProperty( LanguageManager.SCRIPTURIAN_CACHE_PATH, name + "/content/cache" );
+		System.setProperty( LanguageManager.SCRIPTURIAN_CACHE_PATH_PROPERTY, name + "/content/cache" );
 
 		// new File( name + "/content/cache/" + name ).mkdirs();
 		// new File( name + "/content/cache/python/executables" ).mkdirs();

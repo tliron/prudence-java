@@ -363,7 +363,8 @@ Prudence.Routing = Prudence.Routing || function() {
 								languageManager: executable.manager,
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
-								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
+								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
+								debug: this.settings.errors.debug
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -381,7 +382,8 @@ Prudence.Routing = Prudence.Routing || function() {
 								languageManager: executable.manager,
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
-								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
+								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
+								debug: this.settings.errors.debug
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -627,12 +629,12 @@ Prudence.Routing = Prudence.Routing || function() {
 			)
 		}
 		
-		Public.defrost = function(documentSource) {
+		Public.defrost = function(documentSource, isTextWithScriptlets) {
 			importClass(
 				com.threecrickets.scripturian.util.DefrostTask)
 				
 			if (true == this.settings.code.defrost) {
-				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, false, true)
+				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.errors.debug)
 				for (var t in tasks) {
 					executorTasks.push(tasks[t])
 				}
@@ -786,7 +788,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				root = Sincerity.Files.build(app.root, root)
 			}
 
-			var restlet = new Directory(app.context, root.toURI())
+			var restlet = new Directory(app.context, root.toURI().toString())
 			restlet.listingAllowed = Sincerity.Objects.ensure(this.listingAllowed, false)
 			restlet.negotiatingContent = Sincerity.Objects.ensure(this.negotiate, true)
 			
@@ -889,7 +891,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
-					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
+					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
+					debug: app.settings.errors.debug
 				}
 
 				// Pass-throughs
@@ -920,7 +923,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 
 				// Defrost
-				app.defrost(delegatedResource.documentSource)
+				app.defrost(delegatedResource.documentSource, false)
 
 				// Merge globals
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
@@ -1076,7 +1079,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					scriptletPlugins: new ConcurrentHashMap()
+					scriptletPlugins: new ConcurrentHashMap(),
+					debug: app.settings.errors.debug
 				}
 
 				// Libraries
@@ -1124,7 +1128,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 				
 				// Defrost
-				app.defrost(generatedTextResource.documentSource)
+				app.defrost(generatedTextResource.documentSource, true)
 
 				// Merge globals
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.GeneratedTextResource': generatedTextResource}))
@@ -1190,7 +1194,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
-					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
+					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
+					debug: app.settings.errors.debug
 				}
 
 				// Merge globals

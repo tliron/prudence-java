@@ -71,6 +71,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.DelegatedHandler.commonLibraryDocumentSource:</code>
  * {@link DocumentSource}.</li>
  * <li>
+ * <code>com.threecrickets.prudence.DelegatedHandler.debug:</code>
+ * {@link Boolean}, defaults to false.</li>
  * <code>com.threecrickets.prudence.DelegatedHandler.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
  * <li><code>com.threecrickets.prudence.DelegatedHandler.defaultName:</code>

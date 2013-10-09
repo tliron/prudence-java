@@ -101,6 +101,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
  * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.debug:</code>
+ * {@link Boolean}, defaults to false.</li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyPattern:</code>
  * {@link String}, defaults to "{ri}|{dn}".</li>
  * <li>

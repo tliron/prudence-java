@@ -88,6 +88,16 @@ public interface DocumentExecutionAttributes
 	public boolean isPrepare();
 
 	/**
+	 * Whether to enable debug for the executables.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>debug</code> in the application's {@link Context}.
+	 * 
+	 * @return Whether to enable debug for executables
+	 */
+	public boolean isDebug();
+
+	/**
 	 * Executables might use these document sources for importing libraries.
 	 * <p>
 	 * This setting can be configured by setting an attribute named

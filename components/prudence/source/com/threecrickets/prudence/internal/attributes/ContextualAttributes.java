@@ -233,6 +233,7 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 		parsingContext.setLanguageManager( getLanguageManager() );
 		parsingContext.setDefaultLanguageTag( getDefaultLanguageTag() );
 		parsingContext.setPrepare( isPrepare() );
+		parsingContext.setDebug( isDebug() );
 		if( includeMainSource )
 			parsingContext.setDocumentSource( getDocumentSource() );
 
@@ -283,6 +284,7 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 			parsingContext.setLanguageManager( getLanguageManager() );
 			parsingContext.setDefaultLanguageTag( getDefaultLanguageTag() );
 			parsingContext.setPrepare( isPrepare() );
+			parsingContext.setDebug( isDebug() );
 			parsingContext.setDocumentSource( documentSource );
 
 			Executable executable = new Executable( documentName, System.currentTimeMillis(), code, true, parsingContext );

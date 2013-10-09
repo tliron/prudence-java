@@ -338,6 +338,7 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 		parsingContext.setLanguageManager( getLanguageManager() );
 		parsingContext.setDefaultLanguageTag( getDefaultLanguageTag() );
 		parsingContext.setPrepare( isPrepare() );
+		parsingContext.setDebug( isDebug() );
 		if( includeMainSource )
 			parsingContext.setDocumentSource( getDocumentSource() );
 

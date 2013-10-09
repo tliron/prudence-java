@@ -225,6 +225,19 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 		return prepare;
 	}
 
+	public boolean isDebug()
+	{
+		if( debug == null )
+		{
+			debug = (Boolean) getAttributes().get( prefix + ".debug" );
+
+			if( debug == null )
+				debug = false;
+		}
+
+		return debug;
+	}
+
 	@Override
 	public ExecutionController getExecutionController()
 	{
@@ -399,6 +412,11 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 	 * Whether to prepare executables.
 	 */
 	protected Boolean prepare;
+
+	/**
+	 * Whether to enable debug for executables.
+	 */
+	protected Boolean debug;
 
 	/**
 	 * An optional {@link ExecutionController} to be used with the scripts.

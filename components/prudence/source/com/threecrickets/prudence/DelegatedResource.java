@@ -99,6 +99,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
+ * <code>com.threecrickets.prudence.DelegatedResource.debug:</code>
+ * {@link Boolean}, defaults to false.</li>
  * <li><code>com.threecrickets.prudence.DelegatedResource.defaultName:</code>
  * {@link String}, defaults to "default".</li>
  * <li>
@@ -629,6 +631,7 @@ public class DelegatedResource extends ServerResource
 		try
 		{
 			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough );
+			System.out.println("!!!!!!!!!!!!!!! del: " + documentDescriptor);
 			Executable executable = documentDescriptor.getDocument();
 			Object enteringKey = getApplication().hashCode();
 

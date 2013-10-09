@@ -55,6 +55,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.applicationServiceName</code>
  * : Defaults to "application".</li>
+ * <code>com.threecrickets.prudence.ApplicationTask.debug:</code>
+ * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
