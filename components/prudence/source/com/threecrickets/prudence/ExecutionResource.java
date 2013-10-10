@@ -196,17 +196,18 @@ public class ExecutionResource extends ServerResource
 			attributes.addLibraryLocations( executionContext );
 
 			ExecutionResourceConversationService conversationService = new ExecutionResourceConversationService( this, entity, variant, attributes.getDefaultCharacterSet() );
+			ExecutionResourceDocumentService documentService = new ExecutionResourceDocumentService( this, documentDescriptor );
 
 			// Default media type
 			conversationService.setMediaType( MediaType.TEXT_PLAIN );
 
-			executionContext.getServices().put( attributes.getDocumentServiceName(), new ExecutionResourceDocumentService( this, documentDescriptor ) );
+			executionContext.getServices().put( attributes.getDocumentServiceName(), documentService );
 			executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create() );
 			executionContext.getServices().put( attributes.getConversationServiceName(), conversationService );
 
 			try
 			{
-				documentDescriptor.getDocument().execute( executionContext, null, attributes.getExecutionController() );
+				documentDescriptor.getDocument().execute( executionContext, documentService, attributes.getExecutionController() );
 
 				StringRepresentation representation = new StringRepresentation( output.toString(), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet() );
 

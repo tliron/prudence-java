@@ -1,6 +1,7 @@
 
-document.execute('/stickstick/data/')
-document.execute('/sincerity/json/')
+document.require(
+	'/stickstick/data/',
+	'/sincerity/json/')
 
 importClass(java.lang.System)
 

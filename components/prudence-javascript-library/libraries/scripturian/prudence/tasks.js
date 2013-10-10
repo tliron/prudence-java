@@ -11,9 +11,10 @@
 // at http://threecrickets.com/
 //
 
-document.executeOnce('/prudence/logging/')
-document.executeOnce('/sincerity/objects/')
-document.executeOnce('/sincerity/json/')
+document.require(
+	'/prudence/logging/',
+	'/sincerity/objects/',
+	'/sincerity/json/')
 
 var Prudence = Prudence || {}
 
@@ -108,7 +109,7 @@ Prudence.Tasks = Prudence.Tasks || function() {
 				params.fn = String(params.fn)
 			}
 			if (params.json) {
-				params.code = "<% document.executeOnce('/sincerity/json/'); var _fn=" + params.fn.trim() + "; _fn(Sincerity.JSON.from(document.context)); %>"
+				params.code = "<% document.require('/sincerity/json/'); var _fn=" + params.fn.trim() + "; _fn(Sincerity.JSON.from(document.context)); %>"
 			}
 			else {
 				params.code = '<% var _fn=' + params.fn.trim() + '; _fn(document.context); %>'

@@ -11,12 +11,13 @@
 // at http://threecrickets.com/
 //
 
-document.executeOnce('/prudence/logging/')
-document.executeOnce('/sincerity/xml/')
-document.executeOnce('/sincerity/objects/')
-document.executeOnce('/sincerity/rhino/')
-document.executeOnce('/sincerity/json/')
-document.executeOnce('/sincerity/jvm/')
+document.require(
+	'/prudence/logging/',
+	'/sincerity/xml/',
+	'/sincerity/objects/',
+	'/sincerity/rhino/',
+	'/sincerity/json/',
+	'/sincerity/jvm/')
 
 var Prudence = Prudence || {}
 

@@ -11,11 +11,12 @@
 // at http://threecrickets.com/
 //
 
-document.executeOnce('/prudence/logging/')
-document.executeOnce('/sincerity/classes/')
-document.executeOnce('/sincerity/objects/')
-document.executeOnce('/sincerity/jvm/')
-document.executeOnce('/sincerity/json/')
+document.require(
+	'/prudence/logging/',
+	'/sincerity/classes/',
+	'/sincerity/objects/',
+	'/sincerity/jvm/',
+	'/sincerity/json/')
 
 var Prudence = Prudence || {}
 
@@ -177,11 +178,11 @@ Prudence.Lazy = Prudence.Lazy || function() {
 		if (config.dependencies) {
 			config.dependencies = Sincerity.Objects.array(config.dependencies)
 			for (var d in config.dependencies) {
-				fn += 'document.executeOnce(\'' + config.dependencies[d].escapeSingleQuotes() + '\');\n'
+				fn += 'document.require(\'' + config.dependencies[d].escapeSingleQuotes() + '\');\n'
 			}
 		}
 		if (config.config) {
-			fn += 'document.executeOnce(\'/sincerity/json/\');\n'
+			fn += 'document.require(\'/sincerity/json/\');\n'
 		}
 		fn += 'return new ' + config.name + '('
 		if (config.config) {

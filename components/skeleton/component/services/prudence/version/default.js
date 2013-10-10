@@ -3,8 +3,9 @@
 // Allows access to the Prudence version as a component attribute.
 //
 
-document.executeOnce('/sincerity/jvm/')
-document.executeOnce('/sincerity/templates/')
+document.require(
+	'/sincerity/jvm/',
+	'/sincerity/templates/')
 
 var version = Sincerity.JVM.fromProperties(Sincerity.JVM.getResourceAsProperties('com/threecrickets/prudence/version.conf'))
 

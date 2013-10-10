@@ -1,7 +1,5 @@
 
-document.executeOnce('/sincerity/objects/')
-
-Sincerity.Objects.merge(app.settings, {
+app.settings = {
 	description: {
 		name: 'Stickstick',
 		description: 'A demo application for Prudence',
@@ -33,9 +31,9 @@ Sincerity.Objects.merge(app.settings, {
 	mediaTypes: {
 		php: 'text/html'
 	}
-})
+}
 
-Sincerity.Objects.merge(app.globals, {
+app.globals = {
 	stickstick: {
 		backend: 'h2',
 		username: 'root',
@@ -44,4 +42,4 @@ Sincerity.Objects.merge(app.globals, {
 		database: String(Sincerity.Container.getFileFromHere('data', 'stickstick')),
 		log: String(sincerity.container.getLogsFile('stickstick.log')) // this is only used by Python 
 	}
-})
+}

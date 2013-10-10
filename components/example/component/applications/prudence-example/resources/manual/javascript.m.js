@@ -1,8 +1,9 @@
 
-importClass(java.util.concurrent.locks.ReentrantReadWriteLock)
+document.require(
+	'/sincerity/json/',
+	'/data/javascript/')
 
-document.executeOnce('/sincerity/json/')
-document.executeOnce('/data/javascript/')
+importClass(java.util.concurrent.locks.ReentrantReadWriteLock)
 
 // State
 //

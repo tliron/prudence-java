@@ -11,14 +11,15 @@
 // at http://threecrickets.com/
 //
 
-document.executeOnce('/prudence/lazy/')
-document.executeOnce('/sincerity/classes/')
-document.executeOnce('/sincerity/objects/')
-document.executeOnce('/sincerity/templates/')
-document.executeOnce('/sincerity/localization/')
-document.executeOnce('/sincerity/files/')
-document.executeOnce('/sincerity/jvm/')
-document.executeOnce('/restlet/')
+document.require(
+	'/prudence/lazy/',
+	'/sincerity/classes/',
+	'/sincerity/objects/',
+	'/sincerity/templates/',
+	'/sincerity/localization/',
+	'/sincerity/files/',
+	'/sincerity/jvm/',
+	'/restlet/')
 
 var Prudence = Prudence || {}
 

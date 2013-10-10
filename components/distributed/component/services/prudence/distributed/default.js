@@ -4,7 +4,7 @@
 // or the "/configuration/hazelcast.conf" file.
 //
 
-document.execute('/sincerity/container/')
+document.require('/sincerity/container/')
 
 // Try "/configuration/hazelcast.conf" if it exists
 var config = sincerity.container.getConfigurationFile('hazelcast.conf')

@@ -4,7 +4,7 @@
 // from the "/backends/" subdirectory.
 //
 
-document.execute('/sincerity/container/')
+document.require('/sincerity/container/')
 
 var chainCache = new com.threecrickets.prudence.cache.ChainCache()
 component.context.attributes.put('com.threecrickets.prudence.cache', chainCache)

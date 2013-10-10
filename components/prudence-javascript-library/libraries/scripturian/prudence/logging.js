@@ -11,11 +11,12 @@
 // at http://threecrickets.com/
 //
 
-document.executeOnce('/sincerity/classes/')
-document.executeOnce('/sincerity/templates/')
-document.executeOnce('/sincerity/objects/')
-document.executeOnce('/sincerity/rhino/')
-document.executeOnce('/sincerity/localization/')
+document.require(
+	'/sincerity/classes/',
+	'/sincerity/templates/',
+	'/sincerity/objects/',
+	'/sincerity/rhino/',
+	'/sincerity/localization/')
 
 var Prudence = Prudence || {}
 

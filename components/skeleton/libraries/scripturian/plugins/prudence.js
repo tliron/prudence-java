@@ -1,6 +1,7 @@
 
-document.executeOnce('/sincerity/jvm/')
-document.executeOnce('/sincerity/files/')
+document.require(
+	'/sincerity/jvm/',
+	'/sincerity/files/')
 
 importClass(
 	com.threecrickets.sincerity.exception.CommandException,

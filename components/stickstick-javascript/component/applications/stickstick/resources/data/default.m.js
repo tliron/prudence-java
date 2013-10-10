@@ -1,6 +1,7 @@
 
-document.execute('/stickstick/data/')
-document.execute('/sincerity/json/')
+document.require(
+	'/stickstick/data/',
+	'/sincerity/json/')
 
 function handleInit(conversation) {
     conversation.addMediaTypeByName('text/plain')

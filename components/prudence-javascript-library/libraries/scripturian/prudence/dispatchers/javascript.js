@@ -13,7 +13,7 @@
 
 var resources = {}
 
-document.executeOnce(application.globals.get('com.threecrickets.prudence.dispatcher.javascript.resources'))
+document.require(application.globals.get('com.threecrickets.prudence.dispatcher.javascript.resources'))
 
 function handle(conversation, method) {
 	var id = conversation.locals.get('com.threecrickets.prudence.dispatcher.id')

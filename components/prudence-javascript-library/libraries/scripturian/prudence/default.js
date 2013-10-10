@@ -443,6 +443,18 @@ var Prudence = {}
  * @param {String} documentName The document URI
  */
 
+
+/**
+ * Identical to {@link document#executeOnce}, but applies to all function arguments.
+ * <p>
+ * This behavior is identical to "import" or "require" mechanisms in many programming languages.
+ * <p>
+ * You can use {@link document#markExecuted} to change the internal flag used to mark execution.
+ * 
+ * @name document.require
+ * @function
+ */
+
 /**
  * Allows you to change the value of the internal flag marking whether a document was executed in
  * this thread or not.

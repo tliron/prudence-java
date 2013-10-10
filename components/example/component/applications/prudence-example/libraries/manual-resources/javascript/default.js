@@ -1,5 +1,5 @@
 
-document.executeOnce('/manual-resources/javascript/person/')
+document.require('/manual-resources/javascript/person/')
 
 resources = {
 	person: new Person()

@@ -1,5 +1,5 @@
 
-document.executeOnce('/manual-resources/example/')
+document.require('/manual-resources/example/')
 
 resources = {
 	example: new ExampleResource()

@@ -259,10 +259,11 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 					ExecutionContext executionContext = new ExecutionContext( attributes.getWriter(), attributes.getErrorWriter() );
 					attributes.addLibraryLocations( executionContext );
 
-					executionContext.getServices().put( attributes.getDocumentServiceName(), new ApplicationTaskDocumentService( attributes, documentDescriptor, context ) );
+					ApplicationTaskDocumentService documentService = new ApplicationTaskDocumentService( attributes, documentDescriptor, context );
+					executionContext.getServices().put( attributes.getDocumentServiceName(), documentService );
 					executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create( application ) );
 
-					executable.execute( executionContext, this, attributes.getExecutionController() );
+					executable.execute( executionContext, documentService, attributes.getExecutionController() );
 				}
 				else
 				{
@@ -275,12 +276,13 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 						ExecutionContext executionContext = new ExecutionContext( attributes.getWriter(), attributes.getErrorWriter() );
 						attributes.addLibraryLocations( executionContext );
 
-						executionContext.getServices().put( attributes.getDocumentServiceName(), new DocumentService<ApplicationTaskAttributes>( attributes, documentDescriptor ) );
+						ApplicationTaskDocumentService documentService = new ApplicationTaskDocumentService( attributes, documentDescriptor, context );
+						executionContext.getServices().put( attributes.getDocumentServiceName(), documentService );
 						executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create( application ) );
 
 						try
 						{
-							if( !executable.makeEnterable( enteringKey, executionContext, this, attributes.getExecutionController() ) )
+							if( !executable.makeEnterable( enteringKey, executionContext, documentService, attributes.getExecutionController() ) )
 								executionContext.release();
 						}
 						catch( ParsingException x )

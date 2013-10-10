@@ -1,5 +1,5 @@
 
-document.executeOnce('/sincerity/templates/')
+document.require('/sincerity/templates/')
 
 importClass(java.util.concurrent.atomic.AtomicInteger)
 
