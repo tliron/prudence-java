@@ -15,7 +15,7 @@ document.require(
 	'/sincerity/classes/',
 	'/sincerity/templates/',
 	'/sincerity/objects/',
-	'/sincerity/rhino/',
+	'/sincerity/platform/',
 	'/sincerity/localization/')
 
 var Prudence = Prudence || {}
@@ -211,7 +211,7 @@ Prudence.Logging = Prudence.Logging || function() {
 			// We'll remove at least the first line (it's this very location)
 			skip += 1
 			return this.log(level, function() {
-				var details = Sincerity.Rhino.getExceptionDetails(exception, skip)
+				var details = Sincerity.Platform.getExceptionDetails(exception, skip)
 				return details.message + '\n' + details.stackTrace
 			})
 		}

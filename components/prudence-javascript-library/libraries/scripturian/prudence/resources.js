@@ -15,7 +15,7 @@ document.require(
 	'/prudence/logging/',
 	'/sincerity/xml/',
 	'/sincerity/objects/',
-	'/sincerity/rhino/',
+	'/sincerity/platform/',
 	'/sincerity/json/',
 	'/sincerity/jvm/')
 
@@ -485,7 +485,7 @@ Prudence.Resources = Prudence.Resources || function() {
 			catch (x if x.javaException instanceof org.restlet.resource.ResourceException) {
 				Public.logger.log(params.logLevel, function() {
 					var text = resource.response.entity ? String(resource.response.entity.text).trim() : null
-					return String(x.javaException) + (text ? ': ' + text : '') + '\n' + Sincerity.Rhino.getStackTrace(x) + '\nRequest params: ' + Sincerity.JSON.to(params, true) 
+					return String(x.javaException) + (text ? ': ' + text : '') + '\n' + Sincerity.Platform.getStackTrace(x) + '\nRequest params: ' + Sincerity.JSON.to(params, true) 
 				})
 				
 				if (resultType == 'date') {
