@@ -631,7 +631,6 @@ public class DelegatedResource extends ServerResource
 		try
 		{
 			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough );
-			System.out.println("!!!!!!!!!!!!!!! del: " + documentDescriptor);
 			Executable executable = documentDescriptor.getDocument();
 			Object enteringKey = getApplication().hashCode();
 
