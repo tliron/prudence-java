@@ -506,8 +506,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			// Apply globals
 			for (var name in this.globals) {
-				if (null !== this.globals[name]) {
-					this.context.attributes.put(name, this.globals[name])
+				var value = this.globals[name]
+				if (Sincerity.Objects.exists(value)) {
+					this.context.attributes.put(name, value)
 				}
 			}
 

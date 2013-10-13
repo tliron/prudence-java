@@ -26,7 +26,6 @@ import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
-import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.ParsingContext;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentFileSource;
@@ -110,17 +109,6 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 	 * @return The application service name
 	 */
 	public abstract String getApplicationServiceName();
-
-	/**
-	 * An optional {@link ExecutionController} to be used with the executable.
-	 * Useful for exposing your own global variables to the executable.
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>executionController</code> in the application's {@link Context}.
-	 * 
-	 * @return The execution controller or null if none used
-	 */
-	public abstract ExecutionController getExecutionController();
 
 	/**
 	 * This is so we can see the source code for documents by adding

@@ -116,54 +116,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return libraryDocumentSources;
 	}
 
-	public String getDefaultName()
-	{
-		if( defaultName == null )
-		{
-			defaultName = (String) getAttributes().get( prefix + ".defaultName" );
-
-			if( defaultName == null )
-				defaultName = "default";
-		}
-
-		return defaultName;
-	}
-
-	/**
-	 * The default language tag name to be used if the script doesn't specify
-	 * one. Defaults to "javascript".
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>defaultLanguageTag</code> in the application's {@link Context}.
-	 * 
-	 * @return The default language tag
-	 */
-	public String getDefaultLanguageTag()
-	{
-		if( defaultLanguageTag == null )
-		{
-			defaultLanguageTag = (String) getAttributes().get( prefix + ".defaultLanguageTag" );
-
-			if( defaultLanguageTag == null )
-				defaultLanguageTag = "javascript";
-		}
-
-		return defaultLanguageTag;
-	}
-
-	public boolean isTrailingSlashRequired()
-	{
-		if( trailingSlashRequired == null )
-		{
-			trailingSlashRequired = (Boolean) getAttributes().get( prefix + ".trailingSlashRequired" );
-
-			if( trailingSlashRequired == null )
-				trailingSlashRequired = true;
-		}
-
-		return trailingSlashRequired;
-	}
-
 	@Override
 	public String getDocumentServiceName()
 	{
@@ -190,61 +142,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		}
 
 		return applicationServiceName;
-	}
-
-	public LanguageManager getLanguageManager()
-	{
-		if( languageManager == null )
-		{
-			ConcurrentMap<String, Object> attributes = getAttributes();
-			languageManager = (LanguageManager) attributes.get( prefix + ".languageManager" );
-
-			if( languageManager == null )
-			{
-				languageManager = new LanguageManager();
-
-				LanguageManager existing = (LanguageManager) attributes.putIfAbsent( prefix + ".languageManager", languageManager );
-				if( existing != null )
-					languageManager = existing;
-			}
-		}
-
-		return languageManager;
-	}
-
-	public boolean isPrepare()
-	{
-		if( prepare == null )
-		{
-			prepare = (Boolean) getAttributes().get( prefix + ".prepare" );
-
-			if( prepare == null )
-				prepare = true;
-		}
-
-		return prepare;
-	}
-
-	public boolean isDebug()
-	{
-		if( debug == null )
-		{
-			debug = (Boolean) getAttributes().get( prefix + ".debug" );
-
-			if( debug == null )
-				debug = false;
-		}
-
-		return debug;
-	}
-
-	@Override
-	public ExecutionController getExecutionController()
-	{
-		if( executionController == null )
-			executionController = (ExecutionController) getAttributes().get( prefix + ".executionController" );
-
-		return executionController;
 	}
 
 	@Override
@@ -345,6 +242,112 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return cache;
 	}
 
+	//
+	// DocumentExecutionAttributes
+	//
+
+	public LanguageManager getLanguageManager()
+	{
+		if( languageManager == null )
+		{
+			ConcurrentMap<String, Object> attributes = getAttributes();
+			languageManager = (LanguageManager) attributes.get( prefix + ".languageManager" );
+
+			if( languageManager == null )
+			{
+				languageManager = new LanguageManager();
+
+				LanguageManager existing = (LanguageManager) attributes.putIfAbsent( prefix + ".languageManager", languageManager );
+				if( existing != null )
+					languageManager = existing;
+			}
+		}
+
+		return languageManager;
+	}
+
+	/**
+	 * The default language tag name to be used if the script doesn't specify
+	 * one. Defaults to "javascript".
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>defaultLanguageTag</code> in the application's {@link Context}.
+	 * 
+	 * @return The default language tag
+	 */
+	public String getDefaultLanguageTag()
+	{
+		if( defaultLanguageTag == null )
+		{
+			defaultLanguageTag = (String) getAttributes().get( prefix + ".defaultLanguageTag" );
+
+			if( defaultLanguageTag == null )
+				defaultLanguageTag = "javascript";
+		}
+
+		return defaultLanguageTag;
+	}
+
+	public boolean isPrepare()
+	{
+		if( prepare == null )
+		{
+			prepare = (Boolean) getAttributes().get( prefix + ".prepare" );
+
+			if( prepare == null )
+				prepare = true;
+		}
+
+		return prepare;
+	}
+
+	public boolean isDebug()
+	{
+		if( debug == null )
+		{
+			debug = (Boolean) getAttributes().get( prefix + ".debug" );
+
+			if( debug == null )
+				debug = false;
+		}
+
+		return debug;
+	}
+
+	public ExecutionController getExecutionController()
+	{
+		if( executionController == null )
+			executionController = (ExecutionController) getAttributes().get( prefix + ".executionController" );
+
+		return executionController;
+	}
+
+	public String getDefaultName()
+	{
+		if( defaultName == null )
+		{
+			defaultName = (String) getAttributes().get( prefix + ".defaultName" );
+
+			if( defaultName == null )
+				defaultName = "default";
+		}
+
+		return defaultName;
+	}
+
+	public boolean isTrailingSlashRequired()
+	{
+		if( trailingSlashRequired == null )
+		{
+			trailingSlashRequired = (Boolean) getAttributes().get( prefix + ".trailingSlashRequired" );
+
+			if( trailingSlashRequired == null )
+				trailingSlashRequired = true;
+		}
+
+		return trailingSlashRequired;
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -375,23 +378,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	protected volatile Iterable<DocumentSource<Executable>> libraryDocumentSources;
 
 	/**
-	 * If the URL points to a directory rather than a file, and that directory
-	 * contains a file with this name, then it will be used.
-	 */
-	protected volatile String defaultName;
-
-	/**
-	 * The default language tag to be used if the executable doesn't specify
-	 * one.
-	 */
-	protected volatile String defaultLanguageTag;
-
-	/**
-	 * Whether or not trailing slashes are required for all requests.
-	 */
-	protected volatile Boolean trailingSlashRequired;
-
-	/**
 	 * The name of the global variable with which to access the document
 	 * service.
 	 */
@@ -402,26 +388,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	 * service.
 	 */
 	protected volatile String applicationServiceName;
-
-	/**
-	 * The {@link LanguageManager} used to create the language adapters.
-	 */
-	protected volatile LanguageManager languageManager;
-
-	/**
-	 * Whether to prepare executables.
-	 */
-	protected volatile Boolean prepare;
-
-	/**
-	 * Whether to enable debug for executables.
-	 */
-	protected volatile Boolean debug;
-
-	/**
-	 * An optional {@link ExecutionController} to be used with the scripts.
-	 */
-	protected volatile ExecutionController executionController;
 
 	/**
 	 * This is so we can see the source code for scripts by adding
@@ -453,4 +419,41 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	 * Cache used for caching mode.
 	 */
 	protected volatile Cache cache;
+
+	/**
+	 * The {@link LanguageManager} used to create the language adapters.
+	 */
+	protected volatile LanguageManager languageManager;
+
+	/**
+	 * The default language tag to be used if the executable doesn't specify
+	 * one.
+	 */
+	protected volatile String defaultLanguageTag;
+
+	/**
+	 * Whether to prepare executables.
+	 */
+	protected volatile Boolean prepare;
+
+	/**
+	 * Whether to enable debug for executables.
+	 */
+	protected volatile Boolean debug;
+
+	/**
+	 * An optional {@link ExecutionController} to be used with the scripts.
+	 */
+	protected volatile ExecutionController executionController;
+
+	/**
+	 * If the URL points to a directory rather than a file, and that directory
+	 * contains a file with this name, then it will be used.
+	 */
+	protected volatile String defaultName;
+
+	/**
+	 * Whether or not trailing slashes are required for all requests.
+	 */
+	protected volatile Boolean trailingSlashRequired;
 }

@@ -132,7 +132,7 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 		pushDocumentDescriptor( documentDescriptor );
 		try
 		{
-			documentDescriptor.getDocument().executeInThread();
+			documentDescriptor.getDocument().executeInThread( this, attributes.getExecutionController() );
 		}
 		finally
 		{

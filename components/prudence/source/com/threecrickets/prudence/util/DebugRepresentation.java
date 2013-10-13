@@ -437,23 +437,32 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h2>Machine Stack Trace</h2>" );
 			html.append( "<div id=\"machine-stack-trace\">" );
-			html.append( "<h3>" );
-			appendSafe( html, throwable.getClass().getCanonicalName() );
-			html.append( "</h3>" );
-			for( StackTraceElement stackTraceElement : throwable.getStackTrace() )
+			while( throwable != null )
 			{
-				appendSafe( html, stackTraceElement.getClassName() );
-				html.append( '.' );
-				appendSafe( html, stackTraceElement.getMethodName() );
-				if( stackTraceElement.getFileName() != null )
+				html.append( "<h3>" );
+				appendSafe( html, throwable.getClass().getCanonicalName() );
+				html.append( "</h3>" );
+				for( StackTraceElement stackTraceElement : throwable.getStackTrace() )
 				{
-					html.append( " (" );
-					appendSafe( html, stackTraceElement.getFileName() );
-					html.append( ':' );
-					html.append( stackTraceElement.getLineNumber() );
-					html.append( ')' );
+					appendSafe( html, stackTraceElement.getClassName() );
+					html.append( '.' );
+					appendSafe( html, stackTraceElement.getMethodName() );
+					if( stackTraceElement.getFileName() != null )
+					{
+						html.append( " (" );
+						appendSafe( html, stackTraceElement.getFileName() );
+						html.append( ':' );
+						html.append( stackTraceElement.getLineNumber() );
+						html.append( ')' );
+					}
+					html.append( "<br />" );
 				}
-				html.append( "<br />" );
+
+				if( throwable == throwable.getCause() )
+					// Avoid endless loops
+					break;
+
+				throwable = throwable.getCause();
 			}
 			html.append( "</div>" );
 		}

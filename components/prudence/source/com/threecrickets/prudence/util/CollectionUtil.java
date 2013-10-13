@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Utility methods for collections.
@@ -42,7 +43,19 @@ public abstract class CollectionUtil
 		{
 			public int compare( Map.Entry<K, V> o1, Map.Entry<K, V> o2 )
 			{
-				return ( o1.getKey() ).compareTo( o2.getKey() );
+				try
+				{
+					return ( o1.getKey() ).compareTo( o2.getKey() );
+				}
+				catch( ClassCastException x )
+				{
+					// Because Java generics are erased, we could get a wrong
+					// key type
+					Map.Entry<?, ?> oo1 = o1;
+					Map.Entry<?, ?> oo2 = o2;
+					Logger.getLogger( CollectionUtil.class.getCanonicalName() ).warning( "Can't compare " + oo1.getKey().getClass() + "(" + oo1.getKey() + ") and " + oo2.getKey().getClass() + "(" + oo2.getKey() + ")" );
+					return ( oo1.getKey().toString() ).compareTo( oo2.getKey().toString() );
+				}
 			}
 		} );
 
