@@ -2,6 +2,7 @@
 // Helper to access the application globals
 
 function getGlobal(name, getDefaultValue) {
+	name = String(name) // workaround to avoid ConsString in Nashorn
 	var value = application.globals.get(name)
 	if (null === value) {
 		value = getDefaultValue()

@@ -12,8 +12,11 @@ var version = Sincerity.JVM.fromProperties(Sincerity.JVM.getResourceAsProperties
 component.context.attributes.put('com.threecrickets.prudence.version', version.version)
 
 if (sincerity.verbosity >= 1) {
-	println('Prudence {0} (Restlet {1} {2})'.cast(
-		version.version,
-		org.restlet.engine.Edition.CURRENT.shortName,
-		org.restlet.engine.Engine.VERSION))
+	var adapter = executable.context.adapter.attributes
+	println('Prudence {prudence.version} (Restlet {restlet.edition} {restlet.version}, {language.name} {language.version})'.cast({
+		'prudence.version': version.version,
+		'restlet.edition': org.restlet.engine.Edition.CURRENT.shortName,
+		'restlet.version': org.restlet.engine.Engine.VERSION,
+		'language.name': adapter.get('name'),
+		'language.version': adapter.get('version')}))
 }

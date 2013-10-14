@@ -318,6 +318,12 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 					return r;
 				}
 			}
+			catch( NoSuchMethodException x )
+			{
+				// We are invalid
+				if( entryPointValidityCache != null )
+					entryPointValidityCache.put( entryPointName, false );
+			}
 			catch( DocumentNotFoundException x )
 			{
 				LoggingUtil.getLogger( application ).warning( "Task not found: " + documentName );
@@ -343,11 +349,10 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 				LoggingUtil.getLogger( application ).log( Level.SEVERE, "Exception or error caught in task", x );
 				throw new RuntimeException( x );
 			}
-			catch( NoSuchMethodException x )
+			catch( Throwable x )
 			{
-				// We are invalid
-				if( entryPointValidityCache != null )
-					entryPointValidityCache.put( entryPointName, false );
+				LoggingUtil.getLogger( application ).log( Level.SEVERE, "Exception or error caught in task", x );
+				throw new RuntimeException( x );
 			}
 		}
 		finally

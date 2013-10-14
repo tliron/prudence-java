@@ -89,7 +89,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 	 * @returns {Prudence.Lazy.Entry|Prudence.Lazy.LazyEntry|Object} Null if not found
 	 */
 	Public.getGlobalEntry = function(name, logger, createFn) {
-		var lazyName = name + '.lazy'
+		var lazyName = String(name + '.lazy') // workaround to avoid ConsString in Nashorn
 		var lazyEntry = application.globals.get(lazyName)
 
 		if (!Sincerity.Objects.exists(lazyEntry)) {
@@ -121,7 +121,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 	 * @returns {Prudence.Lazy.List|Array}
 	 */
 	Public.getGlobalList = function(name, logger, createFn) {
-		var lazyName = name + '.lazy'
+		var lazyName = String(name + '.lazy') // workaround to avoid ConsString in Nashorn
 		var lazyList = application.globals.get(lazyName)
 
 		if (!Sincerity.Objects.exists(lazyList)) {
@@ -149,7 +149,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 	 * @returns {Prudence.Lazy.Map|Object}
 	 */
 	Public.getGlobalMap = function(name, logger, createFn) {
-		var lazyName = name + '.lazy'
+		var lazyName = String(name + '.lazy') // workaround to avoid ConsString in Nashorn
 		var lazyMap = application.globals.get(lazyName)
 
 		if (!Sincerity.Objects.exists(lazyMap)) {
