@@ -93,7 +93,7 @@ var Prudence = {}
  * var separator = java.io.File.pathSeparator
  * var dataFilePath = application.root.path + separator + 'data' + separator + 'myfile.dat'
  * </pre>
- * An alernative method:
+ * An alternative method:
  * <pre>
  * var dataDir = new java.io.File(application.root, 'data')
  * var dataFile = new java.io.File(dataDir, 'myfile.dat')

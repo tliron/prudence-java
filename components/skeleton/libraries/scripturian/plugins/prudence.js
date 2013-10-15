@@ -109,7 +109,7 @@ function digests(command) {
 	var properties = new Properties()
 	addDigests(resourcesDir, properties, algorithm, String(resourcesDir))
 
-	var digestsFile = new File(sincerity.container.getFile('component', 'applications', name, 'digests.properties'))
+	var digestsFile = new File(sincerity.container.getFile('component', 'applications', name, 'digests.conf'))
 	var output = new FileWriter(digestsFile)
 	try {
 		properties.store(output, 'Created by Prudence')
