@@ -1,7 +1,8 @@
 
 document.require(
 	'/sincerity/jvm/',
-	'/sincerity/files/')
+	'/sincerity/files/',
+	'/sincerity/cryptography/')
 
 importClass(
 	com.threecrickets.sincerity.exception.CommandException,
@@ -9,7 +10,8 @@ importClass(
 	java.io.File,
 	java.io.FileReader,
 	java.io.FileWriter,
-	java.io.StringWriter)
+	java.io.StringWriter,
+	java.util.Properties)
 
 function getInterfaceVersion() {
 	return 1
@@ -48,13 +50,17 @@ function prudence(command) {
 		case 'create':
 			create(command)
 			break
+		case 'digests':
+			digests(command)
+			break
 	}
 }
 
 function help(command) {
 	println('prudence help                         Show this help')
 	println('prudence version                      Show the installed Prudence version')
-	println('prudence create [name] [[template]]   Create a skeleton for a new Prudence application using [name] as the directory name')
+	println('prudence create [name] [[template]]   Create a skeleton for a new Prudence application in the [name] application directory')
+	println('prudence digests [name] [[algorithm]] Create digests for all files in the [name]/resources/ application directory')
 }
 
 function version(command) {
@@ -87,6 +93,34 @@ function create(command) {
 	copy(templateDir, applicationDir, /\$\{APPLICATION\}/g, name)
 }
 
+function digests(command) {
+	if (command.arguments.length < 2) {
+		throw new BadArgumentsCommandException(command, 'name', '[algorithm=SHA-1]')
+	}
+	var name = command.arguments[1]
+	var algorithm = 'SHA-1'
+	if (command.arguments.length > 2) {
+		algorithm = command.arguments[2]
+	}
+
+	var resourcesDir = new File(sincerity.container.getFile('component', 'applications', name, 'resources'))
+	println('Calculating ' + algorithm + ' digests for all files under: ' + resourcesDir)
+
+	var properties = new Properties()
+	addDigests(resourcesDir, properties, algorithm, String(resourcesDir))
+
+	var digestsFile = new File(sincerity.container.getFile('component', 'applications', name, 'digests.properties'))
+	var output = new FileWriter(digestsFile)
+	try {
+		properties.store(output, 'Created by Prudence')
+	}
+	finally {
+		output.close()
+	}
+
+	println('Saved digests to: ' + digestsFile)
+}
+
 function copy(source, destination, token, value) {
 	if (source.directory) {
 		var sourceFiles = source.listFiles()
@@ -106,5 +140,20 @@ function copy(source, destination, token, value) {
 		finally {
 			output.close()
 		}
+	}
+}
+
+function addDigests(file, properties, algorithm, prefix) {
+	if (file.directory) {
+		var files = file.listFiles()
+		for (var f in files) {
+			file = files[f]
+			addDigests(file, properties, algorithm, prefix)
+		}
+	}
+	else {
+		var digest = Sincerity.Cryptography.fileDigest(file, algorithm)
+		var path = String(file).substring(prefix.length + 1)
+		properties.put(path, digest)
 	}
 }

@@ -1315,6 +1315,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String} uri
+	 * @param {String} [application]
 	 * @param {Boolean} [hidden=false]
 	 * @param {Object} [locals]
 	 */
@@ -1326,7 +1327,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['uri', 'hidden', 'locals']
+		Public._configure = ['uri', 'application', 'hidden', 'locals']
 
 		Public.create = function(app, uri) {
 			importClass(
@@ -1337,8 +1338,10 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.uri = this.uri.substring(0, this.uri.length - 1)
 				this.hidden = true
 			}
-				
-	   		var capture = new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}', false)
+			
+	   		var capture = Sincerity.Objects.exists(this.application) ?
+	   			new CapturingRedirector(app.context, 'riap://component/' + this.application + this.uri + '?{rq}', false) :
+	   			new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}', false)
 
 			if (Sincerity.Objects.exists(this.locals)) {
 				var injector = new Injector(app.context, capture)

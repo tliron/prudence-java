@@ -2427,7 +2427,7 @@ Template variables can furthermore be used to
 \emph on
 inject
 \emph default
- values in three use cases:
+ values for three use cases:
 \end_layout
 
 \begin_layout Itemize
@@ -2454,29 +2454,44 @@ reference "caching"
 \begin_layout Standard
 In each of these cases you can inject the same conversation.locals that were
  extracted from the matched URI pattern.
- For example, you can redirect from 
-\begin_inset Quotes eld
+ An example of redirection:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	"/person/{id}/": ">http://newsite.org/profile/?id={id}"
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
 \end_inset
 
-/person/{id}/
-\begin_inset Quotes erd
-\end_inset
 
- to 
-\begin_inset Quotes eld
-\end_inset
-
-http://newsite.org/profile/?id={id}
-\begin_inset Quotes erd
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Standard
 Prudence furthermore supports many built-in variables extracted from the
  conversation attributes.
- A list of them is available in the 
+ They are summarized below.
+ Also see the relevant 
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet API documentation"
@@ -2484,7 +2499,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/uti
 
 \end_inset
 
-, but we'll summarize them here in detail.
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2493,8 +2508,8 @@ Request URIs
 
 \begin_layout Standard
 The variables are composed of a prefix and a suffix.
- The prefix specifies which URI you are referring to, while the suffix specified
- which part of that URI you need.
+ The prefix specifies which URI you are referring to, while the suffix specifies
+ the part of that URI.
  For example, the prefix 
 \begin_inset Quotes eld
 \end_inset
@@ -2519,7 +2534,7 @@ The variables are composed of a prefix and a suffix.
 \begin_inset Quotes erd
 \end_inset
 
-, which is the complete actual URI.
+, to specify the complete request URI.
 \end_layout
 
 \begin_layout Paragraph
@@ -2705,9 +2720,84 @@ To refer to the base URI directly, use the special
 \begin_inset Quotes erd
 \end_inset
 
- suffix, which also function as a prefix to which you need to add one of
- the above suffixed.
+ midfix, to which you would still need to add one of the above suffixes.
  For example, “{rbi}” refers to the complete base URI of the actual URI.
+\end_layout
+
+\begin_layout Paragraph
+Capturing Wildcards
+\end_layout
+
+\begin_layout Standard
+This is a common use case for capturing (server-side redirection).
+ According to the rules above, 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+ would be the 
+\begin_inset Quotes eld
+\end_inset
+
+{rr}
+\begin_inset Quotes erd
+\end_inset
+
+ variable.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/assets/*': '/files/media/{rr}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above would capture a URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/assets/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+/files/media/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
