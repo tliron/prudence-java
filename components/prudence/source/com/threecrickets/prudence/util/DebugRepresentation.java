@@ -80,35 +80,36 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<head>\n" );
 		html.append( "<title>Prudence Debug Page</title>\n" );
 		html.append( "<style>\n" );
-		html.append( "  body { font-family: Ubuntu, Lucida Sans Unicode, Lucida Grande, Verdana, Geneva, Tahoma, Arial, Helvetica, sans-serif; font-size: small; }\n" );
-		html.append( "  h1, h2, h3 { font-family: Georgia, Utopia, Palatino, Times New Roman, Times, serif; }\n" );
-		html.append( "  h1, h2 { color: #994 }\n" );
-		html.append( "  h1 { text-align: center; }\n" );
-		html.append( "  span.name { font-weight: bold; font-style: italic; }\n" );
-		html.append( "  div.value { padding-left: 22px; }\n" );
+		html.append( "  body { font-family: Ubuntu, Lucida Sans Unicode, Lucida Grande, Verdana, Geneva, Tahoma, Arial, Helvetica, sans-serif; font-size: 15px }\n" );
+		html.append( "  h1, h2 { font-family: Georgia, Utopia, Palatino, Times New Roman, Times, serif; color: #994; font-style: italic }\n" );
+		html.append( "  h1 { font-size: 15px + 10px; text-align: center }\n" );
+		html.append( "  h2 { font-size: 15px + 2px; margin-top: 28px; margin-bottom: 14px }\n" );
+		html.append( "  h3 { font-size: 15px; font-weight: bold; margin-top: 24px; margin-bottom: 6px }\n" );
+		html.append( "  div.name { font-style: italic }\n" );
+		html.append( "  div.value { padding-left: 22px }\n" );
 		html.append( "</style>\n" );
 		html.append( "</head>\n" );
 		html.append( "<body>\n" );
 
-		html.append( "<h1>Prudence Debug Page</h1>" );
+		html.append( "<h1>Prudence Debug Page</h1>\n" );
 
 		Iterable<StackFrame> stack = null;
 
 		if( throwable instanceof ExecutionException )
 		{
-			html.append( "<h2>Cause: Scripturian Execution Error</h2>" );
+			html.append( "<h2>Cause: Scripturian Execution Error</h2>\n" );
 			ExecutionException executionException = (ExecutionException) throwable;
 			stack = executionException.getStack();
 		}
 		else if( throwable instanceof PreparationException )
 		{
-			html.append( "<h2>Cause: Scripturian Preparation Error</h2>" );
+			html.append( "<h2>Cause: Scripturian Preparation Error</h2>\n" );
 			PreparationException preparationException = (PreparationException) throwable;
 			stack = preparationException.getStack();
 		}
 		else if( throwable instanceof ParsingException )
 		{
-			html.append( "<h2>Cause: Scripturian Parsing Error</h2>" );
+			html.append( "<h2>Cause: Scripturian Parsing Error</h2>\n" );
 			ParsingException parsingException = (ParsingException) throwable;
 			stack = parsingException.getStack();
 		}
@@ -116,20 +117,20 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			html.append( "<h2>Cause: " );
 			appendSafe( html, throwable.getClass().getName() );
-			html.append( "</h2>" );
+			html.append( "</h2>\n" );
 		}
 
-		html.append( "<div id=\"error\">" );
 		html.append( "<h3>" );
 		appendSafe( html, throwable.getMessage() );
-		html.append( "</h3>" );
+		html.append( "</h3>\n" );
+		html.append( "<div id=\"error\">\n" );
 
 		if( stack != null )
 		{
 			for( StackFrame stackFrame : stack )
 			{
+				html.append( "  " );
 				int lineNumber = stackFrame.getLineNumber();
-				appendName( html, "At" );
 				if( ( sourceCodeUri != null ) && sourceCodeUri.length() > 0 )
 				{
 					html.append( "<a href=\"" );
@@ -161,25 +162,25 @@ public class DebugRepresentation extends StringRepresentation
 				}
 				if( ( sourceCodeUri != null ) && sourceCodeUri.length() > 0 )
 					html.append( "</a>" );
-				html.append( "<br />" );
+				html.append( "<br />\n" );
 			}
 		}
 
-		html.append( "</div>" );
+		html.append( "</div>\n" );
 
 		if( !request.getWarnings().isEmpty() )
 		{
-			html.append( "<h2>Warnings</h2>" );
-			html.append( "<div id=\"warnings\">" );
+			html.append( "<h2>Warnings</h2>\n" );
+			html.append( "<div id=\"warnings\">\n" );
 			for( Warning warning : request.getWarnings() )
 			{
 				appendName( html, warning.getDate() );
 				appendValue( html, warning.getText(), " from ", warning.getAgent(), " (", warning.getStatus(), ")" );
 			}
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
-		html.append( "<h2>Request</h2>" );
+		html.append( "<h2>Request</h2>\n" );
 
 		appendName( html, "Time" );
 		appendValue( html, request.getDate() );
@@ -188,8 +189,8 @@ public class DebugRepresentation extends StringRepresentation
 		appendName( html, "Method" );
 		appendValue( html, request.getMethod() );
 
-		html.append( "<h3>URIs</h3>" );
-		html.append( "<div id=\"uris\">" );
+		html.append( "<h3>URIs</h3>\n" );
+		html.append( "<div id=\"uris\">\n" );
 		appendName( html, "Resource" );
 		appendValue( html, request.getResourceRef() );
 		if( request.getReferrerRef() != null )
@@ -197,7 +198,7 @@ public class DebugRepresentation extends StringRepresentation
 			appendName( html, "Referrer" );
 			appendValue( html, request.getReferrerRef() );
 		}
-		html.append( "<br />" );
+		html.append( "<br />\n" );
 		Reference captiveReference = CapturingRedirector.getCapturedReference( request );
 		if( captiveReference != null )
 		{
@@ -213,23 +214,23 @@ public class DebugRepresentation extends StringRepresentation
 		appendValue( html, request.getRootRef() );
 		appendName( html, "Host" );
 		appendValue( html, request.getHostRef() );
-		html.append( "</div>" );
+		html.append( "</div>\n" );
 
 		Form form = request.getResourceRef().getQueryAsForm();
 		if( !form.isEmpty() )
 		{
-			html.append( "<h3>Query Parameters</h3>" );
-			html.append( "<div id=\"query-parameters\">" );
+			html.append( "<h3>Query Parameters</h3>\n" );
+			html.append( "<div id=\"query-parameters\">\n" );
 			for( Parameter parameter : form )
 			{
 				appendName( html, parameter.getName() );
 				appendValue( html, parameter.getValue() );
 			}
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
-		html.append( "<h3>Preferences</h3>" );
-		html.append( "<div id=\"preferences\">" );
+		html.append( "<h3>Preferences</h3>\n" );
+		html.append( "<div id=\"preferences\">\n" );
 		appendName( html, "Media Types" );
 		appendValue( html, clientInfo.getAcceptedMediaTypes() );
 		appendName( html, "Encodings" );
@@ -238,12 +239,12 @@ public class DebugRepresentation extends StringRepresentation
 		appendValue( html, clientInfo.getAcceptedCharacterSets() );
 		appendName( html, "Languages" );
 		appendValue( html, clientInfo.getAcceptedLanguages() );
-		html.append( "</div>" );
+		html.append( "</div>\n" );
 
 		if( conditions.hasSome() )
 		{
-			html.append( "<h3>Conditions</h3>" );
-			html.append( "<div id=\"conditions\">" );
+			html.append( "<h3>Conditions</h3>\n" );
+			html.append( "<div id=\"conditions\">\n" );
 			if( conditions.getModifiedSince() != null )
 			{
 				appendName( html, "Modified Since" );
@@ -274,7 +275,7 @@ public class DebugRepresentation extends StringRepresentation
 				appendName( html, "Range Tag" );
 				appendValue( html, conditions.getRangeTag() );
 			}
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		if( !request.getCacheDirectives().isEmpty() )
@@ -290,8 +291,8 @@ public class DebugRepresentation extends StringRepresentation
 			}
 			if( has )
 			{
-				html.append( "<h3>Cache Directives</h3>" );
-				html.append( "<div id=\"cache-directives\">" );
+				html.append( "<h3>Cache Directives</h3>\n" );
+				html.append( "<div id=\"cache-directives\">\n" );
 				for( CacheDirective cacheDirective : request.getCacheDirectives() )
 				{
 					if( ( cacheDirective.getValue() != null ) && ( cacheDirective.getValue().length() > 0 ) )
@@ -300,12 +301,12 @@ public class DebugRepresentation extends StringRepresentation
 						appendValue( html, cacheDirective.getValue() );
 					}
 				}
-				html.append( "</div>" );
+				html.append( "</div>\n" );
 			}
 		}
 
-		html.append( "<h3>Client</h3>" );
-		html.append( "<div id=\"client\">" );
+		html.append( "<h3>Client</h3>\n" );
+		html.append( "<div id=\"client\">\n" );
 		appendName( html, "Address" );
 		appendValue( html, clientInfo.getAddress(), " port ", clientInfo.getPort() );
 		appendName( html, "Upstream Address" );
@@ -317,8 +318,8 @@ public class DebugRepresentation extends StringRepresentation
 		}
 		appendName( html, "Agent" );
 		appendValue( html, clientInfo.getAgentName(), " ", clientInfo.getAgentVersion() );
-		html.append( "<br />" );
-		appendName( html, "Products" );
+		html.append( "<br />\n" );
+		appendName( html, "Products\n" );
 		for( Product product : clientInfo.getAgentProducts() )
 		{
 			if( product.getComment() != null )
@@ -331,12 +332,12 @@ public class DebugRepresentation extends StringRepresentation
 			appendName( html, "From" );
 			appendValue( html, clientInfo.getFrom() );
 		}
-		html.append( "</div>" );
+		html.append( "</div>\n" );
 
 		if( !request.getCookies().isEmpty() )
 		{
-			html.append( "<h3>Cookies</h3>" );
-			html.append( "<div id=\"cookies\">" );
+			html.append( "<h3>Cookies</h3>\n" );
+			html.append( "<div id=\"cookies\">\n" );
 			for( Cookie cookie : request.getCookies() )
 			{
 				appendName( html, cookie.getName() );
@@ -345,39 +346,40 @@ public class DebugRepresentation extends StringRepresentation
 				else
 					appendValue( html, cookie.getValue(), " (", cookie.getVersion(), ")" );
 			}
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		if( request.isEntityAvailable() )
 		{
-			html.append( "<h3>Payload</h3>" );
-			html.append( "<div id=\"payload\">" );
+			html.append( "<h3>Payload</h3>\n" );
+			html.append( "<div id=\"payload\">\n" );
 			appendSafe( html, request.getEntity() );
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		ConcurrentMap<String, Object> attributes = request.getAttributes();
 		if( !attributes.isEmpty() )
 		{
-			html.append( "<h2>conversation.locals</h2>" );
-			html.append( "<div id=\"conversation-locals\">" );
+			html.append( "<h2>conversation.locals</h2>\n" );
+			html.append( "<div id=\"conversation-locals\">\n" );
 			appendMap( html, attributes );
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		attributes = response.getAttributes();
 		if( !attributes.isEmpty() )
 		{
-			html.append( "<h2>Response Attributes</h2>" );
-			html.append( "<div id=\"response-attributes\">" );
+			html.append( "<h2>Response Attributes</h2>\n" );
+			html.append( "<div id=\"response-attributes\">\n" );
 			appendMap( html, attributes );
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		Application application = Application.getCurrent();
 		if( application != null )
 		{
-			html.append( "<h2>Application</h2>" );
+			html.append( "<h2>Application</h2>\n" );
+			html.append( "<div id=\"application\">\n" );
 			String name = application.getName();
 			if( name != null )
 			{
@@ -404,12 +406,14 @@ public class DebugRepresentation extends StringRepresentation
 			}
 			appendName( html, "Class" );
 			appendValue( html, application.getClass().getName() );
+			html.append( "</div>\n" );
 
 			if( !application.getContext().getAttributes().isEmpty() )
 			{
-				html.append( "<h2>application.globals</h2>" );
-				html.append( "<div id=\"application-globals\">" );
+				html.append( "<h2>application.globals</h2>\n" );
+				html.append( "<div id=\"application-globals\">\n" );
 				appendMap( html, application.getContext().getAttributes() );
+				html.append( "</div>\n" );
 			}
 		}
 
@@ -418,32 +422,33 @@ public class DebugRepresentation extends StringRepresentation
 		{
 			if( !component.getContext().getAttributes().isEmpty() )
 			{
-				html.append( "<h2>application.sharedGlobals</h2>" );
-				html.append( "<div id=\"application-shared-globals\">" );
+				html.append( "<h2>application.sharedGlobals</h2>\n" );
+				html.append( "<div id=\"application-shared-globals\">\n" );
 				appendMap( html, component.getContext().getAttributes() );
-				html.append( "</div>" );
+				html.append( "</div>\n" );
 			}
 		}
 
 		if( !GlobalScope.getInstance().getAttributes().isEmpty() )
 		{
-			html.append( "<h2>executable.globals</h2>" );
-			html.append( "<div id=\"executable-globals\">" );
+			html.append( "<h2>executable.globals</h2>\n" );
+			html.append( "<div id=\"executable-globals\">\n" );
 			appendMap( html, GlobalScope.getInstance().getAttributes() );
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		if( throwable.getStackTrace() != null )
 		{
-			html.append( "<h2>Machine Stack Trace</h2>" );
-			html.append( "<div id=\"machine-stack-trace\">" );
+			html.append( "<h2>Machine Stack Trace</h2>\n" );
+			html.append( "<div id=\"machine-stack-trace\">\n" );
 			while( throwable != null )
 			{
-				html.append( "<h3>" );
+				html.append( "  <h3>" );
 				appendSafe( html, throwable.getClass().getCanonicalName() );
-				html.append( "</h3>" );
+				html.append( "</h3>\n" );
 				for( StackTraceElement stackTraceElement : throwable.getStackTrace() )
 				{
+					html.append( "    " );
 					appendSafe( html, stackTraceElement.getClassName() );
 					html.append( '.' );
 					appendSafe( html, stackTraceElement.getMethodName() );
@@ -455,7 +460,7 @@ public class DebugRepresentation extends StringRepresentation
 						html.append( stackTraceElement.getLineNumber() );
 						html.append( ')' );
 					}
-					html.append( "<br />" );
+					html.append( "<br />\n" );
 				}
 
 				if( throwable == throwable.getCause() )
@@ -464,7 +469,7 @@ public class DebugRepresentation extends StringRepresentation
 
 				throwable = throwable.getCause();
 			}
-			html.append( "</div>" );
+			html.append( "</div>\n" );
 		}
 
 		html.append( "</body>\n" );
@@ -491,7 +496,7 @@ public class DebugRepresentation extends StringRepresentation
 	}
 
 	/**
-	 * A span with CSS class "name".
+	 * A div with CSS class "name".
 	 * 
 	 * @param html
 	 *        The HTML builder
@@ -500,13 +505,13 @@ public class DebugRepresentation extends StringRepresentation
 	 */
 	private static void appendName( StringBuilder html, Object string )
 	{
-		html.append( "<span class=\"name\">" );
+		html.append( "  <div class=\"name\">" );
 		appendSafe( html, string );
-		html.append( "</span> " );
+		html.append( "</div> " );
 	}
 
 	/**
-	 * A span with CSS class "value".
+	 * A div with CSS class "value".
 	 * 
 	 * @param html
 	 *        The HTML builder
@@ -518,7 +523,7 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<div class=\"value\">" );
 		for( Object string : strings )
 			appendSafe( html, string );
-		html.append( "</div>" );
+		html.append( "</div>\n" );
 	}
 
 	/**
@@ -536,8 +541,10 @@ public class DebugRepresentation extends StringRepresentation
 			appendName( html, entry.getKey() );
 			if( entry.getValue() instanceof Collection<?> )
 			{
+				html.append( "\n" );
 				for( Object o : (Collection<?>) entry.getValue() )
 				{
+					html.append( "    " );
 					if( o instanceof Parameter )
 					{
 						Parameter parameter = (Parameter) o;
