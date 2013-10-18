@@ -6002,7 +6002,869 @@ Mapping vs.
 \end_layout
 
 \begin_layout Subsubsection
+handleInit
+\begin_inset CommandInset label
+LatexCommand label
+name "handle-init"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is the only required entry point.
+ It is called once for 
+\emph on
+every user request
+\emph default
+, and always before any of the other entry points.
+\end_layout
+
+\begin_layout Standard
+The main work is to initialize supported media types via 
+\bar under
+conversation.addMediaType (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-add-media-type"
+
+\end_inset
+
+)
+\bar default
+, in order of preference.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.addMediaTypeByName('text/plain') 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence handles content negotiation automatically, choosing the best media
+ type according to list of acceptable and preferred formats sent by the
+ client and this list.
+\end_layout
+
+\begin_layout Paragraph
+But, Why?
+\end_layout
+
+\begin_layout Standard
+You might wonder why we add these supported media types dynamically for
+ each request via a call to handleInit, since they are usually always the
+ same for a resource.
+ The reason is that sometimes they may not be the same.
+ In handleInit, you can check for various conditions of the conversation,
+ or even external to the conversation, to decide which media types to support.
+ For example, you might not want to support XHTML for old browsers, but
+ you'd want it at the top of the list for new browsers.
+ Or, you might not be able to support PDF in case an external service is
+ down.
+ In which case, you won't want it on the list at all, in which case content
+ negotiation would choose a different format that the client supports, such
+ as DVI.
+\end_layout
+
+\begin_layout Standard
+So, this gives you a lot flexibility, at no real expense: adding media types
+ per request is extremely lightweight.
+\end_layout
+
+\begin_layout Subsubsection
+handleGet
+\begin_inset CommandInset label
+LatexCommand label
+name "handle-get"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Handles HTTP “GET” requests.
+\end_layout
+
+\begin_layout Standard
+In a conventional 
+\bar under
+resource-oriented architecture (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../../rest/"
+
+\end_inset
+
+)
+\bar default
+, clients will not be expecting the resource to be altered in any way by
+ a GET operation.
+\end_layout
+
+\begin_layout Standard
+What you'll usually do here is construct a representation of the resource,
+ possibly according to specific parameters of the request, and return this
+ representation to the client.
+ See the “
+\bar under
+conversation” API documentation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation"
+
+\end_inset
+
+)
+\bar default
+ for a complete reference.
+ Note especially that if you've 
+\bar under
+captured URI segments (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|static-capturing"
+
+\end_inset
+
+)
+\bar default
+, they'll be available in 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+The following return types are supported:
+\end_layout
+
+\begin_layout Itemize
+Numbers: Returns the number as an HTTP status code to the client, with no
+ other content.
+ Usually used for errors.
+ For example, 404 means “not found.” Note that 
+\bar under
+error capturing (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|capturing-errors"
+
+\end_inset
+
+)
+\bar default
+ can let you take over and return an appropriate error page to the client.
+\end_layout
+
+\begin_layout Itemize
+Arrays of bytes: Used for returning binary representations.
+ Note that some languages (JavaScript, for example) have their own implementatio
+ns of arrays, which are not exactly compatible with JVM arrays.
+ In such cases, you have to make sure to return JVM arrays.
+ Internally, Prudence represents these values with a 
+\begin_inset CommandInset href
+LatexCommand href
+name "ByteArrayRepresentation"
+target "http://threecrickets.com/prudence/api/index.html?com/threecrickets/prudence/util/ByteArrayRepresentation.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Representation instances: You can construct and return a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet representation"
+target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/Representation.html"
+
+\end_inset
+
+ directly.
+\end_layout
+
+\begin_layout Itemize
+Other return values: If the 
+\bar under
+conversation.mediaType (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-media-type"
+
+\end_inset
+
+)
+\bar default
+ is “application/java” the value will be wrapped in an 
+\begin_inset CommandInset href
+LatexCommand href
+name "ObjectRepresentation instance"
+target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+
+\end_inset
+
+.
+ Otherwise, it will be converted into a string if it isn't a string already,
+ and returned to the client as a textual representation.
+\end_layout
+
+\begin_layout Standard
+Beyond the return value, you can affect the response sent to the client
+ by the response attributes in the “
+\bar under
+conversation” service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation"
+
+\end_inset
+
+)
+\bar default
+.
+ In particular, the 
+\bar under
+conversation.modificationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-modification-date"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+conversation.tag (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-tag"
+
+\end_inset
+
+)
+\bar default
+ can be used to affect 
+\bar under
+conditional HTTP requests (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../resources/|conditional-requests"
+
+\end_inset
+
+)
+\bar default
+.
+ For these, you may also consider implementing the 
+\bar under
+handleGetInfo entry point (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get-info"
+
+\end_inset
+
+)
+\bar default
+ for more scalable handling of conditional requests.
+\end_layout
+
+\begin_layout Subsubsection
+handlePost
+\begin_inset CommandInset label
+LatexCommand label
+name "handle-post"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Handles HTTP “POST” requests.
+\end_layout
+
+\begin_layout Standard
+In a conventional 
+\bar under
+resource-oriented architecture (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../../rest/"
+
+\end_inset
+
+)
+\bar default
+, POST is the “update” operation (well, not exactly: see note below).
+ Clients will expect the resource to already exist for the POST operation
+ to succeed.
+ That is, a call to GET before the POST may succeed.
+ Clients expect you to return a modified representation, in the selected
+ media type, if the POST succeeded.
+ Subsequent GET operations would then return the same modified representation.
+ A failed POST should not alter the resource.
+\end_layout
+
+\begin_layout Standard
+Note that the entity sent by the client does not have to be identical in
+ format or content to what you return.
+ In fact, it's likely that the client will send smaller delta updates in
+ a POST, rather than a complete representation.
+\end_layout
+
+\begin_layout Standard
+What you'll usually do here is fetch the data, and alter it according to
+ data sent by the client.
+ See the “
+\bar under
+conversation” API documentation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation"
+
+\end_inset
+
+)
+\bar default
+ for a complete reference.
+ Note especially that if you've 
+\bar under
+captured URI segments (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|static-capturing"
+
+\end_inset
+
+)
+\bar default
+, they'll be available in 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+handleGet (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get"
+
+\end_inset
+
+)
+\bar default
+ for supported return types.
+ In fact, you may want handlePost to share the same code path as handleGet
+ for creating the representation.
+\end_layout
+
+\begin_layout Quote
+POST is the only HTTP operation that is not “idempotent,” which means that
+ multiple 
+\emph on
+identical
+\emph default
+ POST operations on a resource 
+\emph on
+may
+\emph default
+ yield different results from a single POST operation.
+ This is why web browsers warn you if you try to refresh a web page that
+ is the result of a POST operation.
+ As such, POST is the correct operation to use for manipulations of a resource
+ that 
+\emph on
+cannot be repeated
+\emph default
+.
+ See 
+\begin_inset CommandInset href
+LatexCommand href
+name "this blog post by John Calcote"
+target "http://jcalcote.wordpress.com/2008/10/16/put-or-post-the-rest-of-the-story/"
+
+\end_inset
+
+ for an in-depth explanation.
+\end_layout
+
+\begin_layout Subsubsection
+handlePut
+\begin_inset CommandInset label
+LatexCommand label
+name "handle-put"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Handles HTTP “PUT” requests.
+\end_layout
+
+\begin_layout Standard
+In a conventional 
+\bar under
+resource-oriented architecture (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../../rest/"
+
+\end_inset
+
+)
+\bar default
+, PUT is the “create” operation (well, not exactly: see note below).
+ Clients will expect whatever current data exists in the resource to be
+ discarded, and for you to return a representation of the new resource in
+ the selected media type.
+ A failed PUT should not alter the resource.
+\end_layout
+
+\begin_layout Standard
+Note that the entity sent by the client does not have to be identical in
+ format or content to what you return.
+ In fact, it's likely that you will return more information to the client
+ than what was sent.
+\end_layout
+
+\begin_layout Standard
+What you'll usually do here is parse and store the data sent by the client.
+ See the “
+\bar under
+conversation” API documentation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation"
+
+\end_inset
+
+)
+\bar default
+ for a complete reference.
+ Note especially that if you've 
+\bar under
+captured URI segments (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|static-capturing"
+
+\end_inset
+
+)
+\bar default
+, they'll be available in 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+handleGet (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get"
+
+\end_inset
+
+)
+\bar default
+ for supported return types.
+ In fact, you may want handlePut to share the same code path as handleGet
+ for creating the representation.
+\end_layout
+
+\begin_layout Quote
+PUT, like most HTTP operations, is “idempotent,” which means that multiple
+ 
+\emph on
+identical
+\emph default
+ PUT operations on a resource are expected to yield the same result as a
+ single PUT operation.
+ If you are implementing a “create” operation that 
+\emph on
+cannot
+\emph default
+ be repeated, then you should use POST instead.
+ See note in POST.
+\end_layout
+
+\begin_layout Subsubsection
+handleDelete
+\begin_inset CommandInset label
+LatexCommand label
+name "handle-delete"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Handles HTTP “DELETE” requests.
+\end_layout
+
+\begin_layout Standard
+In a conventional 
+\bar under
+resource-oriented architecture (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../../rest/"
+
+\end_inset
+
+)
+\bar default
+, clients expect subsequent GET operations to fail with a “not found” (404)
+ code.
+ A DELETE should fail with 404 if the resource is not already there; it
+ should 
+\emph on
+not 
+\emph default
+silently succeed.
+ A failed DELETE should not alter the resource.
+\end_layout
+
+\begin_layout Standard
+What you'll usually do here is make sure the identified resource exists,
+ and if it does, remove or mark it somehow as deleted.
+ See the “
+\bar under
+conversation” API documentation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation"
+
+\end_inset
+
+)
+\bar default
+ for a complete reference.
+ Note especially that if you've 
+\bar under
+captured URI segments (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|static-capturing"
+
+\end_inset
+
+)
+\bar default
+, they'll be available in 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+The following return types are supported:
+\end_layout
+
+\begin_layout Itemize
+Numbers: Returns the number as an HTTP status code to the client, with no
+ other content.
+ Usually used for errors.
+ For example, 404 means “not found.” Note that 
+\bar under
+error capturing (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../routing/|capturing-errors"
+
+\end_inset
+
+)
+\bar default
+ can let you take over and return an appropriate error page to the client.
+\end_layout
+
+\begin_layout Itemize
+Null: Signifies success.
+\end_layout
+
+\begin_layout Quote
+Note: It's good practice to always explicitly return null in handleDelete.
+ Some languages return null if no explicit return statement is used.
+ Others, however, return the value of the last executed operation, which
+ could be a number, which would in turn become an HTTP status code for the
+ client.
+ This can lead to some very bizarre bugs, as clients receive apparently
+ random status codes!
+\end_layout
+
+\begin_layout Subsubsection
 handleGetInfo
+\begin_inset CommandInset label
+LatexCommand label
+name "handle-get-info"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Handles HTTP “GET” requests 
+\emph on
+before
+\emph default
+ 
+\bar under
+handleGet (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+This entry point, if it exists, is called before handleGet in order to provide
+ Prudence with information required for 
+\bar under
+conditional HTTP requests (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../resources/|conditional-requests"
+
+\end_inset
+
+)
+\bar default
+.
+ Only if conditions are not met---for example if our resource is newer than
+ the version the client has cached, or the tag has changed---does Prudence
+ continue to handleGet.
+ Using handleGetInfo can thus improve on the gains of conditional requests:
+ not only are you saving bandwidth, but you are also avoiding a potentially
+ costly handleGet call.
+\end_layout
+
+\begin_layout Standard
+The following return types are supported:
+\end_layout
+
+\begin_layout Itemize
+Numbers: Considered as Unix timestamps, and converted into the modification
+ date.
+ See 
+\bar under
+conversation.modificationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-modification-date"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+JVM Date instances: The modification date.
+ Refer to the Java API documentation for details.
+\end_layout
+
+\begin_layout Itemize
+Strings: Considered as HTTP tags.
+ See 
+\bar under
+conversation.tag (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-tag"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+Tag instances: You can construct and return your own 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet tag"
+target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/data/Tag.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+RepresentationInfo instances: You can construct and return your own 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet representation info"
+target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/RepresentationInfo.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Note that even if though you can only set either the modification date or
+ the tag by the return value, you can set the other one using 
+\bar under
+conversation.modificationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-modification-date"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+conversation.tag (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-tag"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+If you implement handleGetInfo, you should be returning the same conditional
+ information in your handleGet implementation, so that the client would
+ know how to tag the data.
+ The return value from handleGetInfo does not, in fact, ever get to the
+ client: it is only used internally by Prudence to process conditional requests.
+\end_layout
+
+\begin_layout Paragraph
+In the real world\SpecialChar \ldots{}
+
+\end_layout
+
+\begin_layout Standard
+You might be tempted to go ahead and provide a handleGetInfo entry point
+ for every resource you create.
+ This is not necessarily a good practice, for three reasons:
+\end_layout
+
+\begin_layout Enumerate
+It could be that you don't need this optimization.
+ Make sure, first, that you've actually identified a problem with performance
+ or scalability, and that you've traced it to handleGet on this resource.
+\end_layout
+
+\begin_layout Enumerate
+It could be that you won't gain anything from this optimization.
+ Caches and other optimizations along the route between your data and your
+ client might already be doing a great job at keeping handleGet as efficient
+ as it could be.
+ If not, improving them could offer far greater benefits overall than a
+ handleGetInfo.
+\end_layout
+
+\begin_layout Enumerate
+It could be that you'll even hurt your scalability! The reason is that an
+ efficient handleGetInfo implementation would need some mechanism in place
+ to track of data modification, and this mechanism can introduce overhead
+ into your system that causes it to scale worse than without your handleGetInfo.
+\end_layout
+
+\begin_layout Standard
+See “
+\bar under
+Scaling Tips” (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../../scaling/"
+
+\end_inset
+
+)
+\bar default
+ for a thorough discussion of the problem of scalability.
 \end_layout
 
 \begin_layout Subsubsection
@@ -7053,14 +7915,162 @@ app.routes = {
 
 \begin_layout Subsection
 Server-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "server-side-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO: write the manual.
+\end_layout
+
+\begin_layout Standard
+The APIs:
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheDuration
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheTags
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheKeyPattern
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheKey
 \end_layout
 
 \begin_layout Subsection
 Client-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "client-side-caching"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-Content Negotiation
+Conditional Requests
+\end_layout
+
+\begin_layout Standard
+HTTP clients, such as web browsers, store downloaded content in their local
+ cache, marking it with a modification date and tag according to HTTP headers
+ in the response.
+ Subsequent requests to the same URL will be “conditional,” meaning that
+ the client will tell the server what the latest modification date it has.
+ If the server does not have new data, then it returns an empty response
+ with the 304 “not modified” HTTP status, letting the client know that it
+ is safe to use its cached version.
+ This saves both bandwidth and processing resources on the server.
+\end_layout
+
+\begin_layout Standard
+To support conditional requests, you have to explicitly set at least one
+ of 
+\bar under
+conversation.modificationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-modification-date"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+conversation.tag (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-tag"
+
+\end_inset
+
+)
+\bar default
+.
+ If you implement 
+\bar under
+handleGetInfo (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get-info"
+
+\end_inset
+
+)
+\bar default
+, you should be returning one of these values instead.
+\end_layout
+
+\begin_layout Standard
+Note that these attributes are ignored in case you are constructing and
+ returning your own 
+\begin_inset CommandInset href
+LatexCommand href
+name "Representation instance"
+target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/Representation.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Client Caching
+\end_layout
+
+\begin_layout Standard
+Though clients rely on a local cache for conditional requests, you can provide
+ them with additional caching directives.
+ In Prudence, you can control the expiration of the client's cached entry
+ with 
+\bar under
+conversation.maxAge (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-max-age"
+
+\end_inset
+
+)
+\bar default
+ or 
+\bar under
+conversation.expirationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-expiration-date"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Explicitly setting cache directives has an important side effect: most clients
+ will 
+\emph on
+not
+\emph default
+ send conditional HTTP requests for the cached data until the cache entry
+ expires.
+ This allows you to save bandwidth and improves client performance, but
+ at the expense of not being able to update the client upon changes.
+ Use with care.
 \end_layout
 
 \begin_layout Section
@@ -8229,6 +9239,13 @@ The remaining part of the URI, “/thread/12/” will be further routed inside
 
 \begin_layout Section
 Working in a Cluster
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -10730,6 +11747,415 @@ Move
 
 \begin_layout Subsection
 Upgrading the Component
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Section
+FAQ
+\begin_inset CommandInset label
+LatexCommand label
+name "faq"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Please also refer to the FAQs for 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity"
+target "http://threecrickets.com/sincerity/manual/faq/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Scripturian"
+target "http://threecrickets.com/scripturian/manual/faq/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Prudence or Node.js?
+\begin_inset CommandInset label
+LatexCommand label
+name "prudence-vs-node-js"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Both are server-side platforms for creating network servers in JavaScript.
+ Both have evolved to support package managers: 
+\begin_inset CommandInset href
+LatexCommand href
+name "npm"
+target "https://npmjs.org/"
+
+\end_inset
+
+ for Node.js, Sincerity for Prudence.
+\end_layout
+
+\begin_layout Standard
+But that's pretty much where the similarities end.
+\end_layout
+
+\begin_layout Paragraph
+Purpose and Architecture
+\end_layout
+
+\begin_layout Standard
+Prudence is a platform for REST services, such as web pages and RESTful
+ APIs.
+ Node.js is a platform for asynchronous services, such as streaming video
+ and audio servers.
+ These are 
+\emph on
+very
+\emph default
+ different use cases.
+\end_layout
+
+\begin_layout Standard
+First, note that 
+\emph on
+both
+\emph default
+ use non-blocking servers at the low level.
+ Actually, because Prudence uses 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jetty"
+target "http://www.eclipse.org/jetty/"
+
+\end_inset
+
+ as its driver, you have the option to change it to blocking: see 
+\bar under
+configuring servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "servers"
+
+\end_inset
+
+)
+\bar default
+.
+ Generally, Jetty is designed from the ground-up for web services, and behaves
+ smartly and exceptionally well under high loads.
+\end_layout
+
+\begin_layout Standard
+On top of that Prudence has a multi-threaded REST application environment
+ with 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet"
+target "http://restlet.org/"
+
+\end_inset
+
+ at its core.
+ Mult-threadedness is essential for the web because generating HTML is logically
+ a single-event procedure, which you want to handle as quickly as possible.
+ Via a managed thread-pool, Prudence can leverage multi-core CPUs as well
+ as highly-concurrent database backends to serve several user requests simultane
+ously.
+ Node.js could not be more different: it is by design 
+\emph on
+single
+\emph default
+-threaded and event-driven: requests are 
+\emph on
+never 
+\emph default
+handed simultaneously, and only a single CPU core would ever be used by
+ the server itself (though services it uses, such as video encoding, could
+ definitely be multi-threaded).
+\end_layout
+
+\begin_layout Standard
+Node.js' 
+\begin_inset Quotes eld
+\end_inset
+
+raw
+\begin_inset Quotes erd
+\end_inset
+
+ architecture makes good sense for streaming applications: streams are never
+ handled as a single event, but rather in 
+\begin_inset Quotes eld
+\end_inset
+
+chunks
+\begin_inset Quotes erd
+\end_inset
+
+ that saturate the socket with data.
+ There is no advantage to using more than one thread if a single thread
+ is already taking up all the bandwidth.
+ Really, your only variable is the size of the chunks: you'll want them
+ smaller under high load in order to degrade performance fairly among clients.
+\end_layout
+
+\begin_layout Standard
+Node.js is great for its intended use case.
+ It's vastly easier to write event handlers in JavaScript over C or C++,
+ and JavaScript also makes bootstrapping the server a piece of cake.
+ And if you're not married to JavaScript, similar excellent asynchronous
+ platforms are available: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Tornado"
+target "www.tornadoweb.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Twisted"
+target "http://twistedmatrix.com/"
+
+\end_inset
+
+ for Python, and 
+\begin_inset CommandInset href
+LatexCommand href
+name "EventMachine"
+target "http://rubyeventmachine.com/"
+
+\end_inset
+
+ for Ruby.
+\end_layout
+
+\begin_layout Paragraph
+You're Doing It Wrong
+\end_layout
+
+\begin_layout Standard
+It's very odd that Node.js has become popular for developing the 
+\emph on
+non
+\emph default
+-streaming web: it is not designed for it, and in fact is quite bad at it:
+ if a single event handler hangs, the whole server will hang.
+ A database backend that responds slowly to one request (say, a heavy query),
+ would cause a delay for 
+\emph on
+all
+\emph default
+ clients who are waiting for their turn in the single-threaded model.
+ These serious problems can be ameliorated (clumsily and with other costs)
+ by running multiple Node.js processes behind a load balancer, but it should
+ be clear that Node.js is entirely the wrong tool for the job.
+\end_layout
+
+\begin_layout Standard
+So, why is Node.js so misused? One reason is that its raw architecture is
+ attractive in its simplicity: multi-threaded programming is hard to get
+ right, single-threaded easy.
+ JavaScript, too, is a draw, as a language that many programmers already
+ know.
+ Sure, it's not a great web platform, but it's one in which you can build
+ web services quickly and easily, and sometimes that's more important than
+ scalability or even robustness.
+ But another reason is more worrying: ignorance.
+ People who should know better heard that Node.js is 
+\begin_inset Quotes eld
+\end_inset
+
+fast
+\begin_inset Quotes erd
+\end_inset
+
+ because it's 
+\begin_inset Quotes eld
+\end_inset
+
+asynchronous
+\begin_inset Quotes erd
+\end_inset
+
+ and think that would lead to faster page load-times for web browsers and
+ the ability to handle heavier loads.
+ This is very, 
+\emph on
+very
+\emph default
+ wrong.
+\end_layout
+
+\begin_layout Standard
+We believe that Prudence is a much more sensible choice for REST/JavaScript.
+ Beyond the basic platform, also consider Prudence's features aimed specifically
+ at RESTful scalability such 
+\bar under
+integrated caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+, full control of 
+\bar under
+conditional HTTP (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get-info"
+
+\end_inset
+
+)
+\bar default
+, and 
+\bar under
+clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+.
+ Check out our 
+\begin_inset CommandInset href
+LatexCommand href
+name "Scaling Tips"
+target "http://threecrickets.com/prudence/scaling/"
+
+\end_inset
+
+ article, too, which is useful even if you don't choose Prudence.
+\end_layout
+
+\begin_layout Paragraph
+Technology and Ecosystem
+\end_layout
+
+\begin_layout Standard
+Prudence was especially designed for the JVM, to enjoy and provide you access
+ to its rich and high-quality ecosystem, to leverage its excellent concurrency
+ libraries, its monitoring/profiling capabilities, and to be portable and
+ integrative.
+ The platform is very mature and reliable, as are many of the libraries
+ that Prudence relies on, such as Jetty, Restlet and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+With Prudence, you are not in any way limited to JavaScript: it supports
+ many dynamic languages running on top of the JVM, providing you access
+ to even more ecosystems.
+ However, it gives a lot of love to JavaScript: Sincerity comes with a 
+\begin_inset CommandInset href
+LatexCommand href
+name "rich foundation of libraries"
+target "http://threecrickets.com/sincerity/manual/programming/#sincerity-javascript-library"
+
+\end_inset
+
+, offering essentials such as OOP and string interpolation, as well as friendly
+ wrappers over powerful JVM services.
+\end_layout
+
+\begin_layout Standard
+Node.js has a much younger and narrower ecosystem, albeit vibrant and quickly
+ growing.
+ It's easier to connect C/C++ libraries to Node.js, but on the other hand
+ it's easier to write extensions in Java for Prudence.
+\end_layout
+
+\begin_layout Standard
+In terms of sheer computational performance, Node.js has done well to leverage
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+browser wars,
+\begin_inset Quotes erd
+\end_inset
+
+ which have resulted in very performative JavaScript interpreters and JITs.
+ (However, it's worth remembering that these engines are really optimized
+ for web browser environments.) Prudence can run JavaScript on your choice
+ of either 
+\begin_inset CommandInset href
+LatexCommand href
+name "Nashorn"
+target "http://openjdk.java.net/projects/nashorn/"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "Rhino"
+target "https://developer.mozilla.org/en-US/docs/Rhino"
+
+\end_inset
+
+.
+ Nashorn is, as of this writing, still under development, to be released
+ with JVM 8 in March 2014.
+ It promises excellent performance, on par with Java code in some cases.
+ Rhino is not as fast, but still performs well and is very mature.
+\end_layout
+
+\begin_layout Standard
+But a comparative benchmark would make little sense.
+ Node.js' single-threaded model really 
+\emph on
+needs
+\emph default
+ blazing-fast language performance, as it directly affects its scalability.
+ Prudence's multi-threaded model and RESTful expectations mean that it's
+ rarely CPU-bound: for example, you spend orders of magnitude more time
+ waiting for database backends to respond than for functions to be called.
+ For its use cases, smart architecture---and smart caching---are 
+\emph on
+far 
+\emph default
+more important for scalability than language performance.
+ Also note that all the performance-critical parts of Prudence are written
+ in Java: just as they are written in C++ for Node.js.
+\end_layout
+
+\begin_layout Paragraph
+Summary
+\end_layout
+
+\begin_layout Standard
+Choose the right tool for the job! Node.js is a great choice for asynchronous
+ services, and Prudence---we hope you'll agree---is a great choice for web
+ services and RESTful APIs.
 \end_layout
 
 \end_body
