@@ -122,6 +122,13 @@ LatexCommand tableofcontents
 
 \begin_layout Section
 Tutorial
+\begin_inset CommandInset label
+LatexCommand label
+name "tutorial"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -635,6 +642,17 @@ app.routes
  dict.
 \end_layout
 
+\begin_layout Subsubsection
+URI Templates
+\begin_inset CommandInset label
+LatexCommand label
+name "uri-templates"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 The 
 \emph on
@@ -721,7 +739,8 @@ any
 \end_inset
 
 .
- You can access the remainder of the URI via the [TODO] API.
+ You can access the remainder of the URI via the conversation.reference.remainingP
+art API [TODO link].
  Note that Prudence will attempt to match 
 \emph on
 non
@@ -730,16 +749,31 @@ non
  a general fallback for URIs.
 \end_layout
 
+\begin_layout Subsubsection
+Route Configurations
+\begin_inset CommandInset label
+LatexCommand label
+name "route-configurations"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 The 
 \emph on
 values
 \emph default
- of the app.routes dict are route
+ of the app.routes dict are 
 \emph on
- 
+route
 \emph default
-configurations.
+ 
+\emph on
+configurations
+\emph default
+.
  These are usually defined as JavaScript dicts, where the 
 \begin_inset Quotes eld
 \end_inset
@@ -1283,6 +1317,13 @@ You should use a wildcard URI template for all of these route types, because
 
 \begin_layout Paragraph
 static
+\begin_inset CommandInset label
+LatexCommand label
+name "static-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1362,6 +1403,18 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Stat
 \end_inset
 
  class.
+ See the 
+\bar under
+static resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
@@ -1434,6 +1487,13 @@ reference "manual-resources"
 
 \begin_layout Paragraph
 scriptlet
+\begin_inset CommandInset label
+LatexCommand label
+name "scriptlet-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1656,6 +1716,13 @@ chain or
 [\SpecialChar \ldots{}
 ]
 \begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "chain-route-type"
+
 \end_inset
 
 
@@ -1937,6 +2004,13 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Http
 
 \begin_layout Paragraph
 cacheControl
+\begin_inset CommandInset label
+LatexCommand label
+name "cache-control-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1975,10 +2049,29 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Cach
 \end_inset
 
  class.
+ See the 
+\bar under
+static resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-client-side-caching"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
 javaScriptUnifyMinify
+\begin_inset CommandInset label
+LatexCommand label
+name "javascript-unify-minify-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2042,10 +2135,29 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Java
 \end_inset
 
  class.
+ See the 
+\bar under
+static resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-javascript-and-css-optimization"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
 cssUnifyMinify
+\begin_inset CommandInset label
+LatexCommand label
+name "css-unify-minify-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2109,10 +2221,29 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.CssU
 \end_inset
 
  class.
+ See the 
+\bar under
+static resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-javascript-and-css-optimization"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
 zuss
+\begin_inset CommandInset label
+LatexCommand label
+name "zuss-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2184,6 +2315,18 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Zuss
 \end_inset
 
  class.
+ See the 
+\bar under
+static resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-zuss-to-css"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4784,6 +4927,13 @@ app.hosts = {
 
 \begin_layout Subsection
 The Internal URI-space
+\begin_inset CommandInset label
+LatexCommand label
+name "internal-uri-space"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -6903,6 +7053,29 @@ Not supported directly.
 Integrating Textual Resources
 \end_layout
 
+\begin_layout Standard
+MVC
+\end_layout
+
+\begin_layout Subsubsection
+Java Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "java-resources"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Resources
+\end_layout
+
+\begin_layout Standard
+Other Restlets
+\end_layout
+
 \begin_layout Subsection
 Scriptlet Resources
 \begin_inset CommandInset label
@@ -6924,7 +7097,11 @@ Scriptlets
 \end_layout
 
 \begin_layout Subsubsection
-Working with Different Programming Languages
+Choice of Programming Language
+\end_layout
+
+\begin_layout Subsubsection
+Markup Languages
 \end_layout
 
 \begin_layout Subsubsection
@@ -6932,7 +7109,7 @@ Controlling the Format
 \end_layout
 
 \begin_layout Standard
-Rely on the extension (see static resources) or change it in code.
+Rely on the filename extension (see static resources) or change it in code.
 \end_layout
 
 \begin_layout Subsubsection
@@ -7278,38 +7455,1496 @@ println(Sincerity.JSON.to({greeting: 'Hello'}, true))
 
 \begin_layout Subsection
 Static Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "static-resources"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Must be mapped.
+Prudence works fine as a static web server: it's fast, supports non-blocking
+ chunking, and has many useful features detailed below.
+\end_layout
+
+\begin_layout Standard
+Of course, there are servers out there that specialize in serving static
+ files and might do a better job, but you might be surprised by how far
+ Prudence can take you.
+\end_layout
+
+\begin_layout Standard
+Note that if Internet scalability is really important to you, it's better
+ to even not use a standard web server at all, but instead rely on a CDN
+ (Content Delivery Network) product or service with true global reach.
+\end_layout
+
+\begin_layout Subsubsection
+Configuration
+\end_layout
+
+\begin_layout Standard
+Add support for static resources using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-route-type"
+
+\end_inset
+
+)
+\bar default
+ in your routing.js, mapping it to a URI template ending in a wildcard:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The default configuration for 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ will map all files from your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory, 
+\emph on
+as well as
+\emph default
+ the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ Here is the above configuration with all the defaults fleshed out:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'static',
+\end_layout
+
+\begin_layout Plain Layout
+
+		roots: [
+\end_layout
+
+\begin_layout Plain Layout
+
+			'resources',
+\end_layout
+
+\begin_layout Plain Layout
+
+			sincerity.container.getLibrariesFile('web')
+\end_layout
+
+\begin_layout Plain Layout
+
+		],
+\end_layout
+
+\begin_layout Plain Layout
+
+		listingAllowed: false,
+\end_layout
+
+\begin_layout Plain Layout
+
+		negotiate: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		compress: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+ (pluralized) param is a shortcut to create a chain of two 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ instances.
+ The above is equivalent to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		{type: 'static', root: 'resources'},
+\end_layout
+
+\begin_layout Plain Layout
+
+		{type: 'static', root: sincerity.container.getLibrariesFile('web')}
+\end_layout
+
+\begin_layout Plain Layout
+
+	]
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you want to also support manual and scriptlet resources, make sure to
+ chain 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ after them, so it will catch whatever doesn't have the special 
+\begin_inset Quotes eld
+\end_inset
+
+.m.
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+.s.
+\begin_inset Quotes erd
+\end_inset
+
+ pre-extensions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+		'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+		'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	]
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
 Controlling the Format
 \end_layout
 
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+negotiate
+\begin_inset Quotes erd
+\end_inset
+
+ is true, Prudence will handle HTTP content negotiation, and will assume
+ a single MIME type for each resource, which it will lookup according to
+ its filename extension.
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
 Client-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "static-resources-client-side-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence adds modification timestamp headers to all static resources, which
+ allow clients, such as web browsers, to cache the contents and use conditional
+ HTTP requests to later check if the cache needs to be refreshed.
+\end_layout
+
+\begin_layout Standard
+Conditional HTTP is efficient and fast, but you can go one step further
+ and tell clients to avoid even that check.
+ Use the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+cacheControl
+\begin_inset Quotes erd
+\end_inset
+
+ filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cache-control-route-type"
+
+\end_inset
+
+)
+\bar default
+ before your 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ route type:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'cacheControl',
+\end_layout
+
+\begin_layout Plain Layout
+
+		mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			'image/png': '10m',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'image/jpeg': '10m',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'image/gif': '10m'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+With the above, Prudence will ask web browsers to cache common image types
+ for 10 minutes before sending conditional HTTP requests.
+\end_layout
+
+\begin_layout Standard
+Make sure you understand the implications of this: after the client's first
+ hit, for 10 minutes 
+\emph on
+it will not be able to see changes to that static resource
+\emph default
+.
+ The client's web browser would continue using the older version of the
+ resource until its cache expires.
+\end_layout
+
+\begin_layout Paragraph
+Bypassing the Client Cache
+\begin_inset CommandInset label
+LatexCommand label
+name "static-resources-bypassing-the-client-cache"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There is a widely-used trick that lets you use client-side caching while
+ still letting you propagate changes 
+\emph on
+immediately
+\emph default
+.
+ It makes use of the fact that the client cache uses the 
+\emph on
+complete 
+\emph default
+URL as the cache key, which 
+\emph on
+includes the query matrix
+\emph default
+.
+ If you use a query param with the URL, the 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+ resource will ignore it, but the client will still consider it a new resource
+ in terms of caching.
+ For example, let's say you include an image in an HTML page:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<img src="/media/logo.png" />
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you made a change to the 
+\begin_inset Quotes eld
+\end_inset
+
+logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ file, and you want to bypass the client cache, then just change the HTML
+ to this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<img src="/media/logo.png?_=1" />
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Voila: it's a new URL, so older cached values will not be used.
+ For Prudence, the query makes no difference.
+ You can then simply increase the value of the 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+ query param every time you make a change.
+\end_layout
+
+\begin_layout Standard
+This trick works so well that, if you use it, it's recommended that you
+ actually ask clients to cache your resources 
+\emph on
+forever
+\emph default
+.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Forever
+\begin_inset Quotes erd
+\end_inset
+
+ is not actually supported, but it's customary to use 10 years in the future
+ as a practical equivalent.
+ Use 
+\begin_inset Quotes eld
+\end_inset
+
+farFuture
+\begin_inset Quotes erd
+\end_inset
+
+ as a shortcut in 
+\begin_inset Quotes eld
+\end_inset
+
+cacheControl
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'cacheControl',
+\end_layout
+
+\begin_layout Plain Layout
+
+		mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			'image/png': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'image/jpeg': 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'image/gif': 'farFuture'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remembering to increase the query param in all uses of the resource might
+ be too cumbersome and error-prone.
+ Consider using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence Assets service"
+target "http://threecrickets.com/diligence/manual/service/assets/"
+
+\end_inset
+
+, or something similar, instead: it calculates digests for the resource
+ file contents and use them as the query param.
+ Thus, any change to the file contents will result in a new, unique URL.
+\end_layout
+
+\begin_layout Quote
+What happens to cache entries that have been marked to expire in 10 years,
+ but are no longer used by your site? They indeed will linger in your client's
+ web browser cache.
+ This isn't too bad: web browsers normally are configured with a maximum
+ cache size and the disk space will be cleared and reused if needed.
+ It's still an inelegant waste, for which unfortunately there is no solution
+ in HTTP and HTML.
 \end_layout
 
 \begin_layout Subsubsection
-CSS and JavaScript
+JavaScript and CSS Optimization
+\begin_inset CommandInset label
+LatexCommand label
+name "static-resources-javascript-and-css-optimization"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When writing JavaScript code, you likely want to use a lot of spacing, indentati
+on and comments to keep the code clear and manageable.
+ You would likely also want to divide a large code base among multiple files.
+ Unfortunately, this is not so efficient, because clients must download
+ these files.
+\end_layout
+
+\begin_layout Standard
+Prudence's 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+javaScriptUnifyMinify
+\begin_inset Quotes erd
+\end_inset
+
+ filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "javascript-unify-minify-route-type"
+
+\end_inset
+
+)
+\bar default
+ can help.
+ To configure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'javaScriptUnifyMinify',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The filter will catch URLs ending in 
+\begin_inset Quotes eld
+\end_inset
+
+/all.js
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+/all.min.js
+\begin_inset Quotes erd
+\end_inset
+
+, the former being unified and the latter unified 
+\emph on
+and
+\emph default
+ minified.
+ The contents to be used, by default, will be all the 
+\begin_inset Quotes eld
+\end_inset
+
+.js
+\begin_inset Quotes erd
+\end_inset
+
+ files under your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/scripts/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory 
+\emph on
+as well as
+\emph default
+ those under your container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/scripts/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ The filter writes out the generated 
+\begin_inset Quotes eld
+\end_inset
+
+all.js
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+all.min.js
+\begin_inset Quotes erd
+\end_inset
+
+ files to 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/scripts/
+\begin_inset Quotes erd
+\end_inset
+
+, and makes sure to update these files (unifying and minifying again) if
+ any one of the source files are changed.
+\end_layout
+
+\begin_layout Standard
+Note that the files are unified in alphabetical order, so make sure to rename
+ them accordingly if order of execution is important.
+ 
+\end_layout
+
+\begin_layout Standard
+Here is the above configuration with all the defaults fleshed out:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'javaScriptUnifyMinify',
+\end_layout
+
+\begin_layout Plain Layout
+
+		roots: [
+\end_layout
+
+\begin_layout Plain Layout
+
+			'resources/scripts',
+\end_layout
+
+\begin_layout Plain Layout
+
+			sincerity.container.getLibrariesFile('web', 'scripts')
+\end_layout
+
+\begin_layout Plain Layout
+
+		],
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For a usage example, let's say we have the following three files under the
+ application's subdirectory:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/resources/scripts/jquery.js
+\end_layout
+
+\begin_layout Plain Layout
+
+/resources/scripts/jquery.highlight.js
+\end_layout
+
+\begin_layout Plain Layout
+
+/resources/scripts/jquery.popup.js
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Your HTML files can then include something like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<head>
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	<script src="/scripts/all.min.js"></script>
+\end_layout
+
+\begin_layout Plain Layout
+
+</head>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the first entry in the 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+ array is where the generated 
+\begin_inset Quotes eld
+\end_inset
+
+all.js
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+all.min.js
+\begin_inset Quotes erd
+\end_inset
+
+ files are stored.
+\end_layout
+
+\begin_layout Standard
+The 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+cssUnifyMinify
+\begin_inset Quotes erd
+\end_inset
+
+ filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "css-unify-minify-route-type"
+
+\end_inset
+
+)
+\bar default
+ does the same for CSS files, with the default roots being the application's
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/style/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory and the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/web/style/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ The relevant files are 
+\begin_inset Quotes eld
+\end_inset
+
+all.css
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+all.min.css
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Note, however, that similar functionality is provided by using 
+\bar under
+ZUSS (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-zuss-to-css"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Here's an example with both filters configured:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'javaScriptUnifyMinify',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'cssUnifyMinify',
+\end_layout
+
+\begin_layout Plain Layout
+
+			next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Usage in HTML:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<head>
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	<link rel="stylesheet" type="text/css" href="/style/all.min.css" />
+\end_layout
+
+\begin_layout Plain Layout
+
+</head>
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-ZUSS
+ZUSS to CSS
+\begin_inset CommandInset label
+LatexCommand label
+name "static-resources-zuss-to-css"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
+
+\end_inset
+
+ is a extended CSS language, inspired by 
+\begin_inset CommandInset href
+LatexCommand href
+name "LESS"
+target "http://lesscss.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "SASS"
+target "http://sass-lang.com/"
+
+\end_inset
+
+.
+ It greatly increases the power of CSS by allowing for code re-usability,
+ variables and expressions, as well as nesting CSS.
+ Using the the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+zuss
+\begin_inset Quotes erd
+\end_inset
+
+ filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "zuss-route-type"
+
+\end_inset
+
+)
+\bar default
+ you can compile 
+\begin_inset Quotes eld
+\end_inset
+
+.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ files to CSS, and also apply the same minifier used by 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+cssUnifyMinify
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "css-unify-minify-route-type"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+To configure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'zuss',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The filter works by catching all URLs ending in 
+\begin_inset Quotes eld
+\end_inset
+
+.css
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+.min.css
+\begin_inset Quotes erd
+\end_inset
+
+.
+ It will then try to find an equivalent 
+\begin_inset Quotes eld
+\end_inset
+
+.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ file, and if it does, will compile it and produce the equivalent 
+\begin_inset Quotes eld
+\end_inset
+
+.css
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+.min.css
+\begin_inset Quotes erd
+\end_inset
+
+ file.
+ It makes sure to recompile if the source 
+\begin_inset Quotes eld
+\end_inset
+
+.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ file is changed.
+\end_layout
+
+\begin_layout Standard
+For a usage example, let's say we have a 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/style/dark/main.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ file the application's subdirectory.
+ Your HTML files can then include something like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<head>
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	<link rel="stylesheet" type="text/css" href="/style/dark/main.min.css" />
+\end_layout
+
+\begin_layout Plain Layout
+
+</head>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+zuss
+\begin_inset Quotes erd
+\end_inset
+
+ filter can be configured with a 
+\begin_inset Quotes eld
+\end_inset
+
+roots
+\begin_inset Quotes erd
+\end_inset
+
+ param similarly to the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+javaScriptMinifyUnify
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+cssUnifyMinify
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-javascript-and-css-optimization"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsection
-Java Resources
+Resources As Internal APIs
+\begin_inset CommandInset label
+LatexCommand label
+name "internal-api"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Resources
+See the 
+\bar under
+internal URI-space (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-Other Restlets
+document.internal
+\end_layout
+
+\begin_layout Standard
+Prudence.Resources.request
+\end_layout
+
+\begin_layout Standard
+Optimizing using application/java MIME type
 \end_layout
 
 \begin_layout Subsection
@@ -7395,7 +9030,8 @@ bill.csv
 \begin_inset Quotes erd
 \end_inset
 
- filename.
+ filename, or open it in a supporting application, such as a spreadsheet
+ editor.
 \end_layout
 
 \begin_layout Section
@@ -8332,81 +9968,6 @@ Restlet has excellent virtual host support, and there is a many-to-many
 \end_layout
 
 \begin_layout Subsection
-Containment Strategies
-\end_layout
-
-\begin_layout Standard
-First, though, it's worth considering whether, despite its ease, it's worth
- using a single container for everything.
-\end_layout
-
-\begin_layout Subsubsection
-Advantages of Using a Single Container
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: you are using a single base directory, and
- because all configuration is done by JavaScript inside the container it
- can be fully dynamic.
-\end_layout
-
-\begin_layout Enumerate
-Less memory use that running multiple JVMs.
-\end_layout
-
-\begin_layout Enumerate
-You can use application.sharedGlobals to share state between applications.
- (Note that if they are running in multiple containers, you can use application.d
-istributedGlobals instead.
- Will also work on VMs running on separate machines in the cluster.
- But distributed globals have to be serializable, of course.)
-\end_layout
-
-\begin_layout Subsubsection
-Advantages of Using Multiple Containers
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: several base directories can mean separate
- code/distribution repositories, and configuration may happen at the reverse-pro
-xy level with your web frontend.
- It may even worth having each application running in its own JVM/container.
-\end_layout
-
-\begin_layout Enumerate
-Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
-\end_layout
-
-\begin_layout Enumerate
-Run-time flexibility: you can restart the JVM for one container without
- affecting others that are running.
-\end_layout
-
-\begin_layout Standard
-There is no performance advantage in either scenario.
- Everything in Prudence is designed around high-concurrency and threading,
- and threads are managed by the OS globally.
- (Well, there are caveats to this statements: Linux can group threads per
- running process for purposes of prioritization, but this is only really
- done for desktop applications.
- But this could be possibly useful when running several containers, if you
- want to guarantee high thread priority to one of the containers over the
- others.
- Any of this would only effect 
-\emph on
-very
-\emph default
- high concurrency deployments, where CPU usage is often high.)
-\end_layout
-
-\begin_layout Standard
-Assuming you do decide to use a single container, we'll explain below how
- it's done.
- (Note that the Prudence Administration application shows all of this routing
- information at runtime).
-\end_layout
-
-\begin_layout Subsection
 Configuring Servers
 \begin_inset CommandInset label
 LatexCommand label
@@ -8478,7 +10039,32 @@ server.address = [string]
 
 \begin_layout Standard
 There are also many configuration parameters for Jetty, the HTTP engine,
- which you can set in the server's context:
+ which you can set in the server's context.
+ Here we configure the size of the thread pool:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('minThreads', 6)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.add('maxThreads', 12)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here we switch to a blocking server:
 \end_layout
 
 \begin_layout Standard
@@ -8489,11 +10075,6 @@ status open
 \begin_layout Plain Layout
 
 server.context.parameters.add('type', 1) // blocking NIO
-\end_layout
-
-\begin_layout Plain Layout
-
-server.context.parameters.add('minThreads', 10)
 \end_layout
 
 \end_inset
@@ -9069,6 +10650,88 @@ eat
 
 \begin_layout Itemize
 3-default.js (this is the hungry host)
+\end_layout
+
+\begin_layout Subsubsection
+Deploying Multiple Sites
+\end_layout
+
+\begin_layout Standard
+Using the virtual hosts and application model, Prudence can let you manage
+ several sites using a single Prudence installation (a 
+\begin_inset Quotes eld
+\end_inset
+
+container
+\begin_inset Quotes erd
+\end_inset
+
+).
+ But is this always a good idea?
+\end_layout
+
+\begin_layout Paragraph
+Advantages of Using a Single Container
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: you are using a single base directory for the
+ entire project, which might be easier for you.
+ Because all configuration is done by JavaScript inside the container, it
+ is very flexible.
+\end_layout
+
+\begin_layout Enumerate
+Less memory use than running multiple JVMs.
+\end_layout
+
+\begin_layout Enumerate
+Shared memory: you can use application.sharedGlobals to share state between
+ applications.
+\end_layout
+
+\begin_layout Paragraph
+Advantages of Using Multiple Containers
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: several base directories can mean separate
+ code/distribution repositories, which might be easier for you.
+ Configuration will be at your web frontend (reverse proxy).
+\end_layout
+
+\begin_layout Enumerate
+Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
+ With this in mind, it may even be worth having each 
+\emph on
+single application
+\emph default
+ running in its own JVM/container.
+\end_layout
+
+\begin_layout Enumerate
+Run-time flexibility: you can restart the JVM for one container without
+ affecting others that are running.
+\end_layout
+
+\begin_layout Standard
+There is no performance advantage in either scenario.
+ Everything in Prudence is designed around high-concurrency and threading,
+ and generally threads are managed by the OS globally.
+\end_layout
+
+\begin_layout Quote
+Well, there are caveats to that statement: Linux can group threads per running
+ process for purposes of prioritization, but this is only really done for
+ desktop applications.
+ The feature could be possibly useful when running several containers, if
+ you want to guarantee high thread priority to one of the containers over
+ the others.
+ Any of this would only effect 
+\emph on
+very
+\emph default
+ high concurrency and highly CPU-bound deployments.
 \end_layout
 
 \begin_layout Subsection
@@ -11796,16 +13459,9 @@ name "prudence-vs-node-js"
 \end_layout
 
 \begin_layout Standard
-Both are server-side platforms for creating network servers in JavaScript.
- Both have evolved to support package managers: 
-\begin_inset CommandInset href
-LatexCommand href
-name "npm"
-target "https://npmjs.org/"
-
-\end_inset
-
- for Node.js, Sincerity for Prudence.
+Both are server-side platforms for creating network servers using JavaScript.
+ Both have evolved to support package managers: Sincerity for Prudence,
+ npm for Node.js.
 \end_layout
 
 \begin_layout Standard
@@ -11834,7 +13490,15 @@ First, note that
 both
 \emph default
  use non-blocking servers at the low level.
- Actually, because Prudence uses 
+ So they're both asynchronous in 
+\emph on
+that
+\emph default
+ particular respect.
+\end_layout
+
+\begin_layout Quote
+Actually, because Prudence uses 
 \begin_inset CommandInset href
 LatexCommand href
 name "Jetty"
@@ -11842,7 +13506,12 @@ target "http://www.eclipse.org/jetty/"
 
 \end_inset
 
- as its driver, you have the option to change it to blocking: see 
+ as its driver, you have the option to change it to a 
+\emph on
+blocking
+\emph default
+ server, which may behave better in some workloads.
+ See 
 \bar under
 configuring servers (page 
 \begin_inset CommandInset ref
@@ -11855,12 +13524,20 @@ reference "servers"
 \bar default
 .
  Generally, Jetty is designed from the ground-up for web services, and behaves
- smartly and exceptionally well under high loads.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "smartly"
+target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
+
+\end_inset
+
+ and exceptionally well under high volumes.
 \end_layout
 
 \begin_layout Standard
-On top of that Prudence has a multi-threaded REST application environment
- with 
+On top of the server Prudence uses a multi-threaded RESTful application
+ environment with 
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet"
@@ -11868,27 +13545,35 @@ target "http://restlet.org/"
 
 \end_inset
 
- at its core.
- Mult-threadedness is essential for the web because generating HTML is logically
- a single-event procedure, which you want to handle as quickly as possible.
- Via a managed thread-pool, Prudence can leverage multi-core CPUs as well
- as highly-concurrent database backends to serve several user requests simultane
-ously.
- Node.js could not be more different: it is by design 
+ handling the intricacies of HTTP.
+ Why multi-threaded? Because generating HTML is logically a 
+\emph on
+single-event
+\emph default
+ procedure: at the moment you get the client's request, you generate the
+ HTML content and send it immediately.
+ Thus, via a managed, configurable thread-pool, Prudence can leverage multi-core
+ CPUs as well as highly-concurrent database backends to serve several several
+ user requests simultaneously.
+\end_layout
+
+\begin_layout Standard
+Node.js could not be more different: it is by design 
 \emph on
 single
 \emph default
--threaded and event-driven: requests are 
+-threaded and event-
+\emph on
+driven
+\emph default
+: requests are 
 \emph on
 never 
 \emph default
 handed simultaneously, and only a single CPU core would ever be used by
- the server itself (though services it uses, such as video encoding, could
- definitely be multi-threaded).
-\end_layout
-
-\begin_layout Standard
-Node.js' 
+ the HTTP server itself (though services it calls, such as video encoding,
+ could definitely be multi-threaded).
+ Seems odd? Actually, this 
 \begin_inset Quotes eld
 \end_inset
 
@@ -11896,28 +13581,38 @@ raw
 \begin_inset Quotes erd
 \end_inset
 
- architecture makes good sense for streaming applications: streams are never
- handled as a single event, but rather in 
+ architecture makes a lot of sense for streaming applications: as opposed
+ to HTML pages, streams are always 
+\emph on
+multi
+\emph default
+-event procedures, each event generating a 
 \begin_inset Quotes eld
 \end_inset
 
-chunks
+chunk
 \begin_inset Quotes erd
 \end_inset
 
- that saturate the socket with data.
+ of the stream that saturates the socket with data.
  There is no advantage to using more than one thread if a single thread
  is already taking up all the bandwidth.
- Really, your only variable is the size of the chunks: you'll want them
- smaller under high load in order to degrade performance fairly among clients.
+ In fact, thread synchronization could introduce overhead that would slow
+ the server down.
+ Really, your only variable in terms of scalability is the size of the chunks:
+ you'll want them smaller under high load in order to degrade performance
+ fairly among clients.
 \end_layout
 
 \begin_layout Standard
 Node.js is great for its intended use case.
- It's vastly easier to write event handlers in JavaScript over C or C++,
- and JavaScript also makes bootstrapping the server a piece of cake.
- And if you're not married to JavaScript, similar excellent asynchronous
- platforms are available: 
+ It's vastly easier to write event handlers in JavaScript than in C/C++,
+ and JavaScript also makes it easy to bootstrap the server.
+\end_layout
+
+\begin_layout Quote
+If you need Node.js but JavaScript is not your favorite dynamic language,
+ similarly excellent asynchronous platforms are available: check out 
 \begin_inset CommandInset href
 LatexCommand href
 name "Tornado"
@@ -11949,18 +13644,19 @@ You're Doing It Wrong
 \end_layout
 
 \begin_layout Standard
-It's very odd that Node.js has become popular for developing the 
+It's very odd that Node.js has become a popular platform for the 
 \emph on
 non
 \emph default
--streaming web: it is not designed for it, and in fact is quite bad at it:
- if a single event handler hangs, the whole server will hang.
- A database backend that responds slowly to one request (say, a heavy query),
- would cause a delay for 
+-streaming web: it's not designed for it, and in fact is quite a bad fit:
+ consider that in a single-threaded runtime, if a single event handler hangs,
+ the whole server will hang.
+ And scalability is miserable: a database backend that responds slowly to
+ one request (say, a heavy query), would cause a delay for 
 \emph on
 all
 \emph default
- clients who are waiting for their turn in the single-threaded model.
+ clients who are waiting their turn on the thread.
  These serious problems can be ameliorated (clumsily and with other costs)
  by running multiple Node.js processes behind a load balancer, but it should
  be clear that Node.js is entirely the wrong tool for the job.
@@ -11968,14 +13664,15 @@ all
 
 \begin_layout Standard
 So, why is Node.js so misused? One reason is that its raw architecture is
- attractive in its simplicity: multi-threaded programming is hard to get
- right, single-threaded easy.
+ attractively simple: multi-threaded programming is hard to get right, single-th
+readed easy.
  JavaScript, too, is a draw, as a language that many programmers already
  know.
- Sure, it's not a great web platform, but it's one in which you can build
- web services quickly and easily, and sometimes that's more important than
- scalability or even robustness.
- But another reason is more worrying: ignorance.
+ So, despite not being a great web platform, it's one in which you can build
+ web services quickly and with little fuss, and sometimes that's more important
+ than scalability or even robustness, especially if the goal is to create
+ in-house services.
+ But another reason for Node.js' popularity is more worrying: ignorance.
  People who should know better heard that Node.js is 
 \begin_inset Quotes eld
 \end_inset
@@ -11984,7 +13681,7 @@ fast
 \begin_inset Quotes erd
 \end_inset
 
- because it's 
+ and 
 \begin_inset Quotes eld
 \end_inset
 
@@ -11993,18 +13690,16 @@ asynchronous
 \end_inset
 
  and think that would lead to faster page load-times for web browsers and
- the ability to handle heavier loads.
- This is very, 
-\emph on
-very
-\emph default
- wrong.
+ the ability to handle more page hits.
+ That's a very wrong conclusion.
 \end_layout
 
 \begin_layout Standard
-We believe that Prudence is a much more sensible choice for REST/JavaScript.
+We believe that Prudence is a much more sensible choice for the RESTful
+ web.
  Beyond the basic platform, also consider Prudence's features aimed specifically
- at RESTful scalability such 
+ at scalability.
+ such as 
 \bar under
 integrated caching (page 
 \begin_inset CommandInset ref
@@ -12037,7 +13732,14 @@ reference "clusters"
 
 )
 \bar default
-.
+ for expanding horizontally in the 
+\begin_inset Quotes eld
+\end_inset
+
+cloud.
+\begin_inset Quotes erd
+\end_inset
+
  Check out our 
 \begin_inset CommandInset href
 LatexCommand href
@@ -12054,11 +13756,11 @@ Technology and Ecosystem
 \end_layout
 
 \begin_layout Standard
-Prudence was especially designed for the JVM, to enjoy and provide you access
+Prudence was especially designed for the JVM, to provide you with access
  to its rich and high-quality ecosystem, to leverage its excellent concurrency
- libraries, its monitoring/profiling capabilities, and to be portable and
+ libraries and monitoring/profiling capabilities, and to be portable and
  integrative.
- The platform is very mature and reliable, as are many of the libraries
+ The JVM platform is very mature and reliable, as are many of the libraries
  that Prudence relies on, such as Jetty, Restlet and 
 \begin_inset CommandInset href
 LatexCommand href
@@ -12068,13 +13770,16 @@ target "http://www.hazelcast.com/"
 \end_inset
 
 .
+ It's easier to connect C/C++ libraries to Node.js, but on the other hand
+ it's easier to write and deploy extensions in Java/Scala/Groovy for Prudence.
 \end_layout
 
 \begin_layout Standard
-With Prudence, you are not in any way limited to JavaScript: it supports
- many dynamic languages running on top of the JVM, providing you access
- to even more ecosystems.
- However, it gives a lot of love to JavaScript: Sincerity comes with a 
+And Prudence is not just JavaScript: it supports many dynamic languages
+ running on top of the JVM---Python, Ruby, PHP, Lua, Groovy and Clojure---as
+ well as their respective ecosystems.
+ That said, it does give special love to JavaScript: Sincerity comes with
+ a 
 \begin_inset CommandInset href
 LatexCommand href
 name "rich foundation of libraries"
@@ -12083,14 +13788,25 @@ target "http://threecrickets.com/sincerity/manual/programming/#sincerity-javascr
 \end_inset
 
 , offering essentials such as OOP and string interpolation, as well as friendly
- wrappers over powerful JVM services.
+ wrappers for powerful JVM services such as concurrent collections and cryptogra
+phy.
 \end_layout
 
 \begin_layout Standard
-Node.js has a much younger and narrower ecosystem, albeit vibrant and quickly
- growing.
- It's easier to connect C/C++ libraries to Node.js, but on the other hand
- it's easier to write extensions in Java for Prudence.
+Node.js is JavaScript-centric, and though it has a much younger and narrower
+ ecosystem, it is 
+\begin_inset CommandInset href
+LatexCommand href
+name "vibrant and quickly growing"
+target "https://npmjs.org/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+No Benchmarks for You
 \end_layout
 
 \begin_layout Standard
@@ -12105,8 +13821,8 @@ browser wars,
 
  which have resulted in very performative JavaScript interpreters and JITs.
  (However, it's worth remembering that these engines are really optimized
- for web browser environments.) Prudence can run JavaScript on your choice
- of either 
+ for web browser environments, not servers.) Prudence can run JavaScript
+ on your choice of either 
 \begin_inset CommandInset href
 LatexCommand href
 name "Nashorn"
@@ -12123,8 +13839,8 @@ target "https://developer.mozilla.org/en-US/docs/Rhino"
 \end_inset
 
 .
- Nashorn is, as of this writing, still under development, to be released
- with JVM 8 in March 2014.
+ Nashorn is as of this writing still under development, to be released with
+ JVM 8 in March 2014.
  It promises excellent performance, on par with Java code in some cases.
  Rhino is not as fast, but still performs well and is very mature.
 \end_layout
@@ -12139,13 +13855,17 @@ needs
  Prudence's multi-threaded model and RESTful expectations mean that it's
  rarely CPU-bound: for example, you spend orders of magnitude more time
  waiting for database backends to respond than for functions to be called.
- For its use cases, smart architecture---and smart caching---are 
+ For the web page use case, smart architecture---and smart caching---are
+ 
 \emph on
 far 
 \emph default
 more important for scalability than language performance.
- Also note that all the performance-critical parts of Prudence are written
- in Java: just as they are written in C++ for Node.js.
+\end_layout
+
+\begin_layout Standard
+Note, too, that all the performance-critical parts of Prudence are written
+ in Java, just as they are written in C++ for Node.js.
 \end_layout
 
 \begin_layout Paragraph
@@ -12156,6 +13876,2795 @@ Summary
 Choose the right tool for the job! Node.js is a great choice for asynchronous
  services, and Prudence---we hope you'll agree---is a great choice for web
  services and RESTful APIs.
+\end_layout
+
+\begin_layout Section
+The Case for REST
+\begin_inset CommandInset label
+LatexCommand label
+name "the-cast-for-rest"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There's a lot of buzz about REST, but also a lot confusion about what it
+ is and what it's good for.
+ This essay attempts to convey REST's simple essence.
+\end_layout
+
+\begin_layout Standard
+Let's start, then, not at REST, but at an attempt to create a new architecture
+ for building scalable applications.
+ Our goals are for it to be minimal, straightforward, and still have enough
+ features to be productive.
+ We want to learn some lessons from the failures of other, more elaborate
+ and complicated architectures.
+\end_layout
+
+\begin_layout Standard
+Let's call ours a 
+\begin_inset Quotes eld
+\end_inset
+
+resource-oriented architecture.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Resources
+\end_layout
+
+\begin_layout Standard
+Our base unit is a 
+\begin_inset Quotes eld
+\end_inset
+
+resource,
+\begin_inset Quotes erd
+\end_inset
+
+ which, like an object in object-oriented architectures, encapsulates data
+ with some functionality.
+ However, we've learned from object-orientation that implementing arbitrary
+ interfaces is a recipe for complexity: proxy generation, support for arbitrary
+ types, marshaling, etc.
+ All that often requires a middleware layer to handle the protocol.
+ So, instead, we'll keep it simple and define a limited, unified interface
+ that would be just useful enough.
+\end_layout
+
+\begin_layout Standard
+From our experience with relational databases, we've learned that a tremendous
+ amount of power can be found in 
+\begin_inset Quotes eld
+\end_inset
+
+CRUD
+\begin_inset Quotes erd
+\end_inset
+
+: Create, Read, Update and Delete.
+ If we support just these operations, our resources will already be very
+ powerful, enjoying the accumulated wisdom and design patterns from the
+ database world.
+ 
+\end_layout
+
+\begin_layout Subsection
+Identifiers
+\end_layout
+
+\begin_layout Standard
+First, let's start with a way of uniquely identifying our resources.
+ We'll define a name-based address space where our resources live.
+ Each resource is 
+\begin_inset Quotes eld
+\end_inset
+
+attached
+\begin_inset Quotes erd
+\end_inset
+
+ to one or more addresses.
+ We'll allow for 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+ as a customary separator to allow for hierarchical addressing schemes.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/animal/dog/3/
+\end_layout
+
+\begin_layout Plain Layout
+
+/animal/cat/12/image/
+\end_layout
+
+\begin_layout Plain Layout
+
+/animal/cat/12/image/large/
+\end_layout
+
+\begin_layout Plain Layout
+
+/animal/cat/12/specs/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the above, we've allowed for different kinds of animals, a way of referencing
+ individual animals, and a way of referencing specific aspects of these
+ animals.
+\end_layout
+
+\begin_layout Standard
+Let's now go over CRUD operations in increasing order of complexity.
+\end_layout
+
+\begin_layout Subsection
+Delete
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Delete
+\begin_inset Quotes erd
+\end_inset
+
+ is the most trivial operation.
+ After sending 
+\begin_inset Quotes eld
+\end_inset
+
+delete
+\begin_inset Quotes erd
+\end_inset
+
+ to an identifier, we expect it to not exist anymore.
+ Whether sub-resources in our hierarchy can exist or not, we'll leave up
+ to individual implementations.
+ For example, deleting 
+\begin_inset Quotes eld
+\end_inset
+
+/animal/cat/12/image
+\begin_inset Quotes erd
+\end_inset
+
+ may or may not delete 
+\begin_inset Quotes eld
+\end_inset
+
+/animal/cat/12/image/large
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Note that we don't care about atomicity here, because we don't expect anything
+ to happen after our 
+\begin_inset Quotes eld
+\end_inset
+
+delete
+\begin_inset Quotes erd
+\end_inset
+
+ operation.
+ A million changes can happen to our cat before our command is processed,
+ but they're all forgotten after 
+\begin_inset Quotes eld
+\end_inset
+
+delete.
+\begin_inset Quotes erd
+\end_inset
+
+ (See 
+\begin_inset Quotes eld
+\end_inset
+
+update,
+\begin_inset Quotes erd
+\end_inset
+
+ below, for a small caveat.)
+\end_layout
+
+\begin_layout Subsection
+Read
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Read
+\begin_inset Quotes erd
+\end_inset
+
+ is a bit more complicated than 
+\begin_inset Quotes eld
+\end_inset
+
+delete.
+\begin_inset Quotes erd
+\end_inset
+
+ Since our resource might be changed by other clients, too, we want to make
+ sure that there's some kind of way to mark which version we are reading.
+ This will allow us to avoid unnecessary reads if there hasn't been any
+ change.
+\end_layout
+
+\begin_layout Standard
+Thus, we'll need our resource-oriented architecture to support some kind
+ of version tagging feature.
+\end_layout
+
+\begin_layout Subsection
+Update
+\end_layout
+
+\begin_layout Standard
+The problem with 
+\begin_inset Quotes eld
+\end_inset
+
+update
+\begin_inset Quotes erd
+\end_inset
+
+ is that it always references a certain version that we have 
+\begin_inset Quotes eld
+\end_inset
+
+read” before.
+ In some cases, though not all, we need some way to make sure that the data
+ we expect to be there hasn't changed since we've last “read” it.
+ Let's call this a “conditional update.” (In databases, this is called a
+ 
+\begin_inset Quotes eld
+\end_inset
+
+compare-and-set
+\begin_inset Quotes erd
+\end_inset
+
+ atomic operation.)
+\end_layout
+
+\begin_layout Standard
+Actually, we've oversimplified our earlier definition of “delete.” In some
+ cases, we'd want a “conditional delete” to depend on certain expectations
+ about the data.
+ We might not want the resource deleted in some cases.
+\end_layout
+
+\begin_layout Standard
+We'll need our resource-oriented architecture to support a general “conditional”
+ operation feature.
+ 
+\end_layout
+
+\begin_layout Subsection
+Create
+\end_layout
+
+\begin_layout Standard
+This is our most complex operation.
+ Our first problem is that our identifier might not exist yet, or might
+ already be attached to a resource.
+ One approach could be to try identifiers in sequence:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/13/ -> Error, already exists
+\end_layout
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/14/ -> Error, already exists
+\end_layout
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/15/ -> Error, already exists
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/302041/ -> Success!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Obviously, this is not a scalable solution.
+ Another approach could be to have a helper resource which provides us with
+ the necessary ID:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Read: /animal/cat/next/ -> 14
+\end_layout
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/14/ -> Oops, someone else beat us to 14!
+\end_layout
+
+\begin_layout Plain Layout
+
+Read: /animal/cat/next/ -> 15
+\end_layout
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/15/ -> Success!
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Of course, we can also have “/animal/cat/next” return unique IDs (such as
+ GUIDs) to avoid duplications.
+ If we never create our cat, they will be wasted, though.
+ The main problem with this approach is that it requires two calls per creation:
+ a “read,” and then a “create.” We can handle this in one call by allowing
+ for “partial” creation, a “create” linked with an intrinsic “read”:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Create: /animal/cat/ -> We send the data for the cat without the ID, and
+ get back the same cat with an ID
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Other solutions exist, too.
+ The point of this discussion is to show you that “create” is not trivial,
+ but also that solutions to “create” already exist within the resource-oriented
+ architecture we've defined.
+ “Create,” though programmatically complex, does not require any additional
+ architectural features.
+\end_layout
+
+\begin_layout Subsection
+Aggregate Resources
+\end_layout
+
+\begin_layout Standard
+At first glance, handling the problem of getting lots of resources at the
+ same time, thus saving on the number of calls, can trivially be handled
+ by the features we've listed so far.
+ A common solution is to define a 
+\begin_inset Quotes eld
+\end_inset
+
+plural” version of the 
+\begin_inset Quotes eld
+\end_inset
+
+singular” resource:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/animal/cats/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A “read” would give us all cats.
+ But what if there are ten million cats? We can support paging.
+ Again, we have a solution within our current feature set, using identifiers
+ for each subset of cats:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/animal/cats/100/200/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can define the above to return no more than 100 cats: from the 100th,
+ to the 200th.
+ There's a slight problem in this solution: the burden is on whatever component
+ in our system handles mapping identifiers to resources.
+ This is not terrible, but if we want our system to be more generic, it
+ could help if things like “100 to 200” could be handled by our resource
+ more directly.
+ For convenience, let's implement a simple parameter system for all commands:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Read(100, 200): /animal/cats/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the above, our mapping component only needs to know about “/animal/cats”.
+ The dumber our mapping component is, the easier it is to implement.
+ 
+\end_layout
+
+\begin_layout Subsection
+Formats
+\end_layout
+
+\begin_layout Standard
+The problem of supporting multiple formats seems similar, at first glance,
+ to that of aggregate resources.
+ Again, we could potentially solve it with command parameters:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Read(UTF-8, Russian): /animal/cat/13/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This would give us a Russian, Unicode UTF-8 encoded version of our cat.
+ Looks good, except that there is a potential problem: the client might
+ prefer certain formats, but actually be able to handle others.
+ It's more a matter of preference than any precision.
+ Of course, we can have another resource where all available formats are
+ listed, but this would require an extra call, and also introduce the problem
+ of atomicity---what if the cat changes between these calls? A better solution
+ would be to have the client associate certain preferences per command,
+ have our resource emit its capabilities, with the mapping component in
+ between “negotiating” these two lists.
+ This “negotiation” is a rather simple algorithm to choose the best mutually
+ preferable format.
+\end_layout
+
+\begin_layout Standard
+This would be a simple feature to add to our resource-oriented architecture,
+ which could greatly help to decouple its support for multiple formats from
+ its addressing scheme.
+ 
+\end_layout
+
+\begin_layout Subsection
+Shared State
+\end_layout
+
+\begin_layout Standard
+Shared state between the client and server is very useful for managing sessions
+ and implementing basic security.
+ Of course, it's quite easy to abuse shared state, too, by treating it as
+ a cache for data.
+ We don't want to encourage that.
+ Instead, we just want a very simple shared state system.
+\end_layout
+
+\begin_layout Standard
+We'll allow for this by attaching small, named, shared state objects to
+ every request and response to a command.
+ Nothing fancy or elaborate.
+ There is a potential security breach here, so we have to trust that all
+ components along the way honor the relationship between client and server,
+ and don't allow other servers access to our shared state.
+ 
+\end_layout
+
+\begin_layout Subsection
+Summary of Features
+\end_layout
+
+\begin_layout Standard
+So, what do we need?
+\end_layout
+
+\begin_layout Standard
+We need a way to map identifiers to resources.
+ We need support for the four CRUD operations.
+ We need support for “conditional” updates and deletes.
+ We need all operations to support “parameters.” We need “negotiation” of
+ formats.
+ And, we need a simple shared state attachment feature.
+\end_layout
+
+\begin_layout Standard
+This list is very easy to implement.
+ It requires very little computing power, and no support for generic, arbitrary
+ additions.
+\end_layout
+
+\begin_layout Subsection
+Transactions\SpecialChar \ldots{}
+ Not!
+\end_layout
+
+\begin_layout Standard
+Before we go on, it's worth mentioning one important feature which we did
+ not require: transactions.
+ Transactions are optional, and sometimes core features in many databases
+ and distributed object systems.
+ They can be extremely powerful, as they allow atomicity across an arbitrary
+ number of commands.
+ They are also, however, heavy to implement, as they require considerable
+ shared state between client and server.
+ Powerful as they are, it is possible to live without them.
+ For example, we can implement complex atomicity schemes ourselves within
+ a single resource.
+ This puts some burden on us, but it does remove the heavy burden of supporting
+ arbitrary transactions from our architecture.
+ With some small reluctance, then, we'll do without transactions.
+ 
+\end_layout
+
+\begin_layout Subsection
+Let's Do It!
+\end_layout
+
+\begin_layout Standard
+OK, so now we know what we need, let's go ahead and implement the infrastructure
+ of components to handle our requirements.
+ All we need is stacks for all supported clients, backend stacks for all
+ our potential server platforms, middleware components to handle all the
+ identifier routing, content negotiation, caching of data\SpecialChar \ldots{}
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar \ldots{}
+And thousands of man hours to develop, test, deploy, and integrate.
+ Like any large-scale, enterprise architecture, even trivial requirements
+ have to jump through the usual hoops set up by the sheer scale of the task.
+ Behind every great architecture are the nuts and bolts of the infrastructure.
+\end_layout
+
+\begin_layout Standard
+Wouldn't it be great if the infrastructure already existed?
+\end_layout
+
+\begin_layout Subsection
+The Punchline
+\end_layout
+
+\begin_layout Standard
+Well, duh.
+ 
+\emph on
+All
+\emph default
+ the requirements for our resource-oriented architecture are already supported
+ by HTTP:
+\end_layout
+
+\begin_layout Standard
+Our resource identifiers are URLs.
+ The CRUD operations are in the four HTTP verbs: PUT, GET, POST and DELETE.
+ “Conditional” and “negotiated” modes are handled by headers, as are “cookies”
+ for shared state.
+ Version stamps are e-tags and timestamps.
+ Command parameters are query matrices appended to URLs.
+ It's all there.
+\end_layout
+
+\begin_layout Standard
+Most importantly, the infrastructure for HTTP is already fully 
+\emph on
+deployed
+\emph default
+ world-wide.
+ TCP/IP stacks are part of practically every operating system; wiring, switching
+ and routing are part and parcel; HTTP gateways, firewalls, load balancers,
+ proxies, caches, filters, etc., are stable consumer components; certificate
+ authorities, national laws, international agreements are already in place
+ to support the complex inter-business interaction.
+ Best of all, this available infrastructure is successfully maintained,
+ with minimal down-time, by highly-skilled independent technicians, organization
+s and component vendors across the world.
+\end_layout
+
+\begin_layout Quote
+It's important to note a dependency and possible limitation of HTTP: it
+ is bound to TCP/IP.
+ Indeed, all identifiers are URLs: Uniform Resource Locators.
+ In URLs, the first segment is reserved for the domain, either an IP address
+ or a domain name translatable to an IP address.
+ Compare this with the more general URIs (Uniform Resource Identifiers),
+ which do not have this requirement.
+ Though we'll often be tied to HTTP in REST, you'll see the literature attemptin
+g, at least, to be more generic.
+ There are definitely use cases for non-HTTP, and even non-TCP/IP addressing
+ schemes.
+ In Prudence, it's possible to address internal resources with URIs 
+\emph on
+that are not URLs
+\emph default
+; see 
+\bar under
+internal APIs (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-api"
+
+\end_inset
+
+)
+\bar default
+.
+ 
+\end_layout
+
+\begin_layout Subsection
+It's All About Infrastructure
+\end_layout
+
+\begin_layout Standard
+The most important lesson to take from this exercise is the importance of
+ infrastructure, something easily forgotten when planning architecture in
+ ideal, abstract terms.
+ This is why, I believe, Roy Fielding named 
+\begin_inset CommandInset href
+LatexCommand href
+name "Chapter 5 of his 2000 dissertation"
+target "http://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm"
+
+\end_inset
+
+ “Representational State Transfer (REST)” rather than, say, “resource-oriented
+ architecture,” as we have here.
+ Fielding, one of the authors of the HTTP protocol, was intimately familiar
+ with its deployment challenges, and the name “REST” is intended to point
+ out the key characteristic of its infrastructure: HTTP and similar protocols
+ are designed for transferring lightly annotated data representations, nothing
+ more.
+ “Resources” are merely logical encapsulations of these representations,
+ depending on a contract between client and server.
+ The infrastructure does not, in itself, do anything in particular to maintain,
+ say, a sensible hierarchy of addresses, abitrary atomicity of CRUD operations,
+ etc.
+ That's up to your implementation.
+ But, representational state transfer---REST---is the mundane, underlying
+ magic that makes it all possible.
+\end_layout
+
+\begin_layout Standard
+To come back to where we started: a resource-oriented architecture requires
+ a REST infrastructure.
+ In practice, the two terms become interchangeable.
+\end_layout
+
+\begin_layout Standard
+The principles of resource-orientation can and are applied in many systems.
+ The word wide web, of course, with its ecology of web browsers, web servers,
+ certificate authorities, etc., is the most obvious model.
+ But other core Internet systems, such as email (SMTP, POP, IMAP), file
+ transfer (FTP, WebDAV) also implement some subset of REST.
+ Your application can do this, too, and enjoy the same potential for scalability
+ as these global, open implementations.
+ 
+\end_layout
+
+\begin_layout Subsection
+Does REST Scale?
+\end_layout
+
+\begin_layout Standard
+Part of the buzz about REST is that it's an inherently scalable architecture.
+ This is true, but perhaps not in the way that you think.
+\end_layout
+
+\begin_layout Standard
+Consider that there are two uses of the word “scalable”:
+\end_layout
+
+\begin_layout Standard
+First, it's 
+\series bold
+the ability to respond to a growing number of user requests without degradation
+ in response time
+\series default
+, by “simply” adding hardware (horizontal scaling) or replacing it with
+ more powerful hardware (vertical scaling).
+ This is the aspect of scalability that engineers care about.
+ The simple answer is that REST can help, but it doesn't stand out.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "SOAP"
+target "http://en.wikipedia.org/wiki/SOAP"
+
+\end_inset
+
+, for example, can also do it pretty well.
+ REST aficionados sometimes point out that REST is “stateless,” or “session-less
+,” both characteristics that would definitely help scale.
+ But, this is misleading.
+ Protocols might be stateless, but architectures built on top of them don't
+ have to be.
+ For example, we've specifically talked about sessions here, and many web
+ frameworks manage sessions via cookies.
+ On the other hand, you can easily make poorly scalable REST.
+ The bottom line is that there's nothing in REST that guarantees scalability
+ in 
+\emph on
+this
+\emph default
+ respect.
+ Indeed, engineers coming to REST due to this false lure end up wondering
+ what the big deal is.
+ We wrote a whole article for 
+\bar under
+Scaling Tips (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips"
+
+\end_inset
+
+)
+\bar default
+, which is indeed not specifically about REST.
+\end_layout
+
+\begin_layout Standard
+The second use of “scalability” comes from the realm of enterprise and project
+ management.
+ It's 
+\series bold
+the ability of your project to grow in complexity without degradation in
+ your ability to manage it
+\series default
+.
+ And that's REST's beauty---you already have the infrastructure, which is
+ the hardest thing to scale in a project.
+ You don't need to deploy client stacks.
+ You don't need to create and update proxy objects for five different programmin
+g languages used in your enterprise.
+ You don't need to deploy incompatible middleware by three different vendors
+ and spend weeks trying to force them to play well together.
+ Why would engineers care about REST? Precisely because they don't have
+ to: they can focus on application engineering, rather than get bogged down
+ by infrastructure management.
+\end_layout
+
+\begin_layout Standard
+That said, a “resource-oriented architecture” as we defined here is not
+ a bad start for---engineering-wise---scalable systems.
+ Keep your extras lightweight, minimize or eliminate shared state, and encapsula
+te your resources according to use cases, and you won't, at least immediately,
+ create any obstacles to scaling.
+ 
+\end_layout
+
+\begin_layout Subsection
+Prudence
+\end_layout
+
+\begin_layout Standard
+Convinced? The best way to understand REST is to experiment with it.
+ You've come to the right place.
+ Start with the 
+\bar under
+tutorial (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tutorial"
+
+\end_inset
+
+)
+\bar default
+, and feel free to skip around the documentation and try things out for
+ yourself.
+ You'll find it easy, fun, and powerful enough for you to create large-scale
+ applications that take full advantage of the inherently scalable infrastructure
+ of REST.
+ Happy RESTing!
+\end_layout
+
+\begin_layout Section
+Scaling Tips
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Scalability is the ability to respond to a growing number of user requests
+ without degradation in response time.
+ Two variables influence it: 1) your total number of threads and 2) the
+ time it takes each thread to process a request.
+ Increasing the number of threads seems straightforward: you can keep adding
+ more machines behind load balancers.
+ However, the two variables are tied, as there are diminishing returns and
+ even reversals: beyond a certain point, time per request can actually grow
+ longer as you add threads and machines.
+\end_layout
+
+\begin_layout Standard
+Let's ignore the first variable here, because the challenge of getting more
+ machines is mostly financial.
+ It's the second that you can do something about as an engineer.
+\end_layout
+
+\begin_layout Standard
+If you want your application to handle many concurrent users, then you're
+ fighting this fact: a request will get queued in the best case or discarded
+ in the worst case if there is no thread available to serve it.
+ Your challenge is to make sure that a thread is always available.
+ And it's not easy, as you'll find out as you read through this article.
+ Minimizing the time per request becomes an architectural challenge that
+ encompasses the entire structure of your application
+\end_layout
+
+\begin_layout Subsection
+Performance Does Not Equal Scalability
+\end_layout
+
+\begin_layout Standard
+Performance does not equal scalability.
+ Performance does not equal scalability.
+ Performance does not equal scalability.
+\end_layout
+
+\begin_layout Standard
+Get it? Performance does not equal scalability.
+\end_layout
+
+\begin_layout Standard
+This is an important mantra for two reasons:
+\end_layout
+
+\begin_layout Subsubsection
+1.
+ Performant Can Mean Less Scalable
+\end_layout
+
+\begin_layout Standard
+Optimizing for performance can adversely affect your scalability.
+ The reason is contextual: when you optimize for performance, you often
+ work in an isolated context, specifically so you can accurately measure
+ response times and fine-tune them.
+ For example, making sure that a specific SQL query is fast would involve
+ just running that query.
+ A full-blown experiment involving millions of users doing various operations
+ on your application would make it very hard to accurately measure and optimize
+ the query.
+ Unfortunately, by working in an isolated context you cannot easily see
+ how your efforts would affect other parts of an application.
+ To do so would require a lot of experience and imagination.
+ To continue our example, in order to optimize your one SQL query you might
+ create an index.
+ That index might need to be synchronized with many servers in your cluster.
+ And that synchronization overhead, in turn, could seriously affect your
+ ability to scale.
+ Congratulations! You've made one query run fast in a situation that never
+ happens in real life, and you've brought your web site to a halt.
+\end_layout
+
+\begin_layout Standard
+One way to try to get around this is to fake scale.
+ Tools such as 
+\begin_inset CommandInset href
+LatexCommand href
+name "JMeter"
+target "http://jakarta.apache.org/jmeter/"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "Siege"
+target "http://www.joedog.org/index/siege-home"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "ApacheBench"
+target "http://httpd.apache.org/"
+
+\end_inset
+
+ can create “load.” They also create unfounded confidence in engineers.
+ If you simulate 10,000 users bombarding a single web page, then you're,
+ as before, working in an isolated context.
+ All you've done is add concurrency to your performance optimization measurement
+s.
+ Your application pathways might work optimally in these situations, but
+ this might very well be due to the fact that the system is not doing anything
+ else.
+ Add those “other” operations in, and you might get worse site capacity
+ than you did before “optimizing.”
+\end_layout
+
+\begin_layout Subsubsection
+2.
+ Wasted Effort
+\end_layout
+
+\begin_layout Standard
+Even if you don't adversely affect your scalability through optimizing for
+ performance, you might be making no gains, either.
+ No harm done? Well, plenty of harm, maybe.
+ Optimizing for performance might waste a lot of development time and money.
+ This effort would be better spent on work that could actually help scalability.
+\end_layout
+
+\begin_layout Standard
+And, perhaps more seriously, it demonstrates a fundamental misunderstanding
+ of the problem field.
+ If you don't know what your problems are, you'll never be able to solve
+ them.
+\end_layout
+
+\begin_layout Subsubsection
+Pitfalls
+\end_layout
+
+\begin_layout Standard
+Study the problem field carefully.
+ Understand the challenges and potential pitfalls.
+ You don't have to apply every single scalability strategy up-front, but
+ at least make sure you're not making a fatal mistake, such as binding yourself
+ strongly to a technology or product with poor scalability.
+ A bad decision can mean that when you need to scale up in the future, no
+ amount of money and engineering effort would be able to save you before
+ you lose customers and tarnish your brand.
+\end_layout
+
+\begin_layout Standard
+Moreover, be very careful of blindly applying “successful” strategies used
+ and recommended by others to your product.
+ What worked for them might not work for you.
+ In fact, there's a chance that their strategy doesn't even work for them,
+ and they just think it did because of a combination of seemingly unrelated
+ factors.
+ The realm of web scalability is still young, full of guesswork, intuition
+ and magical thinking.
+ Even the experts are often making it up as they're going along.
+\end_layout
+
+\begin_layout Standard
+Generally, be very suspicious of products or technologies being touted as
+ “faster” than others.
+ 
+\emph on
+“Fast” doesn't say anything about the ability to scale.
+
+\emph default
+ Is a certain database engine “fast”? That's important for certain applications,
+ no doubt.
+ But maybe the database is missing important clustering features, such that
+ it would be a poor choice for scalable applications.
+ Does a certain programming language execute faster than another? That's
+ great if you're doing video compression, but speed of execution might not
+ have a noticeable effect on scalability.
+ Web applications mostly do I/O, not computation.
+ The same web application might have very similar performance characteristics
+ whether it's written in C++ or PHP.
+\end_layout
+
+\begin_layout Standard
+Moreover, if the faster language is difficult to work with, has poor debugging
+ tools, limited integration with web technologies, then it would slow down
+ your work and your ability to scale.
+\end_layout
+
+\begin_layout Quote
+Speed of execution can actually help scalability in its financial aspect:
+ If your application servers are constantly at maximum CPU load, then a
+ faster execution platform would let you cram more web threads into each
+ server.
+ This could help you reduce costs.
+ For example, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "Facebook's HipHop"
+target "http://developers.facebook.com/blog/post/358"
+
+\end_inset
+
+: they saved millions by translating their PHP code to C.
+ Because Prudence is built on the fast JVM platform, you're in good hands
+ in this respect.
+ Note, however, that there's a potential pitfall to high performance: more
+ threads per machine would also mean more RAM requirements per machine,
+ which also costs money.
+ Crunch the numbers and make sure that you're actually saving money by increasin
+g performance.
+ Once again, performance does not equal scalability.
+\end_layout
+
+\begin_layout Standard
+That last point about programming languages is worth some elaboration.
+ Beyond how well your chosen technologies perform, it's important to evaluate
+ them in terms to how easy they are to manage.
+ Large web sites are large projects, involving large teams of people and
+ large amounts of money.
+ That's difficult enough to coordinate.
+ You want the technology to present you with as few extra managerial challenges
+ as possible.
+\end_layout
+
+\begin_layout Standard
+Beware especially of languages and platforms described as “agile,” as if
+ they somehow embody the spirit of the popular 
+\begin_inset CommandInset href
+LatexCommand href
+name "Agile Manifesto"
+target "http://agilemanifesto.org/"
+
+\end_inset
+
+.
+ Often, “agile” seems to emphasize the following features: forgiveness for
+ syntax slips, light or no type checking, automatic memory management and
+ automatic concurrency---all features that seem to speed up development,
+ but could just as well be used for sloppy, error-prone, hard-to-debug,
+ and hard-to-fix code, slowing down development in the long run.
+ If you're reading this article, then your goal is likely not to create
+ a quick demo, but a stable application with a long, evolving life span.
+\end_layout
+
+\begin_layout Standard
+Ignore the buzzwords (“productivity”, “fast”), and instead make sure you're
+ choosing technology that you can control, instead of technology that will
+ control you.
+\end_layout
+
+\begin_layout Standard
+We discuss this topic some more in 
+\bar under
+“The Case for Rest” (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+.
+ By building on the existing web infrastructure, Prudence can make large
+ Internet projects easier to manage.
+\end_layout
+
+\begin_layout Subsubsection
+Analysis
+\end_layout
+
+\begin_layout Standard
+Be especially careful of applying a solution before you know if you even
+ have a problem.
+\end_layout
+
+\begin_layout Standard
+How to identify your scalability bottlenecks? You can create simulations
+ and measurements of scalability rather than performance.
+ You need to model actual user behavior patterns, allow for a diversity
+ of such behaviors to happen concurrently, and replicate this diversity
+ on a massive scale.
+\end_layout
+
+\begin_layout Standard
+Creating such a simulation is a difficult and expensive, as is monitoring
+ and interpreting the results and identifying potential bottlenecks.
+ This is the main reason for the lack of good data and good judgment about
+ how to scale.
+ Most of what we know comes from tweaking real live web sites, which either
+ comes at the expense of user experience, or allows for very limited experimenta
+tion.
+ Your best bet is to hire a team who's already been through this before.
+\end_layout
+
+\begin_layout Subsubsection
+Optimizing for Scalability
+\end_layout
+
+\begin_layout Standard
+In summary, your architectural objective is to increase concurrency, not
+ necessarily performance.
+ Optimizing for concurrency means breaking up tasks into as many pieces
+ as possible, and possibly even breaking requests into smaller pieces.
+ We'll cover numerous strategies here, from frontend to backend.
+ Meanwhile, feel free to frame these inspirational slogans on your wall:
+\end_layout
+
+\begin_layout Quote
+Requests are hot potatoes: Pass them on!
+\end_layout
+
+\begin_layout Standard
+And:
+\end_layout
+
+\begin_layout Quote
+It's better to have many short requests than one long one.
+\end_layout
+
+\begin_layout Subsection
+Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Retrieving from a cache can be orders of magnitude faster than dynamically
+ processing a request.
+ It's your most powerful tool for increasing concurrency.
+\end_layout
+
+\begin_layout Standard
+Caching, however, is only effective is there's something in the cache.
+ It's pointless to cache fragments that appear only to one user on only
+ one page that they won't return to.
+ On the other hand, there may very well be fragments on the page that will
+ recur often.
+ If you design your page carefully to allow for fragmentation, you will
+ reap the benefits of fine-grained caching.
+ Remember, though, that the outermost fragment's expiration defines the
+ expiration of the included fragments.
+ It's thus good practice to define no caching on the page itself, and only
+ to cache fragments.
+\end_layout
+
+\begin_layout Standard
+In your plan for fine-grained caching with Prudence, take special care to
+ isolate those fragments that cannot be cached, and cache everything around
+ them.
+\end_layout
+
+\begin_layout Standard
+Make sure to change the 
+\bar under
+cache key (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/api/|document-cache-key-pattern"
+
+\end_inset
+
+)
+\bar default
+ to fit the lowest common denominator: you want as many possible requests
+ to use the already-cached data, rather than generating new data.
+ Note that, by default, Prudence includes the request URI in the cache key.
+ Fragments, though, may very well appear identically in many different URIs.
+ You would thus not want the URI as part of their cache key.
+\end_layout
+
+\begin_layout Standard
+Cache aggressively, but also take cache validation seriously.
+ Make good use of Prudence's 
+\bar under
+cache tags (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/api/|document-cache-tags"
+
+\end_inset
+
+)
+\bar default
+ to allow you to invalidate portions of the cache that should be updated
+ as data changes.
+ Note, though, that every time you invalidate you will lose caching benefits.
+ If possible, make sure that your cache tags don't cover too many pages.
+ Invalidate only those entries that really need to be invalidated.
+\end_layout
+
+\begin_layout Standard
+(It's sad that many popular web sites do cache validation so poorly.
+ Users have come to expect that sometimes they see wrong, outdated data
+ on a page, sometimes mixed with up-to-date data.
+ The problem is usually solved within minutes, or after a few browser refreshes,
+ but please do strive for a better user experience in your web site!)
+\end_layout
+
+\begin_layout Standard
+If you're using a 
+\bar under
+deferred task handler (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-deferrable-tasks"
+
+\end_inset
+
+)
+\bar default
+, you might want to invalidate tagged cache entries when tasks are done.
+ Consider creating a special internal API that lets the task handler call
+ back to your application to do this.
+\end_layout
+
+\begin_layout Standard
+How long should you cache? As long as the user can bear! In a perfect world,
+ of limitless computing resources, all pages would always be generated freshly
+ per request.
+ In a great many cases, however, there is no harm at all if users see some
+ data that's a few hours or a few days old.
+\end_layout
+
+\begin_layout Quote
+Note that even very small cache durations can make a big difference in applicati
+on stability.
+ Consider it the maximum throttle for load.
+ For example, a huge sudden peak of user load, or even a denial-of-service
+ (DOS) attack, might overrun your thread pool.
+ However, a cache duration of just 1 second would mean that your page would
+ never be generated more than once every second.
+ You are instantly protected against a destructive scenario.
+\end_layout
+
+\begin_layout Subsubsection
+Cache Warming
+\end_layout
+
+\begin_layout Standard
+Caches work best when they are “warm,” meaning that they are full of data
+ ready to be retrieved.
+\end_layout
+
+\begin_layout Standard
+A “cold” cache is not only useless, but it can also lead indirectly to a
+ serious problem.
+ If your site has been optimized for a warm cache, starting from cold could
+ significantly strain your performance, as your application servers struggle
+ to generate all pages and fragments from scratch.
+ Users would be getting slow response times until the cache is significantly
+ warm.
+ Worse, your system could crash under the sudden extra load.
+\end_layout
+
+\begin_layout Standard
+There are two strategies to deal with cold caches.
+ The first is to allow your cache to be persistent, so that if you restart
+ the cache system it retains the same warmth it had before.
+ This happens automatically with 
+\bar under
+database-backed caches (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-cache-backends"
+
+\end_inset
+
+)
+\bar default
+.
+ The second strategy is to deliberately warm up the cache in preparation
+ for user requests.
+\end_layout
+
+\begin_layout Standard
+Consider creating a special external process or processes to do so.
+ Here are some tips:
+\end_layout
+
+\begin_layout Enumerate
+Consider mechanisms to make sure that your warmer does not overload your
+ system or take too much bandwidth from actual users.
+ The best warmers are adaptive, changing their load according to what the
+ servers can handle.
+ Otherwise, consider shutting down your site for a certain amount of time
+ until the cache is sufficiently warm.
+\end_layout
+
+\begin_layout Enumerate
+If the scope is very large, you will have to pick and choose which pages
+ to warm up.
+ You would want to choose only the most popular pages, in which case you
+ might need a system to record and measure popularity.
+ For example, for a blog, it's not enough just to warm up, say, the last
+ two weeks of blog posts, because a blog post from a year ago might be very
+ popular at the moment.
+ Effective warming would require you to find out how many times certain
+ blog posts were hit in the past two weeks.
+ It might make sense to embed this auditing ability into the cache backend
+ itself.
+\end_layout
+
+\begin_layout Subsubsection*
+Pre-Filling the Cache
+\end_layout
+
+\begin_layout Standard
+If there are thousands of ways in which users can organize a data view,
+ and each of these views is particular to one user, then it may make little
+ sense to cache them individually, because individual schemes would hardly
+ ever be re-used.
+ You'll just be filling up the cache with useless entries.
+\end_layout
+
+\begin_layout Standard
+Take a closer look, though:
+\end_layout
+
+\begin_layout Enumerate
+It may be that of the thousands of organization schemes only a few are commonly
+ used, so it's worth caching the output of just those.
+\end_layout
+
+\begin_layout Enumerate
+It could be that these schemes are similar enough to each other that you
+ could generate them all in one operation, and save them each separately
+ in the cache.
+ Even if cache entries will barely be used, if they're cheap to create,
+ it still might be worth creating them.
+\end_layout
+
+\begin_layout Standard
+This leads us to an important point:
+\end_layout
+
+\begin_layout Quote
+Prudence is a “frontend” platform, in that it does not specify which data
+ backend, if at all, you should use.
+ Its cache, however, is general purpose, and you can store in it anything
+ that you can encode as a string.
+\end_layout
+
+\begin_layout Standard
+Let's take as a pre-filling example a tree data structure in which branches
+ can be visually opened and closed.
+ Additionally, according to user permissions different parts of the tree
+ may be hidden.
+ Sounds too complicated to cache all the view combinations? Well, consider
+ that you can trigger, upon any change to the tree data structure, a function
+ that loops through all the different iterations of the tree recursively
+ and saves a view of each of them to the cache.
+ The cache keys can be something like “branch1+.branch2-.branch3+”, with “+”
+ signifying “-” whether the branch is visually open or closed.
+ You can use similar +'s and -'s for permissions, and create views per permissio
+n combinations.
+ Later, when users with specific permissions request different views of
+ the tree, no problem: all possibilities were already pre-filled.
+ You might end up having to generate and cache thousands of views at once,
+ but the difference between generating one view and generating thousands
+ of views may be quite small, because the majority of that duration is spent
+ communicating with the database backend.
+ 
+\end_layout
+
+\begin_layout Standard
+If generating thousands of views takes too long for the duration of a single
+ request, another option is to generate them on a separate thread.
+ Even if it takes a few minutes to generate all the many, many tree views
+ combinations, it might be OK in your application for views to be a few
+ minutes out-of-date.
+ Consider that the scalability benefits can be very significant: you generate
+ views only 
+\emph on
+once 
+\emph default
+for the entire system, while millions of concurrent users do a simple retrieval
+ from the cache.
+\end_layout
+
+\begin_layout Subsubsection*
+Caching the Data Backend
+\end_layout
+
+\begin_layout Standard
+Pre-filling the cache can take you very far.
+ It is, however, quite complicated to implement, and can be ineffective
+ if data changes too frequently or if the cache has to constantly be updated.
+ Also, it's hard to scale the pre-filling to 
+\emph on
+millions 
+\emph default
+of fragments.
+\end_layout
+
+\begin_layout Standard
+If we go back to our tree example above, the problem was that it was too
+ costly to fetch the entire tree from the database.
+ But what if we cache the tree itself? In that case, it would be very quick
+ to generate any view of the tree on-demand.
+ Instead of caching the view, we'd be caching the data, and achieving the
+ same scalability gains.
+\end_layout
+
+\begin_layout Standard
+Easy, right? So why not cache 
+\emph on
+all
+\emph default
+ our data structures? The reason is that it's very difficult to do this
+ correctly beyond trivial examples.
+ Data structures tend to have complex interrelationships (one-to-many, many-to-m
+any, foreign keys, recursive tree structures, graphs, etc.) such that a change
+ in data at one point of the structure may alter various others in particular
+ ways.
+ For example, consider a calendar database, and that you're caching individual
+ days with all their events.
+ Weekly calendar views are then generated on the fly (and quickly) for users
+ according to what kinds of events they want to see in their personal calendars.
+ What happens if a user adds a recurring event that happens every Monday?
+ You'll need to make sure that all Mondays currently cached would be invalidated
+, which might mean tagging all these as “monday” using Prudence's cache
+ tags.
+ This requires a specific caching strategy for a specific application.
+\end_layout
+
+\begin_layout Standard
+By all means, cache your data structures if you can't easily cache your
+ output, but be aware of the challenge!
+\end_layout
+
+\begin_layout Quote
+Prudence's sister project, Diligence, is designed specifically to solve
+ this problem.
+ It not only caches your data structures, but it validates them in memory
+ using your coded logic, instead of invalidating them and forcing them to
+ be re-fetched from the database.
+ It supports data structures commonly used with relational databases, pluggable
+ storage technologies, high-performance resource pooling and throttling,
+ and natural integration with Prudence.
+ Together, 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence and Prudence"
+target "http://threecrickets.com/diligenceandprudence/"
+
+\end_inset
+
+ form a solid platform for building scalable, data-backed web applications.
+ At the time of this writing, Diligence is still under development.
+ We hope to release it as open source soon, so stay tuned!
+\end_layout
+
+\begin_layout Subsubsection
+Cache Backends
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-cache-backends"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Your cache backend can become a bottleneck to scalability if 1) it can't
+ handle the amount of data you are storing, or 2) it can't respond quickly
+ enough to cache fetching.
+ 
+\end_layout
+
+\begin_layout Standard
+Before you start worrying about this, consider that it's a rare problem
+ to have.
+ Even if you are caching millions of pages and fragments, a simple relational-da
+tabase-backed cache, such as Prudence's SqlCache implementations, could
+ handle this just fine.
+ A key/value table is the most trivial workload for relational databases,
+ and it's also easy to 
+\bar under
+shard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-by-section"
+
+\end_inset
+
+)
+\bar default
+.
+ Relational database are usually very good at caching these tables in their
+ memory and responding optimally to read requests.
+ Prudence even lets you chain caches together to create tiers: an in-process
+ memory cache in front of a SQL cache would ensure that many requests don't
+ even reach the SQL backend.
+\end_layout
+
+\begin_layout Standard
+High concurrency can also be handled very well by this solution.
+ Despite any limits to the number of concurrent connections you can maintain
+ to the database, each request is handled very quickly, and it would require
+ 
+\emph on
+very 
+\emph default
+high loads to saturate.
+ The math is straightforward: with a 10ms average retrieval time (very pessimist
+ic!) and a maximum of 10 concurrent database connections (again, pessimistic!)
+ you can handle 1,000 cache hits per second.
+ A real environment would likely provide results orders of magnitude better.
+\end_layout
+
+\begin_layout Standard
+The nice thing about this solution is that it uses the infrastructure you
+ already have: the database.
+\end_layout
+
+\begin_layout Standard
+But, what if you need to handle 
+\emph on
+millions
+\emph default
+ of cache hits per second? First, let us congratulate you for your global
+ popularity.
+ Second, there is a simple solution: distributed memory caches.
+ Prudence comes with 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+ and support for 
+\begin_inset CommandInset href
+LatexCommand href
+name "memcached"
+target "http://memcached.org/"
+
+\end_inset
+
+, which both offer much better scalability than database backends.
+ Because the cache is in memory, you lose the ability to easily persist
+ your cache and keep it warm: restarting your cache nodes will effectively
+ reset them.
+ There are workarounds---for example, parts of the cache can be persisted
+ to a second database-backed cache tier---but this is a significant feature
+ to lose.
+\end_layout
+
+\begin_layout Quote
+Actually, Hazelcast offers fail-safe, live backups.
+ While it's not quite as permanent as a database, it might be good enough
+ for your needs.
+ And memcached has various plugins that allow for real database persistence,
+ though using them would require you to deal with the scalability challenges
+ of 
+\bar under
+database backends (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-data-backends"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+You'll see many web frameworks out there that support a distributed memory
+ cache (usually memcached) and recommend you use it (“it's fast!” they claim,
+ except that it can be slower per request than optimized databases, and
+ that anyway performance does not equal scalability).
+ We'd urge you to consider that advice carefully: keeping your cache warm
+ is a challenge made much easier if you can store it in a persistent backend,
+ and database backends can take you very far in scale without adding a new
+ infrastructure to your deployment.
+ It's good to know, though, that Prudence's support for Hazelcast and memcached
+ is there to help you in case you reach the popularity levels of LiveJournal,
+ Facebook, YouTube, Twitter, etc.
+\end_layout
+
+\begin_layout Subsubsection
+Client-Side Caching
+\end_layout
+
+\begin_layout Standard
+Modern web browsers support client-side caching, a feature meant to improve
+ the user experience and save bandwidth costs.
+ A site that makes good use of client-side caching will appear to work fast
+ for users, and will also help to increase your site's popularity index
+ with search engines.
+\end_layout
+
+\begin_layout Standard
+Optimizing the user experience is not the topic of this article: our job
+ here is to make sure your site doesn't degrade its performance as load
+ increases.
+ However, client-side caching can indirectly help you scale by reducing
+ the number of hits you have to take in order for your application to work.
+\end_layout
+
+\begin_layout Quote
+Actually, doing a poor job with client-side caching can help you scale:
+ users will hate your site and stop using it---voila, less hits you have
+ to deal with.
+ OK, that was a joke!
+\end_layout
+
+\begin_layout Standard
+Generally, Prudence handles client-side caching automatically.
+ If you cache a page, then headers will be set to ask the client to cache
+ for the same length of time.
+ By default, conditional mode is used: every time the client tries to view
+ a page, it will make a request to make sure that nothing has changed since
+ their last request to the page.
+ In case nothing has changed, no content is returned.
+\end_layout
+
+\begin_layout Standard
+You can also turn on “offline caching” mode, in which the client will avoid
+ even that quick request.
+ Why not enable offline caching by default? Because it involves some risk:
+ if you ask to cache a page for one week, but then find out that you have
+ a mistake in your application, then users will not see any fix you publish
+ until their local cache expires, which can take up to a week! It's important
+ that you you understand the implications before using this mode.
+ See the 
+\bar under
+dynamicWebClientCachingMode application setting (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/application/|dynamic-web-client-caching-mode"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+It's generally safer to apply offline caching to your static resources,
+ such as graphics and other resources.
+ A general custom is to ask the client to cache these “forever” (10 years),
+ and then, if you need to update a file, you simply create a new one with
+ a new URL, and have all your HTML refer to the new version.
+ Because clients cache according to URL, their cached for the old version
+ will simply not be ignored.
+ See 
+\bar under
+CacheControlFilter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/static-web/|cache-control-filter"
+
+\end_inset
+
+)
+\bar default
+.
+ There, you'll also see some more tricks Prudence offers you to help optimize
+ the user experience, such as unifying/minimizing client-side JavaScript
+ and CSS.
+\end_layout
+
+\begin_layout Subsubsection
+Upstream Caching
+\end_layout
+
+\begin_layout Standard
+If you need to quickly scale a web site that has not been designed for caching,
+ a band-aid is available: upstream caches, such as 
+\begin_inset CommandInset href
+LatexCommand href
+name "Varnish"
+target "http://varnish-cache.org/"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "NCache"
+target "http://code.google.com/p/ncache/"
+
+\end_inset
+
+ and even 
+\begin_inset CommandInset href
+LatexCommand href
+name "Squid"
+target "http://www.squid-cache.org/"
+
+\end_inset
+
+.
+ For archaic reasons, these are called “reverse proxy” caches, but they
+ really work more like filters.
+ According to attributes in the user request (URL, cookies, etc.), they decide
+ whether to fetch and send a cached version of the response, or to allow
+ the request to continue to your application servers.
+\end_layout
+
+\begin_layout Standard
+The crucial use case is archaic, too.
+ If you're using an old web framework in which you cannot implement caching
+ logic yourself, or cannot plug in to a good cache backend, then these upstream
+ caches can do it for you.
+\end_layout
+
+\begin_layout Standard
+They are problematic in two ways:
+\end_layout
+
+\begin_layout Enumerate
+Decoupling caching logic from your application means losing many features.
+ For example, invalidating portions of the cache is difficult if not impossible.
+ It's because of upstream caching, indeed, that so many web sites do a poor
+ job at showing up-to-date information.
+\end_layout
+
+\begin_layout Enumerate
+Filtering actually implements a kind of partitioning, but one that is vertical
+ rather than horizontal.
+ In horizontal partitioning, a “switch” decides to send requests to one
+ cluster of servers or another.
+ Within each cluster, you can control capacity and scale.
+ But in vertical partitioning, the “filter” handles requests internally.
+ Not only is the “filter” more complex and vulnerable than a “switch” as
+ a frontend connector to the world, but you've also complicated your ability
+ to control the capacity of the caching layer.
+ It's embedded inside your frontend, rather than being another cluster of
+ servers.
+ We'll delve into 
+\bar under
+backend partitioning (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-backend-partitioning"
+
+\end_inset
+
+)
+\bar default
+ below.
+\end_layout
+
+\begin_layout Standard
+Unfortunately, there is a use case relevant for newer web frameworks, too:
+ if you've designed your application poorly, and you have many requests
+ that could take a long time to complete, then your thread pools could get
+ saturated when many users are concurrently making those requests.
+ When saturated, you cannot handle even the super-quick cache requests.
+ An upstream cache band-aid could, at least, keep serving its cached pages,
+ even though your application servers are at full capacity.
+ This creates an illusion of scalability: some users will see your web site
+ behaving fine, while others will see it hanging.
+\end_layout
+
+\begin_layout Standard
+The real solution would be to re-factor your application so that it does
+ not have long requests, guaranteeing that you're never too saturated to
+ handle tiny requests.
+ Below are tips on how to do this.
+\end_layout
+
+\begin_layout Subsection
+Dealing with Lengthy Requests
+\end_layout
+
+\begin_layout Standard
+One size does not fit all: you will want to use different strategies to
+ deal with different kinds of tasks.
+\end_layout
+
+\begin_layout Subsubsection
+Deferrable Tasks
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-deferrable-tasks"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Deferrable tasks are tasks that can be resolved later, without impeding
+ on the user's ability to continue using the application.
+\end_layout
+
+\begin_layout Standard
+If the deferrable task is deterministically fast, you can do all processing
+ in the request itself.
+ If not, you should queue the task on a handling service.
+ Prudence's 
+\bar under
+tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/tasks/"
+
+\end_inset
+
+)
+\bar default
+ implementation is a great solution for deferrable tasks, as it lets you
+ run tasks on other threads or even distribute them in a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+ cluster.
+\end_layout
+
+\begin_layout Standard
+Deferring tasks does present a challenge to the user experience: What do
+ you do if the task fails and the user needs to know about it? One solution
+ can be to send a warning email or other kind of message to the user.
+ Another solution could be to have your client constantly poll in the background
+ (via “AJAX”) to see if there are any error messages, which in turn might
+ require you to keep a queue of such error messages per user.
+\end_layout
+
+\begin_layout Standard
+Before you decide on deferring a task, think carefully of the user experience:
+ for example, users might be constantly refreshing a web page waiting to
+ see the results of their operation.
+ Perhaps the task you thought you can defer should actually be considered
+ necessary (see below)?
+\end_layout
+
+\begin_layout Subsubsection
+Necessary Tasks
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Necessary tasks are tasks that must be resolved before the user can continue
+ using the application.
+\end_layout
+
+\begin_layout Standard
+If the necessary task is deterministically fast, you can do all processing
+ in the request itself.
+ If not, you should queue the task on a handling service and return a “please
+ wait” page to the user.
+\end_layout
+
+\begin_layout Standard
+It would be nice to add a progress bar or some other kind of estimation
+ of how long it would take for the task to be done, with a maximum duraton
+ set after which the task should be considered to have failed.
+ The client would poll until the task status is marked “done,” after which
+ they would be redirected back to the application flow.
+ Each polling request sent by the client could likely be processed very
+ quickly, so this this strategy effectively breaks the task into many small
+ requests (“It's better to have many short requests than one long one”).
+\end_layout
+
+\begin_layout Standard
+Prudence's 
+\bar under
+tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/tasks/"
+
+\end_inset
+
+)
+\bar default
+ implementation is a good start for creating such a mechanism: however,
+ it would be up to you to create a “please wait” mechanism, as well as a
+ way to track the tasks' progress and deal with failure.
+\end_layout
+
+\begin_layout Standard
+Implementing such a handling service is not trivial.
+ It adds a new component to your architecture, one that also has to be made
+ to scale.
+ One can also argue that it adversely affects user experience by adding
+ overhead, delaying the time it takes for the task to complete.
+ The bottom line, though, is you're vastly increasing concurrency and your
+ ability to scale.
+ And, you're improving the user experience in one respect: they would get
+ a feedback on what's going on rather than having their browsers spin, waiting
+ for their requests to complete.
+\end_layout
+
+\begin_layout Subsubsection
+File Uploads
+\end_layout
+
+\begin_layout Standard
+These are potentially very long requests that you cannot break into smaller
+ tasks, because they depend entirely on the client.
+ As such, they present a unique challenge to scalability.
+\end_layout
+
+\begin_layout Standard
+Fortunately, Prudence handles client requests via non-blocking I/O, meaning
+ that large file uploads will not hold on to a single thread for the duration
+ of the upload.
+ See 
+\bar under
+conversation.form (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/api/|conversation-form"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Unfortunately, many concurrent uploads will still saturate your threads.
+ If your application relies on frequent file uploads, you are advised to
+ handle such requests on separate Prudence instances, so that uploads won't
+ stop your application from handling other web requests.
+ You may also consider using a third-party service specializing in file
+ storage and web uploads.
+\end_layout
+
+\begin_layout Subsubsection
+Asynchronous Request Processing
+\end_layout
+
+\begin_layout Standard
+Having the client poll until a task is completed lets you break up a task
+ into multiple requests and increase concurrency.
+ Another strategy is to break an 
+\emph on
+individual request
+\emph default
+ into pieces.
+ While you're processing the request and preparing the response, you can
+ free the web thread to handle other requests.
+ When you're ready to deliver content, you raise a signal, and the next
+ available web thread takes care of sending your response to the client.
+ You can continue doing this indefinitely until the response is complete.
+ From the client's perspective it's a single request: a web browser, for
+ example, would spin until the request was completed.
+\end_layout
+
+\begin_layout Standard
+You might be adding some extra time overhead for the thread-switching on
+ your end, but the benefits for scalability are obvious: you are increasing
+ concurrency by shortening the time you are holding on to web threads.
+\end_layout
+
+\begin_layout Standard
+For web services that deliver heavy content, such as images, video, audio,
+ it's absolutely necessary.
+ Without it, a single user could tie up a thread for minutes, if not hours.
+ You would still get degraded performance if you have more concurrent users
+ than you have threads, but at least degradation will be shared among users.
+ Without asynchronous processing, each user would tie up one thread, and
+ when that finite resource is used up, more users won't be able to access
+ your service.
+\end_layout
+
+\begin_layout Standard
+Even for lightweight content such as HTML web pages, asynchronous processing
+ can be a good tactic for increasing concurrency.
+ For example, if you need to fetch data from a backend with non-deterministic
+ response time, it's best to free the web thread until you actually have
+ content available for the response.
+\end_layout
+
+\begin_layout Standard
+It's not a good idea to do this for every page.
+ While it's better to have many short requests instead of one long one,
+ it's obviously better to have one short request rather than many short
+ ones.
+ Which web requests are good candidates for asynchronous processing?
+\end_layout
+
+\begin_layout Enumerate
+Requests for which processing is made of independent operations.
+ (They'll likely be required to work in sequence, but if they can be processed
+ in parallel, even better!)
+\end_layout
+
+\begin_layout Enumerate
+Requests that must access backend services with non-deterministic response
+ times.
+\end_layout
+
+\begin_layout Standard
+And, even for #2, if the service can take a 
+\emph on
+very
+\emph default
+ long time to respond, consider that it might be better to queue the task
+ on a task handler and give proper feedback to the user.
+\end_layout
+
+\begin_layout Standard
+And so, after this lengthy discussion, it turns out that there aren't that
+ many places where asynchronous processing can help you scale.
+ Caching is far more useful.
+\end_layout
+
+\begin_layout Standard
+As of version 1.1, Prudence has limited support for asynchronous processing,
+ via 
+\bar under
+conversation.defer (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../manual/api/|conversation-defer"
+
+\end_inset
+
+)
+\bar default
+.
+ Better support is planned for a future version.
+\end_layout
+
+\begin_layout Subsection
+Backend Partitioning
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-backend-partitioning"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can keep adding more nodes behind a load balancer insofar as each request
+ does not have to access shared state.
+ Useful web applications, however, are likely data-driven, requiring considerabl
+e state.
+\end_layout
+
+\begin_layout Standard
+If the challenge in handling web requests is cutting down the length of
+ request, then that of backends is the struggle against degraded performance
+ as you add new nodes to your database cluster.
+ These nodes have to synchronize their state with each other, and that synchroni
+zation overhead increases exponentially.
+ There's a definite point of diminishing returns.
+\end_layout
+
+\begin_layout Standard
+The backend is one place where high-performance hardware can help.
+ Ten expensive, powerful machines might be equal in total power to forty
+ cheap machines, but they require a quarter of the synchronization overhead,
+ giving you more elbow room to scale up.
+ Fewer nodes means better scalablity.
+\end_layout
+
+\begin_layout Standard
+But CPUs can only take you so far.
+\end_layout
+
+\begin_layout Standard
+Partitioning is as useful to backend scaling as caching is to web request
+ scaling.
+ Rather than having one big cluster of identical nodes, you would have several
+ smaller, independent clusters.
+ This lets you add nodes to each cluster without spreading synchronization
+ overhead everywhere.
+ The more partitions you can create, the better you'll be able to scale.
+\end_layout
+
+\begin_layout Standard
+Partitioning can happen in various components of your application, such
+ as application servers, the caching system, task queues, etc.
+ However, it is most effective, and most complicated to implement, for databases.
+ Our discussion will thus focus on relational (SQL) databases.
+ Other systems would likely require simpler subsets of these strategies.
+\end_layout
+
+\begin_layout Subsubsection
+Reads vs.
+ Writes
+\end_layout
+
+\begin_layout Standard
+This simple partitioning scheme greatly reduces synchronization overhead.
+ Read-only servers will never send data to the writable servers.
+ Also, knowing that they don't have to handle writes means you can optimize
+ their configurations for aggressive caching.
+\end_layout
+
+\begin_layout Standard
+(In fact, some database synchronization systems will only let you create
+ this kind of cluster, providing you with one “master” writable node and
+ several read-only “slaves.” They force you to partition!)
+\end_layout
+
+\begin_layout Standard
+Another nice thing about read/write partitioning is that you can easily
+ add it to all the other strategies.
+ Any cluster can thus be divided into two.
+\end_layout
+
+\begin_layout Standard
+Of course, for web services that are heavily balanced towards writes, this
+ is not an effective strategy.
+ For example, if you are implementing an auditing service that is constantly
+ being bombarded by incoming data, but is only queried once in a while,
+ then an extra read-only node won't help you scale.
+\end_layout
+
+\begin_layout Standard
+Note that one feature you lose is the ability to have a transaction in which
+ a write 
+\emph on
+might
+\emph default
+ happen, because a transaction cannot contain both a read-only node and
+ a write-only node.
+ If you must have atomicity, you will have to do your transaction on the
+ writable cluster, or have two transactions: one to lookup and see if you
+ need to change the data, and the second to perform the change---while first
+ checking again that data didn't change since the previous transaction.
+ Too much of this obviously lessens the effectiveness of read/write partitioning.
+\end_layout
+
+\begin_layout Subsubsection
+By Feature
+\end_layout
+
+\begin_layout Standard
+The most obvious and effective partitioning scheme is by feature.
+ Your site might offer different kinds of services that are functionally
+ independent of each other, even though they are displayed to users as united.
+ Behind the scenes, each feature uses a different set of tables.
+ The rule of thumb is trivial: if you can put the tables in separate databases,
+ then you can put these databases in separate clusters.
+\end_layout
+
+\begin_layout Standard
+One concern in feature-based partitioning is that there are a few tables
+ that still need to be shared.
+ For example, even though the features are separate, they all depend on
+ user settings that are stored in one table.
+\end_layout
+
+\begin_layout Standard
+The good news is that it can be cheap to synchronize just this one table
+ between all clusters.
+ Especially if this table doesn't change often---how often do you get new
+ users signing up for your service?---then synchronization overhead will
+ be minimal.
+\end_layout
+
+\begin_layout Standard
+If your database system doesn't let you synchronize individual tables, then
+ you can do it in your code by writing to all clusters at the same time.
+\end_layout
+
+\begin_layout Standard
+Partitioning by feature is terrific in that it lets you partition other
+ parts of the stack, too.
+ For example, you can also use a different set of web servers for each feature.
+\end_layout
+
+\begin_layout Standard
+Also consider that some features might be candidates for using a 
+\bar under
+“NoSQL” database (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-data-backends"
+
+\end_inset
+
+)
+\bar default
+.
+ Choose the best backend per feature.
+\end_layout
+
+\begin_layout Subsubsection
+By Section
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-by-section"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Another kind of partitioning is sometimes called “sharding.” It involves
+ splitting up tables into sections that can be placed in different databases.
+ Some databases support sharding as part of their synchronization strategy,
+ but you can also implement it in your code.
+ The great thing about sharding is that it lets you create as many shards
+ (and clusters) as you want.
+ It's the key to the truly large scale.
+\end_layout
+
+\begin_layout Standard
+Unfortunately, like partitioning by feature, sharding is not always possible.
+ You need to also shard all related tables, so that queries can be self-containe
+d within each shard.
+ It's thus most appropriate for one-to-many data hierarchies.
+ For example, if your application is a blog that supports comments, then
+ you put some blogs and their comments on one shard, and others in another
+ shard.
+ However, if, say, you have a feature where blog posts can refer to other
+ arbitrary blog posts, then querying for those would have to cross shard
+ boundaries.
+\end_layout
+
+\begin_layout Standard
+The best way to see where sharding is possible is to draw a diagram of your
+ table relationships.
+ Places in the diagram which look like individual trees---trunks spreading
+ out into branches and twigs---are good candidates for sharding.
+\end_layout
+
+\begin_layout Standard
+How to decide which data goes in which shard?
+\end_layout
+
+\begin_layout Standard
+Sometimes the best strategy is arbitrary.
+ For example, put all the even-numbered IDs in one shard, and the odd-numbered
+ ones in another.
+ This allows for straightforward growth because you can just switch it to
+ division by three if you want three shards.
+ 
+\end_layout
+
+\begin_layout Standard
+Another strategy might seem obvious: If you're running a site which shows
+ different sets of data to different users, then why not implement it as
+ essentially separate sites? For example, a social networking site strictly
+ organized around individual cities could have separate database clusters
+ per city.
+\end_layout
+
+\begin_layout Standard
+A “region” can be geographical, but also topical.
+ For example, a site hosting dance-related discussion forums might have
+ one cluster for ballet and one for tango.
+ A “region” can also refer to user types.
+ For example, your social networking site could be partitioned according
+ to age groups.
+\end_layout
+
+\begin_layout Standard
+The only limitation is queries.
+ You can still let users access profiles in other regions, but cross-regional
+ relational queries won't be possible.
+ Depending on what your application does, this could be a reasonable solution.
+\end_layout
+
+\begin_layout Standard
+A great side-benefit to geographical partitioning is that you can host your
+ servers at data centers within the geographical location, leading to better
+ user experiences.
+ Regional partitioning is useful even for “NoSQL” databases.
+\end_layout
+
+\begin_layout Subsubsection*
+Coding Tips for Partitioning
+\end_layout
+
+\begin_layout Standard
+If you organize your code well, it would be very easy to implement partitioning.
+ You simply assign different database operations to use different connection
+ pools.
+ If it's by feature, then you can hard code it for those features.
+ If it's sharding, then you add a switch before each operation telling it
+ which connection pool to use.
+\end_layout
+
+\begin_layout Standard
+For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def get_blogger_profile(user_id):
+\end_layout
+
+\begin_layout Plain Layout
+
+	connection = blogger_pool.get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	connection.close()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def get_blog_post_and_comments(blog_post_id):
+\end_layout
+
+\begin_layout Plain Layout
+
+	shard_id = object.id % 3
+\end_layout
+
+\begin_layout Plain Layout
+
+	connection = blog_pools[shard_id].get_connection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	connection.close()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Unfortunately, some programming practices make such an effective, clean
+ organization difficult.
+\end_layout
+
+\begin_layout Standard
+Some developers prefer to use ORMs (object-relational mappers) rather than
+ access the database directly.
+ Many ORMs do not easily allow for partitioning, either because they support
+ only a single database connection pool, or because they don't allow your
+ objects to be easily shared between connections.
+\end_layout
+
+\begin_layout Standard
+For example, your logic might require you to retrieve an “object” from the
+ database, and only then decide if you need to alter it or not.
+ If you're doing read/write partitioning, then you obviously want to read
+ from the read partition.
+ Some ORMs, though, have the object tied so strongly to an internal connection
+ object that you can't trivially read it from one connection and save it
+ into another.
+ You'd either have to read the object initially from the write partition,
+ minimizing the usefulness of read/write partitioning, or re-read it from
+ the write partition when you realize you need to alter it, causing unnecessary
+ overhead.
+ (Note that you'll need to do this anyway if you need the write to happen
+ in a transaction.)
+\end_layout
+
+\begin_layout Standard
+Object oriented design is also problematic in a more general sense.
+ The first principle of object orientation is “encapsulation,” putting your
+ code and data structure in one place: the class.
+ This might make sense for business logic, but, for the purposes of re-factoring
+ your data backend for partitioning or other strategies, you really don't
+ want the data access code to be spread out among dozens of classes in your
+ application.
+ You want it all in one place, preferably even one source code file.
+ It would let you plug in a whole new data backend strategy by replacing
+ this source code file.
+ For data-driven web development, you are better off not being too object
+ oriented.
+\end_layout
+
+\begin_layout Standard
+Even more generally speaking, organizing code together by mechanism or technolog
+y, rather than by “object” encapsulation, will let you apply all kinds of
+ re-factorizations more easily, especially if you manage to decouple your
+ application's data structures from any library-specific data structures.
+\end_layout
+
+\begin_layout Subsection
+Data Backends
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-data-backends"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Relational (SQL) databases such as MySQL were, for decades, the backbone
+ of the web.
+ They were originally developed as minimal alternatives to enterprise database
+ servers such as Oracle Database and IBM's DB2.
+ Their modest feature set allowed for better performance, smaller footprints,
+ and low investment costs---perfect for web applications.
+ The free software LAMP stack (Linux, Apache, MySQL and PHP) 
+\emph on
+was
+\emph default
+ the web.
+\end_layout
+
+\begin_layout Standard
+Relational databases require a lot of synchronization overhead for clusters,
+ limiting their scalability.
+ Though partitioning can take you far, using a “NoSQL” database could take
+ you even further.
+\end_layout
+
+\begin_layout Subsubsection
+Graph Databases
+\end_layout
+
+\begin_layout Standard
+If your relational data structure contains arbitrary-depth relationships
+ or many “generic” relationships forced into a relational model, then consider
+ using a graph database instead.
+ Not only will traversing your data be faster, but also the database structure
+ will allow for more efficient performance.
+ The implications for scalability can be dramatic.
+\end_layout
+
+\begin_layout Standard
+Social networking applications are often used as examples of graph structures,
+ but there are many others: forums with threaded and cross-referenced discussion
+s, semantic knowledge bases, warehouse and parts management, music “genomes,”
+ user-tagged media sharing sites, and many science and engineering applications.
+\end_layout
+
+\begin_layout Standard
+Though fast, querying a complex graph can be difficult to prototype.
+ Fortunately, the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Gremlin"
+target "http://wiki.github.com/tinkerpop/gremlin/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "SPARQL"
+target "http://www.w3.org/TR/rdf-sparql-query/"
+
+\end_inset
+
+ languages do for graphs what SQL does for relational databases.
+ Your query becomes coherent and portable.
+\end_layout
+
+\begin_layout Standard
+A popular graph database is 
+\begin_inset CommandInset href
+LatexCommand href
+name "Neo4j"
+target "http://neo4j.org/"
+
+\end_inset
+
+, and it's especially easy to use with Prudence.
+ Because it's JVM-based, you can access it internally from Prudence.
+ It also has embedded bindings for many of Prudence's supported languages,
+ and supports a network REST interface which you can easily access via Prudence'
+s document.external.
+\end_layout
+
+\begin_layout Subsubsection
+Document Databases
+\end_layout
+
+\begin_layout Standard
+If your data is composed mostly of “documents”---self-contained records
+ with few relationships to other documents---then consider a document database.
+ 
+\end_layout
+
+\begin_layout Standard
+Document databases allow for straightforward distribution and very fine-grained
+ replication, requiring considerably less overhead than relational and graph
+ databases.
+ Document databases are as scalable as data storage gets: variants are used
+ by all the super-massive Internet services.
+\end_layout
+
+\begin_layout Standard
+The cost of this scalability is the loss of your ability to do relational
+ queries of your data.
+ Instead, you'll be using distributed map/reduce, or rely on an indexing
+ service.
+ These are powerful tools, but they do not match relational queries in sheer
+ flexibility of complex queries.
+ Implementing something as simple as a many-to-many connection, the bread-and-bu
+tter of relational databases, is non-trivial in document databases.
+ Where document databases shine is at listing, sorting and searching through
+ very large catalogs of documents.
+\end_layout
+
+\begin_layout Standard
+Candidate applications include online retail, blogs, wikis, archives, newspapers
+, contact lists, calendars, photo galleries, dating profiles\SpecialChar \ldots{}
+ The list is
+ actually quite long, making document databases very attractive for many
+ products.
+ But, it's important to always be aware of their limitations: for example,
+ merely adding social networking capabilities to a dating site would require
+ complex relations that might be better handled with a graph database.
+ The combination of a document database with a graph database might, in
+ fact, be enough to remove any benefit a relational database could bring.
+\end_layout
+
+\begin_layout Standard
+A popular document database is 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+.
+ Though document-based, it has a few basic relational features that might
+ be just good enough for your needs.
+ Another is 
+\begin_inset CommandInset href
+LatexCommand href
+name "CouchDB"
+target "http://couchdb.apache.org/"
+
+\end_inset
+
+, which is a truly distributed database.
+ With CouchDB it's trivial to replicate and synchronize data with clients'
+ desktops or mobile devices, and to distribute it to partners.
+ It also supports a REST interface which you can easily access via Prudence's
+ document.external.
+ And, both MongoDB and CouchDB use JavaScript extensively, making it natural
+ to use with Prudence's JavaScript flavor.
+\end_layout
+
+\begin_layout Quote
+We've started a project 
+\begin_inset CommandInset href
+LatexCommand href
+name "to better integrate Prudence JavaScript with MongoDB"
+target "http://code.google.com/p/mongodb-json/"
+
+\end_inset
+
+.
+ It is included in the “Savory JavaScript” edition.
+\end_layout
+
+\begin_layout Subsubsection
+Column Databases
+\end_layout
+
+\begin_layout Standard
+These can be considered as subsets of document databases.
+ The “document,” in this case, is required to have an especially simple,
+ one-dimensional structure.
+\end_layout
+
+\begin_layout Standard
+This requirement allows optimization for a truly massive scale.
+\end_layout
+
+\begin_layout Standard
+Column databases occupy the “cloud” market niche: they allow companies like
+ Google and Amazon to offer cheap database storage and services for third
+ parties.
+ See Google's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Datastore"
+target "http://code.google.com/appengine/docs/java/datastore/"
+
+\end_inset
+
+ (based on 
+\begin_inset CommandInset href
+LatexCommand href
+name "Bigtable"
+target "http://labs.google.com/papers/bigtable.html"
+
+\end_inset
+
+) and Amazon's 
+\begin_inset CommandInset href
+LatexCommand href
+name "SimpleDB"
+target "http://aws.amazon.com/simpledb/"
+
+\end_inset
+
+ (based on 
+\begin_inset CommandInset href
+LatexCommand href
+name "Dynamo"
+target "http://www.allthingsdistributed.com/2007/10/amazons_dynamo.html"
+
+\end_inset
+
+; actually, Dynamo is a “key/value” database, which is even more opaque
+ than a column database).
+\end_layout
+
+\begin_layout Standard
+Though you can run your own column database via open source projects like
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cassandra"
+target "http://cassandra.apache.org/"
+
+\end_inset
+
+ (originally developed by/for Facebook), 
+\begin_inset CommandInset href
+LatexCommand href
+name "HBase"
+target "http://hadoop.apache.org/hbase/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Redis"
+target "http://redis.io/"
+
+\end_inset
+
+, the document databases mentioned above offer richer document structures
+ and more features.
+ Consider column databases only if you need truly massive scale, or if you
+ want to make use of the cheap storage offered by “cloud” vendors.
+\end_layout
+
+\begin_layout Subsubsection
+Best of All Worlds
+\end_layout
+
+\begin_layout Standard
+Of course, consider that it's very possible to use both SQL and “NoSQL”
+ (graph, document, column) databases together for different parts of your
+ application.
+ See 
+\bar under
+backend partitioning (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-backend-partitioning"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \end_body
