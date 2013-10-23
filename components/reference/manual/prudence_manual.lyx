@@ -310,6 +310,13 @@ Manual Resources
 
 \begin_layout Section
 The URI-space
+\begin_inset CommandInset label
+LatexCommand label
+name "the-uri-space"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4168,7 +4175,7 @@ Resource dispatching, for the purpose of the URI/resource separation paradigm,
  only makes sense for manual resources.
  For scriptlet resources, 
 \bar under
-Resource capturing (page 
+resource capturing (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "resource-capturing"
@@ -4610,13 +4617,38 @@ app.dispatchers = {
 
 \end_layout
 
-\begin_layout Subsubsection
-Custom Dispatching
+\begin_layout Subsection
+app.dispatchers
 \end_layout
 
 \begin_layout Standard
-Under the hood resource dispatching is handled by URI capturing.
- The URI is captured to a special manual resource called a 
+The common use of 
+\begin_inset Quotes eld
+\end_inset
+
+app.dispatchers
+\begin_inset Quotes erd
+\end_inset
+
+ has been 
+\bar under
+discussed above (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-dispatching"
+
+\end_inset
+
+)
+\bar default
+.
+ Here we'll delve into more details and see how to create your own custom
+ dispatchers.
+\end_layout
+
+\begin_layout Standard
+Under the hood, resource dispatching is handled by the URI capturing mechanism:
+ the URI is captured to a special manual resource---the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4624,11 +4656,12 @@ dispatcher
 \begin_inset Quotes erd
 \end_inset
 
- with an injected value specifying to which resource it should dispatch.
+---with an injected value specifying the ID of resource to which it should
+ dispatch.
 \end_layout
 
 \begin_layout Standard
-Prudence comes with a few dipsatchers to be found in the 
+Prudence's default dispatchers can be found in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4647,13 +4680,33 @@ Prudence comes with a few dipsatchers to be found in the
 
 .
  You are encouraged to look at the code there in order to understand how
- dispatching works: it's quite straightforward.
+ dispatching works: it's quite straightforward delegation of the 
+\bar under
+entry points of a manual resource (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-However, you can also write your own dispatchers to handle more complex
- dispatching paradigms.
- An example configuration of overriding the default 
+However, you can also write your own dispatchers to handle different dispatching
+ paradigms.
+ To configure them, you will need to use a long-form for 
+\begin_inset Quotes eld
+\end_inset
+
+app.dispatchers
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example, here we override the default 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4681,83 +4734,12 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	javascript: {
-\end_layout
-
-\begin_layout Plain Layout
-
-		dispatcher: '/dispatchers/mydispatcher/',
-\end_layout
-
-\begin_layout Plain Layout
-
-		resources: '/resources/'
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You would then need a 
-\begin_inset Quotes eld
-\end_inset
-
-/libraries/dispatchers/mydispatcher.js
-\begin_inset Quotes erd
-\end_inset
-
- file under your application's subdirectory.
- You would be able to access the dispatch ID as the 
-\begin_inset Quotes eld
-\end_inset
-
-prudence.dispatcher.id
-\begin_inset Quotes erd
-\end_inset
-
- conversation.local.
-\end_layout
-
-\begin_layout Standard
-Note that you do not need to override the default dispatchers, and can use
- any dispatcher name:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.dispatchers = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
 	special: {
 \end_layout
 
 \begin_layout Plain Layout
 
-		dispatcher: '/dispatchers/myspecialdispatcher/',
+		dispatcher: '/dispatchers/special-dispatcher/',
 \end_layout
 
 \begin_layout Plain Layout
@@ -4786,6 +4768,25 @@ app.dispatchers = {
 \end_layout
 
 \begin_layout Standard
+The dispatcher code (a standard manual resource) would be in a 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/dispatchers/special-dispatcher.js
+\begin_inset Quotes erd
+\end_inset
+
+ file under your application's subdirectory.
+ You would be able to access the dispatch ID there as the injected 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.dispatcher.id
+\begin_inset Quotes erd
+\end_inset
+
+ conversation.local.
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4801,7 +4802,7 @@ customValue2
 \begin_inset Quotes erd
 \end_inset
 
- would then be available to your dispatcher code as the 
+ would be application.globals: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4817,16 +4818,71 @@ prudence.dispatcher.special.customValue2
 \begin_inset Quotes erd
 \end_inset
 
- application.globals respectively (replace 
-\begin_inset Quotes eld
+ respectively.
+\end_layout
+
+\begin_layout Standard
+You can also override the default dispatchers:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	javascript: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		dispatcher: '/dispatchers/my-javascript-dispatcher/',
+\end_layout
+
+\begin_layout Plain Layout
+
+		resources: '/resources/'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
 \end_inset
 
-special
-\begin_inset Quotes erd
+
+\end_layout
+
+\begin_layout Subsection
+app.errors
+\begin_inset CommandInset label
+LatexCommand label
+name "app-errors"
+
 \end_inset
 
- in the name with your dispatcher name).
- Thus, you can configure your dispatcher in routing.js.
+
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsection
@@ -4946,6 +5002,17 @@ app.hosts internal
 
 \begin_layout Subsection
 app.preheat
+\begin_inset CommandInset label
+LatexCommand label
+name "app-preheat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsection
@@ -7773,6 +7840,13 @@ app.routes = {
 
 \begin_layout Subsubsection
 Controlling the Format
+\begin_inset CommandInset label
+LatexCommand label
+name "static-resources-controlling-the-format"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -7784,13 +7858,50 @@ negotiate
 \begin_inset Quotes erd
 \end_inset
 
- is true, Prudence will handle HTTP content negotiation, and will assume
- a single MIME type for each resource, which it will lookup according to
- its filename extension.
+ is true, Prudence will handle HTTP content negotiation for your static
+ resources, and will assume a single MIME type per resource.
+ That MIME type is determined by the filename extension.
+ For example, a resource named 
+\begin_inset Quotes eld
+\end_inset
+
+logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ will have the 
+\begin_inset Quotes eld
+\end_inset
+
+image/png
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type.
 \end_layout
 
 \begin_layout Standard
-TODO
+Prudence recognizes many common file types by default, but you can add your
+ own mappings in you application's settings.js, using 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.settings.mediaTypes
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-media-types"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -9074,6 +9185,13 @@ TODO
 
 \begin_layout Section
 Accepting Uploads
+\begin_inset CommandInset label
+LatexCommand label
+name "accepting-uploads"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9740,84 +9858,882 @@ Built-in Filters
 Configuring Applications
 \end_layout
 
+\begin_layout Standard
+Prudence application's live in their own subdirectory under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/applications/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The subdirectory name itself can be considered a setting, as it is used
+ as a default identifier for the application in various use cases.
+\end_layout
+
+\begin_layout Standard
+Prudence uses 
+\begin_inset Quotes eld
+\end_inset
+
+configuration-by-script
+\begin_inset Quotes erd
+\end_inset
+
+ almost everywhere: configuration files are true JavaScript source code,
+ meaning that you can do pretty much anything you need during the bootstrap
+ process, allowing for dynamic configurations that adjust to their working
+ environments.
+\end_layout
+
+\begin_layout Quote
+Prudence, as of version 2.0, does not support live re-configuring of applications.
+ You must restart Prudence in order for changed settings to take hold.
+ The one exception is 
+\bar under
+crontab (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "crontab"
+
+\end_inset
+
+)
+\bar default
+: changes there are picked up on-the-fly once per minute.
+\end_layout
+
+\begin_layout Subsubsection
+Overview
+\end_layout
+
+\begin_layout Standard
+The subdirectory contains five main configuration files:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+settings.js
+\series default
+: This required file, detailed in this chapter, includes settings used by
+ Prudence as well as your own custom settings.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+routing.js
+\series default
+: This required file defines the application's 
+\bar under
+URI-space (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-uri-space"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+crontab
+\series default
+: This optional file defines 
+\bar under
+regularly scheduled background tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "crontab"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+default.js
+\series default
+: This required file is used to load the other configuration files above.
+ You should not normally need to edit this file, but feel free to examine
+ it to understand the application bootstrapping process.
+\end_layout
+
 \begin_layout Subsection
 settings.js
 \end_layout
 
-\begin_layout Subsubsection
-app.settings
+\begin_layout Standard
+If you use the default template with the 
+\begin_inset Quotes eld
+\end_inset
+
+sincerity prudence create
+\begin_inset Quotes erd
+\end_inset
+
+ command, you should get a setting.js file that looks something like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	description: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		name: 'myapp',
+\end_layout
+
+\begin_layout Plain Layout
+
+		description: 'Skeleton for myapp application',
+\end_layout
+
+\begin_layout Plain Layout
+
+		author: 'The Author',
+\end_layout
+
+\begin_layout Plain Layout
+
+		owner: 'The Project'
+\end_layout
+
+\begin_layout Plain Layout
+
+	},
+\end_layout
+
+\begin_layout Plain Layout
+
+	errors: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		debug: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		homeUrl: 'http://threecrickets.com/prudence/', // Only used when debug=false
+\end_layout
+
+\begin_layout Plain Layout
+
+		contactEmail: 'info@threecrickets.com' // Only used when debug=false
+\end_layout
+
+\begin_layout Plain Layout
+
+	}, 
+\end_layout
+
+\begin_layout Plain Layout
+
+	code: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		libraries: ['libraries'], // Handlers and tasks will be found here
+\end_layout
+
+\begin_layout Plain Layout
+
+		defrost: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		minimumTimeBetweenValidityChecks: '1s',
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultDocumentName: 'default',
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultExtension: 'js',
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultLanguageTag: 'javascript',
+\end_layout
+
+\begin_layout Plain Layout
+
+		sourceViewable: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	}, 
+\end_layout
+
+\begin_layout Plain Layout
+
+	uploads: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		root: 'uploads',
+\end_layout
+
+\begin_layout Plain Layout
+
+		sizeThreshold: '0kb'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}, 
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		php: 'text/html'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that some values can be specified as either numbers or string:
+\end_layout
+
+\begin_layout Itemize
+Durations: numerically as milliseconds, or using 'ms', 's', 'm', 'h' or
+ 'd' suffixes for milliseconds, seconds, minutes, hours or days.
+ Fractions can be used, for example: 
+\begin_inset Quotes eld
+\end_inset
+
+1.5d
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Data sizes: numerically as bytes, or using 'b', 'kb', 'mb', 'gb' or 'tb'
+ suffixes.
+ Magnitude uses the binary system: 1kb = 1024b.
+ Fractions can be used, for example: 
+\begin_inset Quotes eld
+\end_inset
+
+1.5mb
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
 app.settings.description
 \end_layout
 
+\begin_layout Standard
+Information here is meant for humans.
+ It appears in the Prudence Administration application.
+\end_layout
+
 \begin_layout Subsubsection
 app.settings.errors
+\end_layout
+
+\begin_layout Standard
+How should Prudence deal with errors in your application?
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ is true, Prudence will return a very detailed 
+\bar under
+debug page (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "debug-page"
+
+\end_inset
+
+)
+\bar default
+ in HTML for uncaught exceptions in your code.
+ Because this can reveal your application's internal data, 
+\series bold
+make sure to set 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ to false for production deployments
+\series default
+.
+ Debug mode also enables scriptlet resource debugging: under your container's
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/cache/scripturian/
+\begin_inset Quotes erd
+\end_inset
+
+ directory you will see the generated source code for each resource.
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ is false, a generic error page will be returned instead, using 
+\begin_inset Quotes eld
+\end_inset
+
+homeUrl
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+contactEmail
+\begin_inset Quotes erd
+\end_inset
+
+ in its template.
+ Alternatively, you can also route your own custom error pages using 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.errors
+\begin_inset Quotes erd
+\end_inset
+
+ in routing.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-errors"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
 app.settings.code
 \end_layout
 
+\begin_layout Standard
+Here you can control how Prudence deals with your code:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+libraries
+\series default
+: An array of paths where importable libraries will be found.
+ If relative, they will be based on the application's root subdirectory.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+defrost
+\series default
+: When true will attempt to 
+\begin_inset Quotes eld
+\end_inset
+
+defrost
+\begin_inset Quotes erd
+\end_inset
+
+ manual and scriptlet resources under the 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory.
+ Defrosting means pre-parsing and sometimes pre-compiling the code: this
+ allows for faster startup times on first hits to these resources.
+ Note that defrosting is 
+\emph on
+not
+\emph default
+ pre-heating: the former only pre-compiles, the latter actually does a 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ on your resources, which would ensure that services used by your resources
+ are also warmed up.
+ See 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-preheat"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+minimumTimeBetweenValidityChecks
+\series default
+: Scripturian makes sure to reload (and thus re-compile) code if the source
+ files are changed, for which it compares the file's modification dates
+ to the cached values.
+ For high-volume deployments, this might involve constantly checking the
+ filesystem, potentially resulting in performance problems on some operating
+ systems.
+ This value allows you to enforce a delay between these checks.
+ It's a good idea to set it to anything greater than zero.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+defaultDocumentName
+\series default
+: When a document name specifies to a directory, Scripturian will internally
+ change the specification to a document with this name in the subdirectory
+ (excluding the extension).
+ Example, if the value is 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ and you are calling 
+\begin_inset Quotes eld
+\end_inset
+
+document.require('/mylibrary/')
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/mylibrary/
+\begin_inset Quotes erd
+\end_inset
+
+ is a directory, the it would specify 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/mylibrary/default.*
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+defaultExtension
+\series default
+: If more than one file in a directory has the same name but different extension
+s, then this extension will be preferred.
+ For example, if the value is 
+\begin_inset Quotes eld
+\end_inset
+
+js
+\begin_inset Quotes erd
+\end_inset
+
+ and a directory has both 
+\begin_inset Quotes eld
+\end_inset
+
+mylibrary.js
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+mylibrary.py
+\begin_inset Quotes erd
+\end_inset
+
+, then the former file will be preferred.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+defaultLanguageTag
+\series default
+: If a scriptlet tag does not specify a language, then this value will be
+ the default.
+\end_layout
+
 \begin_layout Subsubsection
 app.settings.uploads
 \end_layout
 
+\begin_layout Standard
+Configure 
+\bar under
+file upload behavior (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "accepting-uploads"
+
+\end_inset
+
+)
+\bar default
+ here:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+root
+\series default
+: This is where uploaded files are stored.
+ If relative, it will be based on the application's root subdirectory.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+sizeThreshold
+\series default
+: The file upload mechanism can optimize by caching small files in memory
+ instead of saving them to disk.
+ Only if files are greater in size will be they be stored.
+ Set to zero to save all files to disk.
+\end_layout
+
 \begin_layout Subsubsection
 app.settings.mediaTypes
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-media-types"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This dict maps filename extensions to MIME types.
+\end_layout
+
+\begin_layout Standard
+Prudence recognizes many common file types by default: for example, 
+\begin_inset Quotes eld
+\end_inset
+
+png
+\begin_inset Quotes erd
+\end_inset
+
+ is mapped to 
+\begin_inset Quotes eld
+\end_inset
+
+image/png
+\begin_inset Quotes erd
+\end_inset
+
+.
+ However, using this setting you can define additional mappings or change
+ the default ones.
+ Note that each filename extension can be mapped to one 
+\emph on
+and only one
+\emph default
+ MIME type.
+\end_layout
+
+\begin_layout Standard
+This setting is used mostly for scriptlet and 
+\bar under
+static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-controlling-the-format"
+
+\end_inset
+
+)
+\bar default
+.
+ For example, a scriptlet resource named 
+\begin_inset Quotes eld
+\end_inset
+
+person.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ will have the default 
+\begin_inset Quotes eld
+\end_inset
+
+text/html
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type (which you can change in scriptlet code via the conversation.mediaType
+ APIs), and a static resource named 
+\begin_inset Quotes eld
+\end_inset
+
+logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ will have the 
+\begin_inset Quotes eld
+\end_inset
+
+image/png
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type.
+\end_layout
+
+\begin_layout Standard
+For manual resources, you define their supported MIME types manually in
+ 
+\bar under
+handleInit (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-init"
+
+\end_inset
+
+)
+\bar default
+.
+ There, you can refer to MIME types directly via the conversation.addMediaTypeByN
+ame API, or you can look them up from this setting using the conversation.addMedi
+aTypeByExtension API.
 \end_layout
 
 \begin_layout Subsubsection
 app.globals
 \end_layout
 
-\begin_layout Subsection
-routing.js
-\end_layout
-
-\begin_layout Subsubsection
-app.hosts
-\end_layout
-
-\begin_layout Subsubsection
-app.routes
-\end_layout
-
-\begin_layout Subsubsection
-app.errors
-\end_layout
-
-\begin_layout Subsubsection
-app.dispatchers
-\end_layout
-
-\begin_layout Subsection
-Scheduling Tasks (Cron)
-\end_layout
-
-\begin_layout Subsection
-Default Directories
+\begin_layout Standard
+Use this for custom settings for your application: values here will become
+ application.globals when your application is running.
 \end_layout
 
 \begin_layout Standard
-/resources/
+Note that this dict is 
+\begin_inset Quotes eld
+\end_inset
+
+flattened
+\begin_inset Quotes erd
+\end_inset
+
+ using dot separators.
+ For example, the following:
 \end_layout
 
 \begin_layout Standard
-/libraries/
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	database: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		driver: 'mysql',
+\end_layout
+
+\begin_layout Plain Layout
+
+		table: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			db: 'myapp',
+\end_layout
+
+\begin_layout Plain Layout
+
+			name: 'users'
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-/libraries/
+\SpecialChar \ldots{}
+would be interpreted as if it were:
 \end_layout
 
 \begin_layout Standard
-/uploads/
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'database.driver': 'mysql',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'database.table.db': 'myapp',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'database.table.name': 'users'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Configuring the Component
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Standard
@@ -10050,12 +10966,12 @@ status open
 
 \begin_layout Plain Layout
 
-server.context.parameters.add('minThreads', 6)
+server.context.parameters.set('minThreads', '6')
 \end_layout
 
 \begin_layout Plain Layout
 
-server.context.parameters.add('maxThreads', 12)
+server.context.parameters.set('maxThreads', '12')
 \end_layout
 
 \end_inset
@@ -10074,7 +10990,7 @@ status open
 
 \begin_layout Plain Layout
 
-server.context.parameters.add('type', 1) // blocking NIO
+server.context.parameters.set('type', '1') // blocking NIO
 \end_layout
 
 \end_inset
@@ -10162,17 +11078,17 @@ component.servers.add(server)
 
 \begin_layout Plain Layout
 
-server.context.parameters.add('keystorePath', '/path/prudence.jks')
+server.context.parameters.set('keystorePath', '/path/prudence.jks')
 \end_layout
 
 \begin_layout Plain Layout
 
-server.context.parameters.add('keystorePassword', 'mykeystorepassword')
+server.context.parameters.set('keystorePassword', 'mykeystorepassword')
 \end_layout
 
 \begin_layout Plain Layout
 
-//server.context.parameters.add('keyPassword', 'mykeypassword')
+//server.context.parameters.set('keyPassword', 'mykeypassword')
 \end_layout
 
 \begin_layout Plain Layout
@@ -10186,7 +11102,7 @@ server.context.parameters.add('keystorePassword', 'mykeystorepassword')
 
 \begin_layout Plain Layout
 
-server.context.parameters.add('useForwardedForHeader', 'true')
+server.context.parameters.set('useForwardedForHeader', 'true')
 \end_layout
 
 \end_inset
@@ -12390,6 +13306,13 @@ See Sincerity Manual
 
 \begin_layout Subsection
 Debug Page
+\begin_inset CommandInset label
+LatexCommand label
+name "debug-page"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -13490,7 +14413,11 @@ First, note that
 both
 \emph default
  use non-blocking servers at the low level.
- So they're both asynchronous in 
+ So they're 
+\emph on
+both
+\emph default
+ asynchronous in 
 \emph on
 that
 \emph default
@@ -13510,7 +14437,7 @@ target "http://www.eclipse.org/jetty/"
 \emph on
 blocking
 \emph default
- server, which may behave better in some workloads.
+ server, which may behave better in some controlled workloads.
  See 
 \bar under
 configuring servers (page 
@@ -13545,7 +14472,7 @@ target "http://restlet.org/"
 
 \end_inset
 
- handling the intricacies of HTTP.
+ handling the many intricacies of HTTP.
  Why multi-threaded? Because generating HTML is logically a 
 \emph on
 single-event
@@ -13571,9 +14498,11 @@ driven
 never 
 \emph default
 handed simultaneously, and only a single CPU core would ever be used by
- the HTTP server itself (though services it calls, such as video encoding,
- could definitely be multi-threaded).
- Seems odd? Actually, this 
+ the HTTP server itself.
+\end_layout
+
+\begin_layout Standard
+Seems odd? Actually, this 
 \begin_inset Quotes eld
 \end_inset
 
@@ -13602,6 +14531,12 @@ chunk
  Really, your only variable in terms of scalability is the size of the chunks:
  you'll want them smaller under high load in order to degrade performance
  fairly among clients.
+ That said, other libraries you might use from Node.js 
+\emph on
+can and do
+\emph default
+ use threads: this is useful for CPU-bound workloads like CPU-intensive
+ video encoding.
 \end_layout
 
 \begin_layout Standard
@@ -13611,7 +14546,7 @@ Node.js is great for its intended use case.
 \end_layout
 
 \begin_layout Quote
-If you need Node.js but JavaScript is not your favorite dynamic language,
+If you like Node.js but JavaScript is not your favorite dynamic language,
  similarly excellent asynchronous platforms are available: check out 
 \begin_inset CommandInset href
 LatexCommand href
@@ -13648,18 +14583,47 @@ It's very odd that Node.js has become a popular platform for the
 \emph on
 non
 \emph default
--streaming web: it's not designed for it, and in fact is quite a bad fit:
- consider that in a single-threaded runtime, if a single event handler hangs,
- the whole server will hang.
- And scalability is miserable: a database backend that responds slowly to
- one request (say, a heavy query), would cause a delay for 
+-streaming web: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Express"
+target "http://expressjs.com/"
+
+\end_inset
+
+, for example, provides some limited RESTful functionality on top of it.
+ But event-driven servers are not designed for REST, and are in fact quite
+ a bad fit: consider that in a single-threaded runtime, if a single event
+ handler hangs, the whole server will hang.
+ Node.js deals with the problem by in effect offloading it to external libraries
+ written in C++: its database drivers, for example, handle queries in their
+ own connection thread pools, and push events to Node.js when data is available.
+ But in your JavaScript event handlers, you have to take extra care not
+ to do any time-consuming work: a delay you cause would affect 
 \emph on
 all
 \emph default
- clients who are waiting their turn on the thread.
- These serious problems can be ameliorated (clumsily and with other costs)
- by running multiple Node.js processes behind a load balancer, but it should
- be clear that Node.js is entirely the wrong tool for the job.
+ operations waiting their turn on the single-threaded event loop.
+ Thus, a scalable Node.js application must have event handlers with no risky
+ 
+\begin_inset Quotes eld
+\end_inset
+
+side effects,
+\begin_inset Quotes erd
+\end_inset
+
+ while external services must be called upon in C++.
+\end_layout
+
+\begin_layout Standard
+You can utilize more CPU cores by running multiple Node.js processes behind
+ a load balancer, but the problems quickly multiply: each process loads
+ its own version of the database driver, with its own connection thread
+ pool that can't be shared with the other Node.js processes.
+ In Prudence, by contrast, the same pool is trivially shared by all threads,
+ and this is true for all resources.
+ It should be clear that Node.js is simply the wrong tool for the job.
 \end_layout
 
 \begin_layout Standard
@@ -13668,10 +14632,10 @@ So, why is Node.js so misused? One reason is that its raw architecture is
 readed easy.
  JavaScript, too, is a draw, as a language that many programmers already
  know.
- So, despite not being a great web platform, it's one in which you can build
- web services quickly and with little fuss, and sometimes that's more important
- than scalability or even robustness, especially if the goal is to create
- in-house services.
+ So, despite being a problematic web platform, it's one in which you can
+ build web services quickly and with little fuss, and sometimes that's more
+ important than scalability or even robustness, especially if the goal is
+ to create in-house services.
  But another reason for Node.js' popularity is more worrying: ignorance.
  People who should know better heard that Node.js is 
 \begin_inset Quotes eld
@@ -13681,7 +14645,7 @@ fast
 \begin_inset Quotes erd
 \end_inset
 
- and 
+ because it's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -13692,14 +14656,15 @@ asynchronous
  and think that would lead to faster page load-times for web browsers and
  the ability to handle more page hits.
  That's a very wrong conclusion.
+ You can do great REST in Node.js, but would have to work against the platform's
+ limitations for the scenario.
 \end_layout
 
 \begin_layout Standard
 We believe that Prudence is a much more sensible choice for the RESTful
  web.
- Beyond the basic platform, also consider Prudence's features aimed specifically
- at scalability.
- such as 
+ Beyond the basic architecture, also consider Prudence's features aimed
+ specifically at scalability, such as 
 \bar under
 integrated caching (page 
 \begin_inset CommandInset ref
@@ -13756,12 +14721,12 @@ Technology and Ecosystem
 \end_layout
 
 \begin_layout Standard
-Prudence was especially designed for the JVM, to provide you with access
+Prudence was designed specifically for the JVM, to provide you with access
  to its rich and high-quality ecosystem, to leverage its excellent concurrency
  libraries and monitoring/profiling capabilities, and to be portable and
  integrative.
  The JVM platform is very mature and reliable, as are many of the libraries
- that Prudence relies on, such as Jetty, Restlet and 
+ that Prudence uses, such as Jetty, Restlet and 
 \begin_inset CommandInset href
 LatexCommand href
 name "Hazelcast"
@@ -13782,14 +14747,14 @@ And Prudence is not just JavaScript: it supports many dynamic languages
  a 
 \begin_inset CommandInset href
 LatexCommand href
-name "rich foundation of libraries"
+name "rich foundation library"
 target "http://threecrickets.com/sincerity/manual/programming/#sincerity-javascript-library"
 
 \end_inset
 
 , offering essentials such as OOP and string interpolation, as well as friendly
- wrappers for powerful JVM services such as concurrent collections and cryptogra
-phy.
+ wrappers for powerful JVM services, such as concurrent collections and
+ cryptography.
 \end_layout
 
 \begin_layout Standard
@@ -13820,9 +14785,10 @@ browser wars,
 \end_inset
 
  which have resulted in very performative JavaScript interpreters and JITs.
- (However, it's worth remembering that these engines are really optimized
- for web browser environments, not servers.) Prudence can run JavaScript
- on your choice of either 
+ However, it's worth remembering that these engines are really optimized
+ for web browser environments, not servers, and have very limited support
+ for threading.
+ Prudence can run JavaScript on your choice of either 
 \begin_inset CommandInset href
 LatexCommand href
 name "Nashorn"
@@ -13838,7 +14804,7 @@ target "https://developer.mozilla.org/en-US/docs/Rhino"
 
 \end_inset
 
-.
+, which can both use the JVM's excellent concurrency management.
  Nashorn is as of this writing still under development, to be released with
  JVM 8 in March 2014.
  It promises excellent performance, on par with Java code in some cases.
@@ -13860,7 +14826,7 @@ needs
 \emph on
 far 
 \emph default
-more important for scalability than language performance.
+more important for scalability than language engine performance.
 \end_layout
 
 \begin_layout Standard
@@ -13873,9 +14839,9 @@ Summary
 \end_layout
 
 \begin_layout Standard
-Choose the right tool for the job! Node.js is a great choice for asynchronous
- services, and Prudence---we hope you'll agree---is a great choice for web
- services and RESTful APIs.
+Choose the right tool for the job! Node.js is a great choice for streaming
+ and streaming-like services, and Prudence---we hope you'll agree---is a
+ great choice for web services and RESTful APIs.
 \end_layout
 
 \begin_layout Section
