@@ -23,9 +23,9 @@ import org.restlet.service.EncoderService;
 /**
  * An encoder supporting a list of default encodings.
  * <p>
- * By default it uses its own {@link EncoderService}, instead of that of the
- * application, allowing specific customizations, for example custom settings
- * for {@link EncoderService#getDefaultIgnoredMediaTypes()}.
+ * By default it uses its own {@link CustomEncoderService}, instead of that of
+ * the application, allowing specific customizations, for example custom
+ * settings for {@link EncoderService#getDefaultIgnoredMediaTypes()}.
  * 
  * @author Tal Liron
  * @see IoUtil#SUPPORTED_COMPRESSION_ENCODINGS
@@ -74,7 +74,7 @@ public class CustomEncoder extends Encoder
 	 */
 	public CustomEncoder( Application application, boolean encodingRequest, boolean encodingResponse )
 	{
-		this( application.getContext(), encodingRequest, encodingResponse, new EncoderService() );
+		this( application.getContext(), encodingRequest, encodingResponse, new CustomEncoderService() );
 	}
 
 	/**

@@ -734,6 +734,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
 	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
 	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {Number|String} [compressThreshold=1024] The minumum size in bytes for which to enable compression
 	 * @param {String[]} [compressExclude] Don't compress these media (MIME) types even when compress is true
 	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
@@ -745,11 +746,15 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'compressExclude', 'cacheDuration']
+		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'compressThreshold', 'compressExclude', 'cacheDuration']
 
 		Public.create = function(app, uri) {
 			importClass(
 				com.threecrickets.prudence.util.Fallback)
+				
+			this.compress = Sincerity.Objects.ensure(this.compress, true)
+			this.compressThreshold = Sincerity.Objects.ensure(this.compressThreshold, 1024)
+			this.compressThreshold = Sincerity.Localization.toBytes(this.compressThreshold)
 			
 			if (Sincerity.Objects.exists(this.root)) {
 				this.roots = [this.root]
@@ -796,13 +801,15 @@ Prudence.Routing = Prudence.Routing || function() {
 			restlet.listingAllowed = Sincerity.Objects.ensure(this.listingAllowed, false)
 			restlet.negotiatingContent = Sincerity.Objects.ensure(this.negotiate, true)
 			
-			if (Sincerity.Objects.ensure(this.compress, true)) {
-				// Put an encoder before the directory
+			if (this.compress) {
+				// Put a custom encoder before the directory
 				var encoder = new CustomEncoder(app.instance)
+				encoder.encoderService.minimumSize = this.compressThreshold
 				if (Sincerity.Objects.exists(this.compressExclude)) {
+					var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
 					for (var c in this.compressExclude) {
 						var mediaType = MediaType.valueOf(this.compressExclude[c])
-						encoder.encoderService.ignoredMediaTypes.add(mediaType)
+						ignoredMediaTypes.add(mediaType)
 					}
 				}
 				encoder.next = restlet

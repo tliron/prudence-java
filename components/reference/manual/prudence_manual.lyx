@@ -7324,6 +7324,11 @@ app.routes = {
 
 \begin_layout Plain Layout
 
+		compressThreshold: '1kb',
+\end_layout
+
+\begin_layout Plain Layout
+
 		compressExclude: []
 \end_layout
 
@@ -7558,8 +7563,17 @@ also
 \emph default
  true, Prudence will negotiate the best compression format (gzip and zip
  are supported) and compress on the fly.
- By default, common archive and media formats are excluded, under the assumption
- that they are already optimally compressed.
+ Only files with a size of at least 
+\begin_inset Quotes eld
+\end_inset
+
+compressThreshold
+\begin_inset Quotes erd
+\end_inset
+
+ will be compressed.
+ Also, common archive and media formats are excluded from compression, under
+ the assumption that they are already optimally compressed.
  You can add more exclusions using 
 \begin_inset Quotes eld
 \end_inset
