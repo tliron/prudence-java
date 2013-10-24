@@ -22,11 +22,15 @@ import org.restlet.service.EncoderService;
 
 /**
  * An encoder supporting a list of default encodings.
+ * <p>
+ * By default it uses its own {@link EncoderService}, instead of that of the
+ * application, allowing specific customizations, for example custom settings
+ * for {@link EncoderService#getDefaultIgnoredMediaTypes()}.
  * 
  * @author Tal Liron
  * @see IoUtil#SUPPORTED_COMPRESSION_ENCODINGS
  */
-public class DefaultEncoder extends Encoder
+public class CustomEncoder extends Encoder
 {
 	//
 	// Constants
@@ -53,7 +57,7 @@ public class DefaultEncoder extends Encoder
 	 * @param application
 	 *        The application
 	 */
-	public DefaultEncoder( Application application )
+	public CustomEncoder( Application application )
 	{
 		this( application, false, true );
 	}
@@ -68,9 +72,9 @@ public class DefaultEncoder extends Encoder
 	 * @param encodingResponse
 	 *        Indicates if the response entities should be encoded
 	 */
-	public DefaultEncoder( Application application, boolean encodingRequest, boolean encodingResponse )
+	public CustomEncoder( Application application, boolean encodingRequest, boolean encodingResponse )
 	{
-		this( application.getContext(), encodingRequest, encodingResponse, application.getEncoderService() );
+		this( application.getContext(), encodingRequest, encodingResponse, new EncoderService() );
 	}
 
 	/**
@@ -85,7 +89,7 @@ public class DefaultEncoder extends Encoder
 	 * @param encoderService
 	 *        The encoder service
 	 */
-	public DefaultEncoder( Context context, boolean encodingRequest, boolean encodingResponse, EncoderService encoderService )
+	public CustomEncoder( Context context, boolean encodingRequest, boolean encodingResponse, EncoderService encoderService )
 	{
 		super( context, encodingRequest, encodingResponse, encoderService );
 		describe();

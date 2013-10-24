@@ -722,7 +722,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * be configured in its settings.js, under "settings.mediaTypes".
 	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Directory.html">Directory</a> instance.
-	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/DefaultEncoder.html">DefaultEncoder</a>
+	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html">CustomEncoder</a>
 	 * filter before the Directory.
 	 * 
 	 * @class
@@ -734,6 +734,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
 	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
 	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {String[]} [compressExclude] Don't compress these media (MIME) types even when compress is true
 	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Static = Sincerity.Classes.define(function(Module) {
@@ -744,7 +745,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'cacheDuration']
+		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'compressExclude', 'cacheDuration']
 
 		Public.create = function(app, uri) {
 			importClass(
@@ -783,7 +784,8 @@ Prudence.Routing = Prudence.Routing || function() {
 		function createDirectory(app, root) {
 			importClass(
 					org.restlet.resource.Directory,
-					com.threecrickets.prudence.util.DefaultEncoder,
+					org.restlet.data.MediaType,
+					com.threecrickets.prudence.util.CustomEncoder,
 					java.io.File)
 
 			if (!(root instanceof File)) {
@@ -796,7 +798,13 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			if (Sincerity.Objects.ensure(this.compress, true)) {
 				// Put an encoder before the directory
-				var encoder = new DefaultEncoder(app.instance)
+				var encoder = new CustomEncoder(app.instance)
+				if (Sincerity.Objects.exists(this.compressExclude)) {
+					for (var c in this.compressExclude) {
+						var mediaType = MediaType.valueOf(this.compressExclude[c])
+						encoder.encoderService.ignoredMediaTypes.add(mediaType)
+					}
+				}
 				encoder.next = restlet
 				restlet = encoder
 			}
@@ -2100,7 +2108,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * <li>'farFuture': a string constant that translates to 10 years maximum cache age (a common convention
 	 * implying that the response should be cached "indefinitely")</li>
 	 * </ul>
-	 * Example: {type: 'cacheControl', mediaTypes: {'image/png': 'farFuture', 'image/jpeg': 'farFuture',
+	 * Example: {type: 'cacheControl', mediaTypes: {'image/*': 'farFuture',
 	 * 'text/css': 3600}, next: 'static'} 
 	 * <p>
 	 * You can also set the "default" param to one of these values. If the response MIME type

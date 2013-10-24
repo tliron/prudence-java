@@ -147,7 +147,15 @@ public class CacheControlFilter extends Filter
 		if( response.isEntityAvailable() )
 		{
 			MediaType mediaType = response.getEntity().getMediaType();
-			Number maxAgeNumber = maxAgeForMediaType.get( mediaType );
+			Number maxAgeNumber = null;
+			for( Map.Entry<MediaType, Number> entry : maxAgeForMediaType.entrySet() )
+			{
+				if( entry.getKey().includes( mediaType ) )
+				{
+					maxAgeNumber = entry.getValue();
+					break;
+				}
+			}
 
 			if( maxAgeNumber == null )
 				maxAgeNumber = defaultMaxAge;

@@ -539,17 +539,17 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				'image/png': '1s',
+				'image/*': '1m',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'image/jpeg': '1s',
+				'text/css': '1m',
 \end_layout
 
 \begin_layout Plain Layout
 
-				'image/gif': '1s'
+				'application/x-javascript': '1m'
 \end_layout
 
 \begin_layout Plain Layout
@@ -1959,6 +1959,13 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Inje
 
 \begin_layout Paragraph
 httpAuthenticator
+\begin_inset CommandInset label
+LatexCommand label
+name "http-authenticator-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2007,6 +2014,18 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Http
 \end_inset
 
  class.
+ See the 
+\bar under
+HTTP authentication guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "http-authentication"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
@@ -2520,702 +2539,6 @@ app.routes = {
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Injecting Conversation Attributes
-\begin_inset CommandInset label
-LatexCommand label
-name "injecting-conversation-attributes"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-As we've seen in the app.routes section above, URI template variables delimited
- by curly brackets can be used to match incoming requests and extract the
- values into conversation.locals.
- For example, a 
-\begin_inset Quotes eld
-\end_inset
-
-/person/{id}/
-\begin_inset Quotes erd
-\end_inset
-
- URI template will match the 
-\begin_inset Quotes eld
-\end_inset
-
-/person/linus/
-\begin_inset Quotes erd
-\end_inset
-
- URI and set the 
-\begin_inset Quotes eld
-\end_inset
-
-id
-\begin_inset Quotes erd
-\end_inset
-
- conversation.local to 
-\begin_inset Quotes eld
-\end_inset
-
-linus
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Template variables can furthermore be used to 
-\emph on
-inject
-\emph default
- values for three use cases:
-\end_layout
-
-\begin_layout Itemize
-Captured URI targets
-\end_layout
-
-\begin_layout Itemize
-Redirection URI targets
-\end_layout
-
-\begin_layout Itemize
-
-\bar under
-Cache keys (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "caching"
-
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Standard
-In each of these cases you can inject the same conversation.locals that were
- extracted from the matched URI pattern.
- An example of redirection:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	"/person/{id}/": ">http://newsite.org/profile/?id={id}"
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Prudence furthermore supports many built-in variables extracted from the
- conversation attributes.
- They are summarized below.
- Also see the relevant 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet API documentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Request URIs
-\end_layout
-
-\begin_layout Standard
-The variables are composed of a prefix and a suffix.
- The prefix specifies which URI you are referring to, while the suffix specifies
- the part of that URI.
- For example, the prefix 
-\begin_inset Quotes eld
-\end_inset
-
-{r-}
-\begin_inset Quotes erd
-\end_inset
-
- can be combined with the suffix 
-\begin_inset Quotes eld
-\end_inset
-
-{-i}
-\begin_inset Quotes erd
-\end_inset
-
- for 
-\begin_inset Quotes eld
-\end_inset
-
-{ri}
-\begin_inset Quotes erd
-\end_inset
-
-, to specify the complete request URI.
-\end_layout
-
-\begin_layout Paragraph
-Prefixes
-\end_layout
-
-\begin_layout Itemize
-{r-}: actual URI (
-\bar under
-r
-\bar default
-eference)
-\end_layout
-
-\begin_layout Itemize
-{h-}: virtual 
-\bar under
-h
-\bar default
-ost URI
-\end_layout
-
-\begin_layout Itemize
-{o-}: the application's r
-\bar under
-o
-\bar default
-ot URI on the current virtual host
-\end_layout
-
-\begin_layout Itemize
-{f-}: the re
-\bar under
-f
-\bar default
-erring URI (sent by some clients: usually means that the client clicked
- a hyperlink or was redirected here from elsewhere)
-\end_layout
-
-\begin_layout Paragraph
-Suffixes
-\end_layout
-
-\begin_layout Itemize
-{-i}: the complete URI (
-\bar under
-i
-\bar default
-dentitifer)
-\end_layout
-
-\begin_layout Itemize
-{-h}: the 
-\bar under
-h
-\bar default
-ost identifier (protocol + authority)
-\end_layout
-
-\begin_layout Itemize
-{-a}: the 
-\bar under
-a
-\bar default
-uthority (for URLs, this is the host or IP address)
-\end_layout
-
-\begin_layout Itemize
-{-p}: the 
-\bar under
-p
-\bar default
-ath (everything after the authority)
-\end_layout
-
-\begin_layout Itemize
-{-r}: the 
-\bar under
-r
-\bar default
-emaining part of the path after the base URI (see below)
-\end_layout
-
-\begin_layout Itemize
-{-e}: a r
-\bar under
-e
-\bar default
-lative path from the URI to the application's base URI (see below; note
- that this is a constructed value, not merely a string extracted from the
- URI)
-\end_layout
-
-\begin_layout Itemize
-{-q}: the 
-\bar under
-q
-\bar default
-uery (everything after the 
-\begin_inset Quotes eld
-\end_inset
-
-?
-\begin_inset Quotes erd
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Itemize
-{-f}: the 
-\bar under
-f
-\bar default
-ragment (the tag after the 
-\begin_inset Quotes eld
-\end_inset
-
-#
-\begin_inset Quotes erd
-\end_inset
-
-; note that web browsers handle fragments internally and 
-\emph on
-never
-\emph default
- send them to the server, however fragments may exist in URIs sent 
-\emph on
-from
-\emph default
- the server: see the 
-\begin_inset Quotes eld
-\end_inset
-
-{R-}
-\begin_inset Quotes erd
-\end_inset
-
- variable mentioned below)
-\end_layout
-
-\begin_layout Paragraph
-Base URIs
-\end_layout
-
-\begin_layout Standard
-Every URI also has a 
-\begin_inset Quotes eld
-\end_inset
-
-base
-\begin_inset Quotes erd
-\end_inset
-
- version of it: in the case of wildcard patterns, it is the URI before the
- wildcard begins.
- Otherwise it is usually the application's root URI on the virtual host.
- It is used in the 
-\begin_inset Quotes eld
-\end_inset
-
-{-r}
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-{-e}
-\begin_inset Quotes erd
-\end_inset
-
- suffixes above.
-\end_layout
-
-\begin_layout Standard
-To refer to the base URI directly, use the special 
-\begin_inset Quotes eld
-\end_inset
-
-{-b-}
-\begin_inset Quotes erd
-\end_inset
-
- midfix, to which you would still need to add one of the above suffixes.
- For example, “{rbi}” refers to the complete base URI of the actual URI.
-\end_layout
-
-\begin_layout Paragraph
-Capturing Wildcards
-\end_layout
-
-\begin_layout Standard
-This is a common use case for capturing (server-side redirection).
- According to the rules above, 
-\begin_inset Quotes eld
-\end_inset
-
-*
-\begin_inset Quotes erd
-\end_inset
-
- would be the 
-\begin_inset Quotes eld
-\end_inset
-
-{rr}
-\begin_inset Quotes erd
-\end_inset
-
- variable.
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/assets/*': '/files/media/{rr}'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The above would capture a URI such as 
-\begin_inset Quotes eld
-\end_inset
-
-/assets/images/logo.png
-\begin_inset Quotes erd
-\end_inset
-
- to 
-\begin_inset Quotes eld
-\end_inset
-
-/files/media/images/logo.png
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Request Attributes
-\end_layout
-
-\begin_layout Itemize
-{p}: the 
-\bar under
-p
-\bar default
-rotocol (“http,” “https,” “ftp,” etc.)
-\end_layout
-
-\begin_layout Itemize
-{m}: the 
-\bar under
-m
-\bar default
-ethod (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
-\end_layout
-
-\begin_layout Itemize
-{d}: 
-\bar under
-d
-\bar default
-ate (as a Unix timestamp)
-\end_layout
-
-\begin_layout Subsubsection
-Client Attributes
-\end_layout
-
-\begin_layout Itemize
-{cia}: 
-\bar under
-c
-\bar default
-l
-\bar under
-i
-\bar default
-ent IP 
-\bar under
-a
-\bar default
-ddress
-\end_layout
-
-\begin_layout Itemize
-{ciua}: 
-\bar under
-c
-\bar default
-l
-\bar under
-i
-\bar default
-ent 
-\bar under
-u
-\bar default
-pstream IP 
-\bar under
-a
-\bar default
-ddress (if the request reached us through an upstream load balancer)
-\end_layout
-
-\begin_layout Itemize
-{cig}: 
-\bar under
-c
-\bar default
-l
-\bar under
-i
-\bar default
-ent a
-\bar under
-g
-\bar default
-ent name (for example, and identifier for the browser)
-\end_layout
-
-\begin_layout Subsubsection
-Entity Attributes
-\end_layout
-
-\begin_layout Standard
-All these refer to the data (“entity”) sent by the client.
-\end_layout
-
-\begin_layout Itemize
-{es}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-s
-\bar default
-ize (in bytes)
-\end_layout
-
-\begin_layout Itemize
-{emt}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-m
-\bar default
-edia (MIME) 
-\bar under
-t
-\bar default
-ype
-\end_layout
-
-\begin_layout Itemize
-{ecs}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-c
-\bar default
-haracter 
-\bar under
-s
-\bar default
-et
-\end_layout
-
-\begin_layout Itemize
-{el}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-l
-\bar default
-anguage
-\end_layout
-
-\begin_layout Itemize
-{ee}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-e
-\bar default
-ncoding
-\end_layout
-
-\begin_layout Itemize
-{et}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-t
-\bar default
-ag (HTTP ETag)
-\end_layout
-
-\begin_layout Itemize
-{eed}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-e
-\bar default
-xpiration 
-\bar under
-d
-\bar default
-ate
-\end_layout
-
-\begin_layout Itemize
-{emd}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-m
-\bar default
-odification 
-\bar under
-d
-\bar default
-ate
-\end_layout
-
-\begin_layout Subsubsection
-Response Attributes
-\end_layout
-
-\begin_layout Standard
-[these are not supported in capturing or other forms of server-side redirection,
- because redirection happens before a response is actually generated.] [useful
- for cache patterns?]
-\end_layout
-
-\begin_layout Standard
-These are all in uppercase to differentiate them from the request variables:
-\end_layout
-
-\begin_layout Itemize
-{S}: the HTTP status code
-\end_layout
-
-\begin_layout Itemize
-{SIA}: server IP address
-\end_layout
-
-\begin_layout Itemize
-{SIP}: server port number
-\end_layout
-
-\begin_layout Itemize
-{SIG}: server agent name
-\end_layout
-
-\begin_layout Itemize
-{R-}: the redirection URI (see 
-\begin_inset Quotes eld
-\end_inset
-
-Request URIs
-\begin_inset Quotes erd
-\end_inset
-
- above for a list of suffixes, which must also be in uppercase)
-\end_layout
-
-\begin_layout Standard
-Additionally, all the entity attributes can be used in uppercase to correspond
- to the response entity.
- For example, 
-\begin_inset Quotes eld
-\end_inset
-
-{ES}
-\begin_inset Quotes erd
-\end_inset
-
- for the response entity size, 
-\begin_inset Quotes eld
-\end_inset
-
-{EMT}
-\begin_inset Quotes erd
-\end_inset
-
- for the response media type, etc.
 \end_layout
 
 \begin_layout Subsection
@@ -4982,6 +4305,717 @@ app.hosts = {
 \end_layout
 
 \begin_layout Subsection
+app.preheat
+\begin_inset CommandInset label
+LatexCommand label
+name "app-preheat"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+Injecting Conversation Attributes
+\begin_inset CommandInset label
+LatexCommand label
+name "injecting-conversation-attributes"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As we've seen in the app.routes section above, URI template variables delimited
+ by curly brackets can be used to match incoming requests and extract the
+ values into conversation.locals.
+ For example, a 
+\begin_inset Quotes eld
+\end_inset
+
+/person/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ URI template will match the 
+\begin_inset Quotes eld
+\end_inset
+
+/person/linus/
+\begin_inset Quotes erd
+\end_inset
+
+ URI and set the 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+ conversation.local to 
+\begin_inset Quotes eld
+\end_inset
+
+linus
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Template variables can furthermore be used to 
+\emph on
+inject
+\emph default
+ values for three use cases:
+\end_layout
+
+\begin_layout Itemize
+Captured URI targets
+\end_layout
+
+\begin_layout Itemize
+Redirection URI targets
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Cache keys (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+In each of these cases you can inject the same conversation.locals that were
+ extracted from the matched URI pattern.
+ An example of redirection:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	"/person/{id}/": ">http://newsite.org/profile/?id={id}"
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence furthermore supports many built-in variables extracted from the
+ conversation attributes.
+ They are summarized below.
+ Also see the relevant 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet API documentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Request URIs
+\end_layout
+
+\begin_layout Standard
+The variables are composed of a prefix and a suffix.
+ The prefix specifies which URI you are referring to, while the suffix specifies
+ the part of that URI.
+ For example, the prefix 
+\begin_inset Quotes eld
+\end_inset
+
+{r-}
+\begin_inset Quotes erd
+\end_inset
+
+ can be combined with the suffix 
+\begin_inset Quotes eld
+\end_inset
+
+{-i}
+\begin_inset Quotes erd
+\end_inset
+
+ for 
+\begin_inset Quotes eld
+\end_inset
+
+{ri}
+\begin_inset Quotes erd
+\end_inset
+
+, to specify the complete request URI.
+\end_layout
+
+\begin_layout Paragraph
+Prefixes
+\end_layout
+
+\begin_layout Itemize
+{r-}: actual URI (
+\bar under
+r
+\bar default
+eference)
+\end_layout
+
+\begin_layout Itemize
+{h-}: virtual 
+\bar under
+h
+\bar default
+ost URI
+\end_layout
+
+\begin_layout Itemize
+{o-}: the application's r
+\bar under
+o
+\bar default
+ot URI on the current virtual host
+\end_layout
+
+\begin_layout Itemize
+{f-}: the re
+\bar under
+f
+\bar default
+erring URI (sent by some clients: usually means that the client clicked
+ a hyperlink or was redirected here from elsewhere)
+\end_layout
+
+\begin_layout Paragraph
+Suffixes
+\end_layout
+
+\begin_layout Itemize
+{-i}: the complete URI (
+\bar under
+i
+\bar default
+dentitifer)
+\end_layout
+
+\begin_layout Itemize
+{-h}: the 
+\bar under
+h
+\bar default
+ost identifier (protocol + authority)
+\end_layout
+
+\begin_layout Itemize
+{-a}: the 
+\bar under
+a
+\bar default
+uthority (for URLs, this is the host or IP address)
+\end_layout
+
+\begin_layout Itemize
+{-p}: the 
+\bar under
+p
+\bar default
+ath (everything after the authority)
+\end_layout
+
+\begin_layout Itemize
+{-r}: the 
+\bar under
+r
+\bar default
+emaining part of the path after the base URI (see below)
+\end_layout
+
+\begin_layout Itemize
+{-e}: a r
+\bar under
+e
+\bar default
+lative path from the URI to the application's base URI (see below; note
+ that this is a constructed value, not merely a string extracted from the
+ URI)
+\end_layout
+
+\begin_layout Itemize
+{-q}: the 
+\bar under
+q
+\bar default
+uery (everything after the 
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+{-f}: the 
+\bar under
+f
+\bar default
+ragment (the tag after the 
+\begin_inset Quotes eld
+\end_inset
+
+#
+\begin_inset Quotes erd
+\end_inset
+
+; note that web browsers handle fragments internally and 
+\emph on
+never
+\emph default
+ send them to the server, however fragments may exist in URIs sent 
+\emph on
+from
+\emph default
+ the server: see the 
+\begin_inset Quotes eld
+\end_inset
+
+{R-}
+\begin_inset Quotes erd
+\end_inset
+
+ variable mentioned below)
+\end_layout
+
+\begin_layout Paragraph
+Base URIs
+\end_layout
+
+\begin_layout Standard
+Every URI also has a 
+\begin_inset Quotes eld
+\end_inset
+
+base
+\begin_inset Quotes erd
+\end_inset
+
+ version of it: in the case of wildcard patterns, it is the URI before the
+ wildcard begins.
+ Otherwise it is usually the application's root URI on the virtual host.
+ It is used in the 
+\begin_inset Quotes eld
+\end_inset
+
+{-r}
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+{-e}
+\begin_inset Quotes erd
+\end_inset
+
+ suffixes above.
+\end_layout
+
+\begin_layout Standard
+To refer to the base URI directly, use the special 
+\begin_inset Quotes eld
+\end_inset
+
+{-b-}
+\begin_inset Quotes erd
+\end_inset
+
+ midfix, to which you would still need to add one of the above suffixes.
+ For example, “{rbi}” refers to the complete base URI of the actual URI.
+\end_layout
+
+\begin_layout Paragraph
+Capturing Wildcards
+\end_layout
+
+\begin_layout Standard
+This is a common use case for capturing (server-side redirection).
+ According to the rules above, 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+ would be the 
+\begin_inset Quotes eld
+\end_inset
+
+{rr}
+\begin_inset Quotes erd
+\end_inset
+
+ variable.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/assets/*': '/files/media/{rr}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above would capture a URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/assets/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+/files/media/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Request Attributes
+\end_layout
+
+\begin_layout Itemize
+{p}: the 
+\bar under
+p
+\bar default
+rotocol (“http,” “https,” “ftp,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{m}: the 
+\bar under
+m
+\bar default
+ethod (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{d}: 
+\bar under
+d
+\bar default
+ate (as a Unix timestamp)
+\end_layout
+
+\begin_layout Subsubsection
+Client Attributes
+\end_layout
+
+\begin_layout Itemize
+{cia}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent IP 
+\bar under
+a
+\bar default
+ddress
+\end_layout
+
+\begin_layout Itemize
+{ciua}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent 
+\bar under
+u
+\bar default
+pstream IP 
+\bar under
+a
+\bar default
+ddress (if the request reached us through an upstream load balancer)
+\end_layout
+
+\begin_layout Itemize
+{cig}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent a
+\bar under
+g
+\bar default
+ent name (for example, and identifier for the browser)
+\end_layout
+
+\begin_layout Subsubsection
+Entity Attributes
+\end_layout
+
+\begin_layout Standard
+All these refer to the data (“entity”) sent by the client.
+\end_layout
+
+\begin_layout Itemize
+{es}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+s
+\bar default
+ize (in bytes)
+\end_layout
+
+\begin_layout Itemize
+{emt}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+m
+\bar default
+edia (MIME) 
+\bar under
+t
+\bar default
+ype
+\end_layout
+
+\begin_layout Itemize
+{ecs}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+c
+\bar default
+haracter 
+\bar under
+s
+\bar default
+et
+\end_layout
+
+\begin_layout Itemize
+{el}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+l
+\bar default
+anguage
+\end_layout
+
+\begin_layout Itemize
+{ee}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+e
+\bar default
+ncoding
+\end_layout
+
+\begin_layout Itemize
+{et}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+t
+\bar default
+ag (HTTP ETag)
+\end_layout
+
+\begin_layout Itemize
+{eed}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+e
+\bar default
+xpiration 
+\bar under
+d
+\bar default
+ate
+\end_layout
+
+\begin_layout Itemize
+{emd}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+m
+\bar default
+odification 
+\bar under
+d
+\bar default
+ate
+\end_layout
+
+\begin_layout Subsubsection
+Response Attributes
+\end_layout
+
+\begin_layout Standard
+[these are not supported in capturing or other forms of server-side redirection,
+ because redirection happens before a response is actually generated.] [useful
+ for cache patterns?]
+\end_layout
+
+\begin_layout Standard
+These are all in uppercase to differentiate them from the request variables:
+\end_layout
+
+\begin_layout Itemize
+{S}: the HTTP status code
+\end_layout
+
+\begin_layout Itemize
+{SIA}: server IP address
+\end_layout
+
+\begin_layout Itemize
+{SIP}: server port number
+\end_layout
+
+\begin_layout Itemize
+{SIG}: server agent name
+\end_layout
+
+\begin_layout Itemize
+{R-}: the redirection URI (see 
+\begin_inset Quotes eld
+\end_inset
+
+Request URIs
+\begin_inset Quotes erd
+\end_inset
+
+ above for a list of suffixes, which must also be in uppercase)
+\end_layout
+
+\begin_layout Standard
+Additionally, all the entity attributes can be used in uppercase to correspond
+ to the response entity.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+{ES}
+\begin_inset Quotes erd
+\end_inset
+
+ for the response entity size, 
+\begin_inset Quotes eld
+\end_inset
+
+{EMT}
+\begin_inset Quotes erd
+\end_inset
+
+ for the response media type, etc.
+\end_layout
+
+\begin_layout Subsection
 The Internal URI-space
 \begin_inset CommandInset label
 LatexCommand label
@@ -4998,21 +5032,6 @@ TODO
 
 \begin_layout Standard
 app.hosts internal
-\end_layout
-
-\begin_layout Subsection
-app.preheat
-\begin_inset CommandInset label
-LatexCommand label
-name "app-preheat"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
 \end_layout
 
 \begin_layout Subsection
@@ -5811,391 +5830,6 @@ Implementing Resources
 \begin_inset CommandInset label
 LatexCommand label
 name "implementing-resources"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Comparison Table
-\end_layout
-
-\begin_layout Standard
-\begin_inset Tabular
-<lyxtabular version="3" rows="9" columns="4">
-<features tabularvalignment="middle">
-<column alignment="center" valignment="top" width="4cm">
-<column alignment="center" valignment="top" width="4cm">
-<column alignment="center" valignment="top" width="4cm">
-<column alignment="center" valignment="top" width="4cm">
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-Manual
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-Scriptlet
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\series bold
-Static
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Supports URI Mapping
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Yes
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Yes
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Yes
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Supports URI Dispatching
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Yes
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-No
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-No
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Filename Extension
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Determines programming language
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Determines MIME type
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Determines MIME type
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Filename Pre-extension
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-*.m.*
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-*.s.*
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-n/a
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Programming Languages
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Determined by filename extension
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Determined by scriptlet tags (multiple languages possible per resource)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-n/a
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Content Negotiation
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Manually determined in handleInit; multiple MIME types possible
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Single MIME type determined by filename extension; multiple encodings automatica
-lly supported and cached
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Single MIME type determined by filename extension; multiple encodings automatica
-lly supported
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Server-Side Caching
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Manual (via API)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Automatic (handled by Prudence)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-n/a
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\emph on
-Client-Side Caching
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Manual (via API)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Automatic (determined by server-side caching)
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Can be added with CacheControlFilter
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
 
 \end_inset
 
@@ -7685,7 +7319,12 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		compress: true
+		compress: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		compressExclude: []
 \end_layout
 
 \begin_layout Plain Layout
@@ -7839,10 +7478,10 @@ app.routes = {
 \end_layout
 
 \begin_layout Subsubsection
-Controlling the Format
+MIME Types and Compression
 \begin_inset CommandInset label
 LatexCommand label
-name "static-resources-controlling-the-format"
+name "static-resources-mime-types-and-compression"
 
 \end_inset
 
@@ -7901,6 +7540,34 @@ reference "settings-media-types"
 
 )
 \bar default
+.
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+compress
+\begin_inset Quotes erd
+\end_inset
+
+ is 
+\emph on
+also
+\emph default
+ true, Prudence will negotiate the best compression format (gzip and zip
+ are supported) and compress on the fly.
+ By default, common archive and media formats are excluded, under the assumption
+ that they are already optimally compressed.
+ You can add more exclusions using 
+\begin_inset Quotes eld
+\end_inset
+
+compressExclude
+\begin_inset Quotes erd
+\end_inset
+
 .
 \end_layout
 
@@ -7981,17 +7648,17 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			'image/png': '10m',
+			'image/*': '10m',
 \end_layout
 
 \begin_layout Plain Layout
 
-			'image/jpeg': '10m',
+			'text/css': '10m',
 \end_layout
 
 \begin_layout Plain Layout
 
-			'image/gif': '10m'
+			'application/x-javascript': '10m'
 \end_layout
 
 \begin_layout Plain Layout
@@ -8020,8 +7687,8 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-With the above, Prudence will ask web browsers to cache common image types
- for 10 minutes before sending conditional HTTP requests.
+With the above, Prudence will ask web browsers to cache common image types,
+ CSS and JavaScript for 10 minutes before sending conditional HTTP requests.
 \end_layout
 
 \begin_layout Standard
@@ -9059,10 +8726,6 @@ Optimizing using application/java MIME type
 \end_layout
 
 \begin_layout Subsection
-Tricks
-\end_layout
-
-\begin_layout Subsubsection
 Browser Downloads
 \end_layout
 
@@ -9143,6 +8806,391 @@ bill.csv
 
  filename, or open it in a supporting application, such as a spreadsheet
  editor.
+\end_layout
+
+\begin_layout Subsection
+Resource Type Comparison Table
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="4cm">
+<column alignment="center" valignment="top" width="4cm">
+<column alignment="center" valignment="top" width="4cm">
+<column alignment="center" valignment="top" width="4cm">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Manual
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Scriptlet
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Static
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Supports URI Mapping
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Supports URI Dispatching
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Yes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+No
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Filename Extension
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Determines programming language
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Determines MIME type
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Determines MIME type
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Filename Pre-extension
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*.m.*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+*.s.*
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Programming Languages
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Determined by filename extension
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Determined by scriptlet tags (multiple languages possible per resource)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Content Negotiation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Manually determined in handleInit; multiple MIME types possible
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Single MIME type determined by filename extension; multiple encodings automatica
+lly supported and cached
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Single MIME type determined by filename extension; multiple encodings automatica
+lly supported
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Server-Side Caching
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Manual (via API)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Automatic (handled by Prudence)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n/a
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+Client-Side Caching
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Manual (via API)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Automatic (determined by server-side caching)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Can be added with CacheControlFilter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -9854,6 +9902,43 @@ Injection
 Built-in Filters
 \end_layout
 
+\begin_layout Subsection
+HTTP Authentication
+\begin_inset CommandInset label
+LatexCommand label
+name "http-authentication"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+\begin_inset Quotes eld
+\end_inset
+
+httpAuthenticator
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "http-authenticator-route-type"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
 \begin_layout Section
 Configuring Applications
 \end_layout
@@ -10549,7 +10634,7 @@ This setting is used mostly for scriptlet and
 static resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "static-resources-controlling-the-format"
+reference "static-resources-mime-types-and-compression"
 
 \end_inset
 
@@ -12197,17 +12282,20 @@ ly.
 \end_layout
 
 \begin_layout Quote
-Note for Clojure flavor: All Clojure vars are VM-wide globals equivalent
- in scope to executable.globals.
+Note for Clojure flavor: 
+\emph on
+All
+\emph default
+ Clojure vars are VM-wide globals equivalent in scope to executable.globals.
  You usually work with namespaces that Prudence creates on the fly, so they
  do not persist beyond the execution.
- However, if you explicitly define a name space, then you can use it as
- a place for shared state.
+ However, if you explicitly define a namespace, then you can use it as a
+ place for shared state.
  It will then be up to you to make sure that your namespace doesn't collide
  with that of another application installed in the Prudence instance.
  Though this approach might seem to break our rule of thumb here, of preferring
  application.globals to application.sharedGlobals, it is more idiomatic to
- Clojure and Lisps more generally.
+ Clojure and Lisps generally.
 \end_layout
 
 \begin_layout Subsubsection
