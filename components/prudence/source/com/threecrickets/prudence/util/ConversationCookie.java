@@ -126,6 +126,7 @@ public class ConversationCookie extends Cookie
 		this.cookieSettings = cookieSettings;
 		changed = true;
 		super.setName( name );
+		super.setPath( "/" );
 	}
 
 	//

@@ -274,6 +274,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 *        <li>'json': see {@link Sincerity.JSON#to}</li>
 	 *        <li>'xml': see {@link Sincerity.XML#to}</li>
 	 *        <li>'web': see {@link Prudence.Resources#toWebPayload}</li>
+	 *        <li>'binary': an array of bytes</li>
 	 *        </ul>
 	 * @param [params.headers] A dict of custom headers to add to the request 
 	 * @param {String|Object} [params.result]
@@ -288,6 +289,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 *        <li>'extendedJson': see {@link Sincerity.JSON#from}</li>
 	 *        <li>'xml': see {@link Sincerity.XML#from}</li>
 	 *        <li>'web': see {@link Prudence.Resources#fromQueryString}</li>
+	 *        <li>'binary': an array of bytes</li>
 	 *        <li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
 	 *        </ul>
 	 * @param {String|Object} [params.result.type] As params.result
@@ -355,6 +357,10 @@ Prudence.Resources = Prudence.Resources || function() {
 					
 				case 'object':
 					params.payload = new org.restlet.representation.ObjectRepresentation(params.payload.value)
+					break
+				
+				case 'binary':
+					params.payload = new org.restlet.representation.ByteArrayRepresentation(params.payload.value)
 					break
 					
 				default:
@@ -638,6 +644,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * <li>'extendedJson': see {@link Sincerity.JSON#from}</li>
 	 * <li>'xml': see {@link Sincerity.XML#from}</li>
 	 * <li>'web': see {@link Prudence.Resources#fromQueryString}</li>
+	 * <li>'binary': an array of bytes</li>
 	 * <li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
 	 * </ul>
 	 * @param [params] Optional params for some conversions
@@ -701,6 +708,18 @@ Prudence.Resources = Prudence.Resources || function() {
 					return Public.fromQueryString(text, params ? params.keys : null)
 				}
 				return {}
+			
+			case 'binary':
+				var size = representation.size
+				if (size != -1) {
+					var channel = representation.channel
+					if (Sincerity.Objects.exists(channel)) {
+						var buffer = java.nio.ByteBuffer.allocate(size)
+						channel.read(buffer)
+						return buffer.array()
+					}
+				}
+				return null
 				
 			case 'properties':
 				var text = representation.text

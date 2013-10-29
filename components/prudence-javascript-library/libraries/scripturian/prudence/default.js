@@ -776,8 +776,9 @@ var Prudence = {}
  * <li>conversation.reference.segments: a list of URI segments in the path</li>
  * <li>conversation.reference.lastSegment: the last segment in the URI path</li>
  * <li>conversation.reference.fragment: the URI fragment (whatever follows "#")</li>
- * <li>conversation.reference.query: the URI query (whatever follows "?"); you might prefer to use {@link conversation#query} instead
- * <li>conversation.reference.relativeRef: a relative URI pointing to the base URI (usually the application root URI on the current virtual host)
+ * <li>conversation.reference.query: the URI query (whatever follows "?"); you might prefer to use {@link conversation#query} instead</li>
+ * <li>conversation.reference.remainingPart: for wildcard URI templates, this is the wildcard value</li>
+ * <li>conversation.reference.relativeRef: a relative URI pointing to the base URI (usually the application root URI on the current virtual host)</li>
  * </ul>
  *
  * @name conversation.reference
@@ -866,7 +867,7 @@ var Prudence = {}
   */
 
 /**
- * Convenient API for accessing {@link conversation#entity) when the payload is a web form (the "application/x-www-form-urlencoded" MIME type;
+ * Convenient API for accessing {@link conversation#entity} when the payload is a web form (the "application/x-www-form-urlencoded" MIME type;
  * usually sent from an HTML &lt;form&gt; entity).
  * <p>
  * Values are either strings or instances of
@@ -1021,7 +1022,7 @@ var Prudence = {}
  */
 
 /**
- * Low-level access to the media (MIME) type.
+ * Low-level access to the response media (MIME) type.
  * <p>
  * You may prefer to use {@link conversation#mediaTypeName} or {@link conversation#mediaTypeExtension} instead.
  * 
@@ -1041,7 +1042,7 @@ var Prudence = {}
  */
 
 /**
- * The response media type. Similar to {@link conversation#mediaTypeName}, but allows the use of shortcuts
+ * The response media (MIME) type. Similar to {@link conversation#mediaTypeName}, but allows the use of shortcuts
  * for the longer MIME names.
  * <p>
  * These shortcuts are in fact identical to the filename extension mapping for the application. For example,
@@ -1144,7 +1145,7 @@ var Prudence = {}
  * browsers allow users to turn off cookie support entirely or filter out certain cookies.
  * 
  * @name conversation.cookies
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Collection.html">java.util.Collection</a>&lt;<a href="http://threecrickets.com:8000/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>&gt;
+ * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Collection.html">java.util.Collection</a>&lt;<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>&gt;
  */
 
 /**
@@ -1153,7 +1154,7 @@ var Prudence = {}
  * @name conversation.getCookie
  * @function
  * @param {String} name The cookie name
- * @returns {<a href="http://threecrickets.com:8000/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>} The cookie, or null if it does not exist
+ * @returns {<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>} The cookie, or null if it does not exist
  */
 
 /**
@@ -1166,7 +1167,7 @@ var Prudence = {}
  * @name conversation.createCookie
  * @function
  * @param {String} name The cookie name
- * @returns {<a href="http://threecrickets.com:8000/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>} The cookie
+ * @returns {<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>} The cookie
  */
 
 /**
@@ -1384,7 +1385,7 @@ var Prudence = {}
  * Asks the client to redirect its request (repeat it) to another URI
  * via HTTP status code 301 ("permanent redirection").
  * <p>
- * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+ * Note that you should prefer to use <i>absolute URIs</i> for the target, never relative URIs.
  * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
  * Relative URIs are handled inconsistently by clients: some treat them as relative to
  * the requested URI, some relative to the domain name, and others may attempt to treat
@@ -1411,10 +1412,10 @@ var Prudence = {}
  */
 
 /**
- * Asks the client to redirect its request (repeat it) to another URI
+ * Asks the client to perform a new "GET" request to a URI
  * via HTTP status code 303 ("see other").
  * <p>
- * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+ * Note that you should prefer to use <i>absolute URIs</i> for the target, never relative URIs.
  * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
  * Relative URIs are handled inconsistently by clients: some treat them as relative to
  * the requested URI, some relative to the domain name, and others may attempt to treat
@@ -1442,7 +1443,7 @@ var Prudence = {}
  * Asks the client to redirect its request (repeat it) to another URI
  * via HTTP status code 307 ("temporary redirection").
  * <p>
- * Note that you should prefer use <i>absolute URIs</i> for the target, never relative URIs.
+ * Note that you should prefer to use <i>absolute URIs</i> for the target, never relative URIs.
  * For example, use 'http://mysite.org/myapp/new/uri/' rather than '/new/uri/'.
  * Relative URIs are handled inconsistently by clients: some treat them as relative to
  * the requested URI, some relative to the domain name, and others may attempt to treat

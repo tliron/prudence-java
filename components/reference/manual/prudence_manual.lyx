@@ -120,6 +120,10 @@ LatexCommand tableofcontents
 
 \end_layout
 
+\begin_layout Part
+Basic Manual
+\end_layout
+
 \begin_layout Section
 Tutorial
 \begin_inset CommandInset label
@@ -405,13 +409,13 @@ infinite
 \end_inset
 
 , etc.
- All URIs that matched these templates belong to your URI-space.
+ All URIs that matche these templates belong to your URI-space.
 \end_layout
 
 \begin_layout Standard
 The URI-space is mostly configured in the application's routing.js file.
- However, your resource implementations can add their own special handling.
- For example, for 
+ However, your resource implementations can add their own special limits.
+ For example, for the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -437,8 +441,8 @@ wildcard
 \begin_inset Quotes erd
 \end_inset
 
- URI templates, allowing you to delegate the parsing of the URI entirely
- to your resource code.
+ URI templates, allowing you to delegate the parsing of the URI remainder
+ entirely to your resource code.
 \end_layout
 
 \begin_layout Subsection
@@ -626,6 +630,39 @@ app.dispatchers = {
 
 \end_layout
 
+\begin_layout Standard
+In the settings, time durations are in milliseconds and data sizes in bytes.
+ But these can be specified as 
+\bar under
+either numbers or strings (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "numeric-shortcuts"
+
+\end_inset
+
+)
+\bar default
+.
+ Examples: 
+\begin_inset Quotes eld
+\end_inset
+
+1.5m
+\begin_inset Quotes erd
+\end_inset
+
+ is 90000 milliseconds and 
+\begin_inset Quotes eld
+\end_inset
+
+1kb
+\begin_inset Quotes erd
+\end_inset
+
+ is 1024 bytes.
+\end_layout
+
 \begin_layout Subsection
 app.routes
 \begin_inset CommandInset label
@@ -704,10 +741,10 @@ Variables
 \end_inset
 
 .
- You can access the string values of these variables in your resource via
- the 
+ You can access the string values of these variables in your resource as
+ 
 \bar under
-conversation.locals API (page 
+conversation.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "conversation-locals"
@@ -746,8 +783,15 @@ any
 \end_inset
 
 .
- You can access the remainder of the URI via the conversation.reference.remainingP
-art API [TODO link].
+ You can access the remainder of the URI via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.reference.remainingPart API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+
+\end_inset
+
+.
  Note that Prudence will attempt to match 
 \emph on
 non
@@ -772,7 +816,15 @@ The
 \emph on
 values
 \emph default
- of the app.routes dict are 
+ of the 
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+ dict are 
 \emph on
 route
 \emph default
@@ -792,8 +844,8 @@ type
  key is the name of the route type configuration, and the rest of the keys
  configure the type.
  During the application's bootstrap process, these dicts are turned in instances
- of classes in the Prudence.Routing API namespace (note that the class names
- have the first character of the type capitalized).
+ of classes in the Prudence.Routing API namespace (the class names have the
+ first character of the type capitalized).
  The values set in the route type configuration dict are sent to the class
  constructor.
 \end_layout
@@ -845,7 +897,7 @@ We will summarize all the route types briefly here, arranged according to
  type configurations.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Resource Route Types
 \end_layout
 
@@ -1054,7 +1106,15 @@ dispatch
 \begin_inset Quotes erd
 \end_inset
 
- in app.routes.
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+.
  For example, if you attach the manual to 
 \begin_inset Quotes eld
 \end_inset
@@ -1313,7 +1373,7 @@ reference "live-execution"
 .
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Mapping Route Types
 \end_layout
 
@@ -1560,7 +1620,7 @@ reference "scriptlet-resources"
  for a complete discussion.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Redirecting Route Types
 \end_layout
 
@@ -1572,6 +1632,13 @@ capture or
 /\SpecialChar \ldots{}
 
 \begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "capture-route-type"
+
 \end_inset
 
 
@@ -1629,6 +1696,18 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Capt
 \end_inset
 
  class.
+ See 
+\bar under
+resource capturing (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
@@ -1639,6 +1718,13 @@ redirect or
 >\SpecialChar \ldots{}
 
 \begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "redirect-route-type"
+
 \end_inset
 
 
@@ -1682,6 +1768,18 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Redi
 \end_inset
 
  class.
+ See the 
+\bar under
+web data guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "redirection"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion, as well as other options for redirection.
 \end_layout
 
 \begin_layout Paragraph
@@ -1699,7 +1797,7 @@ addSlash
 
  type for a permanent client redirect from the URI template to the original
  URI with a trailing slash added.
- An easy way to enforce trailing slashes in your application.
+ It's provides an easy way to enforce trailing slashes in your application.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -1711,7 +1809,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddS
  class.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Combining Route Types
 \end_layout
 
@@ -1818,7 +1916,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Rout
  class.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Filtering Route Types
 \end_layout
 
@@ -1942,8 +2040,18 @@ next
 \end_inset
 
  params to create an injector.
- An injector is a simple filter that injects preset valued into conversation.loca
-ls, but otherwise has no effect on the conversation.
+ An injector is a simple filter that injects preset valued into 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+, but otherwise has no effect on the conversation.
  This is useful for Inversion of Control (IoC): you can use these conversation.lo
 cals to alter the behavior of nested route types directly in your routing.js.
  Handled by the 
@@ -2379,7 +2487,15 @@ app
 \begin_inset Quotes erd
 \end_inset
 
- argument is the instance of Prudence.Routing.Application, and the 
+ argument is the instance of 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Application"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Application"
+
+\end_inset
+
+, and the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2413,8 +2529,23 @@ Add the class to Prudence.Routing.
 \end_layout
 
 \begin_layout Standard
-If you like, you can use Sincerity.Classes to create your class, and also
- inherit from Prudence.Routing.Restlet.
+If you like, you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Classes"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Classes"
+
+\end_inset
+
+ to create your class, and also inherit from 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Routing.Restlet"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Restlet"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -2884,9 +3015,9 @@ profile.s.html
 \begin_inset Quotes erd
 \end_inset
 
- file, you could then access the captured value via the 
+ file, you could then access the captured value as 
 \bar under
-conversation.locals API (page 
+conversation.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "conversation-locals"
@@ -2946,7 +3077,18 @@ User profile for user <%= conversation.locals.get('userId') %>.
 \begin_layout Standard
 We've used a scriptlet resource in this example, but capturing can be used
  for both scriptlet and manual resources.
- The same conversation.locals API is used in both cases.
+ The same 
+\bar under
+conversation.locals API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ is used in both cases.
 \end_layout
 
 \begin_layout Paragraph
@@ -3398,7 +3540,26 @@ Resource capturing lets you use any public URI for any library scriptlet
 \end_inset
 
 , which you organized in subdirectories according to the technologies used.
- Your URI-space can be defined thus:
+ Your URI-space can be defined thus, using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+capture
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-route-type"
+
+\end_inset
+
+)
+\bar default
+:
 \end_layout
 
 \begin_layout Standard
@@ -3480,6 +3641,21 @@ hidden
 \end_inset
 
  route type.
+\end_layout
+
+\begin_layout Standard
+Note that it's also possible to 
+\bar under
+capture wildcards (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-the-wildcard"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsection
@@ -3791,7 +3967,18 @@ Object-oriented inheritance is one useful way to reuse code while allowing
 \end_layout
 
 \begin_layout Standard
-When defining the dispatch, you can also inject set values to conversation.locals.
+When defining the dispatch, you can also inject set values to 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
  You would need to use the long-form configuration to do this:
 \end_layout
 
@@ -3852,7 +4039,18 @@ section
 \begin_inset Quotes erd
 \end_inset
 
- conversation.local.
+ 
+\bar under
+conversation.local (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
  This allows you to configure your resource in routing.js, rather from its
  implementation in resource.js.
  In other words, 
@@ -4108,7 +4306,18 @@ prudence.dispatcher.id
 \begin_inset Quotes erd
 \end_inset
 
- conversation.local.
+ 
+\bar under
+conversation.local (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
  
 \begin_inset Quotes eld
 \end_inset
@@ -4125,7 +4334,18 @@ customValue2
 \begin_inset Quotes erd
 \end_inset
 
- would be application.globals: 
+ would be 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4232,8 +4452,18 @@ Use app.hosts in routing.js to assign the application to a base URI on that
 \emph on
 once
 \emph default
- in such cases: all application.globals are shared no matter which host a
- request is routed from.
+ in such cases: all 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+ are shared no matter which host a request is routed from.
 \end_layout
 
 \begin_layout Paragraph
@@ -4333,7 +4563,18 @@ name "injecting-conversation-attributes"
 \begin_layout Standard
 As we've seen in the app.routes section above, URI template variables delimited
  by curly brackets can be used to match incoming requests and extract the
- values into conversation.locals.
+ values into 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
  For example, a 
 \begin_inset Quotes eld
 \end_inset
@@ -4358,7 +4599,18 @@ id
 \begin_inset Quotes erd
 \end_inset
 
- conversation.local to 
+ 
+\bar under
+conversation.local (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4399,8 +4651,18 @@ reference "caching"
 \end_layout
 
 \begin_layout Standard
-In each of these cases you can inject the same conversation.locals that were
- extracted from the matched URI pattern.
+In each of these cases you can inject the same 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ that were extracted from the matched URI pattern.
  An example of redirection:
 \end_layout
 
@@ -4636,8 +4898,8 @@ base
 \begin_inset Quotes erd
 \end_inset
 
- version of it: in the case of wildcard patterns, it is the URI before the
- wildcard begins.
+ version of it: in the case of wildcard URI templates, it is the URI before
+ the wildcard begins.
  Otherwise it is usually the application's root URI on the virtual host.
  It is used in the 
 \begin_inset Quotes eld
@@ -4672,11 +4934,18 @@ To refer to the base URI directly, use the special
 \end_layout
 
 \begin_layout Paragraph
-Capturing Wildcards
+Injecting the Wildcard
+\begin_inset CommandInset label
+LatexCommand label
+name "injecting-the-wildcard"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-This is a common use case for capturing (server-side redirection).
+This is a common use case for redirection.
  According to the rules above, 
 \begin_inset Quotes eld
 \end_inset
@@ -4748,6 +5017,10 @@ The above would capture a URI such as
 \end_layout
 
 \begin_layout Subsubsection
+Other Attributes
+\end_layout
+
+\begin_layout Paragraph
 Request Attributes
 \end_layout
 
@@ -4775,7 +5048,7 @@ d
 ate (as a Unix timestamp)
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Client Attributes
 \end_layout
 
@@ -4831,7 +5104,7 @@ g
 ent name (for example, and identifier for the browser)
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Entity Attributes
 \end_layout
 
@@ -4951,7 +5224,7 @@ d
 ate
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Response Attributes
 \end_layout
 
@@ -5046,6 +5319,18 @@ REST does not standardize URI-spaces, and indeed has little to say about
 imply
 \emph default
  a preference for certain architectural principles.
+ We go over much of the impetus in 
+\bar under
+The Case for REST article (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+, and suggest you start there.
 \end_layout
 
 \begin_layout Standard
@@ -5126,7 +5411,28 @@ One potential problem is clarity.
 \begin_layout Standard
 A second potential problem is that you need to keep increasing the size
  of your URI-space the more actions of this sort you want to support.
- [SO?]
+ This means more files, more classes, and generally more code.
+ Handling these operations 
+\emph on
+inside
+\emph default
+ a single resource would just mean a simple 
+\begin_inset Quotes eld
+\end_inset
+
+if
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+switch
+\begin_inset Quotes erd
+\end_inset
+
+ statement and an extra method.
 \end_layout
 
 \begin_layout Standard
@@ -5178,8 +5484,8 @@ stop.
 only
 \emph default
  POST, the non-idempotent verb, for all such operations.
- The infrastructure will never allow more than request to come through per
- POST.
+ The infrastructure would never allow more than request to come through
+ per POST.
  However, if you enforce the use of POST, you will lose the ability of the
  infrastructure to optimize for non-idempotency.
  POST is the least scalable HTTP verb.
@@ -5187,11 +5493,15 @@ only
 
 \begin_layout Standard
 The bottom line is that if you standardize on only using nouns for your
- URIs, you will avoid many of these semantic entanglements.
+ URIs, you will avoid many of these semantic slips.
 \end_layout
 
 \begin_layout Standard
-Note: Beware of gerunds! A URI such as 
+
+\emph on
+Beware of gerunds!
+\emph default
+ A URI such as 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5209,7 +5519,7 @@ Do You Really Need REST?
 
 \begin_layout Standard
 In the above section, it was suggested that you prefer nouns to verbs.
- However, this preference may not make much sense to apply in your application.
+ However, this preference may seem for constraining for your application.
  Your application may be very command-oriented, such that you will end up
  with a very small set of 
 \begin_inset Quotes eld
@@ -5240,8 +5550,24 @@ And that's OK.
 \begin_layout Standard
 Instead, take a look at RPC (Remote Procedure Call) mechanisms.
  The Diligence framework, based on Prudence, provides robust and powerful
- support for JSON-RPC, XML-RPC and ExtDirect, allowing you to hook a JavaScript
- function on the server directly to a URI.
+ support for JSON-RPC, XML-RPC in its 
+\begin_inset CommandInset href
+LatexCommand href
+name "RPC Service"
+target "http://threecrickets.com/diligence/manual/service/rest/"
+
+\end_inset
+
+ as well as ExtDirect in its 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sencha Integration"
+target "http://threecrickets.com/diligence/manual/integration/sencha-ext-direct/"
+
+\end_inset
+
+, allowing you to hook a JavaScript function on the server directly to a
+ URI.
  In terms of HTTP, these protocols all use HTTP POST, and do not leverage
  the HTTP infrastructure as well as a more fully RESTful API.
  But, one size does not fit all, an an RPC-based solution may prove a better
@@ -5836,6 +6162,41 @@ name "implementing-resources"
 
 \end_layout
 
+\begin_layout Standard
+Prudence offers two options for implementing dynamic resources: 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ resources are 
+\begin_inset Quotes eld
+\end_inset
+
+raw,
+\begin_inset Quotes erd
+\end_inset
+
+ giving you complete low-level control over the behavior and format of the
+ encapsulated resource, while 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet
+\begin_inset Quotes erd
+\end_inset
+
+ resources are simplified and highly optimized for cached textual resources,
+ such as HTML web pages.
+\end_layout
+
+\begin_layout Standard
+Additionally, Prudence offers good support for static resources, just like
+ conventional web servers.
+\end_layout
+
 \begin_layout Subsection
 Manual Resources
 \begin_inset CommandInset label
@@ -5850,6 +6211,10 @@ name "manual-resources"
 \begin_layout Subsubsection
 Mapping vs.
  Dispatching
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsubsection
@@ -5873,18 +6238,15 @@ every user request
 \end_layout
 
 \begin_layout Standard
-The main work is to initialize supported media types via 
-\bar under
-conversation.addMediaType (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-add-media-type"
+The main work is to initialize supported media types via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.addMediaType"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.addMediaType"
 
 \end_inset
 
-)
-\bar default
-, in order of preference.
+ APIs, in order of preference.
  For example:
 \end_layout
 
@@ -5926,7 +6288,7 @@ Prudence handles content negotiation automatically, choosing the best media
 \end_layout
 
 \begin_layout Paragraph
-But, Why?
+Dynamic Media Types
 \end_layout
 
 \begin_layout Standard
@@ -5938,16 +6300,16 @@ You might wonder why we add these supported media types dynamically for
  or even external to the conversation, to decide which media types to support.
  For example, you might not want to support XHTML for old browsers, but
  you'd want it at the top of the list for new browsers.
- Or, you might not be able to support PDF in case an external service is
- down.
- In which case, you won't want it on the list at all, in which case content
- negotiation would choose a different format that the client supports, such
+ Or, you might not be able to support PDF in case an external conversion
+ service is down.
+ In which case, you won't want it on the list at all, and instead want content
+ negotiation to choose a different format that the client supports, such
  as DVI.
 \end_layout
 
 \begin_layout Standard
 So, this gives you a lot flexibility, at no real expense: adding media types
- per request is extremely lightweight.
+ per request is very lightweight.
 \end_layout
 
 \begin_layout Subsubsection
@@ -5971,7 +6333,7 @@ In a conventional
 resource-oriented architecture (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../../rest/"
+reference "the-cast-for-rest"
 
 \end_inset
 
@@ -5985,24 +6347,21 @@ reference "../../rest/"
 What you'll usually do here is construct a representation of the resource,
  possibly according to specific parameters of the request, and return this
  representation to the client.
- See the “
-\bar under
-conversation” API documentation (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation"
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "“conversation” API documentation"
+target "http://threecrickets.com/api/javascript/?namespace=conversation"
 
 \end_inset
 
-)
-\bar default
  for a complete reference.
  Note especially that if you've 
 \bar under
 captured URI segments (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../routing/|static-capturing"
+reference "capturing-uri-templates"
 
 \end_inset
 
@@ -6013,7 +6372,7 @@ reference "../routing/|static-capturing"
 conversation.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-locals"
+reference "conversation-locals"
 
 \end_inset
 
@@ -6088,7 +6447,7 @@ reference "../api/|conversation-media-type"
 \begin_inset CommandInset href
 LatexCommand href
 name "ObjectRepresentation instance"
-target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
 
 \end_inset
 
@@ -6234,7 +6593,7 @@ reference "../routing/|static-capturing"
 conversation.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-locals"
+reference "conversation-locals"
 
 \end_inset
 
@@ -6361,7 +6720,7 @@ reference "../routing/|static-capturing"
 conversation.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-locals"
+reference "conversation-locals"
 
 \end_inset
 
@@ -6472,7 +6831,7 @@ reference "../routing/|static-capturing"
 conversation.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-locals"
+reference "conversation-locals"
 
 \end_inset
 
@@ -6802,7 +7161,25 @@ Choice of Programming Language
 \end_layout
 
 \begin_layout Subsubsection
+Templating Languages
+\begin_inset CommandInset label
+LatexCommand label
+name "templating-languages"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Markup Languages
+\begin_inset CommandInset label
+LatexCommand label
+name "markup-languages"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -7116,7 +7493,15 @@ text/plain
 \begin_inset Quotes erd
 \end_inset
 
-, but you can modify it with the conversation.mediaType API:
+, but you can modify it with the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.mediaType API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -7815,7 +8200,7 @@ _
 
 \begin_layout Standard
 This trick works so well that, if you use it, it's recommended that you
- actually ask clients to cache your resources 
+ actually ask clients to cache these resources 
 \emph on
 forever
 \emph default
@@ -7876,17 +8261,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			'image/png': 'farFuture',
-\end_layout
-
-\begin_layout Plain Layout
-
-			'image/jpeg': 'farFuture',
-\end_layout
-
-\begin_layout Plain Layout
-
-			'image/gif': 'farFuture'
+			'image/*': 'farFuture'
 \end_layout
 
 \begin_layout Plain Layout
@@ -8702,127 +9077,6 @@ reference "static-resources-javascript-and-css-optimization"
 \end_layout
 
 \begin_layout Subsection
-Resources As Internal APIs
-\begin_inset CommandInset label
-LatexCommand label
-name "internal-api"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-See the 
-\bar under
-internal URI-space (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "internal-uri-space"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-document.internal
-\end_layout
-
-\begin_layout Standard
-Prudence.Resources.request
-\end_layout
-
-\begin_layout Standard
-Optimizing using application/java MIME type
-\end_layout
-
-\begin_layout Subsection
-Browser Downloads
-\end_layout
-
-\begin_layout Standard
-You can create browser-friendly downloadable responses using the conversation.dis
-position API:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-Item,Cost,Sold,Profit
-\end_layout
-
-\begin_layout Plain Layout
-
-Keyboard,$10.00,$16.00,$6.00
-\end_layout
-
-\begin_layout Plain Layout
-
-Monitor,$80.00,$120.00,$40.00
-\end_layout
-
-\begin_layout Plain Layout
-
-Mouse,$5.00,$7.00,$2.00
-\end_layout
-
-\begin_layout Plain Layout
-
-,,Total,$48.00
-\end_layout
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-conversation.mediaTypeName = 'text/csv'
-\end_layout
-
-\begin_layout Plain Layout
-
-conversation.disposition.type = 'attachment'
-\end_layout
-
-\begin_layout Plain Layout
-
-conversation.disposition.filename = bill.csv'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Most web browsers would recognize the MIME type and offer the user to either
- download the file with the suggested 
-\begin_inset Quotes eld
-\end_inset
-
-bill.csv
-\begin_inset Quotes erd
-\end_inset
-
- filename, or open it in a supporting application, such as a spreadsheet
- editor.
-\end_layout
-
-\begin_layout Subsection
 Resource Type Comparison Table
 \end_layout
 
@@ -9103,8 +9357,8 @@ Manually determined in handleInit; multiple MIME types possible
 \begin_inset Text
 
 \begin_layout Plain Layout
-Single MIME type determined by filename extension; multiple encodings automatica
-lly supported and cached
+Single MIME type determined by filename extension; multiple compression
+ types automatically supported and cached
 \end_layout
 
 \end_inset
@@ -9113,8 +9367,8 @@ lly supported and cached
 \begin_inset Text
 
 \begin_layout Plain Layout
-Single MIME type determined by filename extension; multiple encodings automatica
-lly supported
+Single MIME type determined by filename extension; multiple compression
+ types automatically supported
 \end_layout
 
 \end_inset
@@ -9207,19 +9461,11 @@ Can be added with CacheControlFilter
 
 \end_layout
 
-\begin_layout Section
-Background Tasks
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
 \begin_layout Subsection
-crontab
+Resources As Internal APIs
 \begin_inset CommandInset label
 LatexCommand label
-name "crontab"
+name "internal-api"
 
 \end_inset
 
@@ -9227,14 +9473,122 @@ name "crontab"
 \end_layout
 
 \begin_layout Standard
-TODO
+See the 
+\bar under
+internal URI-space (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+document.internal
+\end_layout
+
+\begin_layout Standard
+Prudence.Resources.request
+\end_layout
+
+\begin_layout Standard
+Optimizing using application/java MIME type
+\end_layout
+
+\begin_layout Section
+Web Data
+\end_layout
+
+\begin_layout Standard
+This chapter deals with sending and receiving data to and from the client
+ in REST, focusing especially on the particulars for HTTP and HTML.
+ It does 
+\emph on
+not
+\emph default
+ deal with storing data in backend databases.
+\end_layout
+
+\begin_layout Quote
+Prudence is a minimalist RESTful platform, 
+\emph on
+not
+\emph default
+ a data-driven web framework, though such frameworks are built on top of
+ it.
+ Check out our 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence"
+target "http://threecrickets.com/diligence"
+
+\end_inset
+
+, which is a full-blown framework based on Prudence and 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+.
+ You may also be interested in the 
+\bar under
+Model-View-Controller (MVC) chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc"
+
+\end_inset
+
+)
+\bar default
+, which guides you through an approach to integrating data backends.
 \end_layout
 
 \begin_layout Subsection
-Task API
+URLs
+\end_layout
+
+\begin_layout Standard
+The simplest way in which a client sends data to the server is via the URL.
+ The main part of the URL is parsed by Prudence and used for 
+\bar under
+routing (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-routes"
+
+\end_inset
+
+)
+\bar default
+, but some of it is left for your own uses.
+\end_layout
+
+\begin_layout Standard
+Generally, the whole or parts of the request URL can be accessed via the
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.reference API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Query Parameters
 \begin_inset CommandInset label
 LatexCommand label
-name "task-api"
+name "query-parameters"
 
 \end_inset
 
@@ -9242,10 +9596,1455 @@ name "task-api"
 \end_layout
 
 \begin_layout Standard
-TODO
+This is the matrix of parameters after the 
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+ in the URI.
 \end_layout
 
-\begin_layout Section
+\begin_layout Standard
+For example, consider this URL:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+http://mysite.org/myapp/user?name=Albert%20Einstein&enabled=true
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note the 
+\begin_inset Quotes eld
+\end_inset
+
+%20
+\begin_inset Quotes erd
+\end_inset
+
+ URL encoding for the space character.
+ Query params will be automatically decoded by Prudence.
+\end_layout
+
+\begin_layout Standard
+In JavaScript, you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.getQuery API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.getQuery"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var query = Prudence.Resources.getQuery(conversation, {
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: 'text',
+\end_layout
+
+\begin_layout Plain Layout
+
+	enabled: 'bool'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the case of multiple params with the same name, the API would return
+ the first param that matches the name.
+ Otherwise, you can also retrieve all values into an array:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var query = Prudence.Resources.getQuery(conversation, {
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: 'text[]',
+\end_layout
+
+\begin_layout Plain Layout
+
+	enabled: 'bool'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Low Level
+\end_layout
+
+\begin_layout Standard
+For non-JavaScript you can use the lower-level 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.query API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.query"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var query = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: conversation.query.get('name'),
+\end_layout
+
+\begin_layout Plain Layout
+
+	enabled: conversation.query.get('enabled') == 'true'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.queryAll"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.queryAll"
+
+\end_inset
+
+ if you need to find multiple params with the same name.
+\end_layout
+
+\begin_layout Subsubsection
+The Wildcard
+\end_layout
+
+\begin_layout Standard
+If you've configured a URI template with a 
+\bar under
+wildcard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "uri-templates"
+
+\end_inset
+
+)
+\bar default
+ in routing.js, you can access the 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+ value using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.reference.remainingPart"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Note that you can also 
+\bar under
+inject the wildcard in URI templates (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-the-wildcard"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Fragments
+\end_layout
+
+\begin_layout Standard
+This is whatever appears after the 
+\begin_inset Quotes eld
+\end_inset
+
+#
+\begin_inset Quotes erd
+\end_inset
+
+ in the URI.
+ Note that for the web 
+\emph on
+fragments are only used for response URLs
+\emph default
+: those sent from the server to the client.
+ This is enforced: web browsers will normally 
+\emph on
+strip fragments
+\emph default
+ before sending URLs to the server, but the server can send them to web
+ browsers.
+ They are commonly used in HTML anchors:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<a name="top" /><h1>This is the top!</h1>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>Click <a href="#top">here</a> to go to the top</p>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+But you can also use them in 
+\bar under
+redirects (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "redirection"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.redirectSeeOther(conversation.base + '#top')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Cookies
+\end_layout
+
+\begin_layout Standard
+Cookies represent a small client-side database, which the server can use
+ to retrieve or store per-client data.
+ Not all clients support cookies, and even those that do (most web browsers)
+ might have the feature disabled, so it's not always good idea to rely on
+ cookies.
+\end_layout
+
+\begin_layout Subsubsection
+From the Client
+\end_layout
+
+\begin_layout Standard
+Retrieve a specific cookie from those the client send you according to its
+ name using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.getCookie"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.getCookie"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.getCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== session) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	print(session.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Or use 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.cookies"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.cookies"
+
+\end_inset
+
+ to iterate through all available cookies.
+\end_layout
+
+\begin_layout Standard
+The following attributes are available:
+\end_layout
+
+\begin_layout Itemize
+name: (read only)
+\end_layout
+
+\begin_layout Itemize
+version: (integer) per a specific cookie
+\end_layout
+
+\begin_layout Itemize
+value: textual, or text-encoded binary data (note that most clients have
+ strict limits on how much total data is allowed to be stored in all cookies
+ per domain)
+\end_layout
+
+\begin_layout Itemize
+domain: the client should only use the cookie with this domain and its subdomain
+s (web browsers will not let you set a cookie for a domain which is not
+ the domain of the request or a subdomain of it)
+\end_layout
+
+\begin_layout Itemize
+path: the client should only use the cookie with URIs that begin with this
+ path (“/”, the default, would mean to use it with all URIs)
+\end_layout
+
+\begin_layout Subsubsection
+To the Client
+\end_layout
+
+\begin_layout Standard
+You can ask that a client modify any of the cookies you've retrieved 
+\emph on
+from
+\emph default
+ it, upon a successful response, by calling the 
+\begin_inset Quotes eld
+\end_inset
+
+save
+\begin_inset Quotes erd
+\end_inset
+
+ method:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.getCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== session) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	session.value = 'newsession'
+\end_layout
+
+\begin_layout Plain Layout
+
+	session.save()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ask the client to create a new cookie using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.createCookie"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.createCookie"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.createCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+session.value = 'newsession'
+\end_layout
+
+\begin_layout Plain Layout
+
+session.save()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that createCookie will retrieve the cookie if it already exists.
+\end_layout
+
+\begin_layout Standard
+When sending cookies 
+\emph on
+to
+\emph default
+ the client, you can set the following attributes 
+\emph on
+in addition
+\emph default
+ to those mentioned above, but note that you 
+\emph on
+cannot
+\emph default
+ retrieve them later:
+\end_layout
+
+\begin_layout Itemize
+maxAge: age in seconds, after which the client should delete the cookie;
+ maxAge=0 deletes the cookie immediately, while maxAge=-1 (the default)
+ asks the client to keep the cookie only for the duration of the “session”
+ (this is defined by the client; for most web browsers this means that the
+ cookie will be deleted when the browser is closed)
+\end_layout
+
+\begin_layout Itemize
+secure: true if the cookie is meant to be used only in secure connections
+ (defaults to false)
+\end_layout
+
+\begin_layout Itemize
+accessRestricted: true if the cookie is meant to be used only in authenticated
+ connections (defaults to false)
+\end_layout
+
+\begin_layout Itemize
+comment: some clients store this, some discard it
+\end_layout
+
+\begin_layout Standard
+You can ask the client to delete a cookie by calling its 
+\begin_inset Quotes eld
+\end_inset
+
+delete
+\begin_inset Quotes erd
+\end_inset
+
+ method.
+ Note that this is identical to setting maxAge=0 and calling 
+\begin_inset Quotes eld
+\end_inset
+
+save
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Security Concerns
+\end_layout
+
+\begin_layout Standard
+You should never store any unencrypted secret data in cookies: though web
+ browsers attempt to 
+\begin_inset Quotes eld
+\end_inset
+
+sandbox
+\begin_inset Quotes erd
+\end_inset
+
+ cookies, making sure that only the server (
+\begin_inset Quotes eld
+\end_inset
+
+domain
+\begin_inset Quotes erd
+\end_inset
+
+) that stored them can retrieve them, there are several ways by which other
+ sites could hijack them.
+ Better yet, don't store 
+\emph on
+any
+\emph default
+ permanent secrets in cookies, even if encrypted, because even encryptions
+ can be hacked.
+\end_layout
+
+\begin_layout Standard
+A separate security concern for users is that cookies can be used to surreptitio
+usly track user activity: any resource on a web page, even an image hosted
+ by an advertising company, can use cookies, and can also track your client's
+ IP address.
+\end_layout
+
+\begin_layout Standard
+Because of these security concerns, it is recommended that you devise a
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cookie policy
+\begin_inset Quotes erd
+\end_inset
+
+ for users and make it public, assuming you require the use of cookies for
+ your site.
+\end_layout
+
+\begin_layout Standard
+Cookies are a security concern for you, too: you cannot expect all your
+ clients to be standard, friendly web browsers.
+ Clients might not honor your requests for cookie modifications, and might
+ be sending you cookies that you did not ask them to store.
+\end_layout
+
+\begin_layout Standard
+Never trust cookies! They are a hacker's playground.
+\end_layout
+
+\begin_layout Subsection
+Redirection
+\begin_inset CommandInset label
+LatexCommand label
+name "redirection"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Client-side redirection in HTTP is handled via response headers.
+\end_layout
+
+\begin_layout Subsubsection
+By Routing
+\end_layout
+
+\begin_layout Standard
+If you need to constantly redirect a specific resource or a URI pattern,
+ you should configure it in your routing.js, using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+redirect
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "redirect-route-type"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/images/*': '>/media/{rr}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that in this example we 
+\bar under
+injected the wildcard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-the-wildcard"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+By API
+\end_layout
+
+\begin_layout Standard
+You can also redirect programmatically by using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.redirectPermament"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectPermament"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.redirectSeeOther"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectSeeOther"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.redirectTemporary"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectTemporary"
+
+\end_inset
+
+ APIs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.redirectSeeOther(conversation.base + '/help/')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if you redirect via API, the client will ignore the response payload
+ if there is one.
+\end_layout
+
+\begin_layout Subsubsection
+In HTML
+\end_layout
+
+\begin_layout Standard
+We're mentioning this here only for completion: via HTML, redirection is
+ handled entirely in the web browser, with no data going to/from the server.
+ A scriptlet resource example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Go <a href="<%= conversation.base + '/elsewhere/' %>">elsewhere</a>.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Server-Side Redirection
+\end_layout
+
+\begin_layout Standard
+In Prudence, this is called 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+capturing
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
+ and has particular use cases.
+ (It can indeed be confusing that this functionality is often grouped together
+ with client-side redirection.)
+\end_layout
+
+\begin_layout Subsection
+Request Payloads
+\begin_inset CommandInset label
+LatexCommand label
+name "request-payloads"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These are used in 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+PUT
+\begin_inset Quotes erd
+\end_inset
+
+ verbs.
+\end_layout
+
+\begin_layout Standard
+In JavaScript, you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.getEntity API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.getEntity"
+
+\end_inset
+
+ to extract the data in various formats:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var data = Prudence.Resources.getEntity(conversation, 'json')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Otherwise, you can use the lower-level 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.entity API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.entity"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/json/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var text = conversation.entity.text
+\end_layout
+
+\begin_layout Plain Layout
+
+var data = Sincerity.JSON.from(text)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if the payload comes from a HTML 
+\begin_inset Quotes eld
+\end_inset
+
+post
+\begin_inset Quotes erd
+\end_inset
+
+ form, 
+\bar under
+better APIs are available (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "html-forms"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+MIME Types
+\end_layout
+
+\begin_layout Standard
+If you wish to support multiple request payload MIME types, be sure to check
+ before retrieving:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var type = conversation.entity.mediaType.name
+\end_layout
+
+\begin_layout Plain Layout
+
+if (type == 'application/json') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = Prudence.Resources.getEntity(conversation, 'json')
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+} else if (type == 'image/png') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = Prudence.Resources.getEntity(conversation, 'binary')
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Consumption
+\end_layout
+
+\begin_layout Standard
+Note that 
+\emph on
+you can only retrieve the request payload once
+\emph default
+.
+ Once the data stream is consumed, its data resources are released.
+ Thus, the following would result in an error:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+print(conversation.entity.text)
+\end_layout
+
+\begin_layout Plain Layout
+
+print(conversation.entity.text)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The simple solution is retrieve once and store in a variable:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var text = conversation.entity.text
+\end_layout
+
+\begin_layout Plain Layout
+
+print(text)
+\end_layout
+
+\begin_layout Plain Layout
+
+print(text)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Parsing Formats
+\end_layout
+
+\begin_layout Standard
+Which formats can Prudence parse, and how well?
+\end_layout
+
+\begin_layout Standard
+This depends on which programming language you're using: for example, both
+ Python and Ruby both come with basic JSON support in their standard libraries,
+ and Python supports XML, as well.
+ Sincerity provides JavaScript with support for both.
+ Of course, you can install libraries that handle these and other formats,
+ and even use JVM libraries.
+\end_layout
+
+\begin_layout Standard
+For other formats, you may indeed need to add other libraries.
+\end_layout
+
+\begin_layout Quote
+A decent starting point is Restlet's 
+\begin_inset CommandInset href
+LatexCommand href
+name "ecosystem of extensions"
+target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?overview-summary.html"
+
+\end_inset
+
+, which can handle several data formats and conversions.
+ However, these are likely more useful in pure Java Restlet programming,
+ where they can plug into Restlet's sophisticated annotation-based conversion
+ system.
+ In Prudence, you will usually be applying any generic parsing library to
+ the raw textual or binary data.
+ Still, the Restlet extensions are useful for 
+\bar under
+response payloads (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "restlet-data-extensions"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+HTML Forms
+\begin_inset CommandInset label
+LatexCommand label
+name "html-forms"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+HTML's 
+\begin_inset Quotes eld
+\end_inset
+
+form
+\begin_inset Quotes erd
+\end_inset
+
+ tag works in two very different modes, depending on the value of its 
+\begin_inset Quotes eld
+\end_inset
+
+method
+\begin_inset Quotes erd
+\end_inset
+
+ param:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+get
+\begin_inset Quotes erd
+\end_inset
+
+: The form fields are all turned into query params and appended to the 
+\begin_inset Quotes eld
+\end_inset
+
+action
+\begin_inset Quotes erd
+\end_inset
+
+ URL.
+ It is important to remember that an HTTP 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ is 
+\emph on
+idempotent
+\emph default
+ and should not be used to store new data, but rather as a way to represent
+ existing data in a particular way.
+ Actually, 
+\begin_inset Quotes eld
+\end_inset
+
+get
+\begin_inset Quotes erd
+\end_inset
+
+ forms are not that useful, and are mostly an odd legacy from the early
+ days of the World Wide Web, where 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ was the only the supported HTTP verb on some platforms.
+ See 
+\bar under
+query parameters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "query-parameters"
+
+\end_inset
+
+)
+\bar default
+ for handling.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+post
+\begin_inset Quotes erd
+\end_inset
+
+: The form fields are actually encoded in the same way that query params
+ are, but instead of being affixed to the URL, they are sent as the payload
+ with an 
+\begin_inset Quotes eld
+\end_inset
+
+application/x-www-form-urlencoded
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type.
+ Though you can of course access this payload 
+\bar under
+directly (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "request-payloads"
+
+\end_inset
+
+)
+\bar default
+, it is recommended to use the specialized APIs detailed here.
+\end_layout
+
+\begin_layout Standard
+Example form:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<form action="<%= conversation.base + '/user/' %>" method="post">
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>Name: <input type="text" name="name"></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>Enabled: <input type="radio" name="enabled" value="true"></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>Disabled: <input type="radio" name="enabled" value="false"></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p><button type="submit">Send</button></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+</form>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In JavaScript, you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.getForm API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.getQuery"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var form = Prudence.Resources.getForm(conversation, {
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: 'text',
+\end_layout
+
+\begin_layout Plain Layout
+
+	enabled: 'bool'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the case of multiple fields with the same name, the API would return
+ the first fields that matches the name.
+ Otherwise, you can also retrieve all values into an array:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var form = Prudence.Resources.getForm(conversation, {
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: 'text[]',
+\end_layout
+
+\begin_layout Plain Layout
+
+	enabled: 'bool'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Low Level
+\end_layout
+
+\begin_layout Standard
+For non-JavaScript you can use the lower-level 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.form API family"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.form"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var form = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: conversation.form.get('name'),
+\end_layout
+
+\begin_layout Plain Layout
+
+	enabled: conversation.form.get('enabled') == 'true'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.formAll"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.formAll"
+
+\end_inset
+
+ if you need to find multiple fields with the same name.
+\end_layout
+
+\begin_layout Subsubsection
 Accepting Uploads
 \begin_inset CommandInset label
 LatexCommand label
@@ -9257,15 +11056,769 @@ name "accepting-uploads"
 \end_layout
 
 \begin_layout Standard
-TODO
-\end_layout
+HTML supports file uploads using forms and the 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Section
-Cookies
+file
+\begin_inset Quotes erd
+\end_inset
+
+ input type.
+ However, the default 
+\begin_inset Quotes eld
+\end_inset
+
+application/x-www-form-urlencoded
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type for forms will not be able to encode files, so you must change
+ it to 
+\begin_inset Quotes eld
+\end_inset
+
+multipart/form-data
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example:
 \end_layout
 
 \begin_layout Standard
-TODO
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<form action="<%= conversation.base + '/user/' %>" method="post" enctype="multipa
+rt/form-data">
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>Name: <input type="text" name="name"></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>Upload your avatar (an image file): <input name="avatar" type="file"
+ /></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p><button type="submit">Send</button></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+</form>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence has flexible support for handling uploads: you can configure them
+ to be stored in memory, or to disk.
+ See the 
+\bar under
+application configuration guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-uploads"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+You can access the uploaded data using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.form API family"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.form"
+
+\end_inset
+
+.
+ Here's a rather sophisticated example for displaying the uploaded file
+ to the user:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+var name = conversation.form.get(name')
+\end_layout
+
+\begin_layout Plain Layout
+
+var tmpAvatar = conversation.form.get('avatar').file
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// The metadata service can provide us with a default extension for the
+ media type
+\end_layout
+
+\begin_layout Plain Layout
+
+var mediaType = conversation.form.get('avatar').mediaType
+\end_layout
+
+\begin_layout Plain Layout
+
+var extension = application.application.metadataService.getExtension(mediaType)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// We will put all avatars under the "/resources/avatars/" directory, so
+ that they
+\end_layout
+
+\begin_layout Plain Layout
+
+// can be visible to the world
+\end_layout
+
+\begin_layout Plain Layout
+
+var avatars = new File(document.source.basePath, 'avatars')
+\end_layout
+
+\begin_layout Plain Layout
+
+avatars.mkdirs()
+\end_layout
+
+\begin_layout Plain Layout
+
+var avatar = new File(avatars, name + '.' + extension)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// Move the file to the new location
+\end_layout
+
+\begin_layout Plain Layout
+
+tmpAvatar.renameTo(avatar)
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>Here's the avatar you uploaded, <%= name %></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<img src="<%= conversation.base + '/avatars/' + avatar.name %>" />
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Response Payloads
+\begin_inset CommandInset label
+LatexCommand label
+name "response-payloads"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This section is mostly applicable to 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+, although it can prove useful to affect the textual payloads of 
+\bar under
+scriptlet resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+For 
+\bar under
+static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+, the response payloads are of course the contents of the resource files.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Textual and Binary Payloads
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+Scriptlet resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+ might seem to always return textual payloads.
+ Actually, by default they will negotiate a compression format, which if
+ selected will result in a binary: the compressed version of the text.
+ But all of that is handled automatically by Prudence for that highly-optimized
+ use case.
+\end_layout
+
+\begin_layout Standard
+For 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+, you can return any arbitrary payload by simply returning a value in handleGet,
+ handlePost or handlePut.
+ Both strings and JVM byte arrays are supported.
+ A textual example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'My payload'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A binary example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/jvm/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var payload = Sincerity.JVM.newArray(10, 'byte')
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (var i = 0; i < 10; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		payload[i] = i
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return payload
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if you return a 
+\emph on
+number
+\emph default
+, it will be treated specially as an HTTP status code.
+ If you wish to return the number as a textual payload, simply convert it
+ to a string:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return String(123)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Binary Streaming
+\end_layout
+
+\begin_layout Standard
+Streaming using 
+\bar under
+background tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+ is not directly supported by Prudence as of version 2.0.
+ However, this feature is planned for a future version, depending on support
+ being added to Restlet.
+\end_layout
+
+\begin_layout Subsubsection
+Restlet Data Extensions
+\begin_inset CommandInset label
+LatexCommand label
+name "restlet-data-extensions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Instead of returning a string or a byte array, you can return an instance
+ of any class inheriting from 
+\begin_inset CommandInset href
+LatexCommand href
+name "Representation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html"
+
+\end_inset
+
+.
+ Restlet comes with 
+\begin_inset CommandInset href
+LatexCommand href
+name "a few basic classes"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/package-summary.html"
+
+\end_inset
+
+ to get you started.
+ Here's a rather boring example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return new org.restlet.representation.StringRepresentation('My payload')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where Restlet really shines is in its 
+\begin_inset CommandInset href
+LatexCommand href
+name "ecosystem of extensions"
+target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?overview-summary.html"
+
+\end_inset
+
+, which can handle several data formats and conversions.
+ For these extensions to work, you will need to install the appropriate
+ library in your container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/jars/
+\begin_inset Quotes erd
+\end_inset
+
+ directory, as well as all dependent libraries.
+ Please refer to the Restlet distribution for complete details.
+\end_layout
+
+\begin_layout Standard
+Note that you can also set the response directly via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.response.entity API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.response"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var payload = new org.restlet.representation.StringRepresentation('My payload')
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.response.entity = payload
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Overriding the MIME Type
+\end_layout
+
+\begin_layout Standard
+The response payload's MIME type has likely already been selected for you
+ via HTTP content negotiation, based on the list of preferences you set
+ up in handleInit.
+ However, it's possible to override this value via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.mediaType API family"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
+
+\end_inset
+
+.
+ This feature should be used sparingly: content negotiation is the preferred
+ RESTful mechanism for determining the response MIME type, and the negotiated
+ value should be honored.
+ However, it could be very useful to override it if you 
+\emph on
+cannot 
+\emph default
+use content negotiation, which might be the case if your clients don't support
+ it.
+\end_layout
+
+\begin_layout Standard
+In this example, we'll allow a 
+\begin_inset Quotes eld
+\end_inset
+
+format=html
+\begin_inset Quotes erd
+\end_inset
+
+ query param to override the negotiated MIME type:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('text/plain')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.query.get('format') == 'html') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.mediaTypeByName = 'text/html'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return '<html><body>My page</body></html>'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that this API works just as well for scriptlet resources, though again
+ content negotiation should be preferred.
+\end_layout
+
+\begin_layout Subsubsection
+Browser Downloads
+\begin_inset CommandInset label
+LatexCommand label
+name "browser-downloads"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can create browser-friendly downloadable responses using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.disposition API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.disposition"
+
+\end_inset
+
+.
+ Here's an example using a 
+\bar under
+scriptlet resource (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Item,Cost,Sold,Profit
+\end_layout
+
+\begin_layout Plain Layout
+
+Keyboard,$10.00,$16.00,$6.00
+\end_layout
+
+\begin_layout Plain Layout
+
+Monitor,$80.00,$120.00,$40.00
+\end_layout
+
+\begin_layout Plain Layout
+
+Mouse,$5.00,$7.00,$2.00
+\end_layout
+
+\begin_layout Plain Layout
+
+,,Total,$48.00
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.mediaTypeName = 'text/csv'
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.disposition.type = 'attachment'
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.disposition.filename = bill.csv'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Most web browsers would recognize the MIME type and ask the user if they
+ would prefer to either download the file with the suggested 
+\begin_inset Quotes eld
+\end_inset
+
+bill.csv
+\begin_inset Quotes erd
+\end_inset
+
+ filename, or open it in a supporting application, such as a spreadsheet
+ editor.
 \end_layout
 
 \begin_layout Section
@@ -9281,6 +11834,181 @@ name "caching"
 
 \begin_layout Subsection
 Introduction: Integrated Caching
+\end_layout
+
+\begin_layout Subsection
+Server-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "server-side-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO: write the manual.
+\end_layout
+
+\begin_layout Standard
+The APIs:
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheDuration
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheTags
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheKeyPattern
+\end_layout
+
+\begin_layout Subsubsection
+document.cacheKey
+\end_layout
+
+\begin_layout Subsection
+Client-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "client-side-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-client-side-caching"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Conditional Requests
+\end_layout
+
+\begin_layout Standard
+HTTP clients, such as web browsers, store downloaded content in their local
+ cache, marking it with a modification date and tag according to HTTP headers
+ in the response.
+ Subsequent requests to the same URL will be “conditional,” meaning that
+ the client will tell the server what the latest modification date it has.
+ If the server does not have new data, then it returns an empty response
+ with the 304 “not modified” HTTP status, letting the client know that it
+ is safe to use its cached version.
+ This saves both bandwidth and processing resources on the server.
+\end_layout
+
+\begin_layout Standard
+To support conditional requests, you have to explicitly set at least one
+ of 
+\bar under
+conversation.modificationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-modification-date"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+conversation.tag (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-tag"
+
+\end_inset
+
+)
+\bar default
+.
+ If you implement 
+\bar under
+handleGetInfo (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get-info"
+
+\end_inset
+
+)
+\bar default
+, you should be returning one of these values instead.
+\end_layout
+
+\begin_layout Standard
+Note that these attributes are ignored in case you are constructing and
+ returning your own 
+\begin_inset CommandInset href
+LatexCommand href
+name "Representation instance"
+target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/Representation.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Client Caching
+\end_layout
+
+\begin_layout Standard
+Though clients rely on a local cache for conditional requests, you can provide
+ them with additional caching directives.
+ In Prudence, you can control the expiration of the client's cached entry
+ with 
+\bar under
+conversation.maxAge (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-max-age"
+
+\end_inset
+
+)
+\bar default
+ or 
+\bar under
+conversation.expirationDate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|conversation-expiration-date"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Explicitly setting cache directives has an important side effect: most clients
+ will 
+\emph on
+not
+\emph default
+ send conditional HTTP requests for the cached data until the cache entry
+ expires.
+ This allows you to save bandwidth and improves client performance, but
+ at the expense of not being able to update the client upon changes.
+ Use with care.
 \end_layout
 
 \begin_layout Subsection
@@ -9729,232 +12457,15 @@ app.routes = {
 
 \end_layout
 
-\begin_layout Subsection
-Server-Side Caching
-\begin_inset CommandInset label
-LatexCommand label
-name "server-side-caching"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO: write the manual.
-\end_layout
-
-\begin_layout Standard
-The APIs:
-\end_layout
-
-\begin_layout Subsubsection
-document.cacheDuration
-\end_layout
-
-\begin_layout Subsubsection
-document.cacheTags
-\end_layout
-
-\begin_layout Subsubsection
-document.cacheKeyPattern
-\end_layout
-
-\begin_layout Subsubsection
-document.cacheKey
-\end_layout
-
-\begin_layout Subsection
-Client-Side Caching
-\begin_inset CommandInset label
-LatexCommand label
-name "client-side-caching"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Conditional Requests
-\end_layout
-
-\begin_layout Standard
-HTTP clients, such as web browsers, store downloaded content in their local
- cache, marking it with a modification date and tag according to HTTP headers
- in the response.
- Subsequent requests to the same URL will be “conditional,” meaning that
- the client will tell the server what the latest modification date it has.
- If the server does not have new data, then it returns an empty response
- with the 304 “not modified” HTTP status, letting the client know that it
- is safe to use its cached version.
- This saves both bandwidth and processing resources on the server.
-\end_layout
-
-\begin_layout Standard
-To support conditional requests, you have to explicitly set at least one
- of 
-\bar under
-conversation.modificationDate (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-modification-date"
-
-\end_inset
-
-)
-\bar default
- and 
-\bar under
-conversation.tag (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-tag"
-
-\end_inset
-
-)
-\bar default
-.
- If you implement 
-\bar under
-handleGetInfo (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "handle-get-info"
-
-\end_inset
-
-)
-\bar default
-, you should be returning one of these values instead.
-\end_layout
-
-\begin_layout Standard
-Note that these attributes are ignored in case you are constructing and
- returning your own 
-\begin_inset CommandInset href
-LatexCommand href
-name "Representation instance"
-target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/Representation.html"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph
-Client Caching
-\end_layout
-
-\begin_layout Standard
-Though clients rely on a local cache for conditional requests, you can provide
- them with additional caching directives.
- In Prudence, you can control the expiration of the client's cached entry
- with 
-\bar under
-conversation.maxAge (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-max-age"
-
-\end_inset
-
-)
-\bar default
- or 
-\bar under
-conversation.expirationDate (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-expiration-date"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-Explicitly setting cache directives has an important side effect: most clients
- will 
-\emph on
-not
-\emph default
- send conditional HTTP requests for the cached data until the cache entry
- expires.
- This allows you to save bandwidth and improves client performance, but
- at the expense of not being able to update the client upon changes.
- Use with care.
-\end_layout
-
-\begin_layout Section
-Filtering
-\begin_inset CommandInset label
-LatexCommand label
-name "filtering"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
-How Routing Works
-\end_layout
-
-\begin_layout Subsection
-Injection
-\end_layout
-
-\begin_layout Subsection
-Built-in Filters
-\end_layout
-
-\begin_layout Subsection
-HTTP Authentication
-\begin_inset CommandInset label
-LatexCommand label
-name "http-authentication"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Standard
-
-\bar under
-\begin_inset Quotes eld
-\end_inset
-
-httpAuthenticator
-\begin_inset Quotes erd
-\end_inset
-
- route type (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "http-authenticator-route-type"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
 \begin_layout Section
 Configuring Applications
+\begin_inset CommandInset label
+LatexCommand label
+name "configuring-applications"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -10239,8 +12750,20 @@ app.settings = {
 
 \end_layout
 
+\begin_layout Paragraph
+Numeric Shortcuts
+\begin_inset CommandInset label
+LatexCommand label
+name "numeric-shortcuts"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
-Note that some values can be specified as either numbers or string:
+Time durations are in milliseconds and data sizes in bytes.
+ But these can be specified as either numbers or strings:
 \end_layout
 
 \begin_layout Itemize
@@ -10270,6 +12793,11 @@ Data sizes: numerically as bytes, or using 'b', 'kb', 'mb', 'gb' or 'tb'
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+You can accomplish the same trick for your own code using Sincerity.Localization.t
+oMilliseconds and Sincerity.Localization.toBytes.
 \end_layout
 
 \begin_layout Subsubsection
@@ -10563,6 +13091,13 @@ defaultLanguageTag
 
 \begin_layout Subsubsection
 app.settings.uploads
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-uploads"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -10671,8 +13206,15 @@ text/html
 \begin_inset Quotes erd
 \end_inset
 
- MIME type (which you can change in scriptlet code via the conversation.mediaType
- APIs), and a static resource named 
+ MIME type (which you can change in scriptlet code via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.mediaType APIs"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
+
+\end_inset
+
+), and a static resource named 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10705,18 +13247,50 @@ reference "handle-init"
 )
 \bar default
 .
- There, you can refer to MIME types directly via the conversation.addMediaTypeByN
-ame API, or you can look them up from this setting using the conversation.addMedi
-aTypeByExtension API.
+ There, you can refer to MIME types directly via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.addMediaTypeByName API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.addMediaTypeByName"
+
+\end_inset
+
+, or you can look them up from this setting using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.addMediaTypeByExtension API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.addMediaTypeByExtension"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
 app.globals
+\begin_inset CommandInset label
+LatexCommand label
+name "app-globals"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Use this for custom settings for your application: values here will become
- application.globals when your application is running.
+ 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+ when your application is running.
 \end_layout
 
 \begin_layout Standard
@@ -10828,1117 +13402,6 @@ app.globals = {
 \end_layout
 
 \begin_layout Section
-Configuring the Component
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Standard
-Order: applications, services, starts component, then runs initialization
- tasks
-\end_layout
-
-\begin_layout Subsection
-/component/servers/
-\end_layout
-
-\begin_layout Standard
-See 
-\bar under
-configuring servers (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "servers"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-/component/clients/
-\end_layout
-
-\begin_layout Subsection
-/component/hosts/
-\end_layout
-
-\begin_layout Standard
-See 
-\bar under
-configuring hosts (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "hosts"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-/component/services/
-\end_layout
-
-\begin_layout Standard
-Run 
-\emph on
-after
-\emph default
- the component is configured but 
-\emph on
-before
-\emph default
- it is started.
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/caching
-\end_layout
-
-\begin_layout Standard
-Configure the caching backend
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/distributed
-\end_layout
-
-\begin_layout Standard
-Load the Hazelcast configuration
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/executor
-\end_layout
-
-\begin_layout Standard
-Configures thread pools for task execution.
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/log
-\end_layout
-
-\begin_layout Standard
-Configures the component's log service, which is used for logging client
- requests.
- (By default web.log)
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/singleton
-\end_layout
-
-\begin_layout Standard
-Prudence assumes a single Restlet Component instance.
- If for some reason you have a more complex setup, you can configure Prudence's
- initialization here.
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/scheduler
-\end_layout
-
-\begin_layout Standard
-Configure the cron scheduler (cron4j)
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/status
-\end_layout
-
-\begin_layout Standard
-Configures Restlet's status service to use Prudence's implementation.
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/version
-\end_layout
-
-\begin_layout Standard
-Provides access to Prudence and Restlet versions.
-\end_layout
-
-\begin_layout Subsection
-/component/templates/
-\end_layout
-
-\begin_layout Section
-Servers and Hosts
-\end_layout
-
-\begin_layout Standard
-Restlet has excellent virtual host support, and there is a many-to-many
- relationship routing between almost servers, hosts and application.
- So, you can easily have a single Prudence container (running in a single
- JVM instance) managing several sites at once with several applications
- on several domains on several servers.
-\end_layout
-
-\begin_layout Subsection
-Configuring Servers
-\begin_inset CommandInset label
-LatexCommand label
-name "servers"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Define your servers under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/servers/
-\begin_inset Quotes erd
-\end_inset
-
-.
- At the simplest, you just add a new file and assign a port for it.
- A minimal server definition for HTTP:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var server = new Server(Protocol.HTTP, 8080)
-\end_layout
-
-\begin_layout Plain Layout
-
-server.name = 'myserver'
-\end_layout
-
-\begin_layout Plain Layout
-
-component.servers.add(server)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You can also bind a server to a specific IP address, in case your machine
- has more than one IP address:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-server.address = [string]
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-There are also many configuration parameters for Jetty, the HTTP engine,
- which you can set in the server's context.
- Here we configure the size of the thread pool:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('minThreads', '6')
-\end_layout
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('maxThreads', '12')
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Here we switch to a blocking server:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('type', '1') // blocking NIO
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-See Jetty's 
-\begin_inset CommandInset href
-LatexCommand href
-name "HttpServerHelper"
-target "http://restlet.org/learn/javadocs/2.1/jse/ext/org/restlet/ext/jetty/HttpServerHelper.html"
-
-\end_inset
-
- as well as all inherited parameters from the parent classes.
-\end_layout
-
-\begin_layout Subsubsection
-Secure Servers (HTTPS)
-\begin_inset CommandInset label
-LatexCommand label
-name "secure-servers"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-If you are using a 
-\bar under
-load balancer or another kind of proxy (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "proxying"
-
-\end_inset
-
-)
-\bar default
-, it may make sense to handle secure connections there.
- But Prudence can also handle secure (HTTPS) connections itself.
- Here's an example configuration for 
-\begin_inset Quotes eld
-\end_inset
-
-/component/servers/https.js
-\begin_inset Quotes erd
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var server = new Server(Protocol.HTTPS, 443)
-\end_layout
-
-\begin_layout Plain Layout
-
-server.name = 'secure'
-\end_layout
-
-\begin_layout Plain Layout
-
-component.servers.add(server)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-// Configure it to use our security keys
-\end_layout
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('keystorePath', '/path/prudence.jks')
-\end_layout
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('keystorePassword', 'mykeystorepassword')
-\end_layout
-
-\begin_layout Plain Layout
-
-//server.context.parameters.set('keyPassword', 'mykeypassword')
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-// Add support for the X-FORWARDED-FOR header used by proxies
-\end_layout
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('useForwardedForHeader', 'true')
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-See the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet Jetty HttpServerHelper documentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?org/restlet/ext/ssl/DefaultSslContextFactory.html"
-
-\end_inset
-
- for all secuirty configuration parameters.
-\end_layout
-
-\begin_layout Paragraph
-Security Keys
-\end_layout
-
-\begin_layout Standard
-The above configuration assumes the you have a Java KeyStore (JKS) file
- at “/path/prudence.jks” containing your security key.
- You can create a key using the 
-\begin_inset CommandInset href
-LatexCommand href
-name "“keytool” utility"
-target "http://docs.oracle.com/javase/1.5.0/docs/tooldocs/index.html#security"
-
-\end_inset
-
- that is bundled with most JVMs.
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-keytool -keystore /path/prudence.jks -alias mykey -genkey -keyalg RSA
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-When creating the keystore, you will be asked provide a password for it,
- and you may optionally provide a password for your key, too, in which case
- you need to comment out the relevant line in the example above.
- (The key alias and key password would be transferred together with the
- key if you move it to a different keystore.)
-\end_layout
-
-\begin_layout Standard
-Such self-created keys are useful for controlled intranet environments,
- in which you can provide clients with the public key, but for Internet
- applications you will likely want a key created by one of the “certificate
- authorities” trusted by most web browsers.
- Some of these certificate authorities may conveniently let you download
- a key in JKS format.
- Otherwise, if they support PKCS12 format, you can use keytool (only JVM
- version 6 and later) to convert PKCS12 to JKS.
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-keytool -importkeystore -srcstoretype PKCS12 -srckeystore /path/prudence.pkcs12
- -destkeystore /path/prudence.jks
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-If your certificate authority won't even let you download PKCS12 file, you
- can create one from your “.key” and “.crt” (or “.pem”) files using 
-\begin_inset CommandInset href
-LatexCommand href
-name "OpenSSL"
-target "http://www.openssl.org/"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-openssl pkcs12 -inkey /path/mykey.key -in /path/mykey.crt -export -out /path/prude
-nce.pkcs12 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-(Note that in this case you 
-\emph on
-must
-\emph default
- give your new PKCS12 a non-empty password, or else keytool will fail with
- an unhelpful error message.)
-\end_layout
-
-\begin_layout Paragraph
-Handling HTTPS
-\end_layout
-
-\begin_layout Standard
-It's sometimes necessary to support HTTPS specially in your implementation.
- One useful strategy is to create separate applications for HTTP and HTTPS,
- and then attach them to different 
-\bar under
-virtual hosts (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "hosts"
-
-\end_inset
-
-)
-\bar default
-, one for each protocol (the 
-\begin_inset Quotes eld
-\end_inset
-
-resourceScheme
-\begin_inset Quotes erd
-\end_inset
-
- parameter).
- However, if the application behaves mostly the same for HTTP and HTTPS,
- but differs only in a few specific resources, it may be useful to check
- for HTTPS programatically.
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-if (conversation.reference.schemeProtocol.name == 'HTTPS') {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Configuring Hosts
-\begin_inset CommandInset label
-LatexCommand label
-name "hosts"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Define you virtual hosts under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/hosts/
-\begin_inset Quotes erd
-\end_inset
-
-.
- A minimal host definition:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var host = new VirtualHost(component.context)
-\end_layout
-
-\begin_layout Plain Layout
-
-host.name = 'privatehost'
-\end_layout
-
-\begin_layout Plain Layout
-
-component.hosts.add(host)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The 
-\begin_inset Quotes eld
-\end_inset
-
-host.name
-\begin_inset Quotes erd
-\end_inset
-
- param exactly matches the string used in 
-\bar under
-app.hosts (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "app-hosts"
-
-\end_inset
-
-)
-\bar default
- per each application.
-\end_layout
-
-\begin_layout Standard
-A virtual host can route according to domain name, and incoming server IP
- address and port assignment:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-host.resourceScheme = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourceDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourcePort = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.serverAddress = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.serverPort = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostScheme = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostPort = [string]
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-“*” wildcards are supported for all of these properties.
- Some notes:
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-resourceScheme
-\begin_inset Quotes erd
-\end_inset
-
-, 
-\begin_inset Quotes eld
-\end_inset
-
-resourceDomain
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-resourcePort
-\begin_inset Quotes erd
-\end_inset
-
- refer to the actual incoming URI.
- Thus 
-\begin_inset Quotes eld
-\end_inset
-
-resourcePort
-\begin_inset Quotes erd
-\end_inset
-
- would be meaningful 
-\emph on
-only if
-\emph default
- URIs explicitly include a port number.
- To match a host to a specific server you would likely want to use 
-\begin_inset Quotes eld
-\end_inset
-
-serverPort
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-hostScheme
-\begin_inset Quotes erd
-\end_inset
-
-, 
-\begin_inset Quotes eld
-\end_inset
-
-hostDomain
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-hostPort
-\begin_inset Quotes erd
-\end_inset
-
- are for matching the 
-\begin_inset Quotes eld
-\end_inset
-
-Host
-\begin_inset Quotes erd
-\end_inset
-
- HTTP header used by some proxies.
-\end_layout
-
-\begin_layout Subsubsection
-The Hungry Host
-\end_layout
-
-\begin_layout Standard
-The 
-\begin_inset Quotes eld
-\end_inset
-
-default
-\begin_inset Quotes erd
-\end_inset
-
- host that comes with the Prudence skeleton doesn't configure any routing
- limitations, meaning that 
-\emph on
-all
-\emph default
- incoming requests are routed.
- We call such a host 
-\begin_inset Quotes eld
-\end_inset
-
-hungry.
-\begin_inset Quotes erd
-\end_inset
-
- Thus, if you want to use more than one host, you have to make sure that
- the hungry host is the 
-\emph on
-last
-\emph default
- one, so that it acts as a fallback for when other hosts don't match incoming
- requests.
- Otherwise, it would 
-\begin_inset Quotes eld
-\end_inset
-
-eat
-\begin_inset Quotes erd
-\end_inset
-
- requests from other hosts.
- Because host files are executed in alphabetical order, a good way to ensure
- that the hungry host is last is to number your host filenames.
- For example:
-\end_layout
-
-\begin_layout Itemize
-1-public.js
-\end_layout
-
-\begin_layout Itemize
-2-private.js
-\end_layout
-
-\begin_layout Itemize
-3-default.js (this is the hungry host)
-\end_layout
-
-\begin_layout Subsubsection
-Deploying Multiple Sites
-\end_layout
-
-\begin_layout Standard
-Using the virtual hosts and application model, Prudence can let you manage
- several sites using a single Prudence installation (a 
-\begin_inset Quotes eld
-\end_inset
-
-container
-\begin_inset Quotes erd
-\end_inset
-
-).
- But is this always a good idea?
-\end_layout
-
-\begin_layout Paragraph
-Advantages of Using a Single Container
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: you are using a single base directory for the
- entire project, which might be easier for you.
- Because all configuration is done by JavaScript inside the container, it
- is very flexible.
-\end_layout
-
-\begin_layout Enumerate
-Less memory use than running multiple JVMs.
-\end_layout
-
-\begin_layout Enumerate
-Shared memory: you can use application.sharedGlobals to share state between
- applications.
-\end_layout
-
-\begin_layout Paragraph
-Advantages of Using Multiple Containers
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: several base directories can mean separate
- code/distribution repositories, which might be easier for you.
- Configuration will be at your web frontend (reverse proxy).
-\end_layout
-
-\begin_layout Enumerate
-Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
- With this in mind, it may even be worth having each 
-\emph on
-single application
-\emph default
- running in its own JVM/container.
-\end_layout
-
-\begin_layout Enumerate
-Run-time flexibility: you can restart the JVM for one container without
- affecting others that are running.
-\end_layout
-
-\begin_layout Standard
-There is no performance advantage in either scenario.
- Everything in Prudence is designed around high-concurrency and threading,
- and generally threads are managed by the OS globally.
-\end_layout
-
-\begin_layout Quote
-Well, there are caveats to that statement: Linux can group threads per running
- process for purposes of prioritization, but this is only really done for
- desktop applications.
- The feature could be possibly useful when running several containers, if
- you want to guarantee high thread priority to one of the containers over
- the others.
- Any of this would only effect 
-\emph on
-very
-\emph default
- high concurrency and highly CPU-bound deployments.
-\end_layout
-
-\begin_layout Subsection
-Routing In-Depth
-\begin_inset CommandInset label
-LatexCommand label
-name "routing-in-depth"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In this final section, we'll describe in detail how routing works in Prudence.
- It can be considered optional, advanced reading.
-\end_layout
-
-\begin_layout Standard
-In Prudence, “routing” refers to the decision-making process by which an
- incoming client request reaches its server-side handler .
- Usually, information in the request itself is used to make the decision,
- such as the URI, cookies, the client type, capabilities and geolocation.
- But routing can also take server-side and other circumstances into account.
- For example, a round-robin load-balancing router might send each incoming
- request to a different handler in sequence.
-\end_layout
-
-\begin_layout Standard
-A request normally goes through many route types before reaching its handler.
- Filters along the way can change information in the request, which could
- also affect routing, and indeed filters can be used as routing tools.
-\end_layout
-
-\begin_layout Standard
-This abstract, flexible routing mechanism is one of Prudence's most powerful
- features, but it's important to understand these basic principles.
- A common misconception is that routing is based on the hierarchical structure
- of URIs, such that a child URI's routing is somehow affected by its parent
- URI.
- While it's possible to explicitly design your routes hierarchically, routing
- is primarily to be understood in terms of the order of routers and filters
- along the way.
- A parent and child URI could thus use entirely different handlers.
-\end_layout
-
-\begin_layout Standard
-To give you a better understanding of how Prudence routing works, let's
- follow the journey of a request, starting with routing at the server level.
-\end_layout
-
-\begin_layout Paragraph
-Step 1: Servers
-\end_layout
-
-\begin_layout Standard
-Requests come in from servers.
- Prudence instances have at the minimum one server, but can have more than
- one.
- Each server listens at a particular HTTP port, and multiple servers may
- in turn be restricted to particular network interfaces on your machine.
- By default, Prudence has a single server that listens to HTTP requests
- on port 8080 coming in from all network interfaces.
-\end_layout
-
-\begin_layout Paragraph
-Step 2: The Component
-\end_layout
-
-\begin_layout Standard
-There is only one component per Prudence instance, and 
-\emph on
-all 
-\emph default
-servers route to it.
- This allows Prudence a unified mechanism to deal with all incoming requests.
-\end_layout
-
-\begin_layout Paragraph
-Step 3: Virtual Hosts
-\end_layout
-
-\begin_layout Standard
-The component's router decides which virtual host should receive the request.
- The decision is often made according to the domain name in the URL, but
- can also take into account which server it came from.
- Virtual hosting is a tool to let you host multiple sites on the same Prudence
- instance, but it can be used for more subtle kinds of routing, too.
-\end_layout
-
-\begin_layout Standard
-At the minimum you must have one virtual host.
- By default, Prudence has one that accepts all incoming requests from all
- servers.
- If you have multiple servers and want to treat them differently, you can
- create a virtual host for each.
-\end_layout
-
-\begin_layout Paragraph
-Step 4: Applications
-\end_layout
-
-\begin_layout Standard
-Using app.hosts, you can configure which virtual hosts your application will
- be attached to, and the base URI for the application on each virtual host.
- An application can accept requests from several virtual hosts at once.
-\end_layout
-
-\begin_layout Standard
-To put it another way, there's a many-to-many relationship between virtual
- hosts and applications: one host can have many applications, and the same
- application can be attached to many hosts.
-\end_layout
-
-\begin_layout Standard
-Note that you can create a “nested” URI scheme for your applications.
- For example, one application might be attached at the root URI at a certain
- virtual host, “/”, while other applications might be at different URIs
- beneath the root, “/wackywiki” and “/wackywiki/support/forum”.
- The root application will not “steal” requests from the other applications,
- because the request is routed to the right application by the virtual host.
- The fact that the latter URI is the hierarchical descendant of the former
- makes no difference to the virtual host router.
-\end_layout
-
-\begin_layout Paragraph
-A Complete Route
-\end_layout
-
-\begin_layout Standard
-Let's assume a client from the Internet send a request to URI “http://www.wacky.or
-g/wackywicki/support/forum/thread/12/.”
-\end_layout
-
-\begin_layout Standard
-Our machine has two network interfaces, one facing the Internet and one
- facing the intranet, and we have two servers to listen on each.
- This particular request has come in through the external server.
- The request reachers the component's router.
-\end_layout
-
-\begin_layout Standard
-We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
- main site, and another to handle “support.wacky.org”, a secure site where
- paying customers can open support tickets.
-\end_layout
-
-\begin_layout Standard
-Our forum application (in the 
-\begin_inset Quotes eld
-\end_inset
-
-/applications/forum/
-\begin_inset Quotes erd
-\end_inset
-
- subdirectory) is attached to both virtual hosts, but at different URIs.
- It's at “www.wacky.org/wackywiki/support/forum” and at “support.wacky.org/forum”.
- In this case, our request is routed to the first virtual host.
- Though there are a few applications installed at this virtual host, our
- request follows the route to the forum application.
-\end_layout
-
-\begin_layout Standard
-The remaining part of the URI, “/thread/12/” will be further routed inside
- the forum application, according to route types installed in its routing.js.
-\end_layout
-
-\begin_layout Section
-Working in a Cluster
-\begin_inset CommandInset label
-LatexCommand label
-name "clusters"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
-Distributed Globals
-\end_layout
-
-\begin_layout Subsection
-Task Farming
-\end_layout
-
-\begin_layout Section
 Programming
 \end_layout
 
@@ -11991,7 +13454,7 @@ Two options!
 \end_layout
 
 \begin_layout Subsection
-Managing State
+State
 \end_layout
 
 \begin_layout Standard
@@ -11999,6 +13462,44 @@ Prudence is designed to allow massive concurrency and scalability while
  at the same time shielding you from the gorier details.
  However, when it comes to sharing state between different parts of your
  code, it's critical that you understand Prudence's state services.
+\end_layout
+
+\begin_layout Subsubsection
+application.globals
+\begin_inset CommandInset label
+LatexCommand label
+name "application-globals"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.globals
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-globals"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -12025,18 +13526,7 @@ These are not “local” in the same way that code scope locals are.
 \begin_layout Standard
 You may ask, then, why you wouldn't want to just use your language globals,
  which have similar scope and life.
- 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-locals"
-
-\end_inset
-
-)
-\bar default
- have three main uses in Prudence:
+ conversation.locals have three main uses in Prudence:
 \end_layout
 
 \begin_layout Enumerate
@@ -12144,7 +13634,7 @@ reference "../resources/|life"
 application.globals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-globals"
+reference "application-globals"
 
 \end_inset
 
@@ -12200,7 +13690,7 @@ might
 application.globals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-globals"
+reference "application-globals"
 
 \end_inset
 
@@ -12220,7 +13710,7 @@ The rule of thumb is to always prefer to use
  application.globals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-globals"
+reference "application-globals"
 
 \end_inset
 
@@ -13444,7 +14934,2987 @@ reference "on-the-fly-scriptlet-resources"
 \end_layout
 
 \begin_layout Section
-Deployment
+FAQ
+\begin_inset CommandInset label
+LatexCommand label
+name "faq"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Please also refer to the FAQs for 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity"
+target "http://threecrickets.com/sincerity/manual/faq/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Scripturian"
+target "http://threecrickets.com/scripturian/manual/faq/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Prudence or Node.js?
+\begin_inset CommandInset label
+LatexCommand label
+name "prudence-vs-node-js"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Both are server-side platforms for creating network servers using JavaScript.
+ Both have evolved to support package managers: Sincerity for Prudence,
+ npm for Node.js.
+\end_layout
+
+\begin_layout Standard
+But that's pretty much where the similarities end.
+\end_layout
+
+\begin_layout Paragraph
+Purpose and Architecture
+\end_layout
+
+\begin_layout Standard
+Prudence is a platform for REST services, such as web pages and RESTful
+ APIs.
+ Node.js is a platform for asynchronous services, such as streaming video
+ and audio servers.
+ These are 
+\emph on
+very
+\emph default
+ different use cases.
+\end_layout
+
+\begin_layout Standard
+First, note that 
+\emph on
+both
+\emph default
+ use non-blocking servers at the low level.
+ So they're 
+\emph on
+both
+\emph default
+ asynchronous in 
+\emph on
+that
+\emph default
+ particular respect.
+\end_layout
+
+\begin_layout Quote
+Actually, because Prudence uses 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jetty"
+target "http://www.eclipse.org/jetty/"
+
+\end_inset
+
+ as its driver, you have the option to change it to a 
+\emph on
+blocking
+\emph default
+ server, which may behave better in some controlled workloads.
+ See 
+\bar under
+configuring servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "servers"
+
+\end_inset
+
+)
+\bar default
+.
+ Generally, Jetty is designed from the ground-up for web services, and behaves
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "smartly"
+target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
+
+\end_inset
+
+ and exceptionally well under high volumes.
+\end_layout
+
+\begin_layout Standard
+On top of the server Prudence uses a multi-threaded RESTful application
+ environment with 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet"
+target "http://restlet.org/"
+
+\end_inset
+
+ handling the many intricacies of HTTP.
+ Why multi-threaded? Because generating HTML is logically a 
+\emph on
+single-event
+\emph default
+ procedure: at the moment you get the client's request, you generate the
+ HTML content and send it immediately.
+ Thus, via a managed, configurable thread-pool, Prudence can leverage multi-core
+ CPUs as well as highly-concurrent database backends to serve several several
+ user requests simultaneously.
+\end_layout
+
+\begin_layout Standard
+Node.js could not be more different: it is by design 
+\emph on
+single
+\emph default
+-threaded and event-
+\emph on
+driven
+\emph default
+: requests are 
+\emph on
+never 
+\emph default
+handed simultaneously, and only a single CPU core would ever be used by
+ the HTTP server itself.
+\end_layout
+
+\begin_layout Standard
+Seems odd? Actually, this 
+\begin_inset Quotes eld
+\end_inset
+
+raw
+\begin_inset Quotes erd
+\end_inset
+
+ architecture makes a lot of sense for streaming applications: as opposed
+ to HTML pages, streams are always 
+\emph on
+multi
+\emph default
+-event procedures, each event generating a 
+\begin_inset Quotes eld
+\end_inset
+
+chunk
+\begin_inset Quotes erd
+\end_inset
+
+ of the stream that saturates the socket with data.
+ There is no advantage to using more than one thread if a single thread
+ is already taking up all the bandwidth.
+ In fact, thread synchronization could introduce overhead that would slow
+ the server down.
+ Really, your only variable in terms of scalability is the size of the chunks:
+ you'll want them smaller under high load in order to degrade performance
+ fairly among clients.
+ That said, other libraries you might use from Node.js 
+\emph on
+can and do
+\emph default
+ use threads: this is useful for CPU-bound workloads like CPU-intensive
+ video encoding.
+\end_layout
+
+\begin_layout Standard
+Node.js is great for its intended use case.
+ It's vastly easier to write event handlers in JavaScript than in C/C++,
+ and JavaScript also makes it easy to bootstrap the server.
+\end_layout
+
+\begin_layout Quote
+If you like Node.js but JavaScript is not your favorite dynamic language,
+ similarly excellent asynchronous platforms are available: check out 
+\begin_inset CommandInset href
+LatexCommand href
+name "Tornado"
+target "www.tornadoweb.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Twisted"
+target "http://twistedmatrix.com/"
+
+\end_inset
+
+ for Python, and 
+\begin_inset CommandInset href
+LatexCommand href
+name "EventMachine"
+target "http://rubyeventmachine.com/"
+
+\end_inset
+
+ for Ruby.
+\end_layout
+
+\begin_layout Paragraph
+You're Doing It Wrong
+\end_layout
+
+\begin_layout Standard
+It's very odd that Node.js has become a popular platform for the 
+\emph on
+non
+\emph default
+-streaming web: 
+\begin_inset CommandInset href
+LatexCommand href
+name "Express"
+target "http://expressjs.com/"
+
+\end_inset
+
+, for example, provides some limited RESTful functionality on top of it.
+ But event-driven servers are not designed for REST, and are in fact quite
+ a bad fit: consider that in a single-threaded runtime, if a single event
+ handler hangs, the whole server will hang.
+ Node.js deals with the problem by in effect offloading it to external libraries
+ written in C++: its database drivers, for example, handle queries in their
+ own connection thread pools, and push events to Node.js when data is available.
+ But in your JavaScript event handlers, you have to take extra care not
+ to do any time-consuming work: a delay you cause would affect 
+\emph on
+all
+\emph default
+ operations waiting their turn on the single-threaded event loop.
+ Thus, a scalable Node.js application must have event handlers with no risky
+ 
+\begin_inset Quotes eld
+\end_inset
+
+side effects,
+\begin_inset Quotes erd
+\end_inset
+
+ while external services must be called upon in C++.
+\end_layout
+
+\begin_layout Standard
+You can utilize more CPU cores by running multiple Node.js processes behind
+ a load balancer, but the problems quickly multiply: each process loads
+ its own version of the database driver, with its own connection thread
+ pool that can't be shared with the other Node.js processes.
+ In Prudence, by contrast, the same pool is trivially shared by all threads,
+ and this is true for all resources.
+ It should be clear that Node.js is simply the wrong tool for the job.
+\end_layout
+
+\begin_layout Standard
+So, why is Node.js so misused? One reason is that its raw architecture is
+ attractively simple: multi-threaded programming is hard to get right, single-th
+readed easy.
+ JavaScript, too, is a draw, as a language that many programmers already
+ know.
+ So, despite being a problematic web platform, it's one in which you can
+ build web services quickly and with little fuss, and sometimes that's more
+ important than scalability or even robustness, especially if the goal is
+ to create in-house services.
+ But another reason for Node.js' popularity is more worrying: ignorance.
+ People who should know better heard that Node.js is 
+\begin_inset Quotes eld
+\end_inset
+
+fast
+\begin_inset Quotes erd
+\end_inset
+
+ because it's 
+\begin_inset Quotes eld
+\end_inset
+
+asynchronous
+\begin_inset Quotes erd
+\end_inset
+
+ and think that would lead to faster page load-times for web browsers and
+ the ability to handle more page hits.
+ That's a very wrong conclusion.
+ You can do great REST in Node.js, but would have to work against the platform's
+ limitations for the scenario.
+\end_layout
+
+\begin_layout Standard
+We believe that Prudence is a much more sensible choice for the RESTful
+ web.
+ Beyond the basic architecture, also consider Prudence's features aimed
+ specifically at scalability, such as 
+\bar under
+integrated caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+, full control of 
+\bar under
+conditional HTTP (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-get-info"
+
+\end_inset
+
+)
+\bar default
+, and 
+\bar under
+clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+ for expanding horizontally in the 
+\begin_inset Quotes eld
+\end_inset
+
+cloud.
+\begin_inset Quotes erd
+\end_inset
+
+ Check out our 
+\begin_inset CommandInset href
+LatexCommand href
+name "Scaling Tips"
+target "http://threecrickets.com/prudence/scaling/"
+
+\end_inset
+
+ article, too, which is useful even if you don't choose Prudence.
+\end_layout
+
+\begin_layout Paragraph
+Technology and Ecosystem
+\end_layout
+
+\begin_layout Standard
+Prudence was designed specifically for the JVM, to provide you with access
+ to its rich and high-quality ecosystem, to leverage its excellent concurrency
+ libraries and monitoring/profiling capabilities, and to be portable and
+ integrative.
+ The JVM platform is very mature and reliable, as are many of the libraries
+ that Prudence uses, such as Jetty, Restlet and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+.
+ It's easier to connect C/C++ libraries to Node.js, but on the other hand
+ it's easier to write and deploy extensions in Java/Scala/Groovy for Prudence.
+\end_layout
+
+\begin_layout Standard
+And Prudence is not just JavaScript: it supports many dynamic languages
+ running on top of the JVM---Python, Ruby, PHP, Lua, Groovy and Clojure---as
+ well as their respective ecosystems.
+ That said, it does give special love to JavaScript: Sincerity comes with
+ a 
+\begin_inset CommandInset href
+LatexCommand href
+name "rich foundation library"
+target "http://threecrickets.com/sincerity/manual/programming/#sincerity-javascript-library"
+
+\end_inset
+
+, offering essentials such as OOP and string interpolation, as well as friendly
+ wrappers for powerful JVM services, such as concurrent collections and
+ cryptography.
+\end_layout
+
+\begin_layout Standard
+Node.js is JavaScript-centric, and though it has a much younger and narrower
+ ecosystem, it is 
+\begin_inset CommandInset href
+LatexCommand href
+name "vibrant and quickly growing"
+target "https://npmjs.org/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+No Benchmarks for You
+\end_layout
+
+\begin_layout Standard
+In terms of sheer computational performance, Node.js has done well to leverage
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+browser wars,
+\begin_inset Quotes erd
+\end_inset
+
+ which have resulted in very performative JavaScript interpreters and JITs.
+ However, it's worth remembering that these engines are really optimized
+ for web browser environments, not servers, and have very limited support
+ for threading.
+ Prudence can run JavaScript on your choice of either 
+\begin_inset CommandInset href
+LatexCommand href
+name "Nashorn"
+target "http://openjdk.java.net/projects/nashorn/"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "Rhino"
+target "https://developer.mozilla.org/en-US/docs/Rhino"
+
+\end_inset
+
+, which can both use the JVM's excellent concurrency management.
+ Nashorn is as of this writing still under development, to be released with
+ JVM 8 in March 2014.
+ It promises excellent performance, on par with Java code in some cases.
+ Rhino is not as fast, but still performs well and is very mature.
+\end_layout
+
+\begin_layout Standard
+But a comparative benchmark would make little sense.
+ Node.js' single-threaded model really 
+\emph on
+needs
+\emph default
+ blazing-fast language performance, as it directly affects its scalability.
+ Prudence's multi-threaded model and RESTful expectations mean that it's
+ rarely CPU-bound: for example, you spend orders of magnitude more time
+ waiting for database backends to respond than for functions to be called.
+ For the web page use case, smart architecture---and smart caching---are
+ 
+\emph on
+far 
+\emph default
+more important for scalability than language engine performance.
+\end_layout
+
+\begin_layout Standard
+Note, too, that all the performance-critical parts of Prudence are written
+ in Java, just as they are written in C++ for Node.js.
+\end_layout
+
+\begin_layout Paragraph
+Summary
+\end_layout
+
+\begin_layout Standard
+Choose the right tool for the job! Node.js is a great choice for streaming
+ and streaming-like services, and Prudence---we hope you'll agree---is a
+ great choice for web services and RESTful APIs.
+\end_layout
+
+\begin_layout Part
+Advanced Manual
+\end_layout
+
+\begin_layout Section
+Model-View-Controller (MVC)
+\begin_inset CommandInset label
+LatexCommand label
+name "mvc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Background
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "model-view-controller (MVC)"
+target "http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller"
+
+\end_inset
+
+ family of architectural patterns has had great influence over user-interface
+ programming and even design.
+ At its core is the idea that the 
+\begin_inset Quotes eld
+\end_inset
+
+model
+\begin_inset Quotes erd
+\end_inset
+
+ (the data) and the 
+\begin_inset Quotes eld
+\end_inset
+
+view
+\begin_inset Quotes erd
+\end_inset
+
+ (the user interface) should be decoupled and isolated.
+ This essentially good idea allows each layer to be optimized and tested
+ on its own.
+ It also allows the secondary benefit of easier refactoring in the future,
+ in case one of the layers needs to be replaced with a different technology,
+ a not uncommon requirement.
+\end_layout
+
+\begin_layout Paragraph
+Forms, Forms, Forms
+\end_layout
+
+\begin_layout Standard
+The problem is that you need an intermediary; and it could be a big problem.
+ Consider that 
+\begin_inset Quotes eld
+\end_inset
+
+classic
+\begin_inset Quotes erd
+\end_inset
+
+ MVC, based around a thick controller layer, isn't as popular as it used
+ to be.
+ There, the controller does 
+\emph on
+as much as possible, 
+\emph default
+under the assumption of predictability, in order to automate the production
+ of large, repetitive user interfaces.
+ It thus handles form validation, binding of form fields to database columns,
+ and even form flows.
+\end_layout
+
+\begin_layout Standard
+Forms, forms, as far as the eye can see.
+ MVC was, and still is, the domain of 
+\begin_inset Quotes eld
+\end_inset
+
+enterprise
+\begin_inset Quotes erd
+\end_inset
+
+ user interfaces.
+ It's telling that the manipulation of the data model is called 
+\begin_inset Quotes eld
+\end_inset
+
+business logic
+\begin_inset Quotes erd
+\end_inset
+
+: the use case for MVC really is big business for big businesses.
+ At its best, MVC makes these boring oceans of forms easier to maintain
+ in the long run.
+ At its worst, programmers drown in an ocean of controller configuration
+ files, complaining that they're working more as 
+\begin_inset Quotes eld
+\end_inset
+
+XML technicians
+\begin_inset Quotes erd
+\end_inset
+
+ than programmers, fighting opaque layers that can only do what they were
+ programmed to do.
+\end_layout
+
+\begin_layout Standard
+Outside of the big business world, where automation reigns supreme, UI implement
+ations use more flexible derivatives of MVC, such as 
+\begin_inset CommandInset href
+LatexCommand href
+name "Model-View-Presenter (MVP)"
+target "http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter"
+
+\end_inset
+
+.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+presenter,
+\begin_inset Quotes erd
+\end_inset
+
+ far from an opaque layer, is implemented directly by the programmer in
+ code, often by inheriting classes the provide the predictable functionality.
+ Depending on the variation you're using, the 
+\begin_inset Quotes eld
+\end_inset
+
+business logic
+\begin_inset Quotes erd
+\end_inset
+
+ might even be in the presenter rather than the model.
+ Still, MVP, like MVC, expresses the same anxiety about mixing model and
+ view.
+\end_layout
+
+\begin_layout Paragraph
+MVC and the Web
+\end_layout
+
+\begin_layout Standard
+These two do not seem an obvious match.
+ The web is RESTful, such that the user interface (the 
+\begin_inset Quotes eld
+\end_inset
+
+view
+\begin_inset Quotes erd
+\end_inset
+
+) is no different from data (the 
+\begin_inset Quotes eld
+\end_inset
+
+model
+\begin_inset Quotes erd
+\end_inset
+
+): both are RESTful resources, implemented similarly.
+ In other words, in REST 
+\emph on
+the model is the view
+\emph default
+, such that separating the two is logical rather than technical.
+\end_layout
+
+\begin_layout Standard
+Well, that's only really and entirely true for the 
+\begin_inset Quotes eld
+\end_inset
+
+classic
+\begin_inset Quotes erd
+\end_inset
+
+ web.
+ Using JavaScript and other in-browser plugins, we get a 
+\begin_inset Quotes eld
+\end_inset
+
+rich
+\begin_inset Quotes erd
+\end_inset
+
+ web that acts no differently from desktop applications.
+ The backend remains RESTful, essentially the 
+\begin_inset Quotes eld
+\end_inset
+
+model,
+\begin_inset Quotes erd
+\end_inset
+
+ with controllers/presenters and views implemented entirely client-side.
+ You can do full-blown, conventional MVC with the 
+\begin_inset Quotes eld
+\end_inset
+
+rich
+\begin_inset Quotes erd
+\end_inset
+
+ web.
+\end_layout
+
+\begin_layout Standard
+MVC, however, has found inroads into the 
+\emph on
+classic
+\emph default
+ web: there exist many frameworks that treat web pages as a pure 
+\begin_inset Quotes eld
+\end_inset
+
+view,
+\begin_inset Quotes erd
+\end_inset
+
+ an approach they go so far as to enforce by allowing you to embed only
+ limited templating code into your HTML.
+ Some of these frameworks even allow you to configure the form flow, which
+ they then use to generate an opaque URI-space for you, and can even smartly
+ support the browser 
+\begin_inset Quotes eld
+\end_inset
+
+back
+\begin_inset Quotes erd
+\end_inset
+
+.
+ (MVC automation at its finest! Or worst\SpecialChar \ldots{}
+)
+\end_layout
+
+\begin_layout Standard
+The impetus for these brutally extreme measures is similar to the one with
+ which we started: a desire to decouple the user interface from everything
+ else.
+ HTML is the realm of web designers, not programmers, and mixing the work
+ of both professions into a single file could be difficult.
+ However, there's a productive distance between cleaning up HTML pages and
+ full-blown MVC, which unfortunately not enough frameworks explore.
+ And actually, not everything called 
+\begin_inset Quotes eld
+\end_inset
+
+MVC
+\begin_inset Quotes erd
+\end_inset
+
+ really is MVC.
+\end_layout
+
+\begin_layout Subsection
+Tutorial
+\end_layout
+
+\begin_layout Standard
+Prudence naturally supports a straightforward MVP architecture while still
+ adhering to RESTful principles.
+ Read on, and consider if it would benefit your project to use it.
+\end_layout
+
+\begin_layout Subsubsection
+Models
+\end_layout
+
+\begin_layout Standard
+Implement this layer according to your preferences and as appropriate to
+ the database technology you are using.
+ For example, you may want to use object-oriented architecture.
+ The model layer as a whole should live in your 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory.
+ For this example, let's put it under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/models/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Do you want the 
+\begin_inset Quotes eld
+\end_inset
+
+business logic
+\begin_inset Quotes erd
+\end_inset
+
+ to live in the model layer? If so, your classes should be of a somewhat
+ higher level of abstraction above the actual data structure.
+ If you prefer the models to more directly represent the data, then you
+ have the option of putting the 
+\begin_inset Quotes eld
+\end_inset
+
+business logic
+\begin_inset Quotes erd
+\end_inset
+
+ in your presenters instead.
+\end_layout
+
+\begin_layout Standard
+For our example, let's implement a simple in-memory model, as 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/models/user.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var Models = Models || {}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+/**
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Retrieve a person model from the database.
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\begin_layout Plain Layout
+
+Models.getPerson = function(name) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var person = new Models.Person()
+\end_layout
+
+\begin_layout Plain Layout
+
+	person.setUsername(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return person
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Models.Person = function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.getUsername = function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return this.username
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.setUsername = function(username) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		this.username = username
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.getComments = function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return this.comments
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.comments = new Models.Messages()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Models.Messages = function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.get = function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return this.messages
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.add = function(message) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		this.messages.append(message)
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.messages = []
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Views
+\end_layout
+
+\begin_layout Standard
+In Prudence, these are hidden 
+\bar under
+scriptlet resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+.
+ For this example, let's put them under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scriptlet-resources/views/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+If you prefer to use templating languages for your views, 
+\bar under
+Velocity and Succinct are supported (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "templating-languages"
+
+\end_inset
+
+)
+\bar default
+.
+ Your designers may also find it useful to use the supported 
+\bar under
+HTML markup languages (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "markup-languages"
+
+\end_inset
+
+)
+\bar default
+.
+ Even then, you can still use dynamic languages, such as JavaScript (server-side
+), when useful: Prudence allows you mix and match languages with ease.
+ Note especially the use of the 
+\begin_inset CommandInset href
+LatexCommand href
+name "in-flow tag"
+target "http://threecrickets.com/scripturian/manual/faq/#in-flow"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Quote
+There are some who shudder at the thought of mixing dynamic languages and
+ HTML.
+ This likely comes from bad experience with poorly-designed PHP applications,
+ where everything gets mixed together into the 
+\begin_inset Quotes eld
+\end_inset
+
+view
+\begin_inset Quotes erd
+\end_inset
+
+ file.
+ If you feel that way, fine: make yourself a rule that only templating languages
+ are allowed in scriptlets.
+ It's purely a matter of project management discipline.
+ We recommend, however, relaxing some of that extremism: for example, you
+ can make the rule that no 
+\begin_inset Quotes eld
+\end_inset
+
+business logic
+\begin_inset Quotes erd
+\end_inset
+
+ should appear together with HTML, while still allowing some flexibility
+ for using server-side JavaScript 
+\emph on
+only
+\emph default
+ for UI-related work.
+\end_layout
+
+\begin_layout Standard
+The required data will be injected into the view by the presenter as an
+ 
+\begin_inset Quotes eld
+\end_inset
+
+object
+\begin_inset Quotes erd
+\end_inset
+
+ POST payload, available via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.entity API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.entity"
+
+\end_inset
+
+.
+ We'll detail below how that happens.
+ For now, here's our example view, 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scriptlet-resources/views/comments.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+var context = conversation.entity.object
+\end_layout
+
+\begin_layout Plain Layout
+
+var person = context.person
+\end_layout
+
+\begin_layout Plain Layout
+
+var comments = person.getComments().get()
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>These are the comments for user: <%= person.getUsername() %></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<table>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% for (var c in comments) { %>
+\end_layout
+
+\begin_layout Plain Layout
+
+		<tr><td><%= comments[c] %></td></tr>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% } %>
+\end_layout
+
+\begin_layout Plain Layout
+
+	</table>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>You may add a comment here:</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<form>
+\end_layout
+
+\begin_layout Plain Layout
+
+		<input name="comment" />
+\end_layout
+
+\begin_layout Plain Layout
+
+		<input type="submit" />
+\end_layout
+
+\begin_layout Plain Layout
+
+	</form>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Presenters
+\end_layout
+
+\begin_layout Standard
+In Prudence, these are the resources that are actually exposed in the URI-space,
+ while the views remain hidden.
+ The presenter retrieves the appropriate view and presents it to the user.
+\end_layout
+
+\begin_layout Standard
+You can use either manual or scriptlet resources as your presenters.
+ However, 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+ offer a bit more flexibility, so we will choose them for our example.
+ We'll put them under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/presenters/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Our example presenter is 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/presenters/user.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/models/user/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var Presenters = Presenters || {}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Presenters.UserComments = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.handleInit = function {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.addMediaTypeByName('text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.addMediaTypeByName('text/plain')
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.handleGet = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+		var person = Models.getPerson(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+		return getView('comments', {person: person})
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.handlePost = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+		var comment = conversation.form.get('comment')
+\end_layout
+
+\begin_layout Plain Layout
+
+		var person = Models.getPerson(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+		person.getComments().add(comment)
+\end_layout
+
+\begin_layout Plain Layout
+
+		return getView('comments', {person: person})
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function getView(view, context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+   var page = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+        uri: '/views/' + uri + '/',
+\end_layout
+
+\begin_layout Plain Layout
+
+        internal: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+        method: 'post',
+\end_layout
+
+\begin_layout Plain Layout
+
+        mediaType: 'text/*',
+\end_layout
+
+\begin_layout Plain Layout
+
+        payload: {
+\end_layout
+
+\begin_layout Plain Layout
+
+            type: 'object',
+\end_layout
+
+\begin_layout Plain Layout
+
+            value: context
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+    })
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.Objects.exists(page) ? page : 404
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To keep the example succinct, we're only making use of a single view in
+ this presenter, though it should be clear that you can use any appropriate
+ logic here to retrieve any view using getView.
+\end_layout
+
+\begin_layout Standard
+getView is where the MVC 
+\begin_inset Quotes eld
+\end_inset
+
+magic
+\begin_inset Quotes erd
+\end_inset
+
+ happens, but as you can see it's really nothing more than an internal request.
+ We're specifically using two special features of internal requests:
+\end_layout
+
+\begin_layout Itemize
+We can request URIs that are hidden: in this case, anything under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scriptlet-resources/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We can transfer 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+ payloads directly using the 
+\begin_inset Quotes eld
+\end_inset
+
+object
+\begin_inset Quotes erd
+\end_inset
+
+ type.
+\end_layout
+
+\begin_layout Standard
+We'll remind you also that internal requests are 
+\emph on
+fast
+\emph default
+.
+ They emphatically do not use HTTP, and 
+\begin_inset Quotes eld
+\end_inset
+
+object
+\begin_inset Quotes erd
+\end_inset
+
+-type payloads are 
+\emph on
+not
+\emph default
+ serialized.
+\end_layout
+
+\begin_layout Subsubsection
+Routing
+\end_layout
+
+\begin_layout Standard
+We're using standard 
+\bar under
+resource dispatching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-dispatching"
+
+\end_inset
+
+)
+\bar default
+.
+ Here's our routing.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{name}/comments/': '@user.comments'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'javascript': '/manual-resources/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And here's our 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/manual-resources.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/presenters/user/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+resources = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'user.comments': new Presenters.UserComments()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Implications for Caching
+\end_layout
+
+\begin_layout Standard
+Caching of scriptlet resources (
+\begin_inset Quotes eld
+\end_inset
+
+views
+\begin_inset Quotes erd
+\end_inset
+
+) works as usual here, though you should take care to remember that the
+ request hitting the scriptlet resource is the 
+\emph on
+internal
+\emph default
+ one, not the external one, which hits the presenter.
+ If there are attributes of the external request that you want to use for
+ the cache key pattern, then you must transfer them manually.
+\end_layout
+
+\begin_layout Subsection
+Custom Dispatchers
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Section
+Background Tasks
+\begin_inset CommandInset label
+LatexCommand label
+name "background-tasks"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+crontab
+\begin_inset CommandInset label
+LatexCommand label
+name "crontab"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+Task API
+\begin_inset CommandInset label
+LatexCommand label
+name "task-api"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Section
+Filtering
+\begin_inset CommandInset label
+LatexCommand label
+name "filtering"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Subsection
+How Routing Works
+\end_layout
+
+\begin_layout Subsection
+Injection
+\end_layout
+
+\begin_layout Subsection
+Built-in Filters
+\end_layout
+
+\begin_layout Subsection
+HTTP Authentication
+\begin_inset CommandInset label
+LatexCommand label
+name "http-authentication"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+\begin_inset Quotes eld
+\end_inset
+
+httpAuthenticator
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "http-authenticator-route-type"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Section
+Configuring the Component
+\begin_inset CommandInset label
+LatexCommand label
+name "configuring-component"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+Order: applications, services, starts component, then runs initialization
+ tasks
+\end_layout
+
+\begin_layout Subsection
+/component/servers/
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+configuring servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "servers"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+/component/clients/
+\end_layout
+
+\begin_layout Subsection
+/component/hosts/
+\end_layout
+
+\begin_layout Standard
+See 
+\bar under
+configuring hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+/component/services/
+\end_layout
+
+\begin_layout Standard
+Run 
+\emph on
+after
+\emph default
+ the component is configured but 
+\emph on
+before
+\emph default
+ it is started.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/caching
+\end_layout
+
+\begin_layout Standard
+Configure the caching backend
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/distributed
+\end_layout
+
+\begin_layout Standard
+Load the Hazelcast configuration
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/executor
+\end_layout
+
+\begin_layout Standard
+Configures thread pools for task execution.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/log
+\end_layout
+
+\begin_layout Standard
+Configures the component's log service, which is used for logging client
+ requests.
+ (By default web.log)
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/singleton
+\end_layout
+
+\begin_layout Standard
+Prudence assumes a single Restlet Component instance.
+ If for some reason you have a more complex setup, you can configure Prudence's
+ initialization here.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/scheduler
+\end_layout
+
+\begin_layout Standard
+Configure the cron scheduler (cron4j)
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/status
+\end_layout
+
+\begin_layout Standard
+Configures Restlet's status service to use Prudence's implementation.
+\end_layout
+
+\begin_layout Subsubsection
+/component/services/prudence/version
+\end_layout
+
+\begin_layout Standard
+Provides access to Prudence and Restlet versions.
+\end_layout
+
+\begin_layout Subsection
+/component/templates/
+\end_layout
+
+\begin_layout Section
+Servers and Hosts
+\end_layout
+
+\begin_layout Standard
+Restlet has excellent virtual host support, and there is a many-to-many
+ relationship routing between almost servers, hosts and application.
+ So, you can easily have a single Prudence container (running in a single
+ JVM instance) managing several sites at once with several applications
+ on several domains on several servers.
+\end_layout
+
+\begin_layout Subsection
+Configuring Servers
+\begin_inset CommandInset label
+LatexCommand label
+name "servers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define your servers under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ At the simplest, you just add a new file and assign a port for it.
+ A minimal server definition for HTTP:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var server = new Server(Protocol.HTTP, 8080)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.name = 'myserver'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.servers.add(server)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can also bind a server to a specific IP address, in case your machine
+ has more than one IP address:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.address = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are also many configuration parameters for Jetty, the HTTP engine,
+ which you can set in the server's context.
+ Here we configure the size of the thread pool:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('minThreads', '6')
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('maxThreads', '12')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here we switch to a blocking server:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('type', '1') // blocking NIO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See Jetty's 
+\begin_inset CommandInset href
+LatexCommand href
+name "HttpServerHelper"
+target "http://restlet.org/learn/javadocs/2.1/jse/ext/org/restlet/ext/jetty/HttpServerHelper.html"
+
+\end_inset
+
+ as well as all inherited parameters from the parent classes.
+\end_layout
+
+\begin_layout Subsubsection
+Secure Servers (HTTPS)
+\begin_inset CommandInset label
+LatexCommand label
+name "secure-servers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you are using a 
+\bar under
+load balancer or another kind of proxy (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "proxying"
+
+\end_inset
+
+)
+\bar default
+, it may make sense to handle secure connections there.
+ But Prudence can also handle secure (HTTPS) connections itself.
+ Here's an example configuration for 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/https.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var server = new Server(Protocol.HTTPS, 443)
+\end_layout
+
+\begin_layout Plain Layout
+
+server.name = 'secure'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.servers.add(server)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// Configure it to use our security keys
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('keystorePath', '/path/prudence.jks')
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('keystorePassword', 'mykeystorepassword')
+\end_layout
+
+\begin_layout Plain Layout
+
+//server.context.parameters.set('keyPassword', 'mykeypassword')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+// Add support for the X-FORWARDED-FOR header used by proxies
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('useForwardedForHeader', 'true')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet Jetty HttpServerHelper documentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?org/restlet/ext/ssl/DefaultSslContextFactory.html"
+
+\end_inset
+
+ for all secuirty configuration parameters.
+\end_layout
+
+\begin_layout Paragraph
+Security Keys
+\end_layout
+
+\begin_layout Standard
+The above configuration assumes the you have a Java KeyStore (JKS) file
+ at “/path/prudence.jks” containing your security key.
+ You can create a key using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "“keytool” utility"
+target "http://docs.oracle.com/javase/1.5.0/docs/tooldocs/index.html#security"
+
+\end_inset
+
+ that is bundled with most JVMs.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+keytool -keystore /path/prudence.jks -alias mykey -genkey -keyalg RSA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When creating the keystore, you will be asked provide a password for it,
+ and you may optionally provide a password for your key, too, in which case
+ you need to comment out the relevant line in the example above.
+ (The key alias and key password would be transferred together with the
+ key if you move it to a different keystore.)
+\end_layout
+
+\begin_layout Standard
+Such self-created keys are useful for controlled intranet environments,
+ in which you can provide clients with the public key, but for Internet
+ applications you will likely want a key created by one of the “certificate
+ authorities” trusted by most web browsers.
+ Some of these certificate authorities may conveniently let you download
+ a key in JKS format.
+ Otherwise, if they support PKCS12 format, you can use keytool (only JVM
+ version 6 and later) to convert PKCS12 to JKS.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+keytool -importkeystore -srcstoretype PKCS12 -srckeystore /path/prudence.pkcs12
+ -destkeystore /path/prudence.jks
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If your certificate authority won't even let you download PKCS12 file, you
+ can create one from your “.key” and “.crt” (or “.pem”) files using 
+\begin_inset CommandInset href
+LatexCommand href
+name "OpenSSL"
+target "http://www.openssl.org/"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+openssl pkcs12 -inkey /path/mykey.key -in /path/mykey.crt -export -out /path/prude
+nce.pkcs12 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Note that in this case you 
+\emph on
+must
+\emph default
+ give your new PKCS12 a non-empty password, or else keytool will fail with
+ an unhelpful error message.)
+\end_layout
+
+\begin_layout Paragraph
+Handling HTTPS
+\end_layout
+
+\begin_layout Standard
+It's sometimes necessary to support HTTPS specially in your implementation.
+ One useful strategy is to create separate applications for HTTP and HTTPS,
+ and then attach them to different 
+\bar under
+virtual hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+, one for each protocol (the 
+\begin_inset Quotes eld
+\end_inset
+
+resourceScheme
+\begin_inset Quotes erd
+\end_inset
+
+ parameter).
+ However, if the application behaves mostly the same for HTTP and HTTPS,
+ but differs only in a few specific resources, it may be useful to check
+ for HTTPS programatically.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if (conversation.reference.schemeProtocol.name == 'HTTPS') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Configuring Hosts
+\begin_inset CommandInset label
+LatexCommand label
+name "hosts"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Define you virtual hosts under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/hosts/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A minimal host definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = new VirtualHost(component.context)
+\end_layout
+
+\begin_layout Plain Layout
+
+host.name = 'privatehost'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.hosts.add(host)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+host.name
+\begin_inset Quotes erd
+\end_inset
+
+ param exactly matches the string used in 
+\bar under
+app.hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-hosts"
+
+\end_inset
+
+)
+\bar default
+ per each application.
+\end_layout
+
+\begin_layout Standard
+A virtual host can route according to domain name, and incoming server IP
+ address and port assignment:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+host.resourceScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourcePort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverAddress = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostPort = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+“*” wildcards are supported for all of these properties.
+ Some notes:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+resourceScheme
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+resourceDomain
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+resourcePort
+\begin_inset Quotes erd
+\end_inset
+
+ refer to the actual incoming URI.
+ Thus 
+\begin_inset Quotes eld
+\end_inset
+
+resourcePort
+\begin_inset Quotes erd
+\end_inset
+
+ would be meaningful 
+\emph on
+only if
+\emph default
+ URIs explicitly include a port number.
+ To match a host to a specific server you would likely want to use 
+\begin_inset Quotes eld
+\end_inset
+
+serverPort
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+hostScheme
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+hostDomain
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+hostPort
+\begin_inset Quotes erd
+\end_inset
+
+ are for matching the 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ HTTP header used by some proxies.
+\end_layout
+
+\begin_layout Subsubsection
+The Hungry Host
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ host that comes with the Prudence skeleton doesn't configure any routing
+ limitations, meaning that 
+\emph on
+all
+\emph default
+ incoming requests are routed.
+ We call such a host 
+\begin_inset Quotes eld
+\end_inset
+
+hungry.
+\begin_inset Quotes erd
+\end_inset
+
+ Thus, if you want to use more than one host, you have to make sure that
+ the hungry host is the 
+\emph on
+last
+\emph default
+ one, so that it acts as a fallback for when other hosts don't match incoming
+ requests.
+ Otherwise, it would 
+\begin_inset Quotes eld
+\end_inset
+
+eat
+\begin_inset Quotes erd
+\end_inset
+
+ requests from other hosts.
+ Because host files are executed in alphabetical order, a good way to ensure
+ that the hungry host is last is to number your host filenames.
+ For example:
+\end_layout
+
+\begin_layout Itemize
+1-public.js
+\end_layout
+
+\begin_layout Itemize
+2-private.js
+\end_layout
+
+\begin_layout Itemize
+3-default.js (this is the hungry host)
+\end_layout
+
+\begin_layout Subsubsection
+Deploying Multiple Sites
+\end_layout
+
+\begin_layout Standard
+Using the virtual hosts and application model, Prudence can let you manage
+ several sites using a single Prudence installation (a 
+\begin_inset Quotes eld
+\end_inset
+
+container
+\begin_inset Quotes erd
+\end_inset
+
+).
+ But is this always a good idea?
+\end_layout
+
+\begin_layout Paragraph
+Advantages of Using a Single Container
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: you are using a single base directory for the
+ entire project, which might be easier for you.
+ Because all configuration is done by JavaScript inside the container, it
+ is very flexible.
+\end_layout
+
+\begin_layout Enumerate
+Less memory use than running multiple JVMs.
+\end_layout
+
+\begin_layout Enumerate
+Shared memory: you can use application.sharedGlobals to share state between
+ applications.
+\end_layout
+
+\begin_layout Paragraph
+Advantages of Using Multiple Containers
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: several base directories can mean separate
+ code/distribution repositories, which might be easier for you.
+ Configuration will be at your web frontend (reverse proxy).
+\end_layout
+
+\begin_layout Enumerate
+Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
+ With this in mind, it may even be worth having each 
+\emph on
+single application
+\emph default
+ running in its own JVM/container.
+\end_layout
+
+\begin_layout Enumerate
+Run-time flexibility: you can restart the JVM for one container without
+ affecting others that are running.
+\end_layout
+
+\begin_layout Standard
+There is no performance advantage in either scenario.
+ Everything in Prudence is designed around high-concurrency and threading,
+ and generally threads are managed by the OS globally.
+\end_layout
+
+\begin_layout Quote
+Well, there are caveats to that statement: Linux can group threads per running
+ process for purposes of prioritization, but this is only really done for
+ desktop applications.
+ The feature could be possibly useful when running several containers, if
+ you want to guarantee high thread priority to one of the containers over
+ the others.
+ Any of this would only effect 
+\emph on
+very
+\emph default
+ high concurrency and highly CPU-bound deployments.
+\end_layout
+
+\begin_layout Subsection
+Routing In-Depth
+\begin_inset CommandInset label
+LatexCommand label
+name "routing-in-depth"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this final section, we'll describe in detail how routing works in Prudence.
+ It can be considered optional, advanced reading.
+\end_layout
+
+\begin_layout Standard
+In Prudence, “routing” refers to the decision-making process by which an
+ incoming client request reaches its server-side handler .
+ Usually, information in the request itself is used to make the decision,
+ such as the URI, cookies, the client type, capabilities and geolocation.
+ But routing can also take server-side and other circumstances into account.
+ For example, a round-robin load-balancing router might send each incoming
+ request to a different handler in sequence.
+\end_layout
+
+\begin_layout Standard
+A request normally goes through many route types before reaching its handler.
+ Filters along the way can change information in the request, which could
+ also affect routing, and indeed filters can be used as routing tools.
+\end_layout
+
+\begin_layout Standard
+This abstract, flexible routing mechanism is one of Prudence's most powerful
+ features, but it's important to understand these basic principles.
+ A common misconception is that routing is based on the hierarchical structure
+ of URIs, such that a child URI's routing is somehow affected by its parent
+ URI.
+ While it's possible to explicitly design your routes hierarchically, routing
+ is primarily to be understood in terms of the order of routers and filters
+ along the way.
+ A parent and child URI could thus use entirely different handlers.
+\end_layout
+
+\begin_layout Standard
+To give you a better understanding of how Prudence routing works, let's
+ follow the journey of a request, starting with routing at the server level.
+\end_layout
+
+\begin_layout Paragraph
+Step 1: Servers
+\end_layout
+
+\begin_layout Standard
+Requests come in from servers.
+ Prudence instances have at the minimum one server, but can have more than
+ one.
+ Each server listens at a particular HTTP port, and multiple servers may
+ in turn be restricted to particular network interfaces on your machine.
+ By default, Prudence has a single server that listens to HTTP requests
+ on port 8080 coming in from all network interfaces.
+\end_layout
+
+\begin_layout Paragraph
+Step 2: The Component
+\end_layout
+
+\begin_layout Standard
+There is only one component per Prudence instance, and 
+\emph on
+all 
+\emph default
+servers route to it.
+ This allows Prudence a unified mechanism to deal with all incoming requests.
+\end_layout
+
+\begin_layout Paragraph
+Step 3: Virtual Hosts
+\end_layout
+
+\begin_layout Standard
+The component's router decides which virtual host should receive the request.
+ The decision is often made according to the domain name in the URL, but
+ can also take into account which server it came from.
+ Virtual hosting is a tool to let you host multiple sites on the same Prudence
+ instance, but it can be used for more subtle kinds of routing, too.
+\end_layout
+
+\begin_layout Standard
+At the minimum you must have one virtual host.
+ By default, Prudence has one that accepts all incoming requests from all
+ servers.
+ If you have multiple servers and want to treat them differently, you can
+ create a virtual host for each.
+\end_layout
+
+\begin_layout Paragraph
+Step 4: Applications
+\end_layout
+
+\begin_layout Standard
+Using app.hosts, you can configure which virtual hosts your application will
+ be attached to, and the base URI for the application on each virtual host.
+ An application can accept requests from several virtual hosts at once.
+\end_layout
+
+\begin_layout Standard
+To put it another way, there's a many-to-many relationship between virtual
+ hosts and applications: one host can have many applications, and the same
+ application can be attached to many hosts.
+\end_layout
+
+\begin_layout Standard
+Note that you can create a “nested” URI scheme for your applications.
+ For example, one application might be attached at the root URI at a certain
+ virtual host, “/”, while other applications might be at different URIs
+ beneath the root, “/wackywiki” and “/wackywiki/support/forum”.
+ The root application will not “steal” requests from the other applications,
+ because the request is routed to the right application by the virtual host.
+ The fact that the latter URI is the hierarchical descendant of the former
+ makes no difference to the virtual host router.
+\end_layout
+
+\begin_layout Paragraph
+A Complete Route
+\end_layout
+
+\begin_layout Standard
+Let's assume a client from the Internet send a request to URI “http://www.wacky.or
+g/wackywicki/support/forum/thread/12/.”
+\end_layout
+
+\begin_layout Standard
+Our machine has two network interfaces, one facing the Internet and one
+ facing the intranet, and we have two servers to listen on each.
+ This particular request has come in through the external server.
+ The request reachers the component's router.
+\end_layout
+
+\begin_layout Standard
+We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
+ main site, and another to handle “support.wacky.org”, a secure site where
+ paying customers can open support tickets.
+\end_layout
+
+\begin_layout Standard
+Our forum application (in the 
+\begin_inset Quotes eld
+\end_inset
+
+/applications/forum/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory) is attached to both virtual hosts, but at different URIs.
+ It's at “www.wacky.org/wackywiki/support/forum” and at “support.wacky.org/forum”.
+ In this case, our request is routed to the first virtual host.
+ Though there are a few applications installed at this virtual host, our
+ request follows the route to the forum application.
+\end_layout
+
+\begin_layout Standard
+The remaining part of the URI, “/thread/12/” will be further routed inside
+ the forum application, according to route types installed in its routing.js.
+\end_layout
+
+\begin_layout Section
+Working in a Cluster
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+Not only for horizontal scaling, but also for isolation.
+\end_layout
+
+\begin_layout Subsection
+Distributed Globals
+\end_layout
+
+\begin_layout Subsection
+Task Farming
+\end_layout
+
+\begin_layout Section
+Deploying
 \end_layout
 
 \begin_layout Subsection
@@ -14145,6 +18615,25 @@ target "https://github.com/tomyeh/ZUSS"
  extension is used.
 \end_layout
 
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CustomEncoder"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html"
+
+\end_inset
+
+: A more localized alternative to using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "EncoderService"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/service/EncoderService.html"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Upgrading from Prudence 1.1
 \end_layout
@@ -14277,14 +18766,34 @@ sincerity prudence create myapp
 
 \end_deeper
 \begin_layout Enumerate
-Copy over individual settings from settings.js, using the new Prudence Manual
+Copy over individual settings from settings.js, using 
+\bar under
+the new manual (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuring-applications"
+
+\end_inset
+
+)
+\bar default
  to find equivalences.
 \end_layout
 
 \begin_layout Enumerate
-Copy over individual settings from routing.js, using the new Prudence Manual
+Redo your routing.js, using 
+\bar under
+the new manual (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuring-component"
+
+\end_inset
+
+)
+\bar default
  to find equivalences.
- Prudence 2.0 has a far more powerful and clearer routing configuration.
+ Prudence 2.0 uses a far more powerful and clearer routing configuration.
 \end_layout
 
 \begin_layout Enumerate
@@ -14441,509 +18950,8 @@ Upgrading the Component
 TODO
 \end_layout
 
-\begin_layout Section
-FAQ
-\begin_inset CommandInset label
-LatexCommand label
-name "faq"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Please also refer to the FAQs for 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity"
-target "http://threecrickets.com/sincerity/manual/faq/"
-
-\end_inset
-
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "Scripturian"
-target "http://threecrickets.com/scripturian/manual/faq/"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Prudence or Node.js?
-\begin_inset CommandInset label
-LatexCommand label
-name "prudence-vs-node-js"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Both are server-side platforms for creating network servers using JavaScript.
- Both have evolved to support package managers: Sincerity for Prudence,
- npm for Node.js.
-\end_layout
-
-\begin_layout Standard
-But that's pretty much where the similarities end.
-\end_layout
-
-\begin_layout Paragraph
-Purpose and Architecture
-\end_layout
-
-\begin_layout Standard
-Prudence is a platform for REST services, such as web pages and RESTful
- APIs.
- Node.js is a platform for asynchronous services, such as streaming video
- and audio servers.
- These are 
-\emph on
-very
-\emph default
- different use cases.
-\end_layout
-
-\begin_layout Standard
-First, note that 
-\emph on
-both
-\emph default
- use non-blocking servers at the low level.
- So they're 
-\emph on
-both
-\emph default
- asynchronous in 
-\emph on
-that
-\emph default
- particular respect.
-\end_layout
-
-\begin_layout Quote
-Actually, because Prudence uses 
-\begin_inset CommandInset href
-LatexCommand href
-name "Jetty"
-target "http://www.eclipse.org/jetty/"
-
-\end_inset
-
- as its driver, you have the option to change it to a 
-\emph on
-blocking
-\emph default
- server, which may behave better in some controlled workloads.
- See 
-\bar under
-configuring servers (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "servers"
-
-\end_inset
-
-)
-\bar default
-.
- Generally, Jetty is designed from the ground-up for web services, and behaves
- 
-\begin_inset CommandInset href
-LatexCommand href
-name "smartly"
-target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
-
-\end_inset
-
- and exceptionally well under high volumes.
-\end_layout
-
-\begin_layout Standard
-On top of the server Prudence uses a multi-threaded RESTful application
- environment with 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet"
-target "http://restlet.org/"
-
-\end_inset
-
- handling the many intricacies of HTTP.
- Why multi-threaded? Because generating HTML is logically a 
-\emph on
-single-event
-\emph default
- procedure: at the moment you get the client's request, you generate the
- HTML content and send it immediately.
- Thus, via a managed, configurable thread-pool, Prudence can leverage multi-core
- CPUs as well as highly-concurrent database backends to serve several several
- user requests simultaneously.
-\end_layout
-
-\begin_layout Standard
-Node.js could not be more different: it is by design 
-\emph on
-single
-\emph default
--threaded and event-
-\emph on
-driven
-\emph default
-: requests are 
-\emph on
-never 
-\emph default
-handed simultaneously, and only a single CPU core would ever be used by
- the HTTP server itself.
-\end_layout
-
-\begin_layout Standard
-Seems odd? Actually, this 
-\begin_inset Quotes eld
-\end_inset
-
-raw
-\begin_inset Quotes erd
-\end_inset
-
- architecture makes a lot of sense for streaming applications: as opposed
- to HTML pages, streams are always 
-\emph on
-multi
-\emph default
--event procedures, each event generating a 
-\begin_inset Quotes eld
-\end_inset
-
-chunk
-\begin_inset Quotes erd
-\end_inset
-
- of the stream that saturates the socket with data.
- There is no advantage to using more than one thread if a single thread
- is already taking up all the bandwidth.
- In fact, thread synchronization could introduce overhead that would slow
- the server down.
- Really, your only variable in terms of scalability is the size of the chunks:
- you'll want them smaller under high load in order to degrade performance
- fairly among clients.
- That said, other libraries you might use from Node.js 
-\emph on
-can and do
-\emph default
- use threads: this is useful for CPU-bound workloads like CPU-intensive
- video encoding.
-\end_layout
-
-\begin_layout Standard
-Node.js is great for its intended use case.
- It's vastly easier to write event handlers in JavaScript than in C/C++,
- and JavaScript also makes it easy to bootstrap the server.
-\end_layout
-
-\begin_layout Quote
-If you like Node.js but JavaScript is not your favorite dynamic language,
- similarly excellent asynchronous platforms are available: check out 
-\begin_inset CommandInset href
-LatexCommand href
-name "Tornado"
-target "www.tornadoweb.org/"
-
-\end_inset
-
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "Twisted"
-target "http://twistedmatrix.com/"
-
-\end_inset
-
- for Python, and 
-\begin_inset CommandInset href
-LatexCommand href
-name "EventMachine"
-target "http://rubyeventmachine.com/"
-
-\end_inset
-
- for Ruby.
-\end_layout
-
-\begin_layout Paragraph
-You're Doing It Wrong
-\end_layout
-
-\begin_layout Standard
-It's very odd that Node.js has become a popular platform for the 
-\emph on
-non
-\emph default
--streaming web: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Express"
-target "http://expressjs.com/"
-
-\end_inset
-
-, for example, provides some limited RESTful functionality on top of it.
- But event-driven servers are not designed for REST, and are in fact quite
- a bad fit: consider that in a single-threaded runtime, if a single event
- handler hangs, the whole server will hang.
- Node.js deals with the problem by in effect offloading it to external libraries
- written in C++: its database drivers, for example, handle queries in their
- own connection thread pools, and push events to Node.js when data is available.
- But in your JavaScript event handlers, you have to take extra care not
- to do any time-consuming work: a delay you cause would affect 
-\emph on
-all
-\emph default
- operations waiting their turn on the single-threaded event loop.
- Thus, a scalable Node.js application must have event handlers with no risky
- 
-\begin_inset Quotes eld
-\end_inset
-
-side effects,
-\begin_inset Quotes erd
-\end_inset
-
- while external services must be called upon in C++.
-\end_layout
-
-\begin_layout Standard
-You can utilize more CPU cores by running multiple Node.js processes behind
- a load balancer, but the problems quickly multiply: each process loads
- its own version of the database driver, with its own connection thread
- pool that can't be shared with the other Node.js processes.
- In Prudence, by contrast, the same pool is trivially shared by all threads,
- and this is true for all resources.
- It should be clear that Node.js is simply the wrong tool for the job.
-\end_layout
-
-\begin_layout Standard
-So, why is Node.js so misused? One reason is that its raw architecture is
- attractively simple: multi-threaded programming is hard to get right, single-th
-readed easy.
- JavaScript, too, is a draw, as a language that many programmers already
- know.
- So, despite being a problematic web platform, it's one in which you can
- build web services quickly and with little fuss, and sometimes that's more
- important than scalability or even robustness, especially if the goal is
- to create in-house services.
- But another reason for Node.js' popularity is more worrying: ignorance.
- People who should know better heard that Node.js is 
-\begin_inset Quotes eld
-\end_inset
-
-fast
-\begin_inset Quotes erd
-\end_inset
-
- because it's 
-\begin_inset Quotes eld
-\end_inset
-
-asynchronous
-\begin_inset Quotes erd
-\end_inset
-
- and think that would lead to faster page load-times for web browsers and
- the ability to handle more page hits.
- That's a very wrong conclusion.
- You can do great REST in Node.js, but would have to work against the platform's
- limitations for the scenario.
-\end_layout
-
-\begin_layout Standard
-We believe that Prudence is a much more sensible choice for the RESTful
- web.
- Beyond the basic architecture, also consider Prudence's features aimed
- specifically at scalability, such as 
-\bar under
-integrated caching (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "caching"
-
-\end_inset
-
-)
-\bar default
-, full control of 
-\bar under
-conditional HTTP (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "handle-get-info"
-
-\end_inset
-
-)
-\bar default
-, and 
-\bar under
-clusters (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "clusters"
-
-\end_inset
-
-)
-\bar default
- for expanding horizontally in the 
-\begin_inset Quotes eld
-\end_inset
-
-cloud.
-\begin_inset Quotes erd
-\end_inset
-
- Check out our 
-\begin_inset CommandInset href
-LatexCommand href
-name "Scaling Tips"
-target "http://threecrickets.com/prudence/scaling/"
-
-\end_inset
-
- article, too, which is useful even if you don't choose Prudence.
-\end_layout
-
-\begin_layout Paragraph
-Technology and Ecosystem
-\end_layout
-
-\begin_layout Standard
-Prudence was designed specifically for the JVM, to provide you with access
- to its rich and high-quality ecosystem, to leverage its excellent concurrency
- libraries and monitoring/profiling capabilities, and to be portable and
- integrative.
- The JVM platform is very mature and reliable, as are many of the libraries
- that Prudence uses, such as Jetty, Restlet and 
-\begin_inset CommandInset href
-LatexCommand href
-name "Hazelcast"
-target "http://www.hazelcast.com/"
-
-\end_inset
-
-.
- It's easier to connect C/C++ libraries to Node.js, but on the other hand
- it's easier to write and deploy extensions in Java/Scala/Groovy for Prudence.
-\end_layout
-
-\begin_layout Standard
-And Prudence is not just JavaScript: it supports many dynamic languages
- running on top of the JVM---Python, Ruby, PHP, Lua, Groovy and Clojure---as
- well as their respective ecosystems.
- That said, it does give special love to JavaScript: Sincerity comes with
- a 
-\begin_inset CommandInset href
-LatexCommand href
-name "rich foundation library"
-target "http://threecrickets.com/sincerity/manual/programming/#sincerity-javascript-library"
-
-\end_inset
-
-, offering essentials such as OOP and string interpolation, as well as friendly
- wrappers for powerful JVM services, such as concurrent collections and
- cryptography.
-\end_layout
-
-\begin_layout Standard
-Node.js is JavaScript-centric, and though it has a much younger and narrower
- ecosystem, it is 
-\begin_inset CommandInset href
-LatexCommand href
-name "vibrant and quickly growing"
-target "https://npmjs.org/"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph
-No Benchmarks for You
-\end_layout
-
-\begin_layout Standard
-In terms of sheer computational performance, Node.js has done well to leverage
- the 
-\begin_inset Quotes eld
-\end_inset
-
-browser wars,
-\begin_inset Quotes erd
-\end_inset
-
- which have resulted in very performative JavaScript interpreters and JITs.
- However, it's worth remembering that these engines are really optimized
- for web browser environments, not servers, and have very limited support
- for threading.
- Prudence can run JavaScript on your choice of either 
-\begin_inset CommandInset href
-LatexCommand href
-name "Nashorn"
-target "http://openjdk.java.net/projects/nashorn/"
-
-\end_inset
-
- or 
-\begin_inset CommandInset href
-LatexCommand href
-name "Rhino"
-target "https://developer.mozilla.org/en-US/docs/Rhino"
-
-\end_inset
-
-, which can both use the JVM's excellent concurrency management.
- Nashorn is as of this writing still under development, to be released with
- JVM 8 in March 2014.
- It promises excellent performance, on par with Java code in some cases.
- Rhino is not as fast, but still performs well and is very mature.
-\end_layout
-
-\begin_layout Standard
-But a comparative benchmark would make little sense.
- Node.js' single-threaded model really 
-\emph on
-needs
-\emph default
- blazing-fast language performance, as it directly affects its scalability.
- Prudence's multi-threaded model and RESTful expectations mean that it's
- rarely CPU-bound: for example, you spend orders of magnitude more time
- waiting for database backends to respond than for functions to be called.
- For the web page use case, smart architecture---and smart caching---are
- 
-\emph on
-far 
-\emph default
-more important for scalability than language engine performance.
-\end_layout
-
-\begin_layout Standard
-Note, too, that all the performance-critical parts of Prudence are written
- in Java, just as they are written in C++ for Node.js.
-\end_layout
-
-\begin_layout Paragraph
-Summary
-\end_layout
-
-\begin_layout Standard
-Choose the right tool for the job! Node.js is a great choice for streaming
- and streaming-like services, and Prudence---we hope you'll agree---is a
- great choice for web services and RESTful APIs.
+\begin_layout Part
+Articles
 \end_layout
 
 \begin_layout Section
