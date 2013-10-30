@@ -510,11 +510,12 @@ public class DelegatedResource extends ServerResource
 		else
 		{
 			Representation representation;
+			MediaType mediaType = conversationService.getMediaType();
 
-			if( MediaType.APPLICATION_JAVA.equals( conversationService.getMediaType() ) )
+			if( MediaType.APPLICATION_JAVA.includes( mediaType ) )
 			{
 				// Wrap in an object representation
-				representation = new ObjectRepresentation<Serializable>( (Serializable) object, MediaType.APPLICATION_JAVA );
+				representation = new ObjectRepresentation<Serializable>( (Serializable) object, mediaType );
 				Language language = conversationService.getLanguage();
 				if( language != null )
 					representation.getLanguages().add( language );
@@ -522,12 +523,12 @@ public class DelegatedResource extends ServerResource
 			}
 			else if( object instanceof byte[] )
 			{
-				representation = new ByteArrayRepresentation( (byte[]) object, conversationService.getMediaType() );
+				representation = new ByteArrayRepresentation( (byte[]) object, mediaType );
 			}
 			else
 			{
 				// Convert to string
-				representation = new StringRepresentation( object.toString(), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet() );
+				representation = new StringRepresentation( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet() );
 			}
 
 			representation.setTag( conversationService.getTag() );

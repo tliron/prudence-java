@@ -349,7 +349,7 @@ not found
 \begin_inset Quotes erd
 \end_inset
 
-) error.
+) HTTP status code.
  In other words, they are not in the URI-space.
 \end_layout
 
@@ -409,7 +409,37 @@ infinite
 \end_inset
 
 , etc.
- All URIs that matche these templates belong to your URI-space.
+ All URIs that match these templates belong to your URI-space.
+\end_layout
+
+\begin_layout Standard
+Note that this definition also encompasses the HTTP 
+\begin_inset Quotes eld
+\end_inset
+
+PUT
+\begin_inset Quotes erd
+\end_inset
+
+ verb, which can be used to create resources (as well as override them).
+ If your server allows for 
+\begin_inset Quotes eld
+\end_inset
+
+PUT
+\begin_inset Quotes erd
+\end_inset
+
+ at a specific set of URIs, then they are likewise part of your URI-space.
+ In other words, you 
+\begin_inset Quotes eld
+\end_inset
+
+support
+\begin_inset Quotes erd
+\end_inset
+
+ them.
 \end_layout
 
 \begin_layout Standard
@@ -443,6 +473,7 @@ wildcard
 
  URI templates, allowing you to delegate the parsing of the URI remainder
  entirely to your resource code.
+ This chapter will cover it all.
 \end_layout
 
 \begin_layout Subsection
@@ -450,15 +481,104 @@ routing.js
 \end_layout
 
 \begin_layout Standard
-Before discussing the routing techniques, let's look at how routing is configure
-d.
-\end_layout
+Routing is configured in your application's routing.js file.
+ The file should configure at least 
+\bar under
 
-\begin_layout Standard
-By convention, routing is configured in your application's routing.js file
- (which is executed by its default.js file).
- The file should configure at least app.hosts and app.routes, and app.dispatchers
- and app.preheat if you are using those optional features.
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-routes"
+
+\end_inset
+
+)
+\bar default
+ and likely 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.hosts
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-hosts"
+
+\end_inset
+
+)
+\bar default
+.
+ Add 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.errors
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-errors"
+
+\end_inset
+
+)
+\bar default
+, 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.dispatchers
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-dispatchers"
+
+\end_inset
+
+)
+\bar default
+, and 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-preheat"
+
+\end_inset
+
+)
+\bar default
+ if you are using those optional features.
 \end_layout
 
 \begin_layout Standard
@@ -479,7 +599,7 @@ default
 
  application template, demonstrating many of the main route type configurations,
  including how to chain and nest types.
- It will be explained in detail in the rest of this chapter.
+ These will be explained in detail in the rest of this chapter.
 \end_layout
 
 \begin_layout Standard
@@ -631,8 +751,9 @@ app.dispatchers = {
 \end_layout
 
 \begin_layout Standard
-In the settings, time durations are in milliseconds and data sizes in bytes.
- But these can be specified as 
+In these settings, note that time durations are in milliseconds and data
+ sizes in bytes.
+ These can be specified as 
 \bar under
 either numbers or strings (page 
 \begin_inset CommandInset ref
@@ -899,6 +1020,13 @@ We will summarize all the route types briefly here, arranged according to
 
 \begin_layout Subsubsection*
 Resource Route Types
+\begin_inset CommandInset label
+LatexCommand label
+name "resource-route-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1217,6 +1345,13 @@ hidden or
 \end_inset
 
 
+\begin_inset CommandInset label
+LatexCommand label
+name "hidden-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1251,6 +1386,18 @@ not found
  URI-space but not the public one.
  This special value is not actually handled by a class, but rather is configured
  into the current router.
+ See also 
+\bar under
+capture-and-hide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-and-hide"
+
+\end_inset
+
+)
+\bar default
+ for another notation.
 \end_layout
 
 \begin_layout Paragraph
@@ -1375,6 +1522,13 @@ reference "live-execution"
 
 \begin_layout Subsubsection*
 Mapping Route Types
+\begin_inset CommandInset label
+LatexCommand label
+name "mapping-route-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1622,6 +1776,13 @@ reference "scriptlet-resources"
 
 \begin_layout Subsubsection*
 Redirecting Route Types
+\begin_inset CommandInset label
+LatexCommand label
+name "redirecting-route-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -1784,6 +1945,13 @@ reference "redirection"
 
 \begin_layout Paragraph
 addSlash
+\begin_inset CommandInset label
+LatexCommand label
+name "addslash-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1811,6 +1979,13 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddS
 
 \begin_layout Subsubsection*
 Combining Route Types
+\begin_inset CommandInset label
+LatexCommand label
+name "combining-route-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Paragraph
@@ -1918,6 +2093,13 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Rout
 
 \begin_layout Subsubsection*
 Filtering Route Types
+\begin_inset CommandInset label
+LatexCommand label
+name "filtering-route-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2242,7 +2424,7 @@ roots
 \begin_inset Quotes erd
 \end_inset
 
- and your container 
+ and your container's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2328,7 +2510,7 @@ roots
 \begin_inset Quotes erd
 \end_inset
 
- and your container 
+ and your container's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2422,7 +2604,7 @@ roots
 \begin_inset Quotes erd
 \end_inset
 
- and your container 
+ and your container's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2465,6 +2647,13 @@ reference "static-resources-zuss-to-css"
 
 \begin_layout Subsubsection
 Custom Route Types
+\begin_inset CommandInset label
+LatexCommand label
+name "custom-route-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2549,8 +2738,15 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Rest
 \end_layout
 
 \begin_layout Standard
-Here's a complete example in which we implement a route type that redirects
- using HTTP status code 303 (
+Here's a complete example in which we implement a route type, 
+\begin_inset Quotes eld
+\end_inset
+
+see
+\begin_inset Quotes erd
+\end_inset
+
+, that redirects using HTTP status code 303 (
 \begin_inset Quotes eld
 \end_inset
 
@@ -2559,7 +2755,7 @@ see other
 \end_inset
 
 ).
- (Note this same effect can be achieved using the built-in 
+ (Note this same effect can be better achieved using the built-in 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2677,15 +2873,33 @@ Routing Paradigms
 \end_layout
 
 \begin_layout Standard
-Prudence offers three built-in techniques for you to support a URI or a
- URI template, reflecting two different routing paradigms:
+Prudence offers 
+\emph on
+three
+\emph default
+ built-in techniques for you to support a URI or a URI template, reflecting
+ 
+\emph on
+two
+\emph default
+ different routing paradigms:
 \end_layout
 
 \begin_layout Enumerate
 
 \series bold
+\bar under
 Resource mapping
 \series default
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-mapping"
+
+\end_inset
+
+)
+\bar default
 : The filesystem hierarchy under an application's 
 \begin_inset Quotes eld
 \end_inset
@@ -2722,8 +2936,18 @@ URI/resource separation:
 \begin_layout Enumerate
 
 \series bold
+\bar under
 Resource capturing
 \series default
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
 : Capturing lets you map URI templates to fixed URIs, as well as perform
  other kinds of internal URI rewrites that are invisible to clients, allowing
  you to provide a published URI-space, which is different from your internal
@@ -2747,8 +2971,18 @@ reference "resource-mapping"
 \begin_layout Enumerate
 
 \series bold
+\bar under
 Resource dispatching
 \series default
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-dispatching"
+
+\end_inset
+
+)
+\bar default
 : In your application's routing.js you can map URIs or URI templates to a
  custom ID, which is then dispatched to your resource handling code.
  Dispatching provides the cleanest and most flexible separation between
@@ -2757,21 +2991,14 @@ Resource dispatching
 
 \end_deeper
 \begin_layout Standard
-When embarking on a new project, you may want to give some thought as to
- whether you should organize your code around 
-\emph on
-resource mapping 
-\emph default
-or
-\emph on
- URI/resource separation
-\emph default
-.
+When embarking on a new project, you may want to give some thought as which
+ paradigm to use.
  Generally, URI/resource separation is preferred for larger applications
- because it allows you full control over you code organization.
- However, it does add an extra layer of configuration and is not as transparent
- as resource mapping.
- It may make sense to use both paradigms.
+ because it allows you more choices for your code organization.
+ However, it does add an extra layer of configuration, and the URI-space
+ is not as transparent as it is for resource mapping.
+ It may make sense to use both paradigms in the same application where appropria
+te.
  Read on, and make sure you understand how to use all three routing techniques.
 \end_layout
 
@@ -2798,7 +3025,7 @@ Resource mapping is the most straightforward and most familiar technique
 \begin_inset Quotes erd
 \end_inset
 
- subdirectory) to the URI space.
+ subdirectory) to the URI-space.
  This is how static web servers, as well as the the PHP, ASP and JSP platforms
  work.
 \end_layout
@@ -2871,6 +3098,8 @@ not found
  of URI template variables.
  As a courtesy to sloppy clients, you can manually add a permanent redirection
  to a trailing slash, using the 
+\bar under
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -2878,7 +3107,16 @@ addSlash
 \begin_inset Quotes erd
 \end_inset
 
- route type.
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "addslash-route-type"
+
+\end_inset
+
+)
+\bar default
+.
  For example:
 \begin_inset listings
 inline false
@@ -2920,10 +3158,10 @@ This mapped URI-space can be manipulated using URI hiding and capturing,
 \end_layout
 
 \begin_layout Subsubsection
-Capturing URI Templates
+Mapping URI Templates
 \begin_inset CommandInset label
 LatexCommand label
-name "capturing-uri-templates"
+name "mapping-uri-templates"
 
 \end_inset
 
@@ -3093,6 +3331,13 @@ reference "conversation-locals"
 
 \begin_layout Paragraph
 Capture-and-Hide
+\begin_inset CommandInset label
+LatexCommand label
+name "capture-and-hide"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3152,7 +3397,27 @@ That final
 \end_inset
 
  implies hiding.
- You of course can also configure capturing and hiding separately.
+ You of course can also configure capturing and hiding separately, using
+ the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hidden-route-type"
+
+\end_inset
+
+)
+\bar default
+.
  The following is equivalent to the above:
 \end_layout
 
@@ -4139,7 +4404,538 @@ app.dispatchers = {
 \end_layout
 
 \begin_layout Subsection
+app.hosts
+\begin_inset CommandInset label
+LatexCommand label
+name "app-hosts"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use 
+\begin_inset Quotes eld
+\end_inset
+
+app.hosts
+\begin_inset Quotes erd
+\end_inset
+
+ to assign the application to a base URI on one or more virtual hosts.
+\end_layout
+
+\begin_layout Standard
+The default configuration uses a single host, the 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ one, but you can add more, or even not have a single 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ host.
+ Still, note that only a 
+\emph on
+single
+\emph default
+ application instance is used, even if attached to multiple hosts: for example,
+ all 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+ are shared no matter which host a request is routed from.
+\end_layout
+
+\begin_layout Standard
+To configure your hosts, and for a more complete discussion, see the 
+\bar under
+servers and hosts guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+The Bare Minimum
+\end_layout
+
+\begin_layout Standard
+You need to attach your application to at least one host to make it public.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/myapp/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Note the required use of quotes around 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+, due to it being a reserved keyword in JavaScript.)
+\end_layout
+
+\begin_layout Standard
+If you don't have an 
+\begin_inset Quotes eld
+\end_inset
+
+app.hosts
+\begin_inset Quotes erd
+\end_inset
+
+ definition, or if it is empty, then your application 
+\emph on
+will not be publicly available over HTTP
+\emph default
+.
+ However, it will still run, and be available as an internal API.
+\end_layout
+
+\begin_layout Subsubsection
+The Internal Host
+\begin_inset CommandInset label
+LatexCommand label
+name "the-internal-host"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+internal
+\begin_inset Quotes erd
+\end_inset
+
+ is a reserved host name, used to represent the 
+\bar under
+internal URI-space (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+By default, applications are always attached to the 
+\begin_inset Quotes eld
+\end_inset
+
+internal
+\begin_inset Quotes erd
+\end_inset
+
+ host, with the base URI being the application's subdirectory name.
+ However, you can override this default should you require:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/myapp/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal: '/special/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Multiple Hosts
+\end_layout
+
+\begin_layout Standard
+Here's an example of attaching the app to two different virtual hosts, with
+ different base URIs under each:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/myapp/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'privatehost': '/admin/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you need your application to sometimes behave differently on each host,
+ you 
+\emph on
+might
+\emph default
+ be able to 
+\emph on
+indirectly
+\emph default
+ discover the host that routed the request using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.reference.baseRef API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+
+\end_inset
+
+.
+ This will always be the application's root URI.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if (conversation.reference.baseRef.path == '/myapp/') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+app.errors
+\begin_inset CommandInset label
+LatexCommand label
+name "app-errors"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default, Prudence will display ready-made error pages if the response's
+ HTTP status code is an error (>=400), but you can override these by settings
+ your own custom pages:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.errors = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	404: '/errors/not-found/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	500: '/errors/fail/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The keys of the dict are status codes, while the values work like 
+\bar under
+captures (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
+.
+ This means that you can implement your error pages using any kind of resource:
+ manual, scriptlet or static.
+\end_layout
+
+\begin_layout Standard
+If your error resource is mapped under 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+, and you don't want it exposed, use the 
+\bar under
+capture-and-hide notation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-and-hide"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.errors = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	404: '/errors/not-found/!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is equivalent to explicitly hiding the URI in 
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+ using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hidden-route-type"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/errors/not-found/': '!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 500 (
+\begin_inset Quotes eld
+\end_inset
+
+internal server error
+\begin_inset Quotes erd
+\end_inset
+
+) statuses caused by uncaught exceptions can be handled specially by 
+\bar under
+enabling debug mode (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-errors"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Warning:
+\series default
+ If you decide to implement your error pages using a 
+\emph on
+non
+\emph default
+-static resource, you run the risk of the resource code throwing an exception.
+ If that happens, it would cause a 500 status code.
+ If the original error was 
+\emph on
+not
+\emph default
+ 500, then this would confuse the client and complicate debugging.
+ However, if the original status code 
+\emph on
+was
+\emph default
+ 500, then it could be much worse: the error would trigger your error page
+ to be displayed again, which might throw the exception again\SpecialChar \ldots{}
+ resulting
+ in a stack overflow error.
+ For these reasons, it's probably a good idea to implement your error pages
+ as static resources, at least for production deployments.
+\end_layout
+
+\begin_layout Subsection
 app.dispatchers
+\begin_inset CommandInset label
+LatexCommand label
+name "app-dispatchers"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4414,127 +5210,6 @@ app.dispatchers = {
 \end_layout
 
 \begin_layout Subsection
-app.errors
-\begin_inset CommandInset label
-LatexCommand label
-name "app-errors"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsection
-app.hosts
-\begin_inset CommandInset label
-LatexCommand label
-name "app-hosts"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Standard
-Use app.hosts in routing.js to assign the application to a base URI on that
- host.
- By default we only use a single host, the default one, but you can assign
- each app to one or more hosts, with different base URIs under each.
- The application instance only runs 
-\emph on
-once
-\emph default
- in such cases: all 
-\bar under
-application.globals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "application-globals"
-
-\end_inset
-
-)
-\bar default
- are shared no matter which host a request is routed from.
-\end_layout
-
-\begin_layout Paragraph
-Minimal definition
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.hosts = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	'default': '/publicbaseuri/'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph
-Custom
-\end_layout
-
-\begin_layout Standard
-Here's an example of “attaching” the app to two different virtual hosts,
- with different base URIs under each:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.hosts = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	'default': '/publicbaseuri/',
-\end_layout
-
-\begin_layout Plain Layout
-
-	'privatehost': '/privatebaseuri'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
 app.preheat
 \begin_inset CommandInset label
 LatexCommand label
@@ -4546,7 +5221,233 @@ name "app-preheat"
 \end_layout
 
 \begin_layout Standard
-TODO
+When a resource gets hit by a request for the first time, there will likely
+ be an initial delay.
+ Your code may have to be compiled, or, if it has been cached, would at
+ least have to be loaded and initialized.
+ But all that should happen very fast: the more serious delay would be caused
+ by initializing subsystems and libraries, such as connecting to databases,
+ logging in to external services, etc.
+\end_layout
+
+\begin_layout Standard
+Another source for delay is that, if you are 
+\bar under
+caching pages (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "server-side-caching"
+
+\end_inset
+
+)
+\bar default
+, as you very well should, then the some cached pages may not exist or be
+ old.
+ The first hit would thus need to generate and cache the page, which is
+ much slower than using the cached version.
+ For very large applications optimized for caching, a 
+\begin_inset Quotes eld
+\end_inset
+
+cold
+\begin_inset Quotes erd
+\end_inset
+
+ cache can cause serious problems: see the discussion in 
+\bar under
+Scaling Tips (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-cache-warming"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+To avoid the delay, it's recommended that you ready your resources by hitting
+ them as soon as Prudence starts up.
+ This happens in two phases:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Defrosting
+\series default
+: Prudence will by default parse and compile the code for manual and scriptlet
+ resources under your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory.
+ See 
+\bar under
+configuring applications (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+ if you wish to turn this feature off.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Preheating
+\series default
+: This causes an 
+\bar under
+internal (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+ 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ on URIs, which would involve not only compiling the code, but also running
+ it.
+ The response payloads, as well as any errors, are ignored.
+\end_layout
+
+\begin_layout Standard
+Your 
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+ is simply an array of relative URIs.
+ As an example, let's preheat the homepage and a few specific resources:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.preheat = [
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/x/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/admin/'
+\end_layout
+
+\begin_layout Plain Layout
+
+]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that you can't use URI templates in 
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+, only explicit URIs.
+ Thus, if you have routed a 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{name}/
+\begin_inset Quotes erd
+\end_inset
+
+ URI template, you would have to 
+\begin_inset Quotes eld
+\end_inset
+
+fill in
+\begin_inset Quotes erd
+\end_inset
+
+ the template with a value.
+ In our example, we chose 
+\begin_inset Quotes eld
+\end_inset
+
+/user/x/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Also note that because preheats are 
+\emph on
+internal
+\emph default
+ requests you can use this mechanism to preheat hidden URIs.
+\end_layout
+
+\begin_layout Standard
+If you wish to do more specialized preheating, you may use the 
+\bar under
+startup task (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "startup"
+
+\end_inset
+
+)
+\bar default
+.
+ However, smart use of 
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+ can very effective, and it's very easy to use.
 \end_layout
 
 \begin_layout Subsection
@@ -5304,7 +6205,33 @@ TODO
 \end_layout
 
 \begin_layout Standard
-app.hosts internal
+The 
+\begin_inset Quotes eld
+\end_inset
+
+internal
+\begin_inset Quotes erd
+\end_inset
+
+ host (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-internal-host"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Avoid serialization (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoid-serialization-for-internal-requests"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Subsection
@@ -5336,6 +6263,7 @@ reference "the-cast-for-rest"
 \begin_layout Standard
 It's a good idea to think very carefully about your URI-space.
  A RESTful URI-space can help you define well-encapsulated RESTful resources.
+ Herein are some topics to consider:
 \end_layout
 
 \begin_layout Subsubsection
@@ -5493,7 +6421,7 @@ only
 
 \begin_layout Standard
 The bottom line is that if you standardize on only using nouns for your
- URIs, you will avoid many of these semantic slips.
+ URIs, you will avoid many of these semantic pitfalls.
 \end_layout
 
 \begin_layout Standard
@@ -5515,6 +6443,13 @@ Beware of gerunds!
 
 \begin_layout Subsubsection
 Do You Really Need REST?
+\begin_inset CommandInset label
+LatexCommand label
+name "do-you-really-need-rest"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5549,8 +6484,24 @@ And that's OK.
 
 \begin_layout Standard
 Instead, take a look at RPC (Remote Procedure Call) mechanisms.
- The Diligence framework, based on Prudence, provides robust and powerful
- support for JSON-RPC, XML-RPC in its 
+ The Diligence framework, based on Prudence, provides easy and robust support
+ for both 
+\begin_inset CommandInset href
+LatexCommand href
+name "JSON-RPC"
+target "http://json-rpc.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "XML-RPC"
+target "http://www.xmlrpc.com/"
+
+\end_inset
+
+ in its 
 \begin_inset CommandInset href
 LatexCommand href
 name "RPC Service"
@@ -5558,7 +6509,15 @@ target "http://threecrickets.com/diligence/manual/service/rest/"
 
 \end_inset
 
- as well as ExtDirect in its 
+ as well as 
+\begin_inset CommandInset href
+LatexCommand href
+name "Ext Direct"
+target "http://www.sencha.com/products/extjs/extdirect"
+
+\end_inset
+
+ in its 
 \begin_inset CommandInset href
 LatexCommand href
 name "Sencha Integration"
@@ -5570,12 +6529,16 @@ target "http://threecrickets.com/diligence/manual/integration/sencha-ext-direct/
  URI.
  In terms of HTTP, these protocols all use HTTP POST, and do not leverage
  the HTTP infrastructure as well as a more fully RESTful API.
- But, one size does not fit all, an an RPC-based solution may prove a better
+ But, one size does not fit all, and an RPC-based solution may prove a better
  match for your project.
 \end_layout
 
 \begin_layout Standard
-It's also perfectly possible to allow for both REST and RPC.
+It's also perfectly possible to use 
+\emph on
+both
+\emph default
+ REST and RPC in your project.
  Use each approach where it is most appropriate.
 \end_layout
 
@@ -5782,8 +6745,12 @@ nature
  standard or interpretation of what of a hierarchy means.
 \end_layout
 
+\begin_layout Paragraph
+Formats
+\end_layout
+
 \begin_layout Standard
-Note that a format should not be considered 
+A format should not be considered 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5867,9 +6834,10 @@ If you create a programming language API, you will surely want to document
 \begin_layout Standard
 Consider that documenting your URI-space is just as important.
  A tool to generate such documentation for you is being considered for a
- future version of Prudence.
- Until it is available, consider adopting a resource documentation standard
- for your project.
+ future version of Prudence (not available in 2.0).
+ Until we have it, consider adopting a resource documentation standard for
+ your project.
+ Here's a suggestion:
 \end_layout
 
 \begin_layout Standard
@@ -6361,7 +7329,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation"
 captured URI segments (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "capturing-uri-templates"
+reference "mapping-uri-templates"
 
 \end_inset
 
@@ -7371,7 +8339,7 @@ status open
 
 \begin_layout Plain Layout
 
-document.executeOnce('/sincerity/templates/')
+document.require('/sincerity/templates/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -7406,7 +8374,7 @@ status open
 
 \begin_layout Plain Layout
 
-document.executeOnce('/sincerity/templates/')
+document.require('/sincerity/templates/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -7516,7 +8484,7 @@ status open
 
 \begin_layout Plain Layout
 
-document.executeOnce('/sincerity/json/')
+document.require('/sincerity/json/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -9076,6 +10044,160 @@ reference "static-resources-javascript-and-css-optimization"
 .
 \end_layout
 
+\begin_layout Subsubsection
+Other Effects
+\end_layout
+
+\begin_layout Standard
+Because static resources don't allow for code (unlike manual and scriptlet
+ resources), the way to program your own effects is to add 
+\bar under
+filters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filtering"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+For example, let's say we want to force all 
+\begin_inset Quotes eld
+\end_inset
+
+.pdf
+\begin_inset Quotes erd
+\end_inset
+
+ files to be downloadable (by default, web browsers might prefer to display
+ the file using a browser plugin).
+ We'll be using the technique described 
+\bar under
+here (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "browser-downloads"
+
+\end_inset
+
+)
+\bar default
+ to change the response's 
+\begin_inset Quotes eld
+\end_inset
+
+disposition
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Here's our filter code, in 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/filters/download-pdf.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleAfter(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var entity = conversation.response.entity
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (entity.mediaType.name == 'application/pdf') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		entity.disposition.type = 'attachment'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To install it in routing.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'filter',
+\end_layout
+
+\begin_layout Plain Layout
+
+		library: '/filters/download-pdf/',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: 'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Resource Type Comparison Table
 \end_layout
@@ -9913,519 +11035,6 @@ conversation.redirectSeeOther(conversation.base + '#top')
 \end_layout
 
 \begin_layout Subsection
-Cookies
-\end_layout
-
-\begin_layout Standard
-Cookies represent a small client-side database, which the server can use
- to retrieve or store per-client data.
- Not all clients support cookies, and even those that do (most web browsers)
- might have the feature disabled, so it's not always good idea to rely on
- cookies.
-\end_layout
-
-\begin_layout Subsubsection
-From the Client
-\end_layout
-
-\begin_layout Standard
-Retrieve a specific cookie from those the client send you according to its
- name using 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.getCookie"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.getCookie"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var session = conversation.getCookie('session')
-\end_layout
-
-\begin_layout Plain Layout
-
-if (null !== session) {
-\end_layout
-
-\begin_layout Plain Layout
-
-	print(session.value)
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Or use 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.cookies"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.cookies"
-
-\end_inset
-
- to iterate through all available cookies.
-\end_layout
-
-\begin_layout Standard
-The following attributes are available:
-\end_layout
-
-\begin_layout Itemize
-name: (read only)
-\end_layout
-
-\begin_layout Itemize
-version: (integer) per a specific cookie
-\end_layout
-
-\begin_layout Itemize
-value: textual, or text-encoded binary data (note that most clients have
- strict limits on how much total data is allowed to be stored in all cookies
- per domain)
-\end_layout
-
-\begin_layout Itemize
-domain: the client should only use the cookie with this domain and its subdomain
-s (web browsers will not let you set a cookie for a domain which is not
- the domain of the request or a subdomain of it)
-\end_layout
-
-\begin_layout Itemize
-path: the client should only use the cookie with URIs that begin with this
- path (“/”, the default, would mean to use it with all URIs)
-\end_layout
-
-\begin_layout Subsubsection
-To the Client
-\end_layout
-
-\begin_layout Standard
-You can ask that a client modify any of the cookies you've retrieved 
-\emph on
-from
-\emph default
- it, upon a successful response, by calling the 
-\begin_inset Quotes eld
-\end_inset
-
-save
-\begin_inset Quotes erd
-\end_inset
-
- method:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var session = conversation.getCookie('session')
-\end_layout
-
-\begin_layout Plain Layout
-
-if (null !== session) {
-\end_layout
-
-\begin_layout Plain Layout
-
-	session.value = 'newsession'
-\end_layout
-
-\begin_layout Plain Layout
-
-	session.save()
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Ask the client to create a new cookie using 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.createCookie"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.createCookie"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var session = conversation.createCookie('session')
-\end_layout
-
-\begin_layout Plain Layout
-
-session.value = 'newsession'
-\end_layout
-
-\begin_layout Plain Layout
-
-session.save()
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that createCookie will retrieve the cookie if it already exists.
-\end_layout
-
-\begin_layout Standard
-When sending cookies 
-\emph on
-to
-\emph default
- the client, you can set the following attributes 
-\emph on
-in addition
-\emph default
- to those mentioned above, but note that you 
-\emph on
-cannot
-\emph default
- retrieve them later:
-\end_layout
-
-\begin_layout Itemize
-maxAge: age in seconds, after which the client should delete the cookie;
- maxAge=0 deletes the cookie immediately, while maxAge=-1 (the default)
- asks the client to keep the cookie only for the duration of the “session”
- (this is defined by the client; for most web browsers this means that the
- cookie will be deleted when the browser is closed)
-\end_layout
-
-\begin_layout Itemize
-secure: true if the cookie is meant to be used only in secure connections
- (defaults to false)
-\end_layout
-
-\begin_layout Itemize
-accessRestricted: true if the cookie is meant to be used only in authenticated
- connections (defaults to false)
-\end_layout
-
-\begin_layout Itemize
-comment: some clients store this, some discard it
-\end_layout
-
-\begin_layout Standard
-You can ask the client to delete a cookie by calling its 
-\begin_inset Quotes eld
-\end_inset
-
-delete
-\begin_inset Quotes erd
-\end_inset
-
- method.
- Note that this is identical to setting maxAge=0 and calling 
-\begin_inset Quotes eld
-\end_inset
-
-save
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Security Concerns
-\end_layout
-
-\begin_layout Standard
-You should never store any unencrypted secret data in cookies: though web
- browsers attempt to 
-\begin_inset Quotes eld
-\end_inset
-
-sandbox
-\begin_inset Quotes erd
-\end_inset
-
- cookies, making sure that only the server (
-\begin_inset Quotes eld
-\end_inset
-
-domain
-\begin_inset Quotes erd
-\end_inset
-
-) that stored them can retrieve them, there are several ways by which other
- sites could hijack them.
- Better yet, don't store 
-\emph on
-any
-\emph default
- permanent secrets in cookies, even if encrypted, because even encryptions
- can be hacked.
-\end_layout
-
-\begin_layout Standard
-A separate security concern for users is that cookies can be used to surreptitio
-usly track user activity: any resource on a web page, even an image hosted
- by an advertising company, can use cookies, and can also track your client's
- IP address.
-\end_layout
-
-\begin_layout Standard
-Because of these security concerns, it is recommended that you devise a
- 
-\begin_inset Quotes eld
-\end_inset
-
-cookie policy
-\begin_inset Quotes erd
-\end_inset
-
- for users and make it public, assuming you require the use of cookies for
- your site.
-\end_layout
-
-\begin_layout Standard
-Cookies are a security concern for you, too: you cannot expect all your
- clients to be standard, friendly web browsers.
- Clients might not honor your requests for cookie modifications, and might
- be sending you cookies that you did not ask them to store.
-\end_layout
-
-\begin_layout Standard
-Never trust cookies! They are a hacker's playground.
-\end_layout
-
-\begin_layout Subsection
-Redirection
-\begin_inset CommandInset label
-LatexCommand label
-name "redirection"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Client-side redirection in HTTP is handled via response headers.
-\end_layout
-
-\begin_layout Subsubsection
-By Routing
-\end_layout
-
-\begin_layout Standard
-If you need to constantly redirect a specific resource or a URI pattern,
- you should configure it in your routing.js, using the 
-\bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-redirect
-\begin_inset Quotes erd
-\end_inset
-
- route type (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "redirect-route-type"
-
-\end_inset
-
-)
-\bar default
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/images/*': '>/media/{rr}'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that in this example we 
-\bar under
-injected the wildcard (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "injecting-the-wildcard"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsubsection
-By API
-\end_layout
-
-\begin_layout Standard
-You can also redirect programmatically by using the 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.redirectPermament"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectPermament"
-
-\end_inset
-
-, 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.redirectSeeOther"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectSeeOther"
-
-\end_inset
-
- or 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.redirectTemporary"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectTemporary"
-
-\end_inset
-
- APIs:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-conversation.redirectSeeOther(conversation.base + '/help/')
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that if you redirect via API, the client will ignore the response payload
- if there is one.
-\end_layout
-
-\begin_layout Subsubsection
-In HTML
-\end_layout
-
-\begin_layout Standard
-We're mentioning this here only for completion: via HTML, redirection is
- handled entirely in the web browser, with no data going to/from the server.
- A scriptlet resource example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-Go <a href="<%= conversation.base + '/elsewhere/' %>">elsewhere</a>.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Server-Side Redirection
-\end_layout
-
-\begin_layout Standard
-In Prudence, this is called 
-\bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-capturing
-\begin_inset Quotes erd
-\end_inset
-
- (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "resource-capturing"
-
-\end_inset
-
-)
-\bar default
- and has particular use cases.
- (It can indeed be confusing that this functionality is often grouped together
- with client-side redirection.)
-\end_layout
-
-\begin_layout Subsection
 Request Payloads
 \begin_inset CommandInset label
 LatexCommand label
@@ -10726,6 +11335,529 @@ reference "restlet-data-extensions"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsection
+Cookies
+\end_layout
+
+\begin_layout Standard
+Cookies represent a small client-side database, which the server can use
+ to retrieve or store per-client data.
+ Not all clients support cookies, and even those that do (most web browsers)
+ might have the feature disabled, so it's not always good idea to rely on
+ cookies.
+\end_layout
+
+\begin_layout Subsubsection
+From the Client
+\end_layout
+
+\begin_layout Standard
+Retrieve a specific cookie from those the client send you according to its
+ name using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.getCookie"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.getCookie"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.getCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== session) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	print(session.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Or use 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.cookies"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.cookies"
+
+\end_inset
+
+ to iterate through all available cookies.
+\end_layout
+
+\begin_layout Standard
+The following attributes are available:
+\end_layout
+
+\begin_layout Itemize
+name: (read only)
+\end_layout
+
+\begin_layout Itemize
+version: (integer) per a specific cookie
+\end_layout
+
+\begin_layout Itemize
+value: textual, or text-encoded binary data (note that most clients have
+ strict limits on how much total data is allowed to be stored in all cookies
+ per domain)
+\end_layout
+
+\begin_layout Itemize
+domain: the client should only use the cookie with this domain and its subdomain
+s (web browsers will not let you set a cookie for a domain which is not
+ the domain of the request or a subdomain of it)
+\end_layout
+
+\begin_layout Itemize
+path: the client should only use the cookie with URIs that begin with this
+ path (“/”, the default, would mean to use it with all URIs)
+\end_layout
+
+\begin_layout Subsubsection
+To the Client
+\end_layout
+
+\begin_layout Standard
+You can ask that a client modify any of the cookies you've retrieved 
+\emph on
+from
+\emph default
+ it, upon a successful response, by calling the 
+\begin_inset Quotes eld
+\end_inset
+
+save
+\begin_inset Quotes erd
+\end_inset
+
+ method:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.getCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== session) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	session.value = 'newsession'
+\end_layout
+
+\begin_layout Plain Layout
+
+	session.save()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Ask the client to create a new cookie using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.createCookie"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.createCookie"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.createCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+session.value = 'newsession'
+\end_layout
+
+\begin_layout Plain Layout
+
+session.save()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that createCookie will retrieve the cookie if it already exists.
+\end_layout
+
+\begin_layout Standard
+When sending cookies 
+\emph on
+to
+\emph default
+ the client, you can set the following attributes 
+\emph on
+in addition
+\emph default
+ to those mentioned above, but note that you 
+\emph on
+cannot
+\emph default
+ retrieve them later:
+\end_layout
+
+\begin_layout Itemize
+maxAge: age in seconds, after which the client should delete the cookie;
+ maxAge=0 deletes the cookie immediately, while maxAge=-1 (the default)
+ asks the client to keep the cookie only for the duration of the “session”
+ (this is defined by the client; for most web browsers this means that the
+ cookie will be deleted when the browser is closed)
+\end_layout
+
+\begin_layout Itemize
+secure: true if the cookie is meant to be used only in secure connections
+ (defaults to false)
+\end_layout
+
+\begin_layout Itemize
+accessRestricted: true if the cookie is meant to be used only in authenticated
+ connections (defaults to false)
+\end_layout
+
+\begin_layout Itemize
+comment: some clients store this, some discard it
+\end_layout
+
+\begin_layout Standard
+You can ask the client to delete a cookie by calling its 
+\begin_inset Quotes eld
+\end_inset
+
+delete
+\begin_inset Quotes erd
+\end_inset
+
+ method.
+ Note that this is identical to setting maxAge=0 and calling 
+\begin_inset Quotes eld
+\end_inset
+
+save
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Security Concerns
+\end_layout
+
+\begin_layout Standard
+You should never store any unencrypted secret data in cookies: though web
+ browsers attempt to 
+\begin_inset Quotes eld
+\end_inset
+
+sandbox
+\begin_inset Quotes erd
+\end_inset
+
+ cookies, making sure that only the server (
+\begin_inset Quotes eld
+\end_inset
+
+domain
+\begin_inset Quotes erd
+\end_inset
+
+) that stored them can retrieve them, they can be hijacked by other means.
+ Better yet, don't store 
+\emph on
+any
+\emph default
+ secrets in cookies, even if encrypted, because even encryptions can be
+ hacked.
+ A cautious exception can be made for 
+\emph on
+short-term
+\emph default
+ secrets: for example, if you store a session ID in a cookie, make sure
+ to expire it on the server so that it cannot be used later by a hacker.
+\end_layout
+
+\begin_layout Standard
+A separate security concern for users is that cookies can be used to surreptitio
+usly track user activity.
+ This works because any resource on a web page---even an image hosted by
+ an advertising company---can use cookies, and can also track your client's
+ IP address.
+ Uses various heuristics it is possible to identify individual users and
+ track parts of their browser history.
+\end_layout
+
+\begin_layout Standard
+Because of these security concerns, it is recommended that you devise a
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cookie policy
+\begin_inset Quotes erd
+\end_inset
+
+ for users and make it public, assuming you require the use of cookies for
+ your site.
+ In particular, let users know which 3rd-party resources you are including
+ in your web pages that may be storing cookies, and for what purpose.
+\end_layout
+
+\begin_layout Standard
+Cookies are a security concern for you, too: you cannot expect all your
+ clients to be standard, friendly web browsers.
+ Clients might not be honoring your requests for cookie modifications, and
+ might be sending you cookies that you did not ask them to store.
+\end_layout
+
+\begin_layout Standard
+Be careful with cookies! They are a hacker's playground.
+\end_layout
+
+\begin_layout Subsection
+Redirection
+\begin_inset CommandInset label
+LatexCommand label
+name "redirection"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Client-side redirection in HTTP is handled via response headers.
+\end_layout
+
+\begin_layout Subsubsection
+By Routing
+\end_layout
+
+\begin_layout Standard
+If you need to constantly redirect a specific resource or a URI pattern,
+ you should configure it in your routing.js, using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+redirect
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "redirect-route-type"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/images/*': '>/media/{rr}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that in this example we 
+\bar under
+injected the wildcard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-the-wildcard"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+By API
+\end_layout
+
+\begin_layout Standard
+You can also redirect programmatically by using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.redirectPermament"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectPermament"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.redirectSeeOther"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectSeeOther"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.redirectTemporary"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.redirectTemporary"
+
+\end_inset
+
+ APIs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.redirectSeeOther(conversation.base + '/help/')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if you redirect via API, the client will ignore the response payload
+ if there is one.
+\end_layout
+
+\begin_layout Subsubsection
+In HTML
+\end_layout
+
+\begin_layout Standard
+We're mentioning this here only for completion: via HTML, redirection is
+ handled entirely in the web browser, with no data going to/from the server.
+ A scriptlet resource example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Go <a href="<%= conversation.base + '/elsewhere/' %>">elsewhere</a>.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Server-Side Redirection
+\end_layout
+
+\begin_layout Standard
+In Prudence, this is called 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+capturing
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
+ and has particular use cases.
+ (It can indeed be confusing that this functionality is often grouped together
+ with client-side redirection.)
 \end_layout
 
 \begin_layout Subsection
@@ -11439,8 +12571,8 @@ Note that if you return a
 number
 \emph default
 , it will be treated specially as an HTTP status code.
- If you wish to return the number as a textual payload, simply convert it
- to a string:
+ If you wish to return the number as the content of an textual payload,
+ simply convert it to a string:
 \end_layout
 
 \begin_layout Standard
@@ -11455,7 +12587,7 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-	return String(123)
+	return String(404)
 \end_layout
 
 \begin_layout Plain Layout
@@ -11605,12 +12737,19 @@ conversation.response.entity = payload
 
 \begin_layout Subsubsection
 Overriding the MIME Type
+\begin_inset CommandInset label
+LatexCommand label
+name "overriding-the-mime-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-The response payload's MIME type has likely already been selected for you
- via HTTP content negotiation, based on the list of preferences you set
- up in handleInit.
+The response payload's MIME type has likely been selected for you automatically
+ by Prudence, via HTTP content negotiation, based on the list of preferences
+ you set up in handleInit.
  However, it's possible to override this value via the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -11620,15 +12759,15 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \end_inset
 
 .
- This feature should be used sparingly: content negotiation is the preferred
- RESTful mechanism for determining the response MIME type, and the negotiated
- value should be honored.
- However, it could be very useful to override it if you 
+ This should be done sparingly: content negotiation is the preferred RESTful
+ mechanism for determining the response MIME type, and the negotiated value
+ should be honored.
+ However, it could be useful and even necessary to override it if you 
 \emph on
 cannot 
 \emph default
 use content negotiation, which might be the case if your clients don't support
- it.
+ it, and yet you still want to support multiple formats.
 \end_layout
 
 \begin_layout Standard
@@ -11684,7 +12823,7 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-		conversation.mediaTypeByName = 'text/html'
+		conversation.mediaTypeName = 'text/html'
 \end_layout
 
 \begin_layout Plain Layout
@@ -11710,6 +12849,262 @@ function handleGet(conversation) {
 \begin_layout Standard
 Note that this API works just as well for scriptlet resources, though again
  content negotiation should be preferred.
+\end_layout
+
+\begin_layout Subsubsection
+Avoid Serialization for Internal Requests
+\begin_inset CommandInset label
+LatexCommand label
+name "avoid-serialization-for-internal-requests"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Your textual and binary representations might be serialized versions of
+ data structures.
+ But if the request is 
+\bar under
+internal (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+, then it would be unnecessary and wasteful to go through serialization/deserial
+ization.
+ A simple optimization would be to pass the data 
+\begin_inset Quotes eld
+\end_inset
+
+as is,
+\begin_inset Quotes erd
+\end_inset
+
+ actually very similarly to a return value for a standard function call.
+\end_layout
+
+\begin_layout Standard
+This works using the special 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type.
+ If selected---whether negotiated for or 
+\bar under
+explicitly overridden (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "overriding-the-mime-type"
+
+\end_inset
+
+)
+\bar default
+---then return values are indeed sent 
+\begin_inset Quotes eld
+\end_inset
+
+as is.
+\begin_inset Quotes erd
+\end_inset
+
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.internal) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.addMediaTypeByName('application/java')
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = ...
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.mediaTypeName == 'application/java') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return data
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.JSON.to(data)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we've added support for 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ only to internal requests, verified using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.internal API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.internal"
+
+\end_inset
+
+.
+ The reason is that we don't want to allow 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ representations over HTTP.
+ (Actually, that 
+\emph on
+could
+\emph default
+ work if the object is itself JVM-serializable, but that's a more advanced
+ use case we won't deal with here.)
+\end_layout
+
+\begin_layout Paragraph
+Under the Hood
+\end_layout
+
+\begin_layout Standard
+When the MIME type is 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+, Prudence is actually wrapping your return value in an 
+\begin_inset CommandInset href
+LatexCommand href
+name "ObjectRepresentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+
+\end_inset
+
+.
+ You can also construct it 
+\bar under
+explicitly (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "restlet-data-extensions"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+return new org.restlet.representation.ObjectRepresentation(data)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, of course, if you return an instance of a class inheriting from
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Representation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html"
+
+\end_inset
+
+, Prudence will detect this and not wrap it again in an 
+\begin_inset CommandInset href
+LatexCommand href
+name "ObjectRepresentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -12208,7 +13603,7 @@ status open
 
 \begin_layout Plain Layout
 
-document.executeOnce('/sincerity/localization/')
+document.require('/sincerity/localization/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -12769,7 +14164,8 @@ Time durations are in milliseconds and data sizes in bytes.
 \begin_layout Itemize
 Durations: numerically as milliseconds, or using 'ms', 's', 'm', 'h' or
  'd' suffixes for milliseconds, seconds, minutes, hours or days.
- Fractions can be used, for example: 
+ Fractions can be used, and are rounded to the nearest millisecond, for
+ example: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -12783,8 +14179,9 @@ Durations: numerically as milliseconds, or using 'ms', 's', 'm', 'h' or
 \begin_layout Itemize
 Data sizes: numerically as bytes, or using 'b', 'kb', 'mb', 'gb' or 'tb'
  suffixes.
- Magnitude uses the binary system: 1kb = 1024b.
- Fractions can be used, for example: 
+ Magnitude uses the binary rather than decimal system: 1kb = 1024b.
+ Fractions can be used, and are rounded to the nearest byte, for example:
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -12796,8 +14193,23 @@ Data sizes: numerically as bytes, or using 'b', 'kb', 'mb', 'gb' or 'tb'
 \end_layout
 
 \begin_layout Standard
-You can accomplish the same trick for your own code using Sincerity.Localization.t
-oMilliseconds and Sincerity.Localization.toBytes.
+You can accomplish the same trick for your own code using 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Localization.toMilliseconds"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Localization&item=Sincerity.Localization.toMilliseconds"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity.Localization.toBytes"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Localization&item=Sincerity.Localization.toBytes"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -12811,10 +14223,26 @@ Information here is meant for humans.
 
 \begin_layout Subsubsection
 app.settings.errors
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-errors"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-How should Prudence deal with errors in your application?
+Uncaught exceptions in your application will automatically set the HTTP
+ response status code to 500 (
+\begin_inset Quotes eld
+\end_inset
+
+internal server error
+\begin_inset Quotes erd
+\end_inset
+
+), but here you can configure the content of the response.
 \end_layout
 
 \begin_layout Standard
@@ -12872,7 +14300,7 @@ debug
 \begin_inset Quotes erd
 \end_inset
 
- is false, a generic error page will be returned instead, using 
+ is false, a generic page will be returned instead, using 
 \begin_inset Quotes eld
 \end_inset
 
@@ -12913,6 +14341,13 @@ reference "app-errors"
 
 \begin_layout Subsubsection
 app.settings.code
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-code"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -14964,8 +16399,8 @@ target "http://threecrickets.com/scripturian/manual/faq/"
 .
 \end_layout
 
-\begin_layout Subsubsection
-Prudence or Node.js?
+\begin_layout Subsubsection*
+How is Prudence different from Node.js?
 \begin_inset CommandInset label
 LatexCommand label
 name "prudence-vs-node-js"
@@ -15436,6 +16871,57 @@ Summary
 Choose the right tool for the job! Node.js is a great choice for streaming
  and streaming-like services, and Prudence---we hope you'll agree---is a
  great choice for web services and RESTful APIs.
+\end_layout
+
+\begin_layout Subsubsection*
+Is REST better than RPC?
+\begin_inset CommandInset label
+LatexCommand label
+name "rest-vs-rpc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Well, it's not 
+\emph on
+necessarily
+\emph default
+ better.
+ One important advantage is that it works inside the already-existing, already-d
+eployed infrastructure of the World Wide Web, meaning that you can immediately
+ benefit from a wide range of optimized functionality.
+ We discuss this in greater detail in 
+\bar under
+The Case for REST (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+But we don't advocate REST for every project.
+ See 
+\bar under
+this discussion (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "do-you-really-need-rest"
+
+\end_inset
+
+)
+\bar default
+ for one reason why RPC may be more appropriate.
+ Choose the right tool for the job!
 \end_layout
 
 \begin_layout Part
@@ -16250,7 +17736,7 @@ Our example presenter is
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/presenters/user.js
+/libraries/presenters/user-comments.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -16297,7 +17783,7 @@ Presenters.UserComments = function(conversation) {
 
 \begin_layout Plain Layout
 
-	this.handleInit = function {
+	this.handleInit = function(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
@@ -16406,7 +17892,7 @@ function getView(view, context) {
 
 \begin_layout Plain Layout
 
-        uri: '/views/' + uri + '/',
+        uri: '/views/' + view + '/',
 \end_layout
 
 \begin_layout Plain Layout
@@ -16624,7 +18110,7 @@ status open
 
 \begin_layout Plain Layout
 
-document.require('/presenters/user/')
+document.require('/presenters/user-comments/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -16651,6 +18137,18 @@ resources = {
 
 \end_layout
 
+\begin_layout Standard
+Test by pointing your web browser to 
+\begin_inset Quotes eld
+\end_inset
+
+/user/Linus/comments/
+\begin_inset Quotes erd
+\end_inset
+
+ under your application's base URL.
+\end_layout
+
 \begin_layout Subsection
 Implications for Caching
 \end_layout
@@ -16669,17 +18167,543 @@ views
 \emph on
 internal
 \emph default
- one, not the external one, which hits the presenter.
+ one, not the external one, which actually hits the presenter.
  If there are attributes of the external request that you want to use for
  the cache key pattern, then you must transfer them manually.
 \end_layout
 
 \begin_layout Subsection
-Custom Dispatchers
+RESTful Models
 \end_layout
 
 \begin_layout Standard
-TODO
+In our MVC implementation above, we've implemented our models as classes
+ (OOP).
+ However, it may make sense to implement them as RESTful resources instead.
+\end_layout
+
+\begin_layout Standard
+Doing so allows for powerful deployment flexibility: it would be possible
+ to decouple the model layer entirely, over HTTP.
+ For example, you could have 
+\begin_inset Quotes eld
+\end_inset
+
+model servers
+\begin_inset Quotes erd
+\end_inset
+
+ running at one data center, close to the database servers, while 
+\begin_inset Quotes eld
+\end_inset
+
+presentation servers
+\begin_inset Quotes erd
+\end_inset
+
+ run elsewhere, providing the direct responses to users.
+ The presenters would be calling the models using secured HTTP requests,
+ instead of function calls.
+\end_layout
+
+\begin_layout Standard
+Even if you're not planning for such flexibility at the moment, it might
+ still be a good idea to allow for it in the future.
+ Until then, you could optimize by treating the model layer as an 
+\bar under
+internal API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+, which makes it about as fast as function calls.
+\end_layout
+
+\begin_layout Standard
+There are two potential downsides to a RESTful model layer.
+ First, there's the added programming complexity: it's easier to create
+ a class than a resource.
+ Second, RESTful resources are limited to four verbs: though GET/POST/PUT/DELETE
+ might be enough for most CRUD operations, it can prove harder to design
+ a RESTful URI-space for complex 
+\begin_inset Quotes eld
+\end_inset
+
+business logic.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A good compromise, if necessary, can be to still use HTTP, just not RESTfully:
+ use Remote Procedure Call (RPC) instead.
+ We discuss this option in the 
+\bar under
+URI-space architecture tips (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "do-you-really-need-rest"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Let's look at a RESTful example.
+ For simplicity, we'll use a mapped resource, 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/models/person.m.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/models/user/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/sincerity/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.internal) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.addMediaTypeByName('application/java')
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var person = Models.getPerson(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+	var result = {
+\end_layout
+
+\begin_layout Plain Layout
+
+		username: person.getUsername(),
+\end_layout
+
+\begin_layout Plain Layout
+
+		comments: person.getComments().get()
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return conversation.mediaTypeName == 'application/java' ? result : Sincerity.JSON.
+to(result)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handlePost(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var payload = Sincerity.JSON.from(conversation.entity.text)
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (payload.comment) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var person = Models.getPerson(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+		person.getComments().add(comment)
+\end_layout
+
+\begin_layout Plain Layout
+
+		var result = {
+\end_layout
+
+\begin_layout Plain Layout
+
+			username: person.getUsername(),
+\end_layout
+
+\begin_layout Plain Layout
+
+			comments: person.getComments().get()
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		return conversation.mediaTypeName == 'application/java' ? result : Sincerity.JSO
+N.to(result)
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 400
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we've 
+\bar under
+optimized for internal requests (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoid-serialization-for-internal-requests"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+We would then modify our presenter like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Presenters.UserComments = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.handleGet = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+		var person = getModel('person/' + encodeURIComponent(name))
+\end_layout
+
+\begin_layout Plain Layout
+
+		return getView('comments', {person: person})
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.handlePost = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+		var comment = conversation.form.get('comment')
+\end_layout
+
+\begin_layout Plain Layout
+
+		var person = postModel('person/' + encodeURIComponent(name), {comment:
+ comment})
+\end_layout
+
+\begin_layout Plain Layout
+
+		return getView('comments', {person: person})
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function getModel(model) {
+\end_layout
+
+\begin_layout Plain Layout
+
+   return Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+        uri: '/models/' + model + '/',
+\end_layout
+
+\begin_layout Plain Layout
+
+        internal: true
+\end_layout
+
+\begin_layout Plain Layout
+
+    })
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function postModel(model, payload) {
+\end_layout
+
+\begin_layout Plain Layout
+
+   return Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+        uri: '/models/' + model + '/',
+\end_layout
+
+\begin_layout Plain Layout
+
+        internal: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+        method: 'post'
+\end_layout
+
+\begin_layout Plain Layout
+
+        payload: {
+\end_layout
+
+\begin_layout Plain Layout
+
+            type: 'object',
+\end_layout
+
+\begin_layout Plain Layout
+
+            value: payload
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+    })
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We've assumed an internal request here, but it's easy to change it to an
+ external request if the model layer runs elsewhere on the network.
+\end_layout
+
+\begin_layout Standard
+Finally, here's our addition to routing.js, using 
+\bar under
+capture-and-hide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-and-hide"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/models/person/{name}/': '/models/person/!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -16713,6 +18737,17 @@ TODO
 \end_layout
 
 \begin_layout Subsection
+startup
+\begin_inset CommandInset label
+LatexCommand label
+name "startup"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Task API
 \begin_inset CommandInset label
 LatexCommand label
@@ -16739,7 +18774,48 @@ name "filtering"
 \end_layout
 
 \begin_layout Standard
-TODO
+In Prudence, 
+\begin_inset Quotes eld
+\end_inset
+
+filters
+\begin_inset Quotes erd
+\end_inset
+
+ are route types used to add effects to resources.
+ Though you can often code the same effect directly into a resource, filters
+ are decoupled from resources, allowing you to reuse the filter on many
+ resources, which is especially useful with for 
+\bar under
+mapping route types (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mapping-route-types"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Furthermore, filters are the 
+\emph on
+only 
+\emph default
+way to add effects to 
+\bar under
+static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+, which cannot themselves be programmed.
 \end_layout
 
 \begin_layout Subsection
@@ -17332,7 +19408,15 @@ resourceScheme
  parameter).
  However, if the application behaves mostly the same for HTTP and HTTPS,
  but differs only in a few specific resources, it may be useful to check
- for HTTPS programatically.
+ for HTTPS programmatically, via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.reference.schemeProtocol API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+
+\end_inset
+
+.
  For example:
 \end_layout
 
@@ -18054,6 +20138,22 @@ Nginx
 
 \begin_layout Subsubsection
 Apache
+\end_layout
+
+\begin_layout Subsubsection
+The 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ Header
+\end_layout
+
+\begin_layout Standard
+conversation.request.hostRef
 \end_layout
 
 \begin_layout Subsection
@@ -20291,6 +22391,13 @@ on stability.
 
 \begin_layout Subsubsection
 Cache Warming
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-cache-warming"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -20346,6 +22453,26 @@ Consider mechanisms to make sure that your warmer does not overload your
 \begin_layout Enumerate
 If the scope is very large, you will have to pick and choose which pages
  to warm up.
+ In Prudence, this is supported via 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-preheat"
+
+\end_inset
+
+)
+\bar default
+.
  You would want to choose only the most popular pages, in which case you
  might need a system to record and measure popularity.
  For example, for a blog, it's not enough just to warm up, say, the last
@@ -20483,28 +22610,6 @@ any, foreign keys, recursive tree structures, graphs, etc.) such that a change
 \begin_layout Standard
 By all means, cache your data structures if you can't easily cache your
  output, but be aware of the challenge!
-\end_layout
-
-\begin_layout Quote
-Prudence's sister project, Diligence, is designed specifically to solve
- this problem.
- It not only caches your data structures, but it validates them in memory
- using your coded logic, instead of invalidating them and forcing them to
- be re-fetched from the database.
- It supports data structures commonly used with relational databases, pluggable
- storage technologies, high-performance resource pooling and throttling,
- and natural integration with Prudence.
- Together, 
-\begin_inset CommandInset href
-LatexCommand href
-name "Diligence and Prudence"
-target "http://threecrickets.com/diligenceandprudence/"
-
-\end_inset
-
- form a solid platform for building scalable, data-backed web applications.
- At the time of this writing, Diligence is still under development.
- We hope to release it as open source soon, so stay tuned!
 \end_layout
 
 \begin_layout Subsubsection
