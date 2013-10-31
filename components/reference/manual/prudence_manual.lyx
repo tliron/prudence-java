@@ -737,7 +737,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	javascript: '/manual-resources/'
+	javascript: '/resources/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -1040,6 +1040,13 @@ dispatch or
 
 @
 \begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "dispatch-route-type"
+
 \end_inset
 
 
@@ -3776,7 +3783,7 @@ Resource capturing lets you use any public URI for any library scriptlet
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scriptlet-resources/
+/libraries/includes/
 \begin_inset Quotes erd
 \end_inset
 
@@ -3893,7 +3900,7 @@ URI rewriting
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scriptlet-resources/
+/libraries/includes/
 \begin_inset Quotes erd
 \end_inset
 
@@ -3954,6 +3961,8 @@ reference "resource-capturing"
 \begin_layout Standard
 Configuring a dispatch is straightforward.
  In routing.js, use the 
+\bar under
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -3961,7 +3970,16 @@ dispatch
 \begin_inset Quotes erd
 \end_inset
 
- route type configuration, or the 
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "dispatch-route-type"
+
+\end_inset
+
+)
+\bar default
+, or the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4008,10 +4026,131 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-The IDs must each be unique in your application.
- You must furthermore configure your dispatchers.
- There is one dispatcher per programming language, and JavaScript is the
- default dispatcher.
+The long-form notation, with all the settings at their default, would look
+ like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/session/{sessionId}/': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'dispatch',
+\end_layout
+
+\begin_layout Plain Layout
+
+		id: 'session',
+\end_layout
+
+\begin_layout Plain Layout
+
+		dispatcher: 'javascript',
+\end_layout
+
+\begin_layout Plain Layout
+
+		locals: []
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, similarly to capturing, you can 
+\bar under
+inject conversation attributes (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-conversation-attributes"
+
+\end_inset
+
+)
+\bar default
+ into the ID.
+ For example, here we will automatically use a different dispatch ID according
+ the protocol, either 
+\begin_inset Quotes eld
+\end_inset
+
+session.HTTP
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+session.HTTPS
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/session/{sessionId}/': '@session.{p}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You must also configure your dispatchers.
+ There is one dispatcher per programming language.
  We can configure it like so:
 \end_layout
 
@@ -4027,7 +4166,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	javascript: '/manual-resources/'
+	javascript: '/resources/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -4045,7 +4184,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-/manual-resources/
+/resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -4062,7 +4201,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/manual-resources.js
+/libraries/resources.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -4216,8 +4355,8 @@ user
 \end_layout
 
 \begin_layout Standard
-As you can see, the manual-resources.js file does not refer to URIs, but
- instead to dispatch IDs, which you can dispatch as you see fit.
+As you can see, the resources.js file does not refer to URIs, but instead
+ to dispatch IDs, which you can dispatch as you see fit.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4227,8 +4366,8 @@ Inversion of Control
 \begin_layout Standard
 Object-oriented inheritance is one useful way to reuse code while allowing
  for special implementations.
- Additionally, Prudence allows for a straightforward IoC (Inversion of Control)
- mechanism.
+ Additionally, Prudence allows for a straightforward Inversion of Control
+ (IoC) mechanism.
 \end_layout
 
 \begin_layout Standard
@@ -4244,7 +4383,7 @@ reference "conversation-locals"
 )
 \bar default
 .
- You would need to use the long-form configuration to do this:
+ You would need to use the long-form notation to do this:
 \end_layout
 
 \begin_layout Standard
@@ -4959,8 +5098,20 @@ reference "resource-dispatching"
 )
 \bar default
 .
- Here we'll delve into more details and see how to create your own custom
+ Here we'll delve into more details and see how to configure your own custom
  dispatchers.
+ Custom dispatchers are very useful for 
+\bar under
+integrating alternative templating engines (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "view-templates"
+
+\end_inset
+
+)
+\bar default
+ into Prudence.
 \end_layout
 
 \begin_layout Standard
@@ -5207,6 +5358,21 @@ app.dispatchers = {
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+See the section on 
+\bar under
+integrating alternative templating engines (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "view-templates"
+
+\end_inset
+
+)
+\bar default
+ for a complete example.
 \end_layout
 
 \begin_layout Subsection
@@ -10757,7 +10923,7 @@ Note the
 \begin_inset Quotes erd
 \end_inset
 
- URL encoding for the space character.
+ URI encoding for the space character.
  Query params will be automatically decoded by Prudence.
 \end_layout
 
@@ -14701,6 +14867,97 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 .
 \end_layout
 
+\begin_layout Standard
+An example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		webm: 'video/webm',
+\end_layout
+
+\begin_layout Plain Layout
+
+		msh: 'model/mesh'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Note for PHP
+\series default
+: You may notice that the 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ template's settings.js sets the 
+\begin_inset Quotes eld
+\end_inset
+
+text/html
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type for the 
+\begin_inset Quotes eld
+\end_inset
+
+php
+\begin_inset Quotes erd
+\end_inset
+
+ extension.
+ The reason for this is that 
+\begin_inset Quotes eld
+\end_inset
+
+.php
+\begin_inset Quotes erd
+\end_inset
+
+ files you put in resources are usually expected to output HTML.
+ You may change if you require a different behavior.
+\end_layout
+
 \begin_layout Subsubsection
 app.globals
 \begin_inset CommandInset label
@@ -17477,7 +17734,7 @@ reference "scriptlet-resources"
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scriptlet-resources/views/
+/libraries/includes/views/
 \begin_inset Quotes erd
 \end_inset
 
@@ -17579,7 +17836,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scriptlet-resources/views/comments.html
+/libraries/includes/views/comments.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -17698,6 +17955,13 @@ var comments = person.getComments().get()
 
 \begin_layout Subsubsection
 Presenters
+\begin_inset CommandInset label
+LatexCommand label
+name "mvc-presenters"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -17974,7 +18238,7 @@ We can request URIs that are hidden: in this case, anything under
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scriptlet-resources/
+/libraries/includes/
 \begin_inset Quotes erd
 \end_inset
 
@@ -18078,7 +18342,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	'javascript': '/manual-resources/'
+	'javascript': '/resources/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -18096,7 +18360,7 @@ And here's our
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/manual-resources.js
+/libraries/resources.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -18149,7 +18413,7 @@ Test by pointing your web browser to
  under your application's base URL.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Implications for Caching
 \end_layout
 
@@ -18170,6 +18434,622 @@ internal
  one, not the external one, which actually hits the presenter.
  If there are attributes of the external request that you want to use for
  the cache key pattern, then you must transfer them manually.
+\end_layout
+
+\begin_layout Subsection
+View Templates
+\begin_inset CommandInset label
+LatexCommand label
+name "view-templates"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One size does not fit all.
+ Almost every web framework comes with its own solution to templating, with
+ its own idiosyncratic syntax and set of features, manifesting its own templatin
+g philosophy.
+ As you've probably picked up, Prudence's philosophy is that the programmer
+ knows best: scriptlets should be able do 
+\emph on
+anything
+\emph default
+, and the programmer doesn't need to be 
+\begin_inset Quotes eld
+\end_inset
+
+protected
+\begin_inset Quotes erd
+\end_inset
+
+ from bad decisions via a dumbed-down, sandboxed templating domain language.
+\end_layout
+
+\begin_layout Standard
+There are two common counter-arguments, which we don't think are very convincing.
+\end_layout
+
+\begin_layout Standard
+The first is that the people designing the templates might not, in fact,
+ know best: they might not be proficient programmers, but instead web designers
+ who specialize in HTML/CSS coding and testing.
+ They would be able to deal with a few inserted template codes, but not
+ a full-blown programming language.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+real
+\begin_inset Quotes erd
+\end_inset
+
+ programmers would be writing the controllers/presenters, and injecting
+ values into the templates according to the web designers' needs.
+ This argument carries less validity than it used to: proficient web designers
+ these days need to know JavaScript, and if they can handle client-side
+ JavaScript, they should be able to handle server-side JavaScript, too.
+ Will they need to learn some new things? Yes, but learning a new templating
+ language is no trivial task, either.
+\end_layout
+
+\begin_layout Standard
+The second counter-argument is about discipline: even competent programmers
+ might be tempted to make 
+\begin_inset Quotes eld
+\end_inset
+
+shortcuts,
+\begin_inset Quotes erd
+\end_inset
+
+ and insert 
+\begin_inset Quotes eld
+\end_inset
+
+business logic
+\begin_inset Quotes erd
+\end_inset
+
+ into what should be purely a 
+\begin_inset Quotes eld
+\end_inset
+
+view.
+\begin_inset Quotes erd
+\end_inset
+
+ This would short-circuit the MVC separation and create hard-to-manage 
+\begin_inset Quotes eld
+\end_inset
+
+spaghetti
+\begin_inset Quotes erd
+\end_inset
+
+ code.
+ A restricted templating language could, then, enforce this discipline.
+ This seems like a brutal solution: programmers get annoyed if their own
+ platforms don't trust them, and in any case can circumvent these restrictions
+ by writing plugins that would then do what they need.
+ But the real issue is that discipline should be handled as a social issue
+ of project management, not by tools.
+\end_layout
+
+\begin_layout Standard
+In any case, we won't force our philosophy on you: Prudence has built in
+ support for two templating engines, and it's easy to plug in a wide range
+ of alternative templating engines into Prudence.
+ If you're familiar and comfortable with a particular one, use it.
+\end_layout
+
+\begin_layout Standard
+There are many great templating engines you can use.
+ The best performing and most minimal solutions are pure JVM libraries:
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "StringTemplate"
+target "http://www.stringtemplate.org/"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "Thymeleaf"
+target "http://www.thymeleaf.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Snippetory"
+target "http://www.jproggy.org/snippetory/"
+
+\end_inset
+
+.
+ However, the most popular ones use other languages, for example 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jinja2"
+target "http://jinja.pocoo.org/docs/"
+
+\end_inset
+
+ for Python.
+ Below are examples per each type.
+\end_layout
+
+\begin_layout Standard
+The technique we'll show for using both types is the same: writing a 
+\bar under
+custom dispatcher (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-dispatchers"
+
+\end_inset
+
+)
+\bar default
+, so make sure you understand what it is before continue to read.
+\end_layout
+
+\begin_layout Subsubsection
+StringTemplate Example
+\end_layout
+
+\begin_layout Standard
+For this example, we chose 
+\begin_inset CommandInset href
+LatexCommand href
+name "StringTemplate"
+target "http://www.stringtemplate.org/"
+
+\end_inset
+
+: it's very minimal, and stringently espouses a philosophy entirely opposite
+ to Prudence's: proof that Prudence is not forcing you into a paradigm!
+ We'll of course use the Java/JVM port, though note that StringTemplate
+ is also ported to other languages.
+\end_layout
+
+\begin_layout Standard
+Download the StringTemplate binary Jar and place it in your container's
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/jars/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+\end_layout
+
+\begin_layout Standard
+We'll be writing our custom dispatcher in JavaScript, because it works well
+ enough with JVM libraries.
+ Here's our application's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/dispatchers/st.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handlePost(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (!conversation.internal) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return 404
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = conversation.locals.get('com.threecrickets.prudence.dispatcher.id')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var st = getDir().getInstanceOf(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (null === st) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return 404
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	var context = conversation.entity.object
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (null !== context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		for (var key in context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			var value = context[key]
+\end_layout
+
+\begin_layout Plain Layout
+
+			for (var v in value) {
+\end_layout
+
+\begin_layout Plain Layout
+
+				st.add(key, value[v])
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return st.render()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function getDir() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var dir = new org.stringtemplate.v4.STRawGroupDir(application.root + '/libraries/te
+mplates/')
+\end_layout
+
+\begin_layout Plain Layout
+
+	dir.delimiterStartChar = '$'
+\end_layout
+
+\begin_layout Plain Layout
+
+	dir.delimiterStopChar = '$'
+\end_layout
+
+\begin_layout Plain Layout
+
+	return dir
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The StringTemplate API is very simple to use, and it should be clear what's
+ going on.
+ The ID is used directly as the template name, and we are injecting the
+ 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+ payload as the template's context.
+ One point of interest: we are treating the context as a dict in which the
+ values are arrays.
+ This is because StringTemplate supports multiple values per key.
+ An example payload:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\begin_layout Plain Layout
+
+	name: ['Linus'],
+\end_layout
+
+\begin_layout Plain Layout
+
+	comments: ['Hi there!', 'How are you?']
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we've allowed only internal requests through: we want this dispatcher
+ hidden from the public URI space, because it should only accessed by our
+ presenters.
+\end_layout
+
+\begin_layout Standard
+Now for our routing.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/views/*': '@st:{rr}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See how we've 
+\bar under
+injected the wildcard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-the-wildcard"
+
+\end_inset
+
+)
+\bar default
+: this means that a URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/views/hello
+\begin_inset Quotes erd
+\end_inset
+
+ would translate to the ID 
+\begin_inset Quotes eld
+\end_inset
+
+hello
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Let's create a template for that, 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/templates/hello.st
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+Hello, $name$!
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Presenters would work the same as in the 
+\bar under
+MVC tutorial (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc-presenters"
+
+\end_inset
+
+)
+\bar default
+.
+ Just note the format for the 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+ payload as discussed above.
+\end_layout
+
+\begin_layout Paragraph
+Caching?
+\end_layout
+
+\begin_layout Standard
+Not with StringTemplate, unfortunately.
+ Its brutal rejection of any kind of programming logic in templates means
+ that you can't even create a plugin to support caching.
+ Your only option would be to use an 
+\bar under
+upstream cache (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-upstream-caching"
+
+\end_inset
+
+)
+\bar default
+.
+ In our next example, we'll be using a 
+\begin_inset Quotes eld
+\end_inset
+
+softer
+\begin_inset Quotes erd
+\end_inset
+
+ engine that allows for that.
+\end_layout
+
+\begin_layout Subsubsection
+Jinja2 Example
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Jinja2"
+target "http://jinja.pocoo.org/docs/"
+
+\end_inset
+
+ mimics the popular template syntax of the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Django framework"
+target "https://www.djangoproject.com/"
+
+\end_inset
+
+ as an embeddable engine.
 \end_layout
 
 \begin_layout Subsection
@@ -18255,6 +19135,10 @@ reference "do-you-really-need-rest"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsubsection
+Tutorial
 \end_layout
 
 \begin_layout Standard
@@ -21035,7 +21919,7 @@ Move
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/scriptlet-resources
+/libraries/includes
 \begin_inset Quotes erd
 \end_inset
 
@@ -22829,6 +23713,13 @@ reference "../manual/static-web/|cache-control-filter"
 
 \begin_layout Subsubsection
 Upstream Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "scaling-tips-upstream-caching"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

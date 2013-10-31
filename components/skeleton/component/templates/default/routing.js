@@ -21,10 +21,10 @@ app.routes = {
 		}
 	],
 
-	'/example1/': '@example', // see /libraries/manual-resources/example.js
-	'/example2/': '/example/'  // see /libraries/scriptlet-resources/example.html
+	'/example1/': '@example', // see /libraries/resources/example.js
+	'/example2/': '/example/'  // see /libraries/includes/example.html
 }
 
 app.dispatchers = {
-	javascript: '/manual-resources/'
+	javascript: '/resources/'
 }

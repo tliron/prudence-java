@@ -52,6 +52,8 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 				return "(print (or (.. conversation getLocals (get " + ScripturianUtil.doubleQuotedLiteral( content.trim() ) + ")) \"\"))";
 			else if( PHP.equals( language ) )
 				return "print($conversation->locals->get(" + ScripturianUtil.doubleQuotedLiteral( content.trim() ) + ")||\"\");";
+			else if( LUA.equals( language ) )
+				return "print(conversation:getLocals():get(" + ScripturianUtil.doubleQuotedLiteral( content.trim() ) + ")or\"\");";
 		}
 		else if( "{{".equals( code ) )
 		{
@@ -68,6 +70,8 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 				return "(.startCapture document " + ScripturianUtil.doubleQuotedLiteral( content.trim() ) + ")";
 			else if( PHP.equals( language ) )
 				return "$document->startCapture(" + ScripturianUtil.doubleQuotedLiteral( content.trim() ) + ");";
+			else if( LUA.equals( language ) )
+				return "document:startCapture(" + ScripturianUtil.doubleQuotedLiteral( content.trim() ) + ");";
 		}
 		else if( "}}".equals( code ) )
 		{
@@ -84,6 +88,8 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 				return "(.endCapture document)";
 			else if( PHP.equals( language ) )
 				return "$document->endCapture();";
+			else if( LUA.equals( language ) )
+				return "document:endCapture();";
 		}
 
 		return "";
@@ -103,4 +109,6 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 	private static final String CLOJURE = "Clojure";
 
 	private static final String PHP = "PHP";
+
+	private static final String LUA = "Lua";
 }

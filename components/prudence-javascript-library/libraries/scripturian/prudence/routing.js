@@ -1008,7 +1008,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/scriptlet-resources']
+	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/includes']
 	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
 	 * @param {String} [preExtension='s']
 	 * @param {Boolean} [trailingSlashRequired=true]
@@ -1044,7 +1044,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					this.root = Sincerity.Files.build(app.root, this.root)
 				}
 				
-				this.includeRoot = Sincerity.Objects.ensure(this.includeRoot, ['libraries', 'scriptlet-resources'])
+				this.includeRoot = Sincerity.Objects.ensure(this.includeRoot, ['libraries', 'includes'])
 				if (!(this.includeRoot instanceof File)) {
 					this.includeRoot = Sincerity.Files.build(app.root, this.includeRoot)
 				}
@@ -1110,7 +1110,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				// Common libraries
 				if (!Sincerity.Objects.exists(app.commonScriptletDocumentSource)) {
-					var library = sincerity.container.getFile('libraries', 'prudence-scriptlet-resources')
+					var library = sincerity.container.getFile('libraries', 'prudence-includes')
 					app.commonScriptletDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
 					app.commonScriptletDocumentSource = app.commonScriptletDocumentSource
 				}
@@ -1271,7 +1271,8 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public.create = function(app, uri) {
 			importClass(
 				com.threecrickets.prudence.util.Injector,
-				com.threecrickets.prudence.util.CapturingRedirector)
+				com.threecrickets.prudence.util.CapturingRedirector,
+				org.restlet.routing.Template)
 				
 			/*if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				throw new SincerityException('A Manual must be attached before a Dispatch can be created')
@@ -1280,7 +1281,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			var dispatcher = app.getDispatcher(this.dispatcher)
 	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.uri + '?{rq}', false)
 			var injector = new Injector(app.context, capture)
-			injector.values.put('com.threecrickets.prudence.dispatcher.id', this.id)
+			injector.values.put('com.threecrickets.prudence.dispatcher.id', new Template(this.id))
 
 			// Extra locals
 			if (Sincerity.Objects.exists(this.locals)) {

@@ -1,5 +1,5 @@
 
-require 'manual-resources/ruby/person.rb'
+require 'resources/ruby/person.rb'
 
 $resources = {
   'person' => Person.new

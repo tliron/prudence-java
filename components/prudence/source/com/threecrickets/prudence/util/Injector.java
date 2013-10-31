@@ -1,5 +1,6 @@
 package com.threecrickets.prudence.util;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -8,11 +9,15 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.routing.Filter;
+import org.restlet.routing.Template;
 
 /**
  * A {@link Filter} that adds values to the request attributes before moving to
  * the next restlet. It allows for a straightforward implementation of IoC
  * (Inversion of Control).
+ * <p>
+ * If values are of class {@link Template}, then they will be cast using the
+ * request and response before added.
  * 
  * @author Tal Liron
  */
@@ -89,7 +94,14 @@ public class Injector extends Filter
 	@Override
 	protected int beforeHandle( Request request, Response response )
 	{
-		request.getAttributes().putAll( values );
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
+		for( Map.Entry<String, Object> entry : values.entrySet() )
+		{
+			Object value = entry.getValue();
+			if( value instanceof Template )
+				value = ( (Template) value ).format( request, response );
+			attributes.put( entry.getKey(), value );
+		}
 		return CONTINUE;
 	}
 

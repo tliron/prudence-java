@@ -35,13 +35,13 @@ app.routes = {
 }
 
 app.dispatchers = {
-	javascript: '/manual-resources/javascript/',
-	python:     '/manual-resources/python/',
-	ruby:       '/manual-resources/ruby/',
-	php:        '/manual-resources/php/',
-	lua:        '/manual-resources/lua/',
-	groovy:     '/manual-resources/groovy/',
-	clojure:    '/manual-resources/clojure/'
+	javascript: '/resources/javascript/',
+	python:     '/resources/python/',
+	ruby:       '/resources/ruby/',
+	php:        '/resources/php/',
+	lua:        '/resources/lua/',
+	groovy:     '/resources/groovy/',
+	clojure:    '/resources/clojure/'
 }
 
 //

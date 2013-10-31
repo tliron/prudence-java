@@ -1,5 +1,5 @@
 
-document.require('/manual-resources/example/')
+document.require('/resources/example/')
 
 resources = {
 	example: new ExampleResource()
