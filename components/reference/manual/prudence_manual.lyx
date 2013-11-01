@@ -14398,6 +14398,10 @@ name "settings-errors"
 
 \end_layout
 
+\begin_layout Paragraph
+Exceptions
+\end_layout
+
 \begin_layout Standard
 Uncaught exceptions in your application will automatically set the HTTP
  response status code to 500 (
@@ -14503,6 +14507,88 @@ reference "app-errors"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Paragraph
+Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-errors-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ is true, special HTTP headers will be added to caching 
+\bar under
+scriptlet resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache
+\series default
+: the cache event, either 
+\begin_inset Quotes eld
+\end_inset
+
+hit
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+miss
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache-Expiration
+\series default
+: a timestamp in standard HTTP format
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache-Key
+\series default
+: the cache key
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache-Tags
+\series default
+: comma-separated list of cache tags
 \end_layout
 
 \begin_layout Subsubsection
@@ -17836,7 +17922,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/includes/views/comments.html
+/libraries/includes/views/user/comments.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -17984,23 +18070,11 @@ reference "manual-resources"
 )
 \bar default
  offer a bit more flexibility, so we will choose them for our example.
- We'll put them under 
+ Our example presenter is in 
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/presenters/
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Our example presenter is 
-\begin_inset Quotes eld
-\end_inset
-
-/libraries/presenters/user-comments.js
+/resources/user/comments.m.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -18024,7 +18098,12 @@ document.require(
 
 \begin_layout Plain Layout
 
-	'/prudence/resources/')
+	'/prudence/resources/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/sincerity/objects/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -18033,7 +18112,22 @@ document.require(
 
 \begin_layout Plain Layout
 
-var Presenters = Presenters || {}
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('text/plain')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \begin_layout Plain Layout
@@ -18042,97 +18136,61 @@ var Presenters = Presenters || {}
 
 \begin_layout Plain Layout
 
-Presenters.UserComments = function(conversation) {
+function handleGet(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-	this.handleInit = function(conversation) {
+	var name = conversation.locals.get('name')
 \end_layout
 
 \begin_layout Plain Layout
 
-		conversation.addMediaTypeByName('text/html')
+	var person = Models.getPerson(name)
 \end_layout
 
 \begin_layout Plain Layout
 
-		conversation.addMediaTypeByName('text/plain')
+	return getView('user/comments', {person: person})
 \end_layout
 
 \begin_layout Plain Layout
 
-	}
+}
 \end_layout
 
 \begin_layout Plain Layout
 
-	
 \end_layout
 
 \begin_layout Plain Layout
 
-	this.handleGet = function(conversation) {
+function handlePost(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-		var name = conversation.locals.get('name')
+	var name = conversation.locals.get('name')
 \end_layout
 
 \begin_layout Plain Layout
 
-		var person = Models.getPerson(name)
+	var comment = conversation.form.get('comment')
 \end_layout
 
 \begin_layout Plain Layout
 
-		return getView('comments', {person: person})
+	var person = Models.getPerson(name)
 \end_layout
 
 \begin_layout Plain Layout
 
-	}
+	person.getComments().add(comment)
 \end_layout
 
 \begin_layout Plain Layout
 
-	
-\end_layout
-
-\begin_layout Plain Layout
-
-	this.handlePost = function(conversation) {
-\end_layout
-
-\begin_layout Plain Layout
-
-		var name = conversation.locals.get('name')
-\end_layout
-
-\begin_layout Plain Layout
-
-		var comment = conversation.form.get('comment')
-\end_layout
-
-\begin_layout Plain Layout
-
-		var person = Models.getPerson(name)
-\end_layout
-
-\begin_layout Plain Layout
-
-		person.getComments().add(comment)
-\end_layout
-
-\begin_layout Plain Layout
-
-		return getView('comments', {person: person})
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
+	return getView('user/comments', {person: person})
 \end_layout
 
 \begin_layout Plain Layout
@@ -18286,24 +18344,8 @@ not
  serialized.
 \end_layout
 
-\begin_layout Subsubsection
-Routing
-\end_layout
-
 \begin_layout Standard
-We're using standard 
-\bar under
-resource dispatching (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "resource-dispatching"
-
-\end_inset
-
-)
-\bar default
-.
- Here's our routing.js:
+Here's our routing.js entry for the presenter:
 \end_layout
 
 \begin_layout Standard
@@ -18323,26 +18365,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/user/{name}/comments/': '@user.comments'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-app.dispatchers = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	'javascript': '/resources/'
+	'/user/{name}/comments/': '/user/comments!'
 \end_layout
 
 \begin_layout Plain Layout
@@ -18356,53 +18379,23 @@ app.dispatchers = {
 \end_layout
 
 \begin_layout Standard
-And here's our 
-\begin_inset Quotes eld
+Note the use of 
+\bar under
+capture-and-hide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-and-hide"
+
 \end_inset
 
-/libraries/resources.js
-\begin_inset Quotes erd
-\end_inset
-
-:
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-document.require('/presenters/user-comments/')
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-resources = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	'user.comments': new Presenters.UserComments()
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Test by pointing your web browser to 
+Voila.
+ Test your new MVC application by pointing your web browser to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -18620,8 +18613,28 @@ target "http://www.stringtemplate.org/"
 \end_layout
 
 \begin_layout Standard
-Download the StringTemplate binary Jar and place it in your container's
- 
+It's available on Maven Central, so you can install it in your container
+ using Sincerity:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity attach maven-central : add org.antlr ST4 : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Otherwise, you can also download the binary Jar from the StringTemplate
+ site and place it in your container's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -18633,9 +18646,7 @@ Download the StringTemplate binary Jar and place it in your container's
 \end_layout
 
 \begin_layout Standard
-We'll be writing our custom dispatcher in JavaScript, because it works well
- enough with JVM libraries.
- Here's our application's 
+Here's our application's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -18653,12 +18664,26 @@ status open
 
 \begin_layout Plain Layout
 
+document.require('/sincerity/objects/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
 function handleInit(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
 	conversation.addMediaTypeByName('text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('text/plain')
 \end_layout
 
 \begin_layout Plain Layout
@@ -18692,7 +18717,22 @@ function handlePost(conversation) {
 
 \begin_layout Plain Layout
 
-	var id = conversation.locals.get('com.threecrickets.prudence.dispatcher.id')
+	var id = String(conversation.locals.get('com.threecrickets.prudence.dispatcher.id'))
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (id.endsWith('/')) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		id = id.substring(0, id.length - 1)
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
 \end_layout
 
 \begin_layout Plain Layout
@@ -18702,7 +18742,7 @@ function handlePost(conversation) {
 
 \begin_layout Plain Layout
 
-	if (null === st) {
+	if (!Sincerity.Objects.exists(st)) {
 \end_layout
 
 \begin_layout Plain Layout
@@ -18717,32 +18757,67 @@ function handlePost(conversation) {
 
 \begin_layout Plain Layout
 
-	var context = conversation.entity.object
+	if (Sincerity.Objects.exists(conversation.entity)) {
 \end_layout
 
 \begin_layout Plain Layout
 
-	if (null !== context) {
+		var context = conversation.entity.object
 \end_layout
 
 \begin_layout Plain Layout
 
-		for (var key in context) {
+		if (Sincerity.Objects.exists(conversation.context)) {
 \end_layout
 
 \begin_layout Plain Layout
 
-			var value = context[key]
+			for (var key in context) {
 \end_layout
 
 \begin_layout Plain Layout
 
-			for (var v in value) {
+				var value = context[key]
 \end_layout
 
 \begin_layout Plain Layout
 
-				st.add(key, value[v])
+				if (Sincerity.Objects.isArray(value)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+					for (var v in value) {
+\end_layout
+
+\begin_layout Plain Layout
+
+						st.add(key, value[v])
+\end_layout
+
+\begin_layout Plain Layout
+
+					}
+\end_layout
+
+\begin_layout Plain Layout
+
+				}
+\end_layout
+
+\begin_layout Plain Layout
+
+				else {
+\end_layout
+
+\begin_layout Plain Layout
+
+					st.add(key, value)
+\end_layout
+
+\begin_layout Plain Layout
+
+				}
 \end_layout
 
 \begin_layout Plain Layout
@@ -18781,8 +18856,8 @@ function getDir() {
 
 \begin_layout Plain Layout
 
-	var dir = new org.stringtemplate.v4.STRawGroupDir(application.root + '/libraries/te
-mplates/')
+	var dir = new org.stringtemplate.v4.STRawGroupDir(application.root + '/libraries/vi
+ews/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -18811,58 +18886,55 @@ mplates/')
 \end_layout
 
 \begin_layout Standard
-The StringTemplate API is very simple to use, and it should be clear what's
- going on.
- The ID is used directly as the template name, and we are injecting the
- 
+The StringTemplate API is very straightforward and this code should be easy
+ to follow.
+ Notes:
+\end_layout
+
+\begin_layout Itemize
+We've allowed only internal requests through: we want to hide this dispatcher
+ from the public URI space because it should only accessed by our presenters.
+\end_layout
+
+\begin_layout Itemize
+We're stripping trailing slashes from the ID because STRawGroupDir doesn't
+ support them.
+\end_layout
+
+\begin_layout Itemize
+We've switched to the older 
 \begin_inset Quotes eld
 \end_inset
 
-POST
+$
 \begin_inset Quotes erd
 \end_inset
 
- payload as the template's context.
- One point of interest: we are treating the context as a dict in which the
- values are arrays.
- This is because StringTemplate supports multiple values per key.
- An example payload:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-{
-\end_layout
-
-\begin_layout Plain Layout
-
-	name: ['Linus'],
-\end_layout
-
-\begin_layout Plain Layout
-
-	comments: ['Hi there!', 'How are you?']
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
+ delimiters because the default 
+\begin_inset Quotes eld
 \end_inset
 
+<
+\begin_inset Quotes erd
+\end_inset
 
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+>
+\begin_inset Quotes erd
+\end_inset
+
+ delimiters are awkward to use with HTML.
 \end_layout
 
-\begin_layout Standard
-Note that we've allowed only internal requests through: we want this dispatcher
- hidden from the public URI space, because it should only accessed by our
- presenters.
+\begin_layout Itemize
+STRawGroupDir does not pick up template file changes on-the-fly, so we're
+ recreating it per request.
+ Because it caches compiled templates, it would be more efficient to make
+ it a global, but they you would have to find an alternative way for invalidatin
+g it for live application edits.
 \end_layout
 
 \begin_layout Standard
@@ -18894,6 +18966,40 @@ app.routes = {
 }
 \end_layout
 
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	st: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		dispatcher: '/dispatchers/st/'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
 \end_inset
 
 
@@ -18911,11 +19017,19 @@ reference "injecting-the-wildcard"
 
 )
 \bar default
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+{rr}
+\begin_inset Quotes erd
+\end_inset
+
 : this means that a URI such as 
 \begin_inset Quotes eld
 \end_inset
 
-/views/hello
+/views/hello/
 \begin_inset Quotes erd
 \end_inset
 
@@ -18928,11 +19042,14 @@ hello
 \end_inset
 
 .
- Let's create a template for that, 
+\end_layout
+
+\begin_layout Standard
+Let's create our template, 
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/templates/hello.st
+/libraries/views/user/comments.st
 \begin_inset Quotes erd
 \end_inset
 
@@ -18956,7 +19073,22 @@ status open
 
 \begin_layout Plain Layout
 
-Hello, $name$!
+	<p>These are the comments for user: $username$</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<table>
+\end_layout
+
+\begin_layout Plain Layout
+
+		$comments:{c | <tr><td>$c$</td></tr>}$
+\end_layout
+
+\begin_layout Plain Layout
+
+	</table>
 \end_layout
 
 \begin_layout Plain Layout
@@ -18975,7 +19107,139 @@ Hello, $name$!
 \end_layout
 
 \begin_layout Standard
-Presenters would work the same as in the 
+Note the use of an anonymous template (a lambda).
+ As an alternative, we can also use named templates, which we can to group
+ into reusable libraries.
+ This is easy to do with 
+\begin_inset CommandInset href
+LatexCommand href
+name "group files"
+target "http://www.antlr.org/wiki/display/ST4/Group+file+syntax"
+
+\end_inset
+
+.
+ With that, here's an alternative definition of the above, saved as 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/views/user.stg
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+comments(username, comments) ::= <<
+\end_layout
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>These are the comments for user: $username$</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<table>
+\end_layout
+
+\begin_layout Plain Layout
+
+		$comments:row()$
+\end_layout
+
+\begin_layout Plain Layout
+
+	</table>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\begin_layout Plain Layout
+
+>>
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+row(content) ::= <<
+\end_layout
+
+\begin_layout Plain Layout
+
+<tr><td>$content$</td></tr>
+\end_layout
+
+\begin_layout Plain Layout
+
+>>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that STRawGroupDir treats these 
+\begin_inset Quotes eld
+\end_inset
+
+.stg
+\begin_inset Quotes erd
+\end_inset
+
+ files as if they were a directory with multiple files when you look up
+ an ID., so the URI to access 
+\begin_inset Quotes eld
+\end_inset
+
+comments
+\begin_inset Quotes erd
+\end_inset
+
+ would be the same in both cases: 
+\begin_inset Quotes eld
+\end_inset
+
+/views/users/comments/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Finally, our presenters would work the same as in the 
 \bar under
 MVC tutorial (page 
 \begin_inset CommandInset ref
@@ -18987,15 +19251,52 @@ reference "mvc-presenters"
 )
 \bar default
 .
- Just note the format for the 
-\begin_inset Quotes eld
+ The only change would be to flatten out the contexts for StringTemplate
+ to use:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var person = Models.getPerson(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+return getView('comments', {
+\end_layout
+
+\begin_layout Plain Layout
+
+	username: person.getUsername(),
+\end_layout
+
+\begin_layout Plain Layout
+
+	comments: person.getComments().get()
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
 \end_inset
 
-POST
-\begin_inset Quotes erd
-\end_inset
 
- payload as discussed above.
+\end_layout
+
+\begin_layout Standard
+That's it!
 \end_layout
 
 \begin_layout Paragraph
@@ -19018,15 +19319,8 @@ reference "scaling-tips-upstream-caching"
 )
 \bar default
 .
- In our next example, we'll be using a 
-\begin_inset Quotes eld
-\end_inset
-
-softer
-\begin_inset Quotes erd
-\end_inset
-
- engine that allows for that.
+ In our next example, we'll be using a more flexible engine that allows
+ for that.
 \end_layout
 
 \begin_layout Subsubsection
@@ -19041,7 +19335,8 @@ target "http://jinja.pocoo.org/docs/"
 
 \end_inset
 
- mimics the popular template syntax of the 
+ is an embeddable engine that mimics the well-known template syntax of the
+ 
 \begin_inset CommandInset href
 LatexCommand href
 name "Django framework"
@@ -19049,7 +19344,1165 @@ target "https://www.djangoproject.com/"
 
 \end_inset
 
- as an embeddable engine.
+.
+ We'll go over its basic integration into Prudence, and also show you how
+ to write plugins to take advantage of Prudence's 
+\bar under
+caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+First we need to install the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Python plugin"
+target "http://threecrickets.com/sincerity/ecosystem/language-plugins/#python-plugin"
+
+\end_inset
+
+ and Jinja2 in our container:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add python : install : easy_install Jinja2==2.6 simplejson
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We're also installing the 
+\begin_inset CommandInset href
+LatexCommand href
+name "simplejson"
+target "http://simplejson.readthedocs.org/"
+
+\end_inset
+
+ library, because Jython doesn't come with the JSON support we'll need (more
+ on that later).
+\end_layout
+
+\begin_layout Quote
+Note that Jinja2 version 2.7 doesn't work in Jython (might be fixed for version
+ 2.8), but version 2.6 does, so that's what we'll use here.
+\end_layout
+
+\begin_layout Standard
+For our dispatcher, we will do something a bit different from before.
+ Because we want to support caching of templates, we will want it actual
+ template renderer as a 
+\bar under
+scriptlet resource (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+.
+ The dispatcher, then, will simply delegate to that scriptlet resource.
+ Another change is that we'll be writing it in Python.
+ So, here's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/dispatchers/jinja.py
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+import simplejson, urllib
+\end_layout
+
+\begin_layout Plain Layout
+
+from org.restlet.representation import ObjectRepresentation
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def handle_init(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.addMediaTypeByName('text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.addMediaTypeByName('text/plain')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def handle_post(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+    if not conversation.internal:
+\end_layout
+
+\begin_layout Plain Layout
+
+        return 404
+\end_layout
+
+\begin_layout Plain Layout
+
+    id = conversation.locals['com.threecrickets.prudence.dispatcher.id']
+\end_layout
+
+\begin_layout Plain Layout
+
+    if id[-1] == '/':
+\end_layout
+
+\begin_layout Plain Layout
+
+        id = id[0:-1]
+\end_layout
+
+\begin_layout Plain Layout
+
+    id += '.html'
+\end_layout
+
+\begin_layout Plain Layout
+
+    context = {}
+\end_layout
+
+\begin_layout Plain Layout
+
+    if conversation.entity:
+\end_layout
+
+\begin_layout Plain Layout
+
+        if conversation.entity.mediaType.name == 'application/java':
+\end_layout
+
+\begin_layout Plain Layout
+
+            context = conversation.entity.object
+\end_layout
+
+\begin_layout Plain Layout
+
+        else:
+\end_layout
+
+\begin_layout Plain Layout
+
+            context = conversation.entity.text
+\end_layout
+
+\begin_layout Plain Layout
+
+            if context:
+\end_layout
+
+\begin_layout Plain Layout
+
+                context = simplejson.loads(context)
+\end_layout
+
+\begin_layout Plain Layout
+
+    payload = ObjectRepresentation({
+\end_layout
+
+\begin_layout Plain Layout
+
+        'context': context,
+\end_layout
+
+\begin_layout Plain Layout
+
+        'uri': str(conversation.reference),
+\end_layout
+
+\begin_layout Plain Layout
+
+        'base_uri': str(conversation.reference.baseRef)})
+\end_layout
+
+\begin_layout Plain Layout
+
+    resource = document.internal('/jinja-template/' + urllib.quote(id, '')
+ + '/', 'text/html')
+\end_layout
+
+\begin_layout Plain Layout
+
+    result = resource.post(payload)
+\end_layout
+
+\begin_layout Plain Layout
+
+    if not result:
+\end_layout
+
+\begin_layout Plain Layout
+
+        return 404
+\end_layout
+
+\begin_layout Plain Layout
+
+    return result.text
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Notes:
+\end_layout
+
+\begin_layout Itemize
+We've allowed only internal requests through: we want to hide this dispatcher
+ from the public URI space because it should only accessed by our presenters.
+\end_layout
+
+\begin_layout Itemize
+Jinja2's FileSystemLoader requires the full filename, so we're stripping
+ trailing slashes and adding 
+\begin_inset Quotes eld
+\end_inset
+
+.html
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We're forwarding a few useful attributes of the request: the original URI
+ and the original base URI.
+\end_layout
+
+\begin_layout Itemize
+We're supporting 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ payloads (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoid-serialization-for-internal-requests"
+
+\end_inset
+
+)
+\bar default
+, but also JSON payloads.
+ Avoiding serialization is fine for Python-to-Python calls, but if we call
+ from another programming language---say, JavaScript---the native structures
+ are not compatible.
+ Thus, we're allowing the use of JSON as an interchange format.
+ When we send the payload to 
+\begin_inset Quotes eld
+\end_inset
+
+/jinja-template/
+\begin_inset Quotes erd
+\end_inset
+
+, it's find to send an object, because it's Python-to-Python.
+\end_layout
+
+\begin_layout Standard
+Our scriptlet resource is 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/jinja-template.s.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+import urllib
+\end_layout
+
+\begin_layout Plain Layout
+
+from jinja2 import Environment, FileSystemLoader
+\end_layout
+
+\begin_layout Plain Layout
+
+from jinja2.exceptions import TemplateNotFound
+\end_layout
+
+\begin_layout Plain Layout
+
+from os import sep
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+id = urllib.unquote(conversation.locals['id'])
+\end_layout
+
+\begin_layout Plain Layout
+
+payload = conversation.entity.object
+\end_layout
+
+\begin_layout Plain Layout
+
+context = payload['context']
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+loader = application.globals['jinaj2.loader']
+\end_layout
+
+\begin_layout Plain Layout
+
+if not loader:
+\end_layout
+
+\begin_layout Plain Layout
+
+    loader = FileSystemLoader(application.root.path + sep + 'libraries' +
+ sep + 'views')
+\end_layout
+
+\begin_layout Plain Layout
+
+    loader = application.getGlobal('jinja2.loaded', loader)
+\end_layout
+
+\begin_layout Plain Layout
+
+env = Environment(loader=loader)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+try:
+\end_layout
+
+\begin_layout Plain Layout
+
+    template = env.get_template(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+    print template.render(context)
+\end_layout
+
+\begin_layout Plain Layout
+
+except TemplateNotFound:
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.statusCode = 404
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Jinja2 API is very straightforward and this code should be easy to follow.
+ Note that we're caching the FileSystemLoader as an application.global: because
+ it can pick up our changes on-the-fly and cache them, it's eminently reusable.
+\end_layout
+
+\begin_layout Standard
+Now for our routing.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/views/*': '@jinja:{rr}',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/jinja-template/{id}/': '/jinja-template/!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	jinja: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		dispatcher: '/dispatchers/jinja/'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See how we've 
+\bar under
+injected the wildcard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injecting-the-wildcard"
+
+\end_inset
+
+)
+\bar default
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+{rr}
+\begin_inset Quotes erd
+\end_inset
+
+: this means that a URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/views/hello/
+\begin_inset Quotes erd
+\end_inset
+
+ would translate to the ID 
+\begin_inset Quotes eld
+\end_inset
+
+hello
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let's create our template, 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/views/user/comments.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>These are the comments for user: {{username}}</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<table>
+\end_layout
+
+\begin_layout Plain Layout
+
+{% for comment in comments %}
+\end_layout
+
+\begin_layout Plain Layout
+
+		<tr><td>{{comment}}</td></tr>
+\end_layout
+
+\begin_layout Plain Layout
+
+{% endfor %}
+\end_layout
+
+\begin_layout Plain Layout
+
+	</table>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, we need to make a small change to our 
+\bar under
+presenter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc-presenters"
+
+\end_inset
+
+)
+\bar default
+ in order to send JSON payloads (if we were writing it in Python, we could
+ optimize by sending 
+\begin_inset Quotes eld
+\end_inset
+
+object
+\begin_inset Quotes erd
+\end_inset
+
+ payloads):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function getView(view, context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+   var page = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+        uri: '/views/' + view + '/',
+\end_layout
+
+\begin_layout Plain Layout
+
+        internal: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+        method: 'post',
+\end_layout
+
+\begin_layout Plain Layout
+
+        mediaType: 'text/*',
+\end_layout
+
+\begin_layout Plain Layout
+
+        payload: {
+\end_layout
+
+\begin_layout Plain Layout
+
+            type: 'json',
+\end_layout
+
+\begin_layout Plain Layout
+
+            value: context
+\end_layout
+
+\begin_layout Plain Layout
+
+        }
+\end_layout
+
+\begin_layout Plain Layout
+
+    })
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.Objects.exists(page) ? page : 404
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That's it!
+\end_layout
+
+\begin_layout Paragraph
+Custom Tags
+\end_layout
+
+\begin_layout Standard
+It's fairly easy to add custom tags to Jinja2.
+ Let's add some to support Prudence caching, as well as the useful 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.base API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.base"
+
+\end_inset
+
+.
+ Here's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/jinja_extensions.py
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+from jinja2 import nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+from jinja2.ext import Extension
+\end_layout
+
+\begin_layout Plain Layout
+
+from org.restlet.data import Reference
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+class Prudence(Extension):
+\end_layout
+
+\begin_layout Plain Layout
+
+    # a set of names that trigger the extension
+\end_layout
+
+\begin_layout Plain Layout
+
+    tags = set(['current_uri', 'application_uri', 'to_base', 'cache_duration',
+ 'cache_tags'])
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    def __init__(self, environment):
+\end_layout
+
+\begin_layout Plain Layout
+
+        super(Prudence, self).__init__(environment)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        # add the defaults to the environment
+\end_layout
+
+\begin_layout Plain Layout
+
+        environment.extend(
+\end_layout
+
+\begin_layout Plain Layout
+
+            prudence_document=None,
+\end_layout
+
+\begin_layout Plain Layout
+
+            prudence_uri=None,
+\end_layout
+
+\begin_layout Plain Layout
+
+            prudence_base_uri=None
+\end_layout
+
+\begin_layout Plain Layout
+
+        )
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    def parse(self, parser):
+\end_layout
+
+\begin_layout Plain Layout
+
+        token = parser.stream.next()
+\end_layout
+
+\begin_layout Plain Layout
+
+        tag = token.value
+\end_layout
+
+\begin_layout Plain Layout
+
+        lineno = token.lineno
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+        if tag == 'current_uri':
+\end_layout
+
+\begin_layout Plain Layout
+
+            return _print(self.environment.prudence_uri, lineno)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        elif tag == 'application_uri':
+\end_layout
+
+\begin_layout Plain Layout
+
+            return _print(self.environment.prudence_base_uri, lineno)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        elif tag == 'to_base':
+\end_layout
+
+\begin_layout Plain Layout
+
+            base = Reference(self.environment.prudence_base_uri)
+\end_layout
+
+\begin_layout Plain Layout
+
+            reference = Reference(base, self.environment.prudence_uri)
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+            # Reverse relative path to the base
+\end_layout
+
+\begin_layout Plain Layout
+
+            relative = base.getRelativeRef(reference).path
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+            return _print(relative, lineno)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        elif tag == 'cache_duration':
+\end_layout
+
+\begin_layout Plain Layout
+
+            duration = parser.parse_expression().as_const()
+\end_layout
+
+\begin_layout Plain Layout
+
+            self.environment.prudence_document.cacheDuration = duration
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        elif tag == 'cache_tags':
+\end_layout
+
+\begin_layout Plain Layout
+
+            tags = [parser.parse_expression().as_const()]
+\end_layout
+
+\begin_layout Plain Layout
+
+            while parser.stream.skip_if('comma'):
+\end_layout
+
+\begin_layout Plain Layout
+
+                tags.append(parser.parse_expression().as_const())
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+            cache_tags = self.environment.prudence_document.cacheTags
+\end_layout
+
+\begin_layout Plain Layout
+
+            for tag in tags:
+\end_layout
+
+\begin_layout Plain Layout
+
+                cache_tags.add(tag)
+\end_layout
+
+\begin_layout Plain Layout
+
+            
+\end_layout
+
+\begin_layout Plain Layout
+
+        return _print('', lineno)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def _print(text, lineno):
+\end_layout
+
+\begin_layout Plain Layout
+
+    return nodes.Output([nodes.TemplateData(text)]).set_lineno(lineno)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We'll then modify our 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/jinja-template.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ to use this extension:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+env = Environment(loader=loader, extensions=['jinja_extensions.Prudence'])
+\end_layout
+
+\begin_layout Plain Layout
+
+env.prudence_document = document
+\end_layout
+
+\begin_layout Plain Layout
+
+env.prudence_uri = payload['uri']
+\end_layout
+
+\begin_layout Plain Layout
+
+env.prudence_base_uri = payload['base_uri']
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+document.cacheKeyPattern = '{ri}|{id}'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We've set up the extension using the attributes forwarded from the dispatcher,
+ and also declared a reasonable cache key pattern.
+\end_layout
+
+\begin_layout Standard
+Here's a simple template to test the extensions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>This page is cached for 5 seconds.</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>current_uri = {% current_uri %}</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>application_uri = {% application_uri %}</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>to_base = {% to_base %}</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+{% cache_duration 5000 %}
+\end_layout
+
+\begin_layout Plain Layout
+
+{% cache_tags 'tag1', 'tag2' %}
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -19364,12 +20817,27 @@ status open
 
 \begin_layout Plain Layout
 
-Presenters.UserComments = function(conversation) {
+function handleGet(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-	...
+	var name = conversation.locals.get('name')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var person = getModel('person/' + encodeURIComponent(name))
+\end_layout
+
+\begin_layout Plain Layout
+
+	return getView('comments', {person: person})
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \begin_layout Plain Layout
@@ -19378,63 +20846,28 @@ Presenters.UserComments = function(conversation) {
 
 \begin_layout Plain Layout
 
-	this.handleGet = function(conversation) {
+function handlePost(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-		var name = conversation.locals.get('name')
+	var name = conversation.locals.get('name')
 \end_layout
 
 \begin_layout Plain Layout
 
-		var person = getModel('person/' + encodeURIComponent(name))
+	var comment = conversation.form.get('comment')
 \end_layout
 
 \begin_layout Plain Layout
 
-		return getView('comments', {person: person})
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
-\end_layout
-
-\begin_layout Plain Layout
-
-	
-\end_layout
-
-\begin_layout Plain Layout
-
-	this.handlePost = function(conversation) {
-\end_layout
-
-\begin_layout Plain Layout
-
-		var name = conversation.locals.get('name')
-\end_layout
-
-\begin_layout Plain Layout
-
-		var comment = conversation.form.get('comment')
-\end_layout
-
-\begin_layout Plain Layout
-
-		var person = postModel('person/' + encodeURIComponent(name), {comment:
+	var person = postModel('person/' + encodeURIComponent(name), {comment:
  comment})
 \end_layout
 
 \begin_layout Plain Layout
 
-		return getView('comments', {person: person})
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
+	return getView('comments', {person: person})
 \end_layout
 
 \begin_layout Plain Layout
@@ -19546,7 +20979,7 @@ We've assumed an internal request here, but it's easy to change it to an
 \end_layout
 
 \begin_layout Standard
-Finally, here's our addition to routing.js, using 
+Here's our addition to routing.js, using 
 \bar under
 capture-and-hide (page 
 \begin_inset CommandInset ref

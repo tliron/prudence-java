@@ -457,6 +457,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	private static final String CACHE_ENTRY_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheEntry";
 
 	/**
+	 * Cache header.
+	 */
+	private static final String CACHE_HEADER = "X-Cache";
+
+	/**
 	 * Cache key header.
 	 */
 	private static final String CACHE_KEY_HEADER = "X-Cache-Key";
@@ -817,45 +822,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		if( ( writer != null ) && ( cacheEntry.getString() != null ) )
 			writer.write( cacheEntry.getString() );
 
-		Series<Header> headers = cacheEntry.getHeaders();
-
-		// Cache debug header
-		if( attributes.isCacheDebug() )
-		{
-			if( headers == null )
-				headers = new Series<Header>( Header.class );
-			else
-			{
-				// Copy headers
-				Series<Header> newHeaders = new Series<Header>( Header.class );
-				for( Header header : headers )
-					newHeaders.add( header );
-				headers = newHeaders;
-			}
-
-			SimpleDateFormat format = new SimpleDateFormat( CACHE_EXPIRATION_HEADER_FORMAT );
-			format.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
-
-			headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
-			headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
-
-			Set<String> cacheTags = getCacheTags( executable, false );
-			if( cacheTags != null )
-			{
-				StringBuilder s = new StringBuilder();
-				for( Iterator<String> i = cacheTags.iterator(); i.hasNext(); )
-				{
-					s.append( i.next() );
-					if( i.hasNext() )
-						s.append( ',' );
-				}
-				headers.add( new Header( CACHE_TAGS_HEADER, s.toString() ) );
-			}
-		}
-
-		// Apply headers
-		if( headers != null )
-			this.resource.getResponse().getAttributes().put( ConversationService.HEADERS_ATTRIBUTE, headers );
+		addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable );
 
 		return cacheEntry.represent();
 	}
@@ -1010,6 +977,8 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 								cacheEntry.setTags( tags );
 								cache.store( cacheKey, cacheEntry );
 							}
+
+							addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
 						}
 					}
 				}
@@ -1045,5 +1014,58 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			writer.flush();
 			executionContext.getErrorWriterOrDefault().flush();
 		}
+	}
+
+	/**
+	 * Adds the caching debug headers if enabled.
+	 * 
+	 * @param cacheEntry
+	 *        The cache entry
+	 * @param cacheKey
+	 *        The cache key
+	 * @param executable
+	 *        The executable
+	 */
+	private void addCachingDebugHeaders( String event, CacheEntry cacheEntry, String cacheKey, Executable executable )
+	{
+		if( !attributes.isCacheDebug() )
+			return;
+
+		Series<Header> headers = cacheEntry.getHeaders();
+
+		if( headers == null )
+			headers = new Series<Header>( Header.class );
+		else
+		{
+			// Copy headers
+			Series<Header> newHeaders = new Series<Header>( Header.class );
+			for( Header header : headers )
+				newHeaders.add( header );
+			headers = newHeaders;
+		}
+
+		SimpleDateFormat format = new SimpleDateFormat( CACHE_EXPIRATION_HEADER_FORMAT );
+		format.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+
+		headers.add( new Header( CACHE_HEADER, event ) );
+		headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
+		headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
+
+		Set<String> cacheTags = getCacheTags( executable, false );
+		if( cacheTags != null )
+		{
+			StringBuilder s = new StringBuilder();
+			for( Iterator<String> i = cacheTags.iterator(); i.hasNext(); )
+			{
+				s.append( i.next() );
+				if( i.hasNext() )
+					s.append( ',' );
+			}
+			headers.add( new Header( CACHE_TAGS_HEADER, s.toString() ) );
+		}
+
+		// Apply headers
+		if( headers != null )
+			resource.getResponse().getAttributes().put( ConversationService.HEADERS_ATTRIBUTE, headers );
 	}
 }
