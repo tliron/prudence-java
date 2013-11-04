@@ -35,13 +35,13 @@ app.routes = {
 }
 
 app.dispatchers = {
-	javascript: '/resources/javascript/',
-	python:     '/resources/python/',
-	ruby:       '/resources/ruby/',
-	php:        '/resources/php/',
-	lua:        '/resources/lua/',
-	groovy:     '/resources/groovy/',
-	clojure:    '/resources/clojure/'
+	javascript: '/dispatched/javascript/',
+	python:     '/dispatched/python/',
+	ruby:       '/dispatched/ruby/',
+	php:        '/dispatched/php/',
+	lua:        '/dispatched/lua/',
+	groovy:     '/dispatched/groovy/',
+	clojure:    '/dispatched/clojure/'
 }
 
 //

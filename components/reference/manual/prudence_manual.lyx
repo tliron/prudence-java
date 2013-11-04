@@ -2119,10 +2119,29 @@ next
 \end_inset
 
  param for nesting into another route type.
+ See the 
+\bar under
+filtering guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filtering"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
 filter
+\begin_inset CommandInset label
+LatexCommand label
+name "filter-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2185,22 +2204,17 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filt
 \end_inset
 
  class.
- See the 
-\bar under
-filtering guide (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "filtering"
-
-\end_inset
-
-)
-\bar default
- for a complete discussion.
 \end_layout
 
 \begin_layout Paragraph
 injector
+\begin_inset CommandInset label
+LatexCommand label
+name "injector-route-type"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2733,7 +2747,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Classes"
 
 \end_inset
 
- to create your class, and also inherit from 
+ to create your class (you don't have to), and also inherit from 
 \begin_inset CommandInset href
 LatexCommand href
 name "Prudence.Routing.Restlet"
@@ -2745,7 +2759,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Rest
 \end_layout
 
 \begin_layout Standard
-Here's a complete example in which we implement a route type, 
+Here's a complete example in which we implement a route type, named 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2876,7 +2890,7 @@ app.routes = {
 \end_layout
 
 \begin_layout Subsection
-Routing Paradigms
+Two Routing Paradigms
 \end_layout
 
 \begin_layout Standard
@@ -3033,8 +3047,8 @@ Resource mapping is the most straightforward and most familiar technique
 \end_inset
 
  subdirectory) to the URI-space.
- This is how static web servers, as well as the the PHP, ASP and JSP platforms
- work.
+ This is how static web servers, as well as the PHP, JSP and ASP platforms
+ usually work.
 \end_layout
 
 \begin_layout Standard
@@ -3176,7 +3190,24 @@ name "mapping-uri-templates"
 \end_layout
 
 \begin_layout Standard
-URI templates can be captured into mapped resources.
+The problem with resource mapping is that the URIs are 
+\begin_inset Quotes eld
+\end_inset
+
+static
+\begin_inset Quotes erd
+\end_inset
+
+: they are only and exactly the the directory and file path.
+ However, this limitation is easily overcome by Prudence's 
+\begin_inset Quotes eld
+\end_inset
+
+capturing
+\begin_inset Quotes erd
+\end_inset
+
+ mechanism, which works on URI templates.
  For example, let's say you have a scriptlet resource file at 
 \begin_inset Quotes eld
 \end_inset
@@ -3477,20 +3508,12 @@ single
 also
 \emph default
  a URI template, and can include any of the conversation attributes discussed
- in 
+ in the 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-Injecting Conversation Attributes
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+string interpolation guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-conversation-attributes"
+reference "string-interpolation"
 
 \end_inset
 
@@ -3531,7 +3554,7 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-The 
+The request method name would then be interpolated into the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3539,7 +3562,7 @@ The
 \begin_inset Quotes erd
 \end_inset
 
- variable is injected with the request method name, for example 
+, for example it could be 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3744,11 +3767,21 @@ The URI-space is your public-facing structure, but your internal implementation
 \begin_layout Standard
 These problems might not be relevant to your application.
  But if they are, you may prefer the URI/resource separation paradigm, which
- can be implemented via URI capturing or resource dispatching, documented
- below.
+ can be implemented via resource capturing or dispatching, documented below.
 \end_layout
 
 \begin_layout Subsection
+URI/Resource Separation
+\begin_inset CommandInset label
+LatexCommand label
+name "uri-resource-separatoin"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Resource Capturing
 \begin_inset CommandInset label
 LatexCommand label
@@ -3921,7 +3954,7 @@ Note that it's also possible to
 capture wildcards (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-the-wildcard"
+reference "interpolating-the-wildcard"
 
 \end_inset
 
@@ -3930,7 +3963,7 @@ reference "injecting-the-wildcard"
 .
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Resource Dispatching
 \begin_inset CommandInset label
 LatexCommand label
@@ -4088,10 +4121,10 @@ app.routes = {
 \begin_layout Standard
 Note that, similarly to capturing, you can 
 \bar under
-inject conversation attributes (page 
+interpolate conversation attributes (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-conversation-attributes"
+reference "string-interpolation"
 
 \end_inset
 
@@ -4166,7 +4199,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	javascript: '/resources/'
+	javascript: '/dispatched/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -4184,7 +4217,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-/resources/
+/dispatched/
 \begin_inset Quotes erd
 \end_inset
 
@@ -4201,7 +4234,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/resources.js
+/libraries/dispatched.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -4359,124 +4392,7 @@ As you can see, the resources.js file does not refer to URIs, but instead
  to dispatch IDs, which you can dispatch as you see fit.
 \end_layout
 
-\begin_layout Subsubsection
-Inversion of Control
-\end_layout
-
-\begin_layout Standard
-Object-oriented inheritance is one useful way to reuse code while allowing
- for special implementations.
- Additionally, Prudence allows for a straightforward Inversion of Control
- (IoC) mechanism.
-\end_layout
-
-\begin_layout Standard
-When defining the dispatch, you can also inject set values to 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
-.
- You would need to use the long-form notation to do this:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/user/{userId}/preferences': {type: 'dispatch', id: 'user', locals: {section:
- 'preferences'}},
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/user/{userId}/profile: {type: 'dispatch', id: 'user', locals: {section:
- 'profile'}}
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that both URI templates are dispatched to the exact same ID, but the
- 
-\begin_inset Quotes eld
-\end_inset
-
-locals
-\begin_inset Quotes erd
-\end_inset
-
- dict used is different for each.
- In your resource implementation, you can allow for different behavior according
- to the value of the 
-\begin_inset Quotes eld
-\end_inset
-
-section
-\begin_inset Quotes erd
-\end_inset
-
- 
-\bar under
-conversation.local (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
-.
- This allows you to configure your resource in routing.js, rather from its
- implementation in resource.js.
- In other words, 
-\begin_inset Quotes eld
-\end_inset
-
-control
-\begin_inset Quotes erd
-\end_inset
-
- is 
-\begin_inset Quotes eld
-\end_inset
-
-inverted,
-\begin_inset Quotes erd
-\end_inset
-
- via value injection.
-\end_layout
-
-\begin_layout Subsubsection
+\begin_layout Paragraph
 Other Programming Languages
 \end_layout
 
@@ -4540,6 +4456,203 @@ app.dispatchers = {
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Inversion of Control (IoC)
+\begin_inset CommandInset label
+LatexCommand label
+name "resource-dispatching-ioc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Object-oriented inheritance is one useful way to reuse code while allowing
+ for special implementations.
+ Additionally, Prudence allows for a straightforward 
+\bar under
+Inversion of Control mechanism (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "ioc"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+For both capturing and dispatching, you can inject set values to 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+ You would need to use the long-form notation to do this.
+ Here are examples for both a capture and a dispatch:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/': {type: 'capture', uri: '/user/', locals: {style: 'simple'}},
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/full/': {type: 'capture', uri: '/user/', locals: {style:
+ 'full'}},
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/preferences/': {type: 'dispatch', id: 'user', locals: {section:
+ 'preferences'}},
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/profile/: {type: 'dispatch', id: 'user', locals: {section:
+ 'profile'}}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that in each case two URI templates are captured/matched to the exact
+ same resource, but the 
+\begin_inset Quotes eld
+\end_inset
+
+locals
+\begin_inset Quotes erd
+\end_inset
+
+ dict used is different for each.
+ In your resource implementations, you can then allow for different behavior
+ according to the value of the set 
+\bar under
+conversation.local (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+this.handleGet = function(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var section = conversation.locals.get('section')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (section == 'preferences') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	else if (section == profile') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This allows you to configure your resources in routing.js, rather than at
+ their implementation code.
+ In other words, 
+\begin_inset Quotes eld
+\end_inset
+
+control
+\begin_inset Quotes erd
+\end_inset
+
+ is 
+\begin_inset Quotes eld
+\end_inset
+
+inverted,
+\begin_inset Quotes erd
+\end_inset
+
+ via value injection.
 \end_layout
 
 \begin_layout Subsection
@@ -5086,7 +5199,7 @@ app.dispatchers
 \begin_inset Quotes erd
 \end_inset
 
- has been 
+ has already been 
 \bar under
 discussed above (page 
 \begin_inset CommandInset ref
@@ -5098,9 +5211,22 @@ reference "resource-dispatching"
 )
 \bar default
 .
- Here we'll delve into more details and see how to configure your own custom
- dispatchers.
- Custom dispatchers are very useful for 
+ Here, we'll delve into more advanced configurations.
+\end_layout
+
+\begin_layout Subsubsection
+Custom Dispatchers
+\begin_inset CommandInset label
+LatexCommand label
+name "custom-dispatchers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Custom dispatchers are very useful for 
 \bar under
 integrating alternative templating engines (page 
 \begin_inset CommandInset ref
@@ -5124,8 +5250,18 @@ dispatcher
 \begin_inset Quotes erd
 \end_inset
 
----with an injected value specifying the ID of resource to which it should
- dispatch.
+---with an 
+\bar under
+injected value (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "ioc"
+
+\end_inset
+
+)
+\bar default
+ specifying the ID of resource to which it should dispatch.
 \end_layout
 
 \begin_layout Standard
@@ -5614,745 +5750,6 @@ app.preheat
 \end_inset
 
  can very effective, and it's very easy to use.
-\end_layout
-
-\begin_layout Subsection
-Injecting Conversation Attributes
-\begin_inset CommandInset label
-LatexCommand label
-name "injecting-conversation-attributes"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-As we've seen in the app.routes section above, URI template variables delimited
- by curly brackets can be used to match incoming requests and extract the
- values into 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
-.
- For example, a 
-\begin_inset Quotes eld
-\end_inset
-
-/person/{id}/
-\begin_inset Quotes erd
-\end_inset
-
- URI template will match the 
-\begin_inset Quotes eld
-\end_inset
-
-/person/linus/
-\begin_inset Quotes erd
-\end_inset
-
- URI and set the 
-\begin_inset Quotes eld
-\end_inset
-
-id
-\begin_inset Quotes erd
-\end_inset
-
- 
-\bar under
-conversation.local (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
- to 
-\begin_inset Quotes eld
-\end_inset
-
-linus
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-Template variables can furthermore be used to 
-\emph on
-inject
-\emph default
- values for three use cases:
-\end_layout
-
-\begin_layout Itemize
-Captured URI targets
-\end_layout
-
-\begin_layout Itemize
-Redirection URI targets
-\end_layout
-
-\begin_layout Itemize
-
-\bar under
-Cache keys (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "caching"
-
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Standard
-In each of these cases you can inject the same 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
- that were extracted from the matched URI pattern.
- An example of redirection:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	"/person/{id}/": ">http://newsite.org/profile/?id={id}"
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Prudence furthermore supports many built-in variables extracted from the
- conversation attributes.
- They are summarized below.
- Also see the relevant 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet API documentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Request URIs
-\end_layout
-
-\begin_layout Standard
-The variables are composed of a prefix and a suffix.
- The prefix specifies which URI you are referring to, while the suffix specifies
- the part of that URI.
- For example, the prefix 
-\begin_inset Quotes eld
-\end_inset
-
-{r-}
-\begin_inset Quotes erd
-\end_inset
-
- can be combined with the suffix 
-\begin_inset Quotes eld
-\end_inset
-
-{-i}
-\begin_inset Quotes erd
-\end_inset
-
- for 
-\begin_inset Quotes eld
-\end_inset
-
-{ri}
-\begin_inset Quotes erd
-\end_inset
-
-, to specify the complete request URI.
-\end_layout
-
-\begin_layout Paragraph
-Prefixes
-\end_layout
-
-\begin_layout Itemize
-{r-}: actual URI (
-\bar under
-r
-\bar default
-eference)
-\end_layout
-
-\begin_layout Itemize
-{h-}: virtual 
-\bar under
-h
-\bar default
-ost URI
-\end_layout
-
-\begin_layout Itemize
-{o-}: the application's r
-\bar under
-o
-\bar default
-ot URI on the current virtual host
-\end_layout
-
-\begin_layout Itemize
-{f-}: the re
-\bar under
-f
-\bar default
-erring URI (sent by some clients: usually means that the client clicked
- a hyperlink or was redirected here from elsewhere)
-\end_layout
-
-\begin_layout Paragraph
-Suffixes
-\end_layout
-
-\begin_layout Itemize
-{-i}: the complete URI (
-\bar under
-i
-\bar default
-dentitifer)
-\end_layout
-
-\begin_layout Itemize
-{-h}: the 
-\bar under
-h
-\bar default
-ost identifier (protocol + authority)
-\end_layout
-
-\begin_layout Itemize
-{-a}: the 
-\bar under
-a
-\bar default
-uthority (for URLs, this is the host or IP address)
-\end_layout
-
-\begin_layout Itemize
-{-p}: the 
-\bar under
-p
-\bar default
-ath (everything after the authority)
-\end_layout
-
-\begin_layout Itemize
-{-r}: the 
-\bar under
-r
-\bar default
-emaining part of the path after the base URI (see below)
-\end_layout
-
-\begin_layout Itemize
-{-e}: a r
-\bar under
-e
-\bar default
-lative path from the URI to the application's base URI (see below; note
- that this is a constructed value, not merely a string extracted from the
- URI)
-\end_layout
-
-\begin_layout Itemize
-{-q}: the 
-\bar under
-q
-\bar default
-uery (everything after the 
-\begin_inset Quotes eld
-\end_inset
-
-?
-\begin_inset Quotes erd
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Itemize
-{-f}: the 
-\bar under
-f
-\bar default
-ragment (the tag after the 
-\begin_inset Quotes eld
-\end_inset
-
-#
-\begin_inset Quotes erd
-\end_inset
-
-; note that web browsers handle fragments internally and 
-\emph on
-never
-\emph default
- send them to the server, however fragments may exist in URIs sent 
-\emph on
-from
-\emph default
- the server: see the 
-\begin_inset Quotes eld
-\end_inset
-
-{R-}
-\begin_inset Quotes erd
-\end_inset
-
- variable mentioned below)
-\end_layout
-
-\begin_layout Paragraph
-Base URIs
-\end_layout
-
-\begin_layout Standard
-Every URI also has a 
-\begin_inset Quotes eld
-\end_inset
-
-base
-\begin_inset Quotes erd
-\end_inset
-
- version of it: in the case of wildcard URI templates, it is the URI before
- the wildcard begins.
- Otherwise it is usually the application's root URI on the virtual host.
- It is used in the 
-\begin_inset Quotes eld
-\end_inset
-
-{-r}
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-{-e}
-\begin_inset Quotes erd
-\end_inset
-
- suffixes above.
-\end_layout
-
-\begin_layout Standard
-To refer to the base URI directly, use the special 
-\begin_inset Quotes eld
-\end_inset
-
-{-b-}
-\begin_inset Quotes erd
-\end_inset
-
- midfix, to which you would still need to add one of the above suffixes.
- For example, “{rbi}” refers to the complete base URI of the actual URI.
-\end_layout
-
-\begin_layout Paragraph
-Injecting the Wildcard
-\begin_inset CommandInset label
-LatexCommand label
-name "injecting-the-wildcard"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This is a common use case for redirection.
- According to the rules above, 
-\begin_inset Quotes eld
-\end_inset
-
-*
-\begin_inset Quotes erd
-\end_inset
-
- would be the 
-\begin_inset Quotes eld
-\end_inset
-
-{rr}
-\begin_inset Quotes erd
-\end_inset
-
- variable.
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/assets/*': '/files/media/{rr}'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The above would capture a URI such as 
-\begin_inset Quotes eld
-\end_inset
-
-/assets/images/logo.png
-\begin_inset Quotes erd
-\end_inset
-
- to 
-\begin_inset Quotes eld
-\end_inset
-
-/files/media/images/logo.png
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
-Other Attributes
-\end_layout
-
-\begin_layout Paragraph
-Request Attributes
-\end_layout
-
-\begin_layout Itemize
-{p}: the 
-\bar under
-p
-\bar default
-rotocol (“http,” “https,” “ftp,” etc.)
-\end_layout
-
-\begin_layout Itemize
-{m}: the 
-\bar under
-m
-\bar default
-ethod (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
-\end_layout
-
-\begin_layout Itemize
-{d}: 
-\bar under
-d
-\bar default
-ate (as a Unix timestamp)
-\end_layout
-
-\begin_layout Paragraph
-Client Attributes
-\end_layout
-
-\begin_layout Itemize
-{cia}: 
-\bar under
-c
-\bar default
-l
-\bar under
-i
-\bar default
-ent IP 
-\bar under
-a
-\bar default
-ddress
-\end_layout
-
-\begin_layout Itemize
-{ciua}: 
-\bar under
-c
-\bar default
-l
-\bar under
-i
-\bar default
-ent 
-\bar under
-u
-\bar default
-pstream IP 
-\bar under
-a
-\bar default
-ddress (if the request reached us through an upstream load balancer)
-\end_layout
-
-\begin_layout Itemize
-{cig}: 
-\bar under
-c
-\bar default
-l
-\bar under
-i
-\bar default
-ent a
-\bar under
-g
-\bar default
-ent name (for example, and identifier for the browser)
-\end_layout
-
-\begin_layout Paragraph
-Entity Attributes
-\end_layout
-
-\begin_layout Standard
-All these refer to the data (“entity”) sent by the client.
-\end_layout
-
-\begin_layout Itemize
-{es}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-s
-\bar default
-ize (in bytes)
-\end_layout
-
-\begin_layout Itemize
-{emt}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-m
-\bar default
-edia (MIME) 
-\bar under
-t
-\bar default
-ype
-\end_layout
-
-\begin_layout Itemize
-{ecs}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-c
-\bar default
-haracter 
-\bar under
-s
-\bar default
-et
-\end_layout
-
-\begin_layout Itemize
-{el}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-l
-\bar default
-anguage
-\end_layout
-
-\begin_layout Itemize
-{ee}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-e
-\bar default
-ncoding
-\end_layout
-
-\begin_layout Itemize
-{et}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-t
-\bar default
-ag (HTTP ETag)
-\end_layout
-
-\begin_layout Itemize
-{eed}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-e
-\bar default
-xpiration 
-\bar under
-d
-\bar default
-ate
-\end_layout
-
-\begin_layout Itemize
-{emd}: 
-\bar under
-e
-\bar default
-ntity 
-\bar under
-m
-\bar default
-odification 
-\bar under
-d
-\bar default
-ate
-\end_layout
-
-\begin_layout Paragraph
-Response Attributes
-\end_layout
-
-\begin_layout Standard
-[these are not supported in capturing or other forms of server-side redirection,
- because redirection happens before a response is actually generated.] [useful
- for cache patterns?]
-\end_layout
-
-\begin_layout Standard
-These are all in uppercase to differentiate them from the request variables:
-\end_layout
-
-\begin_layout Itemize
-{S}: the HTTP status code
-\end_layout
-
-\begin_layout Itemize
-{SIA}: server IP address
-\end_layout
-
-\begin_layout Itemize
-{SIP}: server port number
-\end_layout
-
-\begin_layout Itemize
-{SIG}: server agent name
-\end_layout
-
-\begin_layout Itemize
-{R-}: the redirection URI (see 
-\begin_inset Quotes eld
-\end_inset
-
-Request URIs
-\begin_inset Quotes erd
-\end_inset
-
- above for a list of suffixes, which must also be in uppercase)
-\end_layout
-
-\begin_layout Standard
-Additionally, all the entity attributes can be used in uppercase to correspond
- to the response entity.
- For example, 
-\begin_inset Quotes eld
-\end_inset
-
-{ES}
-\begin_inset Quotes erd
-\end_inset
-
- for the response entity size, 
-\begin_inset Quotes eld
-\end_inset
-
-{EMT}
-\begin_inset Quotes erd
-\end_inset
-
- for the response media type, etc.
 \end_layout
 
 \begin_layout Subsection
@@ -11110,10 +10507,10 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \begin_layout Standard
 Note that you can also 
 \bar under
-inject the wildcard in URI templates (page 
+interpolate the wildcard into the target URI (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-the-wildcard"
+reference "interpolating-the-wildcard"
 
 \end_inset
 
@@ -11505,6 +10902,13 @@ reference "restlet-data-extensions"
 
 \begin_layout Subsection
 Cookies
+\begin_inset CommandInset label
+LatexCommand label
+name "cookies"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -11908,10 +11312,10 @@ app.routes = {
 \begin_layout Standard
 Note that in this example we 
 \bar under
-injected the wildcard (page 
+interpolated the wildcard (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-the-wildcard"
+reference "interpolating-the-wildcard"
 
 \end_inset
 
@@ -14089,7 +13493,18 @@ The subdirectory contains five main configuration files:
 settings.js
 \series default
 : This required file, detailed in this chapter, includes settings used by
- Prudence as well as your own custom settings.
+ Prudence as well as 
+\bar under
+your own custom settings (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-globals"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Itemize
@@ -14399,7 +13814,7 @@ name "settings-errors"
 \end_layout
 
 \begin_layout Paragraph
-Exceptions
+Exception Handling
 \end_layout
 
 \begin_layout Standard
@@ -14449,16 +13864,6 @@ debug
  to false for production deployments
 \series default
 .
- Debug mode also enables scriptlet resource debugging: under your container's
- 
-\begin_inset Quotes eld
-\end_inset
-
-/cache/scripturian/
-\begin_inset Quotes erd
-\end_inset
-
- directory you will see the generated source code for each resource.
 \end_layout
 
 \begin_layout Standard
@@ -14589,6 +13994,31 @@ X-Cache-Key
 X-Cache-Tags
 \series default
 : comma-separated list of cache tags
+\end_layout
+
+\begin_layout Paragraph
+Scriptlet
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ is true, scriptlet resource debugging is enabled: under your container's
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/cache/scripturian/
+\begin_inset Quotes erd
+\end_inset
+
+ directory you will see the generated source code for each resource.
 \end_layout
 
 \begin_layout Subsubsection
@@ -15069,10 +14499,22 @@ reference "application-globals"
 )
 \bar default
  when your application is running.
+ Note that Prudence also supports localized settings via 
+\bar under
+inversion of control (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "ioc"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-Note that this dict is 
+This dict is 
 \begin_inset Quotes eld
 \end_inset
 
@@ -15179,6 +14621,41 @@ app.globals = {
 
 \end_layout
 
+\begin_layout Standard
+In your code, you would access these values using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.globals API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.globals"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var driver = application.globals.get('database.driver')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Lazy Initialization
+\end_layout
+
+\begin_layout Standard
+This is an advanced topic.
+\end_layout
+
 \begin_layout Section
 Programming
 \end_layout
@@ -15193,6 +14670,10 @@ JavaScript
 
 \begin_layout Subsection
 Other Languages
+\end_layout
+
+\begin_layout Subsection
+Lazy Initialization
 \end_layout
 
 \begin_layout Subsection
@@ -17272,6 +16753,764 @@ Advanced Manual
 \end_layout
 
 \begin_layout Section
+String Interpolation
+\begin_inset CommandInset label
+LatexCommand label
+name "string-interpolation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Template variables, delimited by curly brackets, can be used to interpolate
+ strings for three use cases:
+\end_layout
+
+\begin_layout Itemize
+Captured URI targets, via the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+capture
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-route-type"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+Redirection URI targets, via the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+redirect
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "redirect-route-type"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Cache keys (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+Prudence supports many built-in variables extracted from the conversation
+ attributes, all summarized below.
+ See also the related 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet API documentation"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Request URIs
+\end_layout
+
+\begin_layout Standard
+These variables are composed of a prefix and a suffix.
+ The prefix specifies which URI you are referring to, while the suffix specifies
+ the part of that URI.
+ For example, the prefix 
+\begin_inset Quotes eld
+\end_inset
+
+{r-}
+\begin_inset Quotes erd
+\end_inset
+
+ can be combined with the suffix 
+\begin_inset Quotes eld
+\end_inset
+
+{-i}
+\begin_inset Quotes erd
+\end_inset
+
+ for 
+\begin_inset Quotes eld
+\end_inset
+
+{ri}
+\begin_inset Quotes erd
+\end_inset
+
+, to specify the complete request URI.
+\end_layout
+
+\begin_layout Subsubsection
+Prefixes
+\end_layout
+
+\begin_layout Itemize
+{r-}: actual URI (
+\bar under
+r
+\bar default
+eference)
+\end_layout
+
+\begin_layout Itemize
+{h-}: virtual 
+\bar under
+h
+\bar default
+ost URI
+\end_layout
+
+\begin_layout Itemize
+{o-}: the application's r
+\bar under
+o
+\bar default
+ot URI on the current virtual host
+\end_layout
+
+\begin_layout Itemize
+{f-}: the re
+\bar under
+f
+\bar default
+erring URI (sent by some clients: usually means that the client clicked
+ a hyperlink or was redirected here from elsewhere)
+\end_layout
+
+\begin_layout Subsubsection
+Suffixes
+\end_layout
+
+\begin_layout Itemize
+{-i}: the complete URI (
+\bar under
+i
+\bar default
+dentitifer)
+\end_layout
+
+\begin_layout Itemize
+{-h}: the 
+\bar under
+h
+\bar default
+ost identifier (protocol + authority)
+\end_layout
+
+\begin_layout Itemize
+{-a}: the 
+\bar under
+a
+\bar default
+uthority (for URLs, this is the host or IP address)
+\end_layout
+
+\begin_layout Itemize
+{-p}: the 
+\bar under
+p
+\bar default
+ath (everything after the authority)
+\end_layout
+
+\begin_layout Itemize
+{-r}: the 
+\bar under
+r
+\bar default
+emaining part of the path after the base URI (see below)
+\end_layout
+
+\begin_layout Itemize
+{-e}: a r
+\bar under
+e
+\bar default
+lative path from the URI to the application's base URI (see below; note
+ that this is a constructed value, not merely a string extracted from the
+ URI)
+\end_layout
+
+\begin_layout Itemize
+{-q}: the 
+\bar under
+q
+\bar default
+uery (everything after the 
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+{-f}: the 
+\bar under
+f
+\bar default
+ragment (the tag after the 
+\begin_inset Quotes eld
+\end_inset
+
+#
+\begin_inset Quotes erd
+\end_inset
+
+; note that web browsers handle fragments internally and 
+\emph on
+never
+\emph default
+ send them to the server, however fragments may exist in URIs sent 
+\emph on
+from
+\emph default
+ the server: see the 
+\begin_inset Quotes eld
+\end_inset
+
+{R-}
+\begin_inset Quotes erd
+\end_inset
+
+ variable mentioned below)
+\end_layout
+
+\begin_layout Subsubsection
+Base URIs
+\end_layout
+
+\begin_layout Standard
+Every URI also has a 
+\begin_inset Quotes eld
+\end_inset
+
+base
+\begin_inset Quotes erd
+\end_inset
+
+ version of it: in the case of wildcard URI templates, it is the URI before
+ the wildcard begins.
+ Otherwise it is usually the application's root URI on the virtual host.
+ It is used in the 
+\begin_inset Quotes eld
+\end_inset
+
+{-r}
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+{-e}
+\begin_inset Quotes erd
+\end_inset
+
+ suffixes above.
+\end_layout
+
+\begin_layout Standard
+To refer to the base URI directly, use the special 
+\begin_inset Quotes eld
+\end_inset
+
+{-b-}
+\begin_inset Quotes erd
+\end_inset
+
+ midfix, to which you would still need to add one of the above suffixes.
+ For example, “{rbi}” refers to the complete base URI of the actual URI.
+\end_layout
+
+\begin_layout Subsubsection
+Interpolating the Wildcard
+\begin_inset CommandInset label
+LatexCommand label
+name "interpolating-the-wildcard"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a common use case for redirection.
+ According to the rules above, 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+ would be the 
+\begin_inset Quotes eld
+\end_inset
+
+{rr}
+\begin_inset Quotes erd
+\end_inset
+
+ variable.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/assets/*': '/files/media/{rr}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above would capture a URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/assets/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+/files/media/images/logo.png
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Request Attributes
+\end_layout
+
+\begin_layout Itemize
+{p}: the 
+\bar under
+p
+\bar default
+rotocol (“http,” “https,” “ftp,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{m}: the 
+\bar under
+m
+\bar default
+ethod (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.)
+\end_layout
+
+\begin_layout Itemize
+{d}: 
+\bar under
+d
+\bar default
+ate (as a Unix timestamp)
+\end_layout
+
+\begin_layout Subsection
+Client Attributes
+\end_layout
+
+\begin_layout Itemize
+{cia}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent IP 
+\bar under
+a
+\bar default
+ddress
+\end_layout
+
+\begin_layout Itemize
+{ciua}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent 
+\bar under
+u
+\bar default
+pstream IP 
+\bar under
+a
+\bar default
+ddress (if the request reached us through an upstream load balancer)
+\end_layout
+
+\begin_layout Itemize
+{cig}: 
+\bar under
+c
+\bar default
+l
+\bar under
+i
+\bar default
+ent a
+\bar under
+g
+\bar default
+ent name (for example, and identifier for the browser)
+\end_layout
+
+\begin_layout Subsection
+Entity Attributes
+\end_layout
+
+\begin_layout Standard
+All these refer to the data (“entity”) sent by the client.
+\end_layout
+
+\begin_layout Itemize
+{es}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+s
+\bar default
+ize (in bytes)
+\end_layout
+
+\begin_layout Itemize
+{emt}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+m
+\bar default
+edia (MIME) 
+\bar under
+t
+\bar default
+ype
+\end_layout
+
+\begin_layout Itemize
+{ecs}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+c
+\bar default
+haracter 
+\bar under
+s
+\bar default
+et
+\end_layout
+
+\begin_layout Itemize
+{el}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+l
+\bar default
+anguage
+\end_layout
+
+\begin_layout Itemize
+{ee}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+e
+\bar default
+ncoding
+\end_layout
+
+\begin_layout Itemize
+{et}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+t
+\bar default
+ag (HTTP ETag)
+\end_layout
+
+\begin_layout Itemize
+{eed}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+e
+\bar default
+xpiration 
+\bar under
+d
+\bar default
+ate
+\end_layout
+
+\begin_layout Itemize
+{emd}: 
+\bar under
+e
+\bar default
+ntity 
+\bar under
+m
+\bar default
+odification 
+\bar under
+d
+\bar default
+ate
+\end_layout
+
+\begin_layout Subsection
+Response Attributes
+\end_layout
+
+\begin_layout Standard
+[these are not supported in capturing or other forms of server-side redirection,
+ because redirection happens before a response is actually generated.] [useful
+ for cache patterns?]
+\end_layout
+
+\begin_layout Standard
+These are all in uppercase to differentiate them from the request variables:
+\end_layout
+
+\begin_layout Itemize
+{S}: the HTTP status code
+\end_layout
+
+\begin_layout Itemize
+{SIA}: server IP address
+\end_layout
+
+\begin_layout Itemize
+{SIP}: server port number
+\end_layout
+
+\begin_layout Itemize
+{SIG}: server agent name
+\end_layout
+
+\begin_layout Itemize
+{R-}: the redirection URI (see 
+\begin_inset Quotes eld
+\end_inset
+
+Request URIs
+\begin_inset Quotes erd
+\end_inset
+
+ above for a list of suffixes, which must also be in uppercase)
+\end_layout
+
+\begin_layout Standard
+Additionally, all the entity attributes can be used in uppercase to correspond
+ to the response entity.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+{ES}
+\begin_inset Quotes erd
+\end_inset
+
+ for the response entity size, 
+\begin_inset Quotes eld
+\end_inset
+
+{EMT}
+\begin_inset Quotes erd
+\end_inset
+
+ for the response media type, etc.
+\end_layout
+
+\begin_layout Subsection
+conversation.locals
+\end_layout
+
+\begin_layout Standard
+As we've seen in the 
+\bar under
+app.routes guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-routes"
+
+\end_inset
+
+)
+\bar default
+, URI templates delimited by curly brackets can be used to match incoming
+ requests and extract the values into 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+ For example, a 
+\begin_inset Quotes eld
+\end_inset
+
+/person/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ URI template will match the 
+\begin_inset Quotes eld
+\end_inset
+
+/person/linus/
+\begin_inset Quotes erd
+\end_inset
+
+ URI and extract 
+\begin_inset Quotes eld
+\end_inset
+
+linus
+\begin_inset Quotes erd
+\end_inset
+
+ into the 
+\begin_inset Quotes eld
+\end_inset
+
+id
+\begin_inset Quotes erd
+\end_inset
+
+ conversation.local.
+\end_layout
+
+\begin_layout Standard
+But you can also do the opposite: interpolate the values that were extracted
+ from the matched URI pattern.
+ An example of redirection that both extracts and interpolates:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	"/person/{id}/": ">http://newsite.org/profile/?id={id}"
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Model-View-Controller (MVC)
 \begin_inset CommandInset label
 LatexCommand label
@@ -18533,13 +18772,25 @@ spaghetti
 
 \begin_layout Standard
 In any case, we won't force our philosophy on you: Prudence has built in
- support for two templating engines, and it's easy to plug in a wide range
- of alternative templating engines into Prudence.
+ support for 
+\bar under
+two templating engines (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "templating-languages"
+
+\end_inset
+
+)
+\bar default
+, and it's easy to plug in a wide range of alternative templating engines
+ into Prudence.
  If you're familiar and comfortable with a particular one, use it.
+ We'll guide you in this section.
 \end_layout
 
 \begin_layout Standard
-There are many great templating engines you can use.
+There are many templating engines you can use.
  The best performing and most minimal solutions are pure JVM libraries:
  
 \begin_inset CommandInset href
@@ -18584,17 +18835,24 @@ The technique we'll show for using both types is the same: writing a
 custom dispatcher (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "app-dispatchers"
+reference "custom-dispatchers"
 
 \end_inset
 
 )
 \bar default
-, so make sure you understand what it is before continue to read.
+, so make sure you understand dispatching before you continue to read.
 \end_layout
 
 \begin_layout Subsubsection
 StringTemplate Example
+\begin_inset CommandInset label
+LatexCommand label
+name "stringtemplate"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -19008,16 +19266,16 @@ app.dispatchers = {
 \begin_layout Standard
 See how we've 
 \bar under
-injected the wildcard (page 
+interpolated the wildcard (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-the-wildcard"
+reference "interpolating-the-wildcard"
 
 \end_inset
 
 )
 \bar default
- with 
+ into 
 \begin_inset Quotes eld
 \end_inset
 
@@ -19325,6 +19583,13 @@ reference "scaling-tips-upstream-caching"
 
 \begin_layout Subsubsection
 Jinja2 Example
+\begin_inset CommandInset label
+LatexCommand label
+name "jinja2"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -19407,7 +19672,7 @@ Note that Jinja2 version 2.7 doesn't work in Jython (might be fixed for version
 
 \begin_layout Standard
 For our dispatcher, we will do something a bit different from before.
- Because we want to support caching of templates, we will want it actual
+ Because we want to support caching of templates, we will want the actual
  template renderer as a 
 \bar under
 scriptlet resource (page 
@@ -19422,7 +19687,7 @@ reference "scriptlet-resources"
 .
  The dispatcher, then, will simply delegate to that scriptlet resource.
  Another change is that we'll be writing it in Python.
- So, here's 
+ Let's start with 
 \begin_inset Quotes eld
 \end_inset
 
@@ -19872,16 +20137,16 @@ app.dispatchers = {
 \begin_layout Standard
 See how we've 
 \bar under
-injected the wildcard (page 
+interpolated the wildcard (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "injecting-the-wildcard"
+reference "interpolating-the-wildcard"
 
 \end_inset
 
 )
 \bar default
- with 
+ into 
 \begin_inset Quotes eld
 \end_inset
 
@@ -20089,15 +20354,8 @@ Custom Tags
 
 \begin_layout Standard
 It's fairly easy to add custom tags to Jinja2.
- Let's add some to support Prudence caching, as well as the useful 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.base API"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.base"
-
-\end_inset
-
-.
+ Let's add some to support Prudence caching, as well as other useful values
+ specific to the conversation.
  Here's 
 \begin_inset Quotes eld
 \end_inset
@@ -20394,7 +20652,7 @@ We'll then modify our
 \begin_inset Quotes erd
 \end_inset
 
- to use this extension:
+ to use our extension:
 \end_layout
 
 \begin_layout Standard
@@ -20422,23 +20680,13 @@ env.prudence_uri = payload['uri']
 env.prudence_base_uri = payload['base_uri']
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-document.cacheKeyPattern = '{ri}|{id}'
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-We've set up the extension using the attributes forwarded from the dispatcher,
- and also declared a reasonable cache key pattern.
+We've set up the extension using the attributes forwarded from the dispatcher.
 \end_layout
 
 \begin_layout Standard
@@ -20467,17 +20715,17 @@ status open
 
 \begin_layout Plain Layout
 
-<p>current_uri = {% current_uri %}</p>
+<p><b>current_uri</b> = {% current_uri %}</p>
 \end_layout
 
 \begin_layout Plain Layout
 
-<p>application_uri = {% application_uri %}</p>
+<p><b>application_uri</b> = {% application_uri %}</p>
 \end_layout
 
 \begin_layout Plain Layout
 
-<p>to_base = {% to_base %}</p>
+<p><b>to_base</b> = {% to_base %}</p>
 \end_layout
 
 \begin_layout Plain Layout
@@ -21099,10 +21347,21 @@ filters
 \begin_inset Quotes erd
 \end_inset
 
- are route types used to add effects to resources.
+ are 
+\bar under
+route types (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filtering-route-types"
+
+\end_inset
+
+)
+\bar default
+ used to add effects to resources.
  Though you can often code the same effect directly into a resource, filters
  are decoupled from resources, allowing you to reuse the filter on many
- resources, which is especially useful with for 
+ resources, which is especially useful with 
 \bar under
 mapping route types (page 
 \begin_inset CommandInset ref
@@ -21135,19 +21394,1065 @@ reference "static-resources"
 , which cannot themselves be programmed.
 \end_layout
 
-\begin_layout Subsection
-How Routing Works
+\begin_layout Standard
+Because it's easy to enable and disable filters just by editing routing.js,
+ filters are often used for debugging and testing effects.
 \end_layout
 
 \begin_layout Subsection
-Injection
+Tutorial
+\end_layout
+
+\begin_layout Standard
+Filters are implemented similarly to 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+: as source code files (in any supported language) with either or both filter
+ entry points: handleBefore and handleAfter.
+ The former is called before all requests reach the next route type, and
+ the latter is called after they finish their processing.
+\end_layout
+
+\begin_layout Standard
+Let's start with configuring our filter, using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+filter
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filter-route-type"
+
+\end_inset
+
+)
+\bar default
+ in routing.js.
+ We'll put it in front of all our main resources:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'filter',
+\end_layout
+
+\begin_layout Plain Layout
+
+		library: '/my-filter/',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: [
+\end_layout
+
+\begin_layout Plain Layout
+
+			'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+		]
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now let's create the actual filter in 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/my-filter.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+ We'll start with a trivial handleAfter implementation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleAfter(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.logger.info('We got a request for a resource at: ' + conversation.refe
+rence)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Our filter doesn't do much, but it's easy to test that the code is being
+ called by looking at the log.
+ But of course you can do many other things here, as detailed in the examples
+ below.
+ Many of the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation APIs"
+target "http://threecrickets.com/api/javascript/?namespace=conversation"
+
+\end_inset
+
+ are available to you, including the redirection APIs.
+\end_layout
+
+\begin_layout Standard
+Note that while you need to restart your application for the changes in
+ routing.js to take hold, you are free to edit my-filter.js and have the changes
+ will be picked up on-the-fly.
+\end_layout
+
+\begin_layout Standard
+handleAfter is a bit more sophisticated in that it also requires a return
+ value:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleBefore(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.logger.info('We got a request for a resource at: ' + conversation.refe
+rence)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'continue'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Three literal return values are supported, as either a string or a number:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\begin_inset Quotes eld
+\end_inset
+
+continue” or 0
+\series default
+: Continue to the 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ handler
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+
+\series bold
+skip” or 1
+\series default
+: Skip the 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ route type and continue to our own handleAfter function
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\begin_inset Quotes eld
+\end_inset
+
+stop” or 2
+\series default
+: Stop 
+\emph on
+our
+\emph default
+ handling altogether: the same as 
+\begin_inset Quotes eld
+\end_inset
+
+skip,
+\begin_inset Quotes erd
+\end_inset
+
+ but handleAfter is 
+\emph on
+not
+\emph default
+ called (note that if a filter was installed 
+\emph on
+before
+\emph default
+ us, it would still be called)
+\end_layout
+
+\begin_layout Standard
+Again, you may define both a handleBefore and a handleAfter in the same
+ filter.
+\end_layout
+
+\begin_layout Subsection
+Examples
+\end_layout
+
+\begin_layout Subsubsection
+Changing the Request
+\end_layout
+
+\begin_layout Standard
+It may be useful to change user requests for testing purposes.
+ Specifically, we can affect content negotiation by changing the accepted
+ formats declared by the user.
+\end_layout
+
+\begin_layout Standard
+For example, let's say we want to disable compression for all resources,
+ even if users declare that they are capable of handling it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleBefore(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.client.acceptedEncodings.clear()
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'continue'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Easy! Note that this would be 
+\emph on
+much
+\emph default
+ harder to do by changing the response: we would have to decompress all
+ compressed responses.
+\end_layout
+
+\begin_layout Subsubsection
+Overriding the Response
+\end_layout
+
+\begin_layout Standard
+Filters can be useful for overriding the response under certain conditions.
+\end_layout
+
+\begin_layout Standard
+The following example filter always sets the response to a web page displaying
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Blocked!
+\begin_inset Quotes erd
+\end_inset
+
+, unless a special 
+\begin_inset Quotes eld
+\end_inset
+
+admin
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\bar under
+cookie (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cookies"
+
+\end_inset
+
+)
+\bar default
+ is used with a magic value.
+ It can be used to make sure that certain resources are unavailable for
+ users who are not administrators:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+importClass(
+\end_layout
+
+\begin_layout Plain Layout
+
+	org.restlet.representation.StringRepresentation,
+\end_layout
+
+\begin_layout Plain Layout
+
+	org.restlet.data.MediaType)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleAfter(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var cookie = conversation.getCookie('admin')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (null !== cookie) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (cookie.value == 'magic123') {
+\end_layout
+
+\begin_layout Plain Layout
+
+			return
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	var content = '<html><body>Blocked!</body></html>'
+\end_layout
+
+\begin_layout Plain Layout
+
+	var payload = new StringRepresentation(content , MediaType.valueOf('text/html'))
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.response.entity = payload
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Note on 
+\emph on
+changing
+\emph default
+ the response:
+\series default
+ You might think that filters could be useful to affect the content of responses
+, for example to 
+\begin_inset Quotes eld
+\end_inset
+
+filter out
+\begin_inset Quotes erd
+\end_inset
+
+ inappropriate language in HTML pages.
+ Actually, Prudence filters are 
+\emph on
+not
+\emph default
+ a good way to do this, because there's no guarantee that response payloads
+ returned from resources are textual, even if the content is text: they
+ could very well be compressed (gzip) and also chunked.
+ You would then need to be prepared to decode, disassemble, make your changes,
+ and then reassemble such responses, which is neither trivial nor efficient.
+ 
+\emph on
+Content
+\emph default
+ filtering should best be handled at the level of the resource code itself,
+ 
+\emph on
+before 
+\emph default
+the response payload is created.
+\end_layout
+
+\begin_layout Subsubsection
+Side Effects
+\end_layout
+
+\begin_layout Standard
+Filters don't have to change anything about the request or the response.
+ They can be useful for gathering statistics or other debugging information.
+\end_layout
+
+\begin_layout Standard
+In this example, we'll gather statistic about agent self-identification:
+ specifically web browser product names and operating systems (via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.client API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.client"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/templates/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+importClass(
+\end_layout
+
+\begin_layout Plain Layout
+
+	java.util.concurrent.ConcurrentHashMap,
+\end_layout
+
+\begin_layout Plain Layout
+
+	java.util.concurrent.atomic.AtomicInteger)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var logger = application.getSubLogger('statistics')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleBefore(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var agent = conversation.client.agentName
+\end_layout
+
+\begin_layout Plain Layout
+
+	var os = conversation.client.agentAttributes.get('osData')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	getCounter('agent', agent).incrementAndGet()
+\end_layout
+
+\begin_layout Plain Layout
+
+	getCounter('os', os).incrementAndGet()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	logger.info('Agent stats: ' + application.globals.get('counters.agent'))
+\end_layout
+
+\begin_layout Plain Layout
+
+	logger.info('OS stats: ' + application.globals.get('counters.os'))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'continue'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function getCounter(section, name) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var counters = application.getGlobal('counters.' + section, new ConcurrentHashMap
+())
+\end_layout
+
+\begin_layout Plain Layout
+
+	var counter = counters.get(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (null === counter) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		counter = new AtomicInteger()
+\end_layout
+
+\begin_layout Plain Layout
+
+		var existing = counters.putIfAbsent(name, counter)
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (null !== existing) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			counter = existing
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return counter
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here we're storing statistics in memory and sending them to the log, but
+ for your uses you might prefer to store them in a database using atomic
+ operations.
 \end_layout
 
 \begin_layout Subsection
 Built-in Filters
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Standard
+Prudence comes with a few built in filters, each with 
+\bar under
+its own route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filtering-route-types"
+
+\end_inset
+
+)
+\bar default
+.
+ Many of them are useful specifically with 
+\bar under
+static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+, and are discussed in that chapter.
+ A few others are more generally useful, and discussed here.
+\end_layout
+
+\begin_layout Subsubsection
+Inversion of Control (IoC) via Injection
+\begin_inset CommandInset label
+LatexCommand label
+name "ioc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You already know that you can configure parts of your application via 
+\bar under
+application.global presets (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-globals"
+
+\end_inset
+
+)
+\bar default
+.
+ Globals affect the entire application.
+ However, you may sometimes need 
+\emph on
+local 
+\emph default
+configuration: the ability to configure multiple instances of resources
+ differently.
+ That's where the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+injector
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "injector-route-type"
+
+\end_inset
+
+)
+\bar default
+ comes in.
+\end_layout
+
+\begin_layout Standard
+Note that because IoC is most often used together with capturing and dispatching
+, there is a shortcut notation to apply to the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+capture
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ route types (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-dispatching-ioc"
+
+\end_inset
+
+)
+\bar default
+.
+ However, you can also use injection independently.
+ An example for routing.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{name}/': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'injector',
+\end_layout
+
+\begin_layout Plain Layout
+
+		locals: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			deployment: 'production'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: '@user'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To access the injected value in your resource code, simply use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.locals API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.locals"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var deployment = conversation.locals.get('deployment')
+\end_layout
+
+\begin_layout Plain Layout
+
+if (deployment == 'production') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+You can inject any kind of object using an injector, though keep in mind
+ that the native types of JavaScript may not be easily accessible in other
+ programming languages.
+ For example, if you're injecting a dict or an array, it would not be automatica
+lly converted to, say, a Python dict or vector.
+ However, primitive types such as strings and numbers would be OK for all
+ supported languages.
+\end_layout
+
+\begin_layout Paragraph
+Templates
+\end_layout
+
+\begin_layout Standard
+Note that injectors specially recognize 
+\begin_inset CommandInset href
+LatexCommand href
+name "Template"
+target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Template.html"
+
+\end_inset
+
+ instances and casts them before injecting.
+ This allows you to 
+\bar under
+interpolate conversation attributes (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "string-interpolation"
+
+\end_inset
+
+)
+\bar default
+ into strings:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{name}/': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'injector',
+\end_layout
+
+\begin_layout Plain Layout
+
+		locals: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			protocol: new org.restlet.routing.Template('{p}'),
+\end_layout
+
+\begin_layout Plain Layout
+
+			deployment: 'production'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: '@user'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(The above example is not that useful: you can just as easily access the
+ protocol using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.request.method.name"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
+
+\end_inset
+
+.)
+\end_layout
+
+\begin_layout Subsubsection
 HTTP Authentication
 \begin_inset CommandInset label
 LatexCommand label
@@ -21159,12 +22464,9 @@ name "http-authentication"
 \end_layout
 
 \begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Standard
-
+You can implement simple HTTP authentication using the 
 \bar under
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -21176,6 +22478,115 @@ httpAuthenticator
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "http-authenticator-route-type"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'httpAuthenticator',
+\end_layout
+
+\begin_layout Plain Layout
+
+		realm: 'Authorized users only!',
+\end_layout
+
+\begin_layout Plain Layout
+
+		credentials: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			moderator: 'moderatorpassword',
+\end_layout
+
+\begin_layout Plain Layout
+
+			admin: 'adminpassword'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: [
+\end_layout
+
+\begin_layout Plain Layout
+
+			'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'scriptlet'
+\end_layout
+
+\begin_layout Plain Layout
+
+		]
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the implementation relies on 
+\begin_inset CommandInset href
+LatexCommand href
+name "basic authentication (BA)"
+target "http://en.wikipedia.org/wiki/Basic_access_authentication"
+
+\end_inset
+
+, which is unencrypted.
+ It is thus strongly recommended that you use it only with 
+\bar under
+HTTPS (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "secure-servers"
 
 \end_inset
 

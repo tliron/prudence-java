@@ -1,20 +1,10 @@
 
 document.require('/sincerity/templates/')
 
-importClass(java.util.concurrent.atomic.AtomicInteger)
-
 var logger = application.getSubLogger('statistics')
 
 function getCounter() {
-	var counter = application.globals.get('counter')
-	if (null === counter) {
-		counter = new AtomicInteger()
-		var existing = application.globals.put('counter', counter)
-		if (null !== existing) {
-			counter = existing
-		}
-	}
-	return counter
+	return application.getGlobal('counter', new java.util.concurrent.atomic.AtomicInteger())
 }
 
 function handleBefore(conversation) {

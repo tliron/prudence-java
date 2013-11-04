@@ -1,5 +1,5 @@
 
-from resources.python import person
+from dispatched.python import person
 
 resources = {
     'person': person.Person()}

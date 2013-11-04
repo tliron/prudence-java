@@ -1,5 +1,5 @@
 
-require 'resources/ruby/person.rb'
+require 'dispatched/ruby/person.rb'
 
 $resources = {
   'person' => Person.new
