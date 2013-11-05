@@ -19,9 +19,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.restlet.Application;
+import org.restlet.Context;
 import org.restlet.data.LocalReference;
 import org.restlet.data.MediaType;
-import org.restlet.data.Preference;
 import org.restlet.resource.ClientResource;
 
 import com.threecrickets.prudence.internal.attributes.DocumentExecutionAttributes;
@@ -275,9 +275,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	{
 		if( !resourceUri.startsWith( "/" ) )
 			resourceUri = "/" + resourceUri;
-		ClientResource clientResource = new ClientResource( LocalReference.createRiapReference( LocalReference.RIAP_APPLICATION, resourceUri ) );
+		ClientResource clientResource = new ClientResource( Context.getCurrent().createChildContext(), LocalReference.createRiapReference( LocalReference.RIAP_APPLICATION, resourceUri ) );
 		if( mediaTypeName != null )
-			clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
+			clientResource.accept( getMediaType( mediaTypeName ) );
 		return clientResource;
 	}
 
@@ -296,9 +296,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	{
 		if( !resourceUri.startsWith( "/" ) )
 			resourceUri = "/" + resourceUri;
-		ClientResource clientResource = new ClientResource( LocalReference.createRiapReference( LocalReference.RIAP_COMPONENT, "/" + applicationInternalName + resourceUri ) );
+		ClientResource clientResource = new ClientResource( Context.getCurrent().createChildContext(), LocalReference.createRiapReference( LocalReference.RIAP_COMPONENT, "/" + applicationInternalName + resourceUri ) );
 		if( mediaTypeName != null )
-			clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
+			clientResource.accept( getMediaType( mediaTypeName ) );
 		return clientResource;
 	}
 
@@ -313,9 +313,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 */
 	public ClientResource external( String uri, String mediaTypeName )
 	{
-		ClientResource clientResource = new ClientResource( uri );
+		ClientResource clientResource = new ClientResource( Context.getCurrent().createChildContext(), uri );
 		if( mediaTypeName != null )
-			clientResource.getClientInfo().getAcceptedMediaTypes().add( new Preference<MediaType>( getMediaType( mediaTypeName ), 1f ) );
+			clientResource.accept( getMediaType( mediaTypeName ) );
 
 		// The following is a workaround for a Restlet bug:
 		// http://restlet.tigris.org/ds/viewMessage.do?dsForumId=4447&dsMessageId=2738502

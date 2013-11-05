@@ -476,6 +476,21 @@ wildcard
  This chapter will cover it all.
 \end_layout
 
+\begin_layout Standard
+Make sure to also read the 
+\bar under
+URI-space Architecture article (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "uri-space-architecture"
+
+\end_inset
+
+)
+\bar default
+, which discusses general architectural issues.
+\end_layout
+
 \begin_layout Subsection
 routing.js
 \end_layout
@@ -9084,51 +9099,14 @@ Can be added with CacheControlFilter
 
 \end_layout
 
-\begin_layout Subsection
-Resources As Internal APIs
-\begin_inset CommandInset label
-LatexCommand label
-name "internal-api"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-See the 
-\bar under
-internal URI-space (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "internal-uri-space"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-document.internal
-\end_layout
-
-\begin_layout Standard
-Prudence.Resources.request
-\end_layout
-
-\begin_layout Standard
-Optimizing using application/java MIME type
-\end_layout
-
 \begin_layout Section
 Web Data
 \end_layout
 
 \begin_layout Standard
 This chapter deals with sending and receiving data to and from the client
- in REST, focusing especially on the particulars for HTTP and HTML.
+ (as well as external servers) via REST, focusing especially on the particulars
+ for HTTP and HTML.
  It does 
 \emph on
 not
@@ -11949,6 +11927,464 @@ bill.csv
  editor.
 \end_layout
 
+\begin_layout Subsection
+External Requests
+\begin_inset CommandInset label
+LatexCommand label
+name "external-requests"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence uses the Restlet library to serve RESTful resources, but can also
+ use it to consume them.
+ In fact, the client API nicely mirrors the server API.
+\end_layout
+
+\begin_layout Standard
+Note that Prudence can also handle 
+\bar under
+internal REST requests (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-requests"
+
+\end_inset
+
+)
+\bar default
+ without going through HTTP or object serialization.
+ There is an entire 
+\bar under
+internal URI-space (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+ at your fingertips.
+\end_layout
+
+\begin_layout Quote
+It's not a good idea to send an external request while handling a user request,
+ because it could potentially cause a long delay and hold up the user thread.
+ It would be better to use a 
+\bar under
+background task (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+.
+ A possible exception is requests to servers that you control yourself,
+ and that represent a subsystem of your application.
+ In that case, you should still use 
+\bar under
+short timeouts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "external-requests-timeout"
+
+\end_inset
+
+)
+\bar default
+ and fail gracefully.
+\end_layout
+
+\begin_layout Standard
+For our examples, let's get information about the weather on Mars from 
+\begin_inset CommandInset href
+LatexCommand href
+name "MAAS"
+target "http://marsweather.ingenology.com/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In JavaScript, you can use the powerful 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.request API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.request"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var weather = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: 'http://marsweather.ingenology.com/v1/latest/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== weather) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	print('The max temperature on Mars today is ' + weather.report.max_temp +
+ '°C')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The API will automatically convert the response according to the media type.
+ In this case, we requested 
+\begin_inset Quotes eld
+\end_inset
+
+application/json
+\begin_inset Quotes erd
+\end_inset
+
+, so the textual response will be converted from JSON to JavaScript native
+ data.
+ The API will also automatically follow redirects.
+\end_layout
+
+\begin_layout Standard
+Payloads sent to the server, for the 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+PUT
+\begin_inset Quotes erd
+\end_inset
+
+ verbs, are also automatically converted:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var newUser = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: 'http://mysite.org/user/newton/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	method: 'put',
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json',
+\end_layout
+
+\begin_layout Plain Layout
+
+	payload: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'json',
+\end_layout
+
+\begin_layout Plain Layout
+
+		value: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			name: 'Isaac',
+\end_layout
+
+\begin_layout Plain Layout
+
+			nicknames: ['Izzy', 'Zacky', 'Sir']
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Read the API documentation carefully, as it supports many useful parameters.
+\end_layout
+
+\begin_layout Paragraph
+Low Level
+\end_layout
+
+\begin_layout Standard
+For non-JavaScript you can use the lower-level 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.external API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=document.external"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+var resource = document.external('http://marsweather.ingenology.com/v1/latest/')
+\end_layout
+
+\begin_layout Plain Layout
+
+resource.accept(org.restlet.data.MediaType.valueOf('application/json'))
+\end_layout
+
+\begin_layout Plain Layout
+
+result = resource.get()
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== result) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	weather = Sincerity.JSON.from(result.text)
+\end_layout
+
+\begin_layout Plain Layout
+
+	print('The max temperature on Mars today is ' + weather.report.max_temp +
+ '°C')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Timeout
+\begin_inset CommandInset label
+LatexCommand label
+name "external-requests-timeout"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Surprisingly, you cannot set the timeout per request, but instead you need
+ to configure the timeout globally for the 
+\bar under
+HTTP client (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-clients"
+
+\end_inset
+
+)
+\bar default
+.
+ The reason for this is that the client works asynchronously, via a thread
+ pool that is initialized upon startup.
+ Because you don't know which thread will handle your request, you can't
+ set a specific timeout for it.
+\end_layout
+
+\begin_layout Subsubsection
+RESTful Files
+\end_layout
+
+\begin_layout Standard
+The same APIs can be used to easily access resources via the 
+\begin_inset Quotes eld
+\end_inset
+
+file:
+\begin_inset Quotes erd
+\end_inset
+
+ pseudo-protocol.
+ Let's read a JSON file:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var data = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	file: '/tmp/weather.json',
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above is simply a shortcut to this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var data = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: 'file:///tmp/weather.json',
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can even 
+\begin_inset Quotes eld
+\end_inset
+
+PUT
+\begin_inset Quotes erd
+\end_inset
+
+ new file data, and 
+\begin_inset Quotes eld
+\end_inset
+
+DELETE
+\begin_inset Quotes erd
+\end_inset
+
+ files using this API.
+\end_layout
+
 \begin_layout Section
 Caching
 \begin_inset CommandInset label
@@ -12889,7 +13325,7 @@ app.settings = {
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Numeric Shortcuts
 \begin_inset CommandInset label
 LatexCommand label
@@ -12956,7 +13392,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Localizatio
 .
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 app.settings.description
 \end_layout
 
@@ -12965,7 +13401,7 @@ Information here is meant for humans.
  It appears in the Prudence Administration application.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 app.settings.errors
 \begin_inset CommandInset label
 LatexCommand label
@@ -12976,8 +13412,27 @@ name "settings-errors"
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Standard
+Setting 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ to true here enables various useful debugging features.
+\end_layout
+
+\begin_layout Subsubsection
 Exception Handling
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-errors-exceptions"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -13002,7 +13457,7 @@ debug
 \begin_inset Quotes erd
 \end_inset
 
- is true, Prudence will return a very detailed 
+ is true, Prudence will return a very detailed HTML 
 \bar under
 debug page (page 
 \begin_inset CommandInset ref
@@ -13013,7 +13468,7 @@ reference "debug-page"
 
 )
 \bar default
- in HTML for uncaught exceptions in your code.
+.
  Because this can reveal your application's internal data, 
 \series bold
 make sure to set 
@@ -13038,7 +13493,7 @@ debug
 \begin_inset Quotes erd
 \end_inset
 
- is false, a generic page will be returned instead, using 
+ is false, a generic HTML page will be returned instead, using 
 \begin_inset Quotes eld
 \end_inset
 
@@ -13055,7 +13510,7 @@ contactEmail
 \end_inset
 
  in its template.
- Alternatively, you can also route your own custom error pages using 
+ Note that you can also route your own custom error pages using 
 \bar under
 app.errors in routing.js (page 
 \begin_inset CommandInset ref
@@ -13069,7 +13524,7 @@ reference "app-errors"
 .
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Caching
 \begin_inset CommandInset label
 LatexCommand label
@@ -13089,7 +13544,7 @@ debug
 \begin_inset Quotes erd
 \end_inset
 
- is true, special HTTP headers will be added to caching 
+ is true, special HTTP response headers will be added to caching 
 \bar under
 scriptlet resources (page 
 \begin_inset CommandInset ref
@@ -13151,8 +13606,15 @@ X-Cache-Tags
 : comma-separated list of cache tags
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Scriptlet
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-errors-scriptlet"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -13176,7 +13638,7 @@ debug
  directory you will see the generated source code for each resource.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 app.settings.code
 \begin_inset CommandInset label
 LatexCommand label
@@ -13353,7 +13815,7 @@ defaultLanguageTag
  the default.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 app.settings.uploads
 \begin_inset CommandInset label
 LatexCommand label
@@ -13399,7 +13861,7 @@ sizeThreshold
  Set to zero to save all files to disk.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 app.settings.mediaTypes
 \begin_inset CommandInset label
 LatexCommand label
@@ -13621,7 +14083,7 @@ php
  You may change if you require a different behavior.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 app.globals
 \begin_inset CommandInset label
 LatexCommand label
@@ -13795,7 +14257,7 @@ var driver = application.globals.get('database.driver')
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Lazy Initialization
 \end_layout
 
@@ -13803,12 +14265,16 @@ Lazy Initialization
 This is an advanced topic.
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Section
 Programming
 \end_layout
 
 \begin_layout Subsection
-Introduction: Scripturian
+Powered by Scripturian
 \end_layout
 
 \begin_layout Subsection
@@ -13817,46 +14283,6 @@ JavaScript
 
 \begin_layout Subsection
 Other Languages
-\end_layout
-
-\begin_layout Subsection
-Lazy Initialization
-\end_layout
-
-\begin_layout Subsection
-Execution Environments
-\end_layout
-
-\begin_layout Subsubsection
-Bootstrap
-\end_layout
-
-\begin_layout Standard
-Straightforward beginning-to-end script
-\end_layout
-
-\begin_layout Standard
-Except for initialization tasks
-\end_layout
-
-\begin_layout Subsubsection
-Manual Resources and Handlers
-\end_layout
-
-\begin_layout Subsubsection
-Scriptlet Resources
-\end_layout
-
-\begin_layout Subsubsection
-Execute Resource
-\end_layout
-
-\begin_layout Subsubsection
-Cron Tasks
-\end_layout
-
-\begin_layout Standard
-Two options!
 \end_layout
 
 \begin_layout Subsection
@@ -15255,6 +15681,42 @@ target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Lazy"
 Diligence
 \end_layout
 
+\begin_layout Subsection
+Execution Environments
+\end_layout
+
+\begin_layout Subsubsection
+Bootstrap
+\end_layout
+
+\begin_layout Standard
+Straightforward beginning-to-end script
+\end_layout
+
+\begin_layout Standard
+Except for initialization tasks
+\end_layout
+
+\begin_layout Subsubsection
+Manual Resources and Handlers
+\end_layout
+
+\begin_layout Subsubsection
+Scriptlet Resources
+\end_layout
+
+\begin_layout Subsubsection
+Execute Resource
+\end_layout
+
+\begin_layout Subsubsection
+Cron Tasks
+\end_layout
+
+\begin_layout Standard
+Two options!
+\end_layout
+
 \begin_layout Section
 Debugging
 \begin_inset CommandInset label
@@ -16272,7 +16734,7 @@ both
 \end_layout
 
 \begin_layout Subsubsection
-RIAP
+The RIAP Pseudo-Protocol
 \end_layout
 
 \begin_layout Standard
@@ -16336,7 +16798,29 @@ riap://component/{internal host}/*
 \end_layout
 
 \begin_layout Subsection
-Internal Access
+Internal Requests
+\begin_inset CommandInset label
+LatexCommand label
+name "internal-requests"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See also 
+\bar under
+external requests (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "external-requests"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -16346,6 +16830,10 @@ Of course, RIAP URIs cannot be used by clients, only by requests initiated
 
 \begin_layout Standard
 If you're using JavaScript, you 
+\end_layout
+
+\begin_layout Standard
+Prudence.Resources.request
 \end_layout
 
 \begin_layout Subsection
@@ -16372,7 +16860,15 @@ reference "the-internal-host"
 \end_layout
 
 \begin_layout Subsection
-Implementing the Internal URI-space
+Implementing Internal Resources
+\end_layout
+
+\begin_layout Standard
+document.internal
+\end_layout
+
+\begin_layout Standard
+Optimizing using application/java MIME type
 \end_layout
 
 \begin_layout Standard
@@ -22311,6 +22807,13 @@ reference "servers"
 
 \begin_layout Subsection
 /component/clients/
+\begin_inset CommandInset label
+LatexCommand label
+name "component-clients"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -25346,10 +25849,10 @@ reference "tutorial"
 \end_layout
 
 \begin_layout Section
-URI-space Tips
+URI-space Architecture
 \begin_inset CommandInset label
 LatexCommand label
-name "uri-space-tips"
+name "uri-space-architecture"
 
 \end_inset
 
@@ -26127,32 +26630,27 @@ status open
 
 \begin_layout Plain Layout
 
- * URI: /service/{id:decimal}/
+ * @URI /service/{id:decimal}/
 \end_layout
 
 \begin_layout Plain Layout
 
- * Aspects: /service/{id:decimal}/status/
+ * @Aspect /service/{id:decimal}/status/
 \end_layout
 
 \begin_layout Plain Layout
 
- * Verbs: GET, POST, PUT, DELETE
+ * @Verb GET, POST, PUT, DELETE
 \end_layout
 
 \begin_layout Plain Layout
 
- * Media types: application/json, application/xml, text/plain (as JSON)
+ * @MediaType application/json, application/xml, text/plain = as JSON
 \end_layout
 
 \begin_layout Plain Layout
 
- * Query params:
-\end_layout
-
-\begin_layout Plain Layout
-
- *  indent: decimal - if non-zero will return a human-readable indented
+ * @Query {decimal} indent If non-zero will return a human-readable indented
  version
 \end_layout
 
@@ -26163,7 +26661,8 @@ status open
 
 \begin_layout Plain Layout
 
- *  clean: boolean - if "true" or "yes" or "1" wil force removal of an existing
+ * @Query {boolean} clean If "true" or "yes" or "1" wil force removal of
+ an existing
 \end_layout
 
 \begin_layout Plain Layout
@@ -26178,7 +26677,7 @@ status open
 
 \begin_layout Plain Layout
 
- * Representation as application/json:
+ * @Representation {application/json}
 \end_layout
 
 \begin_layout Plain Layout
@@ -26213,7 +26712,7 @@ status open
 
 \begin_layout Plain Layout
 
- * POST/PUT payload as application/json:
+ * @Payload {application/json}
 \end_layout
 
 \begin_layout Plain Layout
@@ -26278,22 +26777,22 @@ status open
 
 \begin_layout Plain Layout
 
- * URI: /service/{id:decimal}/status/
+ * @URI /service/{id:decimal}/status/
 \end_layout
 
 \begin_layout Plain Layout
 
- * Aspect of: /service/{id:decimal}/
+ * @AspectOf /service/{id:decimal}/
 \end_layout
 
 \begin_layout Plain Layout
 
- * Verbs: GET, POST, PUT, DELETE
+ * @Verb GET, POST, PUT, DELETE
 \end_layout
 
 \begin_layout Plain Layout
 
- * Media types: text/plain
+ * @MediaType text/plain
 \end_layout
 
 \begin_layout Plain Layout
@@ -26303,7 +26802,7 @@ status open
 
 \begin_layout Plain Layout
 
- * Representation as text/plain:
+ * @Representation {text/plain}
 \end_layout
 
 \begin_layout Plain Layout

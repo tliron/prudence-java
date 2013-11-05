@@ -34,7 +34,7 @@ var Prudence = Prudence || {}
  */
 Prudence.Resources = Prudence.Resources || function() {
 	/** @exports Public as Prudence.Resources */
-    var Public = {}
+	var Public = {}
 
 	/**
 	 * The library's logger.
@@ -147,26 +147,26 @@ Prudence.Resources = Prudence.Resources || function() {
 		}
 	}
 
-    /**
-     * True if the client is mobile (likely a phone or a tablet).
-     * <p>
-     * The client can set the mode explicitly via mode=mobile or mode=desktop query params.
-     * 
-     * @param conversation The Prudence conversation
-     * @returns {Boolean}
-     */
-    Public.isMobileClient = function(conversation) {
-    	var mode = conversation.query.get('mode')
-    	switch (String(mode)) {
-    		case 'mobile':
-    			return true
-    		case 'desktop':
-    			return false
-    	}
-    	
-    	var agent = conversation.request.clientInfo.agent
-    	return Sincerity.Objects.exists(agent) && (agent.toLowerCase().indexOf('mobile') != -1)
-    }
+	/**
+	 * True if the client is mobile (likely a phone or a tablet).
+	 * <p>
+	 * The client can set the mode explicitly via mode=mobile or mode=desktop query params.
+	 * 
+	 * @param conversation The Prudence conversation
+	 * @returns {Boolean}
+	 */
+	Public.isMobileClient = function(conversation) {
+		var mode = conversation.query.get('mode')
+		switch (String(mode)) {
+			case 'mobile':
+				return true
+			case 'desktop':
+				return false
+		}
+		
+		var agent = conversation.request.clientInfo.agent
+		return Sincerity.Objects.exists(agent) && (agent.toLowerCase().indexOf('mobile') != -1)
+	}
 
 	/**
 	 * Encodes a URL component. Note that JavaScript's standard encodeURIComponent will not encode !'()*~.
@@ -265,39 +265,39 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @param [params.query] The query parameters to add to the URI (see {@link Prudence.Resources#buildUri})
 	 * @param {String} [params.method='get'] The HTTP method: 'get', 'post', 'put', 'delete' or 'head'
 	 * @param {Boolean|String} [params.internal=false] True to use Prudence's document.internal API; a string
-	 *        specifies the internal application name to use
+	 *		specifies the internal application name to use
 	 * @param {String} [params.mediaType] Defaults to 'application/java' for internal=true, otherwise 'text/plain'
 	 * @param [params.payload] A dict in the form of {type: 'type', value: object}. Supported payload types:
-	 *        <ul>
-	 *        <li>'object': as is (only for internal=true)</li>
-	 *        <li>'text': converted to string if not one already</li>
-	 *        <li>'json': see {@link Sincerity.JSON#to}</li>
-	 *        <li>'xml': see {@link Sincerity.XML#to}</li>
-	 *        <li>'web': see {@link Prudence.Resources#toWebPayload}</li>
-	 *        <li>'binary': an array of bytes</li>
-	 *        </ul>
+	 *		<ul>
+	 *		<li>'object': as is (only for internal=true)</li>
+	 *		<li>'text': converted to string if not one already</li>
+	 *		<li>'json': see {@link Sincerity.JSON#to}</li>
+	 *		<li>'xml': see {@link Sincerity.XML#to}</li>
+	 *		<li>'web': see {@link Prudence.Resources#toWebPayload}</li>
+	 *		<li>'binary': an array of bytes</li>
+	 *		</ul>
 	 * @param [params.headers] A dict of custom headers to add to the request 
 	 * @param {String|Object} [params.result]
-	 *        Defaults to 'json' for JSON media types, 'xml' for XML media types, 'object' for 'application/java'
-	 *        and 'text' for everything else. Supported types:
-	 *        <ul>
-	 *        <li>'text': the default (for non-'head' methods)</li>
-	 *        <li>'entity': the Restlet Representation instance (make sure to release it!)</li>
-	 *        <li>'date': the Date from the response header</li>
-	 *        <li>'object': an arbitrary object (only useful for internal conversations)</li>
-	 *        <li>'json': see {@link Sincerity.JSON#from}</li>
-	 *        <li>'extendedJson': see {@link Sincerity.JSON#from}</li>
-	 *        <li>'xml': see {@link Sincerity.XML#from}</li>
-	 *        <li>'web': see {@link Prudence.Resources#fromQueryString}</li>
-	 *        <li>'binary': an array of bytes</li>
-	 *        <li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
-	 *        </ul>
+	 *		Defaults to 'json' for JSON media types, 'xml' for XML media types, 'object' for 'application/java'
+	 *		and 'text' for everything else. Supported types:
+	 *		<ul>
+	 *		<li>'text': the default (for non-'head' methods)</li>
+	 *		<li>'entity': the Restlet Representation instance (make sure to release it!)</li>
+	 *		<li>'date': the Date from the response header</li>
+	 *		<li>'object': an arbitrary object (only useful for internal conversations)</li>
+	 *		<li>'json': see {@link Sincerity.JSON#from}</li>
+	 *		<li>'extendedJson': see {@link Sincerity.JSON#from}</li>
+	 *		<li>'xml': see {@link Sincerity.XML#from}</li>
+	 *		<li>'web': see {@link Prudence.Resources#fromQueryString}</li>
+	 *		<li>'binary': an array of bytes</li>
+	 *		<li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
+	 *		</ul>
 	 * @param {String|Object} [params.result.type] As params.result
 	 * @param {Boolean} [params.result.headers] If true, the result will be in the form of {headers:{}, representation:...}
-	 *        where 'headers' is a dict of HTTP responses; params.results.headers defaults to true if params.method is 'head',
-	 *        otherwise it defaults to false
+	 *		where 'headers' is a dict of HTTP responses; params.results.headers defaults to true if params.method is 'head',
+	 *		otherwise it defaults to false
 	 * @param [params.authorization] A dict in the form of {type: 'scheme name', ...}.
-	 *        For example: {type: 'oauth', rawValue: 'oauth authorization'}
+	 *		For example: {type: 'oauth', rawValue: 'oauth authorization'}
 	 * @param {Number} [params.retry=0] Number of retries in case of failed requests
 	 * @param [params.logLevel='fine'] The log level to use for failed requests
 	 */
@@ -377,14 +377,6 @@ Prudence.Resources = Prudence.Resources || function() {
 				params.file = Sincerity.Objects.isString(params.file) ? new java.io.File(params.file) : params.file
 				params.uri = params.file.toURI()
 				resource = document.external(params.uri, params.mediaType)
-				if (!params.retry) {
-					resource.retryOnError = false
-					resource.retryAttempts = 0
-				}
-				else {
-					resource.retryOnError = true
-					resource.retryAttempts = params.retry
-				}
 				delete params.file
 				delete params.uri
 			}
@@ -403,7 +395,16 @@ Prudence.Resources = Prudence.Resources || function() {
 				}
 				delete params.uri
 			}
-			
+
+			if (!params.retry) {
+				resource.retryOnError = false
+				resource.retryAttempts = 0
+			}
+			else {
+				resource.retryOnError = true
+				resource.retryAttempts = params.retry
+			}
+
 			if (params.headers) {
 				resource.request.attributes.put('org.restlet.http.headers', Public.toHeaders(params.headers))
 			}
@@ -742,18 +743,18 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @param {java.util.Map} map The map
 	 * @param {org.restlet.util.Series} [series] The series (in order to support arrays)
 	 * @param [keys] A dict where keys are attribute names and values are types. Supported types:
-	 *        <ul>
-	 *        <li>'string': no conversion</li>
-	 *        <li>'int': parseInt</li>
-	 *        <li>'float': parseFloat</li>
-	 *        <li>'bool': must be 'true' or 'false'</li>
-	 *        <li>'date': Unix timestamp</li>
-	 *        <li>'json': see {@link Sincerity.JSON#from}</li>
-	 *        <li>'extendedJson': see {@link Sincerity.JSON#from}</li>
-	 *        <li>'xml': see {@link Sincerity.XML#from}</li>
-	 *        </ul>
-	 *        Add '[]' to any type to signify that you want an array of all values.
-	 *        When no keys are supplied, the entire map is converted to a dict of strings.
+	 *		<ul>
+	 *		<li>'string': no conversion</li>
+	 *		<li>'int': parseInt</li>
+	 *		<li>'float': parseFloat</li>
+	 *		<li>'bool': must be 'true' or 'false'</li>
+	 *		<li>'date': Unix timestamp</li>
+	 *		<li>'json': see {@link Sincerity.JSON#from}</li>
+	 *		<li>'extendedJson': see {@link Sincerity.JSON#from}</li>
+	 *		<li>'xml': see {@link Sincerity.XML#from}</li>
+	 *		</ul>
+	 *		Add '[]' to any type to signify that you want an array of all values.
+	 *		When no keys are supplied, the entire map is converted to a dict of strings.
 	 * @returns A dict
 	 */
 	Public.fromAttributeMap = function(map, series, keys) {
@@ -929,5 +930,5 @@ Prudence.Resources = Prudence.Resources || function() {
 		return Public.toForm(dict).webRepresentation
 	}
 
-    return Public
+	return Public
 }()
