@@ -19,15 +19,20 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.CharacterSet;
 import org.restlet.data.ClientInfo;
 import org.restlet.data.Disposition;
 import org.restlet.data.Form;
+import org.restlet.data.Language;
 import org.restlet.data.LocalReference;
+import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
+import org.restlet.representation.ByteArrayRepresentation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.util.Series;
 
 import com.threecrickets.prudence.DelegatedStatusService;
@@ -210,7 +215,7 @@ public class ConversationService
 	}
 
 	/**
-	 * A shortcut to the resource request.
+	 * A shortcut to the request.
 	 * 
 	 * @return The request
 	 */
@@ -220,7 +225,7 @@ public class ConversationService
 	}
 
 	/**
-	 * A shortcut to the resource request client info.
+	 * A shortcut to the request's client info.
 	 * 
 	 * @return The client info
 	 */
@@ -230,13 +235,48 @@ public class ConversationService
 	}
 
 	/**
-	 * A shortcut to the resource response.
+	 * A shortcut to the response.
 	 * 
 	 * @return The response
 	 */
 	public Response getResponse()
 	{
 		return Response.getCurrent();
+	}
+
+	/**
+	 * A shortcut to set the response entity to a {@link StringRepresentation}.
+	 * 
+	 * @param text
+	 *        The text
+	 * @param mediaTypeName
+	 *        The media type or null to leave unchanged
+	 * @param languageName
+	 *        The language or null to leave unchanged
+	 * @param characterSetName
+	 *        The character set or null to leave unchanged
+	 */
+	public StringRepresentation setResponseText( String text, String mediaTypeName, String languageName, String characterSetName )
+	{
+		StringRepresentation representation = new StringRepresentation( text, MediaType.valueOf( mediaTypeName ), Language.valueOf( languageName ), CharacterSet.valueOf( characterSetName ) );
+		getResponse().setEntity( representation );
+		return representation;
+	}
+
+	/**
+	 * A shortcut to set the response entity to a
+	 * {@link ByteArrayRepresentation}.
+	 * 
+	 * @param byteArray
+	 *        The byte array
+	 * @param mediaTypeName
+	 *        The media type or null to leave unchanged
+	 */
+	public ByteArrayRepresentation setResponseBinary( byte[] byteArray, String mediaTypeName )
+	{
+		ByteArrayRepresentation representation = new ByteArrayRepresentation( byteArray, MediaType.valueOf( mediaTypeName ) );
+		getResponse().setEntity( representation );
+		return representation;
 	}
 
 	/**

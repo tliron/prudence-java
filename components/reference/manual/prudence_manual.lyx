@@ -484,15 +484,7 @@ routing.js
 Routing is configured in your application's routing.js file.
  The file should configure at least 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.routes
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.routes (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-routes"
@@ -503,15 +495,7 @@ reference "app-routes"
 \bar default
  and likely 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.hosts
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.hosts (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-hosts"
@@ -523,15 +507,7 @@ reference "app-hosts"
 .
  Add 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.errors
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.errors (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-errors"
@@ -542,15 +518,7 @@ reference "app-errors"
 \bar default
 , 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.dispatchers
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.dispatchers (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-dispatchers"
@@ -561,15 +529,7 @@ reference "app-dispatchers"
 \bar default
 , and 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.preheat (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-preheat"
@@ -796,14 +756,7 @@ name "app-routes"
 \end_layout
 
 \begin_layout Standard
-Routes are configured in your application's routing.js, in the 
-\begin_inset Quotes eld
-\end_inset
-
-app.routes
-\begin_inset Quotes erd
-\end_inset
-
+Routes are configured in your application's routing.js, in the app.routes
  dict.
 \end_layout
 
@@ -937,15 +890,7 @@ The
 \emph on
 values
 \emph default
- of the 
-\begin_inset Quotes eld
-\end_inset
-
-app.routes
-\begin_inset Quotes erd
-\end_inset
-
- dict are 
+ of the app.routes dict are 
 \emph on
 route
 \emph default
@@ -1241,15 +1186,7 @@ dispatch
 \begin_inset Quotes erd
 \end_inset
 
- in 
-\begin_inset Quotes eld
-\end_inset
-
-app.routes
-\begin_inset Quotes erd
-\end_inset
-
-.
+ in app.routes.
  For example, if you attach the manual to 
 \begin_inset Quotes eld
 \end_inset
@@ -4667,15 +4604,8 @@ name "app-hosts"
 \end_layout
 
 \begin_layout Standard
-Use 
-\begin_inset Quotes eld
-\end_inset
-
-app.hosts
-\begin_inset Quotes erd
-\end_inset
-
- to assign the application to a base URI on one or more virtual hosts.
+Use app.hosts to assign the application to a base URI on one or more virtual
+ hosts.
 \end_layout
 
 \begin_layout Standard
@@ -4776,15 +4706,8 @@ default
 \end_layout
 
 \begin_layout Standard
-If you don't have an 
-\begin_inset Quotes eld
-\end_inset
-
-app.hosts
-\begin_inset Quotes erd
-\end_inset
-
- definition, or if it is empty, then your application 
+If you don't have an app.hosts definition, or if it is empty, then your applicati
+on 
 \emph on
 will not be publicly available over HTTP
 \emph default
@@ -5068,15 +4991,7 @@ app.errors = {
 \end_layout
 
 \begin_layout Standard
-This is equivalent to explicitly hiding the URI in 
-\begin_inset Quotes eld
-\end_inset
-
-app.routes
-\begin_inset Quotes erd
-\end_inset
-
- using the 
+This is equivalent to explicitly hiding the URI in app.routes using the 
 \bar under
 
 \begin_inset Quotes eld
@@ -5191,15 +5106,7 @@ name "app-dispatchers"
 \end_layout
 
 \begin_layout Standard
-The common use of 
-\begin_inset Quotes eld
-\end_inset
-
-app.dispatchers
-\begin_inset Quotes erd
-\end_inset
-
- has already been 
+The common use of app.dispatchers has already been 
 \bar under
 discussed above (page 
 \begin_inset CommandInset ref
@@ -5301,15 +5208,7 @@ reference "manual-resources"
 \begin_layout Standard
 However, you can also write your own dispatchers to handle different dispatching
  paradigms.
- To configure them, you will need to use a long-form for 
-\begin_inset Quotes eld
-\end_inset
-
-app.dispatchers
-\begin_inset Quotes erd
-\end_inset
-
-.
+ To configure them, you will need to use a long-form for app.dispatchers.
  For example, here we override the default 
 \begin_inset Quotes eld
 \end_inset
@@ -5635,15 +5534,7 @@ GET
 \end_layout
 
 \begin_layout Standard
-Your 
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
- is simply an array of relative URIs.
+Your app.preheat is simply an array of relative URIs.
  As an example, let's preheat the homepage and a few specific resources:
 \end_layout
 
@@ -5683,15 +5574,7 @@ app.preheat = [
 \end_layout
 
 \begin_layout Standard
-Note that you can't use URI templates in 
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
-, only explicit URIs.
+Note that you can't use URI templates in app.preheat, only explicit URIs.
  Thus, if you have routed a 
 \begin_inset Quotes eld
 \end_inset
@@ -5741,945 +5624,8 @@ reference "startup"
 )
 \bar default
 .
- However, smart use of 
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
- can very effective, and it's very easy to use.
-\end_layout
-
-\begin_layout Subsection
-The Internal URI-space
-\begin_inset CommandInset label
-LatexCommand label
-name "internal-uri-space"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Standard
-The 
-\begin_inset Quotes eld
-\end_inset
-
-internal
-\begin_inset Quotes erd
-\end_inset
-
- host (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "the-internal-host"
-
-\end_inset
-
-)
-\end_layout
-
-\begin_layout Standard
-Avoid serialization (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "avoid-serialization-for-internal-requests"
-
-\end_inset
-
-).
-\end_layout
-
-\begin_layout Subsection
-Architecture Tips
-\end_layout
-
-\begin_layout Standard
-REST does not standardize URI-spaces, and indeed has little to say about
- URI design.
- However, it does 
-\emph on
-imply
-\emph default
- a preference for certain architectural principles.
- We go over much of the impetus in 
-\bar under
-The Case for REST article (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "the-cast-for-rest"
-
-\end_inset
-
-)
-\bar default
-, and suggest you start there.
-\end_layout
-
-\begin_layout Standard
-It's a good idea to think very carefully about your URI-space.
- A RESTful URI-space can help you define well-encapsulated RESTful resources.
- Herein are some topics to consider:
-\end_layout
-
-\begin_layout Subsubsection
-Nouns vs.
- Verbs
-\end_layout
-
-\begin_layout Standard
-It's useful to think of URIs as syntactic 
-\emph on
-nouns
-\emph default
-, a grammatical counterpart to HTTP's 
-\emph on
-verbs
-\emph default
-.
- In other worlds, make sure that you do not include verbs in your URIs.
- Examples:
-\end_layout
-
-\begin_layout Itemize
-Good: 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/status/
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-Bad: 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/start/
-\begin_inset Quotes erd
-\end_inset
-
-, 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/stop/
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-What is wrong with verbs in URIs?
-\end_layout
-
-\begin_layout Standard
-One potential problem is clarity.
- Which HTTP verb should be used on a verb URI? Do you need to POST, PUT
- or DELETE to 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/stop/
-\begin_inset Quotes erd
-\end_inset
-
- in order to stop the service? Of course, you can support all and document
- this, but it won't be immediately obvious to the user.
-\end_layout
-
-\begin_layout Standard
-A second potential problem is that you need to keep increasing the size
- of your URI-space the more actions of this sort you want to support.
- This means more files, more classes, and generally more code.
- Handling these operations 
-\emph on
-inside
-\emph default
- a single resource would just mean a simple 
-\begin_inset Quotes eld
-\end_inset
-
-if
-\begin_inset Quotes erd
-\end_inset
-
- or 
-\begin_inset Quotes eld
-\end_inset
-
-switch
-\begin_inset Quotes erd
-\end_inset
-
- statement and an extra method.
-\end_layout
-
-\begin_layout Standard
-A third, more serious potential problem is idempotency.
- The idempotent verbs PUT and DELETE may be optimized by the HTTP infrastructure
- (for example, a smart load balancer) such that requests arrive more than
- once: this is allowed by the very definition of idempotency.
- However, your operations 
-\emph on
-may
-\emph default
- not be semantically idempotent.
- For example, if a 
-\begin_inset Quotes eld
-\end_inset
-
-stop
-\begin_inset Quotes erd
-\end_inset
-
- is sent to an already-stopped service, it may return an 
-\begin_inset Quotes eld
-\end_inset
-
-already stopped
-\begin_inset Quotes erd
-\end_inset
-
- 500 error.
- In this case, if the infrastructure allows for two 
-\begin_inset Quotes eld
-\end_inset
-
-stop
-\begin_inset Quotes erd
-\end_inset
-
- commands to come through, then the user may get an error even though the
- operation succeeded for the first 
-\begin_inset Quotes eld
-\end_inset
-
-stop.
-\begin_inset Quotes erd
-\end_inset
-
- There's an easy way around this: simply allow 
-\emph on
-only
-\emph default
- POST, the non-idempotent verb, for all such operations.
- The infrastructure would never allow more than request to come through
- per POST.
- However, if you enforce the use of POST, you will lose the ability of the
- infrastructure to optimize for non-idempotency.
- POST is the least scalable HTTP verb.
-\end_layout
-
-\begin_layout Standard
-The bottom line is that if you standardize on only using nouns for your
- URIs, you will avoid many of these semantic pitfalls.
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-Beware of gerunds!
-\emph default
- A URI such as 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/stopping/
-\begin_inset Quotes erd
-\end_inset
-
- is technically a noun, but allows for some verb-related problems to creep
- in.
-\end_layout
-
-\begin_layout Subsubsection
-Do You Really Need REST?
-\begin_inset CommandInset label
-LatexCommand label
-name "do-you-really-need-rest"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In the above section, it was suggested that you prefer nouns to verbs.
- However, this preference may seem for constraining for your application.
- Your application may be very command-oriented, such that you will end up
- with a very small set of 
-\begin_inset Quotes eld
-\end_inset
-
-noun
-\begin_inset Quotes erd
-\end_inset
-
- URIs that need to support a vast amount of commands.
-\end_layout
-
-\begin_layout Standard
-REST shines because it is based on a tiny set of very tightly defined verbs:
- GET, POST, PUT, DELETE.
- The entire infrastructure is highly optimized around them: load balancers,
- caches, browsers, gateways, etc., all should know how best to handle each
- of these for maximum scalability and reliability.
- But, it's entirely possible that your needs cannot be easily satisfied
- by just four verbs.
-\end_layout
-
-\begin_layout Standard
-And that's OK.
- REST is not always the best solution for APIs.
-\end_layout
-
-\begin_layout Standard
-Instead, take a look at RPC (Remote Procedure Call) mechanisms.
- The Diligence framework, based on Prudence, provides easy and robust support
- for both 
-\begin_inset CommandInset href
-LatexCommand href
-name "JSON-RPC"
-target "http://json-rpc.org/"
-
-\end_inset
-
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "XML-RPC"
-target "http://www.xmlrpc.com/"
-
-\end_inset
-
- in its 
-\begin_inset CommandInset href
-LatexCommand href
-name "RPC Service"
-target "http://threecrickets.com/diligence/manual/service/rest/"
-
-\end_inset
-
- as well as 
-\begin_inset CommandInset href
-LatexCommand href
-name "Ext Direct"
-target "http://www.sencha.com/products/extjs/extdirect"
-
-\end_inset
-
- in its 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sencha Integration"
-target "http://threecrickets.com/diligence/manual/integration/sencha-ext-direct/"
-
-\end_inset
-
-, allowing you to hook a JavaScript function on the server directly to a
- URI.
- In terms of HTTP, these protocols all use HTTP POST, and do not leverage
- the HTTP infrastructure as well as a more fully RESTful API.
- But, one size does not fit all, and an RPC-based solution may prove a better
- match for your project.
-\end_layout
-
-\begin_layout Standard
-It's also perfectly possible to use 
-\emph on
-both
-\emph default
- REST and RPC in your project.
- Use each approach where it is most appropriate.
-\end_layout
-
-\begin_layout Subsubsection
-Hierarchies
-\end_layout
-
-\begin_layout Standard
-It's entirely a matter of convention that the use of 
-\begin_inset Quotes eld
-\end_inset
-
-/
-\begin_inset Quotes erd
-\end_inset
-
- in URIs implies hierarchy.
- Historically, the convention was likely imported from filesystem paths,
- where a name before a 
-\begin_inset Quotes eld
-\end_inset
-
-/
-\begin_inset Quotes erd
-\end_inset
-
- signifies a directory rather than a file.
-\end_layout
-
-\begin_layout Standard
-This convention is useful because it's very familiar to users, but additionally
- it implies semantic properties that can add clarity and power to your resource
- design.
- There are two possible semantic principles you may consider:
-\end_layout
-
-\begin_layout Enumerate
-A descendant resource 
-\emph on
-belongs to
-\emph default
- its ancestor, such that resources have cascading relationships in the hierarchy.
- This implies two rules:
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-Operations on a resource 
-\emph on
-may
-\emph default
- affect descendants.
- This rule is most obvious when applied to the DELETE verb: for example,
- if you delete 
-\begin_inset Quotes eld
-\end_inset
-
-/user/{id}/
-\begin_inset Quotes erd
-\end_inset
-
-, then it is expected that the resources at 
-\begin_inset Quotes eld
-\end_inset
-
-/user/{id}/profile/
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-/user/{id}/preferences/
-\begin_inset Quotes erd
-\end_inset
-
- also be deleted.
- A PUT, too, would also affect the descendant resources.
-\end_layout
-
-\begin_layout Enumerate
-Operations on a resource 
-\emph on
-should not
-\emph default
- affect ancestors.
- In other words, a descendant's state is isolated from its ancestors.
- For example, if I send a POST to 
-\begin_inset Quotes eld
-\end_inset
-
-/user/{id}/profile/
-\begin_inset Quotes erd
-\end_inset
-
-, the representation at 
-\begin_inset Quotes eld
-\end_inset
-
-/user/{id}/
-\begin_inset Quotes erd
-\end_inset
-
- should remain unaltered.
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-A descendant resource 
-\emph on
-belongs to
-\emph default
- its ancestor and also represents 
-\emph on
-an aspect of
-\emph default
- its ancestor, such that operations on a resource can be fine-tuned to particula
-r aspects of it.
- This implies three rules:
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-Descendant representations 
-\emph on
-are included
-\emph default
- in ancestor representations.
- For example, a GET on 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/
-\begin_inset Quotes erd
-\end_inset
-
- would include information about the status that you would see if you GET
- on 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/status/
-\begin_inset Quotes erd
-\end_inset
-
-.
- The latter URI makes it easier for the client to direct operations at the
- status aspect.
-\end_layout
-
-\begin_layout Enumerate
-Operations on a resource 
-\emph on
-may
-\emph default
- affect descendants.
- See above.
-\end_layout
-
-\begin_layout Enumerate
-Operations on a resource 
-\emph on
-will
-\emph default
- affect ancestors.
- This is the 
-\emph on
-opposite 
-\emph default
-of the above: the descendant's state is 
-\emph on
-not isolated 
-\emph default
-from its ancestors.
- For example, a POST to 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/status/
-\begin_inset Quotes erd
-\end_inset
-
- would surely also affect 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/
-\begin_inset Quotes erd
-\end_inset
-
-, which includes the status.
-\end_layout
-
-\end_deeper
-\begin_layout Standard
-You can see from the difference between rule 1.b and 2.c.
- that it's important to carefully define the 
-\emph on
-nature
-\emph default
- of your hierarchical relationships.
- Unlike filesystem directory hierarchies, in a URI-space there is no single
- standard or interpretation of what of a hierarchy means.
-\end_layout
-
-\begin_layout Paragraph
-Formats
-\end_layout
-
-\begin_layout Standard
-A format should not be considered 
-\begin_inset Quotes eld
-\end_inset
-
-an aspect
-\begin_inset Quotes erd
-\end_inset
-
- in the sense used in principle 2.
- For example, 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/html/
-\begin_inset Quotes erd
-\end_inset
-
- would not be a good way to support an HTML format for 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/
-\begin_inset Quotes erd
-\end_inset
-
-.
- The reason is that you would be allowing for more than one URI for the
- same encapsulated resource, creating confusion for users.
- For example, it's not immediately clear what would happen if they DELETE
- 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/html/
-\begin_inset Quotes erd
-\end_inset
-
-.
- Would that just remove the ability to represent the service as HTML? Or
- delete the service itself?
-\end_layout
-
-\begin_layout Standard
-Supporting multiple formats is best handled with content negotiation, within
- the REST architecture.
- If further formatting is required, URI query parameters can be used.
- For example: 
-\begin_inset Quotes eld
-\end_inset
-
-/service/{id}/?indent=2
-\begin_inset Quotes erd
-\end_inset
-
- might return a JSON representation with 2-space indentation.
-\end_layout
-
-\begin_layout Subsubsection
-Plural vs.
- Singular
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsubsection
-Documenting Your URI-Space
-\end_layout
-
-\begin_layout Standard
-If you create a programming language API, you will surely want to document
- it in a human language.
- You will want to define the acceptable types and usages of function arguments,
- describe return values, possible raises exceptions, add implementation
- and performance notes, etc.
- Many programming languages include tools for embedding such documentation
- as comments in the source code, and generating a reference manual from
- it.
-\end_layout
-
-\begin_layout Standard
-Consider that documenting your URI-space is just as important.
- A tool to generate such documentation for you is being considered for a
- future version of Prudence (not available in 2.0).
- Until we have it, consider adopting a resource documentation standard for
- your project.
- Here's a suggestion:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-/*
-\end_layout
-
-\begin_layout Plain Layout
-
- * This resource represents a service running on the server.
- Servers have unique
-\end_layout
-
-\begin_layout Plain Layout
-
- * IDs defined by integers.
- A service can be either active or inactive.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * Use POST to change the name or status of an existing service.
- You may
-\end_layout
-
-\begin_layout Plain Layout
-
- * not use it change the ID of an existing service.
- PUT will create a new
-\end_layout
-
-\begin_layout Plain Layout
-
- * service, and DELETE will stop and remove it.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * Implementation note: if you PUT a service with an ID that already exists,
- then
-\end_layout
-
-\begin_layout Plain Layout
-
- * it will only stop and restart the service rather than removing/recreate
- it,
-\end_layout
-
-\begin_layout Plain Layout
-
- * which would be too resource intensive.
- Use DELETE if you absolutely need the
-\end_layout
-
-\begin_layout Plain Layout
-
- * service to be removed first, or set the "clean" query param to "true"
- to
-\end_layout
-
-\begin_layout Plain Layout
-
- * force removal.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * URI: /service/{id:decimal}/
-\end_layout
-
-\begin_layout Plain Layout
-
- * Aspects: /service/{id:decimal}/status/
-\end_layout
-
-\begin_layout Plain Layout
-
- * Verbs: GET, POST, PUT, DELETE
-\end_layout
-
-\begin_layout Plain Layout
-
- * Media types: application/json, application/xml, text/plain (as JSON)
-\end_layout
-
-\begin_layout Plain Layout
-
- * Query params:
-\end_layout
-
-\begin_layout Plain Layout
-
- *  indent: decimal - if non-zero will return a human-readable indented
- version
-\end_layout
-
-\begin_layout Plain Layout
-
- *          of the representation with lines indented by the integer value
-\end_layout
-
-\begin_layout Plain Layout
-
- *  clean: boolean - if "true" or "yes" or "1" wil force removal of an existing
-\end_layout
-
-\begin_layout Plain Layout
-
- *         service during a PUT operation on an existing service
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * Representation as application/json:
-\end_layout
-
-\begin_layout Plain Layout
-
- *  {
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "id": number,
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "name": string (the service name),
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "status": string:"active"|"inactive"
-\end_layout
-
-\begin_layout Plain Layout
-
- *  }
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * POST/PUT payload as application/json:
-\end_layout
-
-\begin_layout Plain Layout
-
- *  {
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "name": ...
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "status": ...
-\end_layout
-
-\begin_layout Plain Layout
-
- *  }
-\end_layout
-
-\begin_layout Plain Layout
-
- */
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-/*
-\end_layout
-
-\begin_layout Plain Layout
-
- * This resource represents the status of a service.
- 
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * DELETE on this resource is identical to PUT or POST with "inactive".
-\end_layout
-
-\begin_layout Plain Layout
-
- * PUT and POST are handled identically.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * URI: /service/{id:decimal}/status/
-\end_layout
-
-\begin_layout Plain Layout
-
- * Aspect of: /service/{id:decimal}/
-\end_layout
-
-\begin_layout Plain Layout
-
- * Verbs: GET, POST, PUT, DELETE
-\end_layout
-
-\begin_layout Plain Layout
-
- * Media types: text/plain
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * Representation as text/plain:
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "active"|"inactive"
-\end_layout
-
-\begin_layout Plain Layout
-
- */
-\end_layout
-
-\end_inset
-
-
+ However, smart use of app.preheat can very effective, and it's very easy
+ to use.
 \end_layout
 
 \begin_layout Section
@@ -8444,15 +7390,7 @@ image/png
 Prudence recognizes many common file types by default, but you can add your
  own mappings in you application's settings.js, using 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.settings.mediaTypes
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.settings.mediaTypes (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "settings-media-types"
@@ -12170,6 +11108,103 @@ function handleGet(conversation) {
 
 \end_layout
 
+\begin_layout Standard
+If you wish to set both the payload 
+\emph on
+and
+\emph default
+ the status code, use an API for either one.
+ Here well use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.status API family"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.status"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.statusCode = 404
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Not found!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alternatively, we can use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.setResponseText"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.setResponseText"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.setResponseBinary"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.setResponseBinary"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.setResponseText('Not found!', null, null, null)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 404
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Paragraph
 Binary Streaming
 \end_layout
@@ -12274,7 +11309,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?overview-summar
 \end_layout
 
 \begin_layout Standard
-Note that you can also set the response directly via the 
+Note that you can also set the response via the 
 \begin_inset CommandInset href
 LatexCommand href
 name "conversation.response.entity API"
@@ -12305,11 +11340,38 @@ conversation.response.entity = payload
 
 \end_layout
 
+\begin_layout Standard
+Or via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.setResponseText API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.setResponseText"
+
+\end_inset
+
+ shortcut:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.setResponseText('My payload', null, null, null)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
-Overriding the MIME Type
+Overriding the Negotiated Format
 \begin_inset CommandInset label
 LatexCommand label
-name "overriding-the-mime-type"
+name "overriding-the-format"
 
 \end_inset
 
@@ -12317,20 +11379,28 @@ name "overriding-the-mime-type"
 \end_layout
 
 \begin_layout Standard
-The response payload's MIME type has likely been selected for you automatically
- by Prudence, via HTTP content negotiation, based on the list of preferences
- you set up in handleInit.
- However, it's possible to override this value via the 
+The response payload's MIME type and language have likely been selected
+ for you automatically by Prudence, via HTTP content negotiation, based
+ on the list of preferences you set up in handleInit.
+ However, it's possible to override these value via the 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.mediaType API family"
+name "conversation.mediaType"
 target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
 
 \end_inset
 
-.
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.language"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.language"
+
+\end_inset
+
+ API families.
  This should be done sparingly: content negotiation is the preferred RESTful
- mechanism for determining the response MIME type, and the negotiated value
+ mechanism for determining the response format, and the negotiated values
  should be honored.
  However, it could be useful and even necessary to override it if you 
 \emph on
@@ -12417,8 +11487,101 @@ function handleGet(conversation) {
 \end_layout
 
 \begin_layout Standard
-Note that this API works just as well for scriptlet resources, though again
- content negotiation should be preferred.
+An example of overriding the negotiated language:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByNameWithLanguage('text/html', 'en')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByNameWithLanguage('text/html', 'fr')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.query.get('language') == 'fr') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.languageName = 'fr'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.languageName == 'fr') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	else {
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that these APIs works just as well for scriptlet resources, though
+ again content negotiation should be preferred.
 \end_layout
 
 \begin_layout Subsubsection
@@ -12474,7 +11637,7 @@ application/java
 explicitly overridden (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "overriding-the-mime-type"
+reference "overriding-the-format"
 
 \end_inset
 
@@ -13894,15 +13057,7 @@ contactEmail
  in its template.
  Alternatively, you can also route your own custom error pages using 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.errors
-\begin_inset Quotes erd
-\end_inset
-
- in routing.js (page 
+app.errors in routing.js (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-errors"
@@ -14085,15 +13240,7 @@ GET
  are also warmed up.
  See 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.preheat (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-preheat"
@@ -14741,15 +13888,7 @@ TODO
 \begin_layout Standard
 See 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.globals
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.globals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-globals"
@@ -16223,6 +15362,61 @@ target "http://threecrickets.com/scripturian/manual/faq/"
 .
 \end_layout
 
+\begin_layout Subsection
+Technology
+\end_layout
+
+\begin_layout Subsubsection*
+How is REST different from RPC?
+\begin_inset CommandInset label
+LatexCommand label
+name "rest-vs-rpc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Well, it's not 
+\emph on
+necessarily
+\emph default
+ better.
+ One important advantage is that it works inside the already-existing, already-d
+eployed infrastructure of the World Wide Web, meaning that you can immediately
+ benefit from a wide range of optimized functionality.
+ We discuss this in greater detail in 
+\bar under
+The Case for REST (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+But we don't advocate REST for every project.
+ See 
+\bar under
+this discussion (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "do-you-really-need-rest"
+
+\end_inset
+
+)
+\bar default
+ for one reason why RPC may be more appropriate.
+ Choose the right tool for the job!
+\end_layout
+
 \begin_layout Subsubsection*
 How is Prudence different from Node.js?
 \begin_inset CommandInset label
@@ -16697,29 +15891,21 @@ Choose the right tool for the job! Node.js is a great choice for streaming
  great choice for web services and RESTful APIs.
 \end_layout
 
+\begin_layout Subsection
+Performance and Scalability
+\end_layout
+
 \begin_layout Subsubsection*
-Is REST better than RPC?
-\begin_inset CommandInset label
-LatexCommand label
-name "rest-vs-rpc"
-
-\end_inset
-
-
+How well does Prudence perform? How well does it scale?
 \end_layout
 
 \begin_layout Standard
-Well, it's not 
-\emph on
-necessarily
-\emph default
- better.
- One important advantage is that it works inside the already-existing, already-d
-eployed infrastructure of the World Wide Web, meaning that you can immediately
- benefit from a wide range of optimized functionality.
- We discuss this in greater detail in 
+First, recognize that there are two common uses for the term “scale.” REST
+ is often referred to as an inherently scalable architecture, but that has
+ more to do with project management than technical effectiveness.
+ This difference is addressed in the 
 \bar under
-The Case for REST (page 
+“The Case for REST” (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "the-cast-for-rest"
@@ -16732,24 +15918,472 @@ reference "the-cast-for-rest"
 \end_layout
 
 \begin_layout Standard
-But we don't advocate REST for every project.
- See 
+From the perspective of the ability to respond to user requests, there are
+ three aspects to consider: 
+\end_layout
+
+\begin_layout Paragraph
+1.
+ Serving HTTP
+\end_layout
+
+\begin_layout Standard
+Prudence comes with 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jetty"
+target "http://www.eclipse.org/jetty/"
+
+\end_inset
+
+, an HTTP server based on the JVM's non-blocking I/O API.
+ Jetty handles concurrent HTTP requests very well, and serves static files
+ at scales comparable to popular HTTP servers.
+\end_layout
+
+\begin_layout Paragraph
+2.
+ Generating HTML
+\end_layout
+
+\begin_layout Standard
+Prudence implements what might be the most sophisticated 
 \bar under
-this discussion (page 
+caching system (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "do-you-really-need-rest"
+reference "caching"
 
 \end_inset
 
 )
 \bar default
- for one reason why RPC may be more appropriate.
- Choose the right tool for the job!
+ of any web development framework.
+ Caching is truly the key to scalable software.
+ See 
+\bar under
+“Scaling Tips” (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips"
+
+\end_inset
+
+)
+\bar default
+ for a comprehensive discussion of the role of caching.
+\end_layout
+
+\begin_layout Paragraph
+3.
+ Running code
+\end_layout
+
+\begin_layout Standard
+There may be a delay when starting up a specific language engine in Prudence
+ for the first time in an application, as it loads and initializes itself.
+ Then, there may be a delay when accessing a dynamic web page or resource
+ for the first time, or after it has been changed, as it might require compilati
+on.
+ Once it's up and running, though, your code performs and scale very well---as
+ well as you've written it.
+ You need to understand concurrency and make sure you make good choices
+ to handle coordination between threads accessing the same data.
+ If all is good, your code will actually perform better throughout the life
+ of the application.
+ The JVM learns and adapts as it runs, and performance can improve the more
+ the application is used.
+\end_layout
+
+\begin_layout Standard
+All language engines supported of Prudence are generally very fast.
+ In some cases, the JVM language implementations are faster than their “native”
+ equivalents.
+ This is demonstrable for Python, Ruby and PHP.
+ The reason is that the JVM, soon reaching version 8, is a very mature virtual
+ machine, and incorporates decades-worth of optimizations for live production
+ environments.
+\end_layout
+
+\begin_layout Standard
+If you are performing CPU-intensive or time-sensitive tasks, then it's best
+ to profile these code segments precisely.
+ Exact performance characteristics depend on the language and engine used.
+ The 
+\begin_inset CommandInset href
+LatexCommand href
+name "Bechmarks Game"
+target "http://shootout.alioth.debian.org/"
+
+\end_inset
+
+ can give you some comparisons of different language engines running high-comput
+ation programs.
+ In any case, if you have a piece of intensive code that really needs to
+ perform well, it's probably best to write it in Java and access it from
+ the your language.
+ You can even write it in C or assembly, and have it linked to Java via
+ JNI.
+\end_layout
+
+\begin_layout Standard
+If you're not doing intensive computation, then don't worry too much about
+ your language being “slow.” It's been shown that for the vast majority of
+ web applications, the performance of the web programming language is rarely
+ the bottleneck.
+ The deciding factors are the usually performance of the backend data-driving
+ technologies and architectures.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+I heard REST is very scalable.
+ Is this true? Does this mean Prudence can support many millions of users?
+\end_layout
+
+\begin_layout Standard
+Yes, if you know what you're doing.
+ See 
+\bar under
+“The Case for REST” (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+“Scaling Tips” (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips"
+
+\end_inset
+
+)
+\bar default
+ for in-depth discussions.
+\end_layout
+
+\begin_layout Standard
+The bottom line is that it's very easy to make your application scale poorly,
+ whatever technology or architecture you use, and that Prudence, in embracing
+ REST and the JVM, can more easily allow for best-practice scalable architecture
+s than most other web platforms.
+\end_layout
+
+\begin_layout Standard
+That's not very reassuring, but it's a fact of software and hardware architectur
+e right now.
+ Achieving massive scale is challenging.
+\end_layout
+
+\begin_layout Subsection
+Errors
+\end_layout
+
+\begin_layout Subsubsection*
+How to avoid the “Adapter not available for language: xml” parsing exception
+ for XML files?
+\end_layout
+
+\begin_layout Standard
+The problem is that the XML header confuses Scripturian, Prudence's language
+ parser, which considers the “<?” a possible scriptlet delimiter:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<?xml version='1.0' encoding='UTF-8'?>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The simple solution is to force Scripturian to use the “<%” for the page
+ via an empty scriptlet, ignoring all “<?”:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% %><?xml version='1.0' encoding='UTF-8'?>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Licensing
+\end_layout
+
+\begin_layout Quote
+The author is not a lawyer.
+ This is not legal advice, but a personal, and possibly wrong interpretation.
+ The wording of the license itself supersedes anything written here.
+\end_layout
+
+\begin_layout Subsubsection*
+Does the LGPL mean I can't use Prudence unless my product is open sourced?
+\end_layout
+
+\begin_layout Standard
+The GPL family of licenses restrict your ability to 
+\emph on
+redistribute
+\emph default
+ software, not to use it.
+ You are free to use Prudence as you please within your organization, even
+ if you're using it to serve public web sites---though with no warranty
+ nor an implicit guarantee of support from the copyright holder, Three Crickets
+ LLC.
+\end_layout
+
+\begin_layout Standard
+The GPL would thus only be an issue if you're selling, or even giving away,
+ a product that 
+\emph on
+would include
+\emph default
+ Prudence.
+\end_layout
+
+\begin_layout Standard
+And note that Prudence uses the 
+\emph on
+Lesser
+\emph default
+ GPL, which has even fewer restrictions on redistribution than the regular
+ GPL.
+ Essentially, as long as you do not alter Prudence in any way, you can include
+ Prudence in any product, 
+\emph on
+even if it is not free
+\emph default
+.
+ With one exception: Prudence uses version 3 of the Lesser GPL, which requires
+ your product to not restrict users' ownership of data via schemes such
+ as DRM if Prudence is to be included in its distribution.
+\end_layout
+
+\begin_layout Standard
+Even if your product does not qualify for including Prudence in it, you
+ always have the option of distributing your product without Prudence, and
+ instructing your customers to download and install Prudence on their own.
+\end_layout
+
+\begin_layout Standard
+We understand that in some cases open sourcing your product is impossible,
+ and passing the burden to the users is cumbersome.
+ As a last resort, we offer you a commercial license as an alternative to
+ the GPL.
+ Please contact Three Crickets for details.
+\end_layout
+
+\begin_layout Standard
+Three Crickets, the original developers of Prudence, are not trying to force
+ you to purchase it.
+ That is not our business model, and we furthermore find such trickery bad
+ for building trusting relationships.
+ Instead, we hope to encourage you to 1) pay Three Crickets for consultation,
+ support and development services for Prudence, and to 2) consider releasing
+ your own product as free software, thereby truly sharing your innovation
+ with all of society.
+\end_layout
+
+\begin_layout Subsubsection*
+Why the LGPL and not the GPL?
+\end_layout
+
+\begin_layout Standard
+The Lesser GPL used to be called the “Library GPL,” and was originally drafted
+ for 
+\begin_inset CommandInset href
+LatexCommand href
+name "glibc"
+target "http://www.gnu.org/software/libc/"
+
+\end_inset
+
+.
+ It is meant for special cases in which the full GPL could limit the adoption
+ of a product, which would be self-defeating.
+ The assumption is that there are many alternatives with less restrictions
+ on distribution.
+\end_layout
+
+\begin_layout Standard
+In the case of the Linux project, the full GPL has done a wonderful job
+ at convincing vendors to open source their code in order to ship their
+ products with Linux inside.
+ However, it doesn't seem likely that they would do the same for Prudence.
+ There are so many great web development platforms out there with fewer
+ restrictions.
+\end_layout
+
+\begin_layout Standard
+Note that the LGPL version 3 has a clause allowing you to “upgrade” Prudence
+ to the full GPL for inclusion in your GPL-ed product.
+ This is a terrific feature, and another reason to love this excellent license.
 \end_layout
 
 \begin_layout Part
 Advanced Manual
+\end_layout
+
+\begin_layout Section
+The Internal URI-space
+\begin_inset CommandInset label
+LatexCommand label
+name "internal-uri-space"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Who says that you need HTTP, or any kind of networking, for REST? The principles
+ themselves are applicable and suitable to in-memory communication, and
+ represent an attractive architectural paradigm for APIs.
+ Attractive especially because it can work 
+\emph on
+both
+\emph default
+ locally and over the wire.
+\end_layout
+
+\begin_layout Subsubsection
+RIAP
+\end_layout
+
+\begin_layout Standard
+In Prudence, internal REST is elegantly supported by specifying the 
+\begin_inset Quotes eld
+\end_inset
+
+RIAP
+\begin_inset Quotes erd
+\end_inset
+
+ pseudo-protocol in URIs.
+ RIAP stands for 
+\begin_inset Quotes eld
+\end_inset
+
+Restlet Internal Access Protocol
+\begin_inset Quotes erd
+\end_inset
+
+.
+ There are two common formats for RIAP URIs:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+riap://application/*
+\begin_inset Quotes erd
+\end_inset
+
+: This will route to the 
+\emph on
+current
+\emph default
+ application.
+ The remainder will exactly match the relative URIs you've mapped in 
+\bar under
+app.routes (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-routes"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+riap://component/{internal host}/*
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Subsection
+Internal Access
+\end_layout
+
+\begin_layout Standard
+Of course, RIAP URIs cannot be used by clients, only by requests initiated
+ in your code.
+\end_layout
+
+\begin_layout Standard
+If you're using JavaScript, you 
+\end_layout
+
+\begin_layout Subsection
+Configuring the Internal URI-space
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+internal
+\begin_inset Quotes erd
+\end_inset
+
+ host (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-internal-host"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Subsection
+Implementing the Internal URI-space
+\end_layout
+
+\begin_layout Standard
+Avoid serialization (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoid-serialization-for-internal-requests"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Section
@@ -16824,8 +16458,8 @@ reference "caching"
 \end_layout
 
 \begin_layout Standard
-Prudence supports many built-in variables extracted from the conversation
- attributes, all summarized below.
+Prudence supports many built-in interpolation variables, extracted from
+ the conversation attributes and summarized below.
  See also the related 
 \begin_inset CommandInset href
 LatexCommand href
@@ -16918,7 +16552,7 @@ Suffixes
 \bar under
 i
 \bar default
-dentitifer)
+dentifier)
 \end_layout
 
 \begin_layout Itemize
@@ -17055,7 +16689,7 @@ To refer to the base URI directly, use the special
 \begin_inset Quotes erd
 \end_inset
 
- midfix, to which you would still need to add one of the above suffixes.
+ infix, to which you would still need to add one of the above suffixes.
  For example, “{rbi}” refers to the complete base URI of the actual URI.
 \end_layout
 
@@ -17071,7 +16705,7 @@ name "interpolating-the-wildcard"
 \end_layout
 
 \begin_layout Standard
-This is a common use case for redirection.
+This is a common use case for redirection, worth emphasizing.
  According to the rules above, 
 \begin_inset Quotes eld
 \end_inset
@@ -17227,11 +16861,11 @@ ent name (for example, and identifier for the browser)
 \end_layout
 
 \begin_layout Subsection
-Entity Attributes
+Payload Attributes
 \end_layout
 
 \begin_layout Standard
-All these refer to the data (“entity”) sent by the client.
+All these refer to the payload (“entity”) sent by the client.
 \end_layout
 
 \begin_layout Itemize
@@ -17426,8 +17060,8 @@ reference "app-routes"
 
 )
 \bar default
-, URI templates delimited by curly brackets can be used to match incoming
- requests and extract the values into 
+, URI templates delimited by curly brackets can be used to parse incoming
+ request URIs and extract the values into 
 \bar under
 conversation.locals (page 
 \begin_inset CommandInset ref
@@ -17606,19 +17240,11 @@ business logic
 \end_inset
 
 : the use case for MVC really is big business for big businesses.
- At its best, MVC makes these boring oceans of forms easier to maintain
+ At its best, MVC makes these repetitive stacks of forms easier to maintain
  in the long run.
  At its worst, programmers drown in an ocean of controller configuration
- files, complaining that they're working more as 
-\begin_inset Quotes eld
-\end_inset
-
-XML technicians
-\begin_inset Quotes erd
-\end_inset
-
- than programmers, fighting opaque layers that can only do what they were
- programmed to do.
+ files, fighting opaque layers of APIs that can only do what they were programme
+d to do, but not what is needed for a sensible UI.
 \end_layout
 
 \begin_layout Standard
@@ -17641,7 +17267,8 @@ presenter,
 \end_inset
 
  far from an opaque layer, is implemented directly by the programmer in
- code, often by inheriting classes the provide the predictable functionality.
+ code, often by inheriting classes that provide the basic predictable functional
+ity.
  Depending on the variation you're using, the 
 \begin_inset Quotes eld
 \end_inset
@@ -17651,7 +17278,7 @@ business logic
 \end_inset
 
  might even be in the presenter rather than the model.
- Still, MVP, like MVC, expresses the same anxiety about mixing model and
+ Still, MVP, like MVC, stems from the same anxiety about mixing model and
  view.
 \end_layout
 
@@ -17682,7 +17309,7 @@ model
 \emph on
 the model is the view
 \emph default
-, such that separating the two is logical rather than technical.
+.
 \end_layout
 
 \begin_layout Standard
@@ -17712,7 +17339,7 @@ model,
 \begin_inset Quotes erd
 \end_inset
 
- with controllers/presenters and views implemented entirely client-side.
+ with controllers/presenters as well as views implemented entirely client-side.
  You can do full-blown, conventional MVC with the 
 \begin_inset Quotes eld
 \end_inset
@@ -17740,8 +17367,8 @@ view,
  an approach they go so far as to enforce by allowing you to embed only
  limited templating code into your HTML.
  Some of these frameworks even allow you to configure the form flow, which
- they then use to generate an opaque URI-space for you, and can even smartly
- support the browser 
+ they then use to generate an opaque URI-space for you, and can even sabotage
+ the browser 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17749,7 +17376,7 @@ back
 \begin_inset Quotes erd
 \end_inset
 
-.
+ button to enforce that flow.
  (MVC automation at its finest! Or worst\SpecialChar \ldots{}
 )
 \end_layout
@@ -17759,7 +17386,7 @@ The impetus for these brutally extreme measures is similar to the one with
  which we started: a desire to decouple the user interface from everything
  else.
  HTML is the realm of web designers, not programmers, and mixing the work
- of both professions into a single file could be difficult.
+ of both professions into a single file presents project management challenges.
  However, there's a productive distance between cleaning up HTML pages and
  full-blown MVC, which unfortunately not enough frameworks explore.
  And actually, not everything called 
@@ -17773,14 +17400,16 @@ MVC
  really is MVC.
 \end_layout
 
-\begin_layout Subsection
-Tutorial
+\begin_layout Standard
+So what are we left with in Prudence? As you'll see, Prudence supports a
+ straightforward MVP architecture while still adhering to RESTful principles.
+ Read on, and consider if it would benefit your project to use it.
+ Our recommendation is to use what works best for you and your development
+ team.
 \end_layout
 
-\begin_layout Standard
-Prudence naturally supports a straightforward MVP architecture while still
- adhering to RESTful principles.
- Read on, and consider if it would benefit your project to use it.
+\begin_layout Subsection
+Tutorial
 \end_layout
 
 \begin_layout Subsubsection
@@ -18040,6 +17669,13 @@ Models.Messages = function() {
 
 \begin_layout Subsubsection
 Views
+\begin_inset CommandInset label
+LatexCommand label
+name "mvc-views"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -18091,9 +17727,17 @@ reference "markup-languages"
 )
 \bar default
 .
- Even then, you can still use dynamic languages, such as JavaScript (server-side
-), when useful: Prudence allows you mix and match languages with ease.
- Note especially the use of the 
+ Even if you prefer templating, you can still 
+\begin_inset Quotes eld
+\end_inset
+
+drop down
+\begin_inset Quotes erd
+\end_inset
+
+ to dynamic languages, such as JavaScript (server-side), when useful: Prudence
+ allows you to easily mix and match scriplets in different languages.
+ If you do so, take special note of the nifty 
 \begin_inset CommandInset href
 LatexCommand href
 name "in-flow tag"
@@ -18107,8 +17751,8 @@ target "http://threecrickets.com/scripturian/manual/faq/#in-flow"
 \begin_layout Quote
 There are some who shudder at the thought of mixing dynamic languages and
  HTML.
- This likely comes from bad experience with poorly-designed PHP applications,
- where everything gets mixed together into the 
+ This likely comes from bad experience with poorly-designed PHP/JSP/ASP
+ applications, where everything gets mixed together into the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -18117,8 +17761,8 @@ view
 \end_inset
 
  file.
- If you feel that way, fine: make yourself a rule that only templating languages
- are allowed in scriptlets.
+ If you're afraid of losing control, then you can simply make yourself a
+ rule that only templating languages are allowed in scriptlets.
  It's purely a matter of project management discipline.
  We recommend, however, relaxing some of that extremism: for example, you
  can make the rule that no 
@@ -18130,11 +17774,23 @@ business logic
 \end_inset
 
  should appear together with HTML, while still allowing some flexibility
- for using server-side JavaScript 
+ for using server-side JavaScript, but 
 \emph on
 only
 \emph default
  for UI-related work.
+ Still unconvinced? We'll show you below how to 
+\bar under
+use your favorite pure templating engine with Prudence (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "view-templates"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -18663,7 +18319,11 @@ views
 \emph on
 internal
 \emph default
- one, not the external one, which actually hits the presenter.
+ one, 
+\emph on
+not
+\emph default
+ the external one, which actually hits the presenter.
  If there are attributes of the external request that you want to use for
  the cache key pattern, then you must transfer them manually.
 \end_layout
@@ -19477,7 +19137,7 @@ Note that STRawGroupDir treats these
 \end_inset
 
  files as if they were a directory with multiple files when you look up
- an ID., so the URI to access 
+ an ID, so the URI to access 
 \begin_inset Quotes eld
 \end_inset
 
@@ -19564,8 +19224,9 @@ Caching?
 \begin_layout Standard
 Not with StringTemplate, unfortunately.
  Its brutal rejection of any kind of programming logic in templates means
- that you can't even create a plugin to support caching.
- Your only option would be to use an 
+ that you can't create a plugin to support caching.
+ Your only option would be to cache the views yourself in the presenter,
+ or even use an 
 \bar under
 upstream cache (page 
 \begin_inset CommandInset ref
@@ -19578,7 +19239,7 @@ reference "scaling-tips-upstream-caching"
 \bar default
 .
  In our next example, we'll be using a more flexible engine that allows
- for that.
+ for more integration with Prudence features.
 \end_layout
 
 \begin_layout Subsubsection
@@ -19611,9 +19272,9 @@ target "https://www.djangoproject.com/"
 
 .
  We'll go over its basic integration into Prudence, and also show you how
- to write plugins to take advantage of Prudence's 
+ to write Jinja2 custom tags to easily take advantage of Prudence's 
 \bar under
-caching (page 
+caching mechanism (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "caching"
@@ -19626,10 +19287,10 @@ reference "caching"
 \end_layout
 
 \begin_layout Standard
-First we need to install the 
+First we need to install 
 \begin_inset CommandInset href
 LatexCommand href
-name "Python plugin"
+name "Python"
 target "http://threecrickets.com/sincerity/ecosystem/language-plugins/#python-plugin"
 
 \end_inset
@@ -19667,13 +19328,13 @@ target "http://simplejson.readthedocs.org/"
 
 \begin_layout Quote
 Note that Jinja2 version 2.7 doesn't work in Jython (might be fixed for version
- 2.8), but version 2.6 does, so that's what we'll use here.
+ 2.8), but version 2.6 does, so that's what we use here.
 \end_layout
 
 \begin_layout Standard
-For our dispatcher, we will do something a bit different from before.
- Because we want to support caching of templates, we will want the actual
- template renderer as a 
+For our dispatcher, we'll do something a bit different from before: because
+ we want to support caching of templates, we will want the actual template
+ renderer as a 
 \bar under
 scriptlet resource (page 
 \begin_inset CommandInset ref
@@ -19686,7 +19347,8 @@ reference "scriptlet-resources"
 \bar default
 .
  The dispatcher, then, will simply delegate to that scriptlet resource.
- Another change is that we'll be writing it in Python.
+ Another change is that we'll be writing it all in Python, so we can call
+ the Jinja2 API.
  Let's start with 
 \begin_inset Quotes eld
 \end_inset
@@ -19868,7 +19530,7 @@ Notes:
 
 \begin_layout Itemize
 We've allowed only internal requests through: we want to hide this dispatcher
- from the public URI space because it should only accessed by our presenters.
+ from the public URI space because it should only be accessed by our presenters.
 \end_layout
 
 \begin_layout Itemize
@@ -19887,6 +19549,7 @@ Jinja2's FileSystemLoader requires the full filename, so we're stripping
 \begin_layout Itemize
 We're forwarding a few useful attributes of the request: the original URI
  and the original base URI.
+ We'll show you later how to use those for our custom tags.
 \end_layout
 
 \begin_layout Itemize
@@ -19912,9 +19575,9 @@ reference "avoid-serialization-for-internal-requests"
 , but also JSON payloads.
  Avoiding serialization is fine for Python-to-Python calls, but if we call
  from another programming language---say, JavaScript---the native structures
- are not compatible.
+ are incompatible.
  Thus, we're allowing the use of JSON as an interchange format.
- When we send the payload to 
+ On the other side, when we send the payload to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -19922,7 +19585,7 @@ reference "avoid-serialization-for-internal-requests"
 \begin_inset Quotes erd
 \end_inset
 
-, it's find to send an object, because it's Python-to-Python.
+, it's fine to send a raw object, because it's Python-to-Python.
 \end_layout
 
 \begin_layout Standard
@@ -20166,7 +19829,7 @@ reference "interpolating-the-wildcard"
 \begin_inset Quotes eld
 \end_inset
 
-hello
+hello/
 \begin_inset Quotes erd
 \end_inset
 
@@ -20354,8 +20017,8 @@ Custom Tags
 
 \begin_layout Standard
 It's fairly easy to add custom tags to Jinja2.
- Let's add some to support Prudence caching, as well as other useful values
- specific to the conversation.
+ Let's add some to support Prudence caching, as well as other useful Prudence
+ values.
  Here's 
 \begin_inset Quotes eld
 \end_inset
@@ -20491,7 +20154,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            return _print(self.environment.prudence_uri, lineno)
+            return _literal(self.environment.prudence_uri, lineno)
 \end_layout
 
 \begin_layout Plain Layout
@@ -20505,7 +20168,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            return _print(self.environment.prudence_base_uri, lineno)
+            return _literal(self.environment.prudence_base_uri, lineno)
 \end_layout
 
 \begin_layout Plain Layout
@@ -20534,7 +20197,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            # Reverse relative path to the base
+            # reverse relative path to the base
 \end_layout
 
 \begin_layout Plain Layout
@@ -20549,7 +20212,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            return _print(relative, lineno)
+            return _literal(relative, lineno)
 \end_layout
 
 \begin_layout Plain Layout
@@ -20621,7 +20284,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-        return _print('', lineno)
+        return _literal('', lineno)
 \end_layout
 
 \begin_layout Plain Layout
@@ -20652,7 +20315,8 @@ We'll then modify our
 \begin_inset Quotes erd
 \end_inset
 
- to use our extension:
+ to use our extension, and set it up using the attributes forwarded from
+ the dispatcher.:
 \end_layout
 
 \begin_layout Standard
@@ -20686,10 +20350,6 @@ env.prudence_base_uri = payload['base_uri']
 \end_layout
 
 \begin_layout Standard
-We've set up the extension using the attributes forwarded from the dispatcher.
-\end_layout
-
-\begin_layout Standard
 Here's a simple template to test the extensions:
 \end_layout
 
@@ -20705,6 +20365,16 @@ status open
 
 \begin_layout Plain Layout
 
+{% cache_duration 5000 %}
+\end_layout
+
+\begin_layout Plain Layout
+
+{% cache_tags 'tag1', 'tag2' %}
+\end_layout
+
+\begin_layout Plain Layout
+
 <body>
 \end_layout
 
@@ -20715,27 +20385,17 @@ status open
 
 \begin_layout Plain Layout
 
-<p><b>current_uri</b> = {% current_uri %}</p>
+<p><b>current_uri</b>: {% current_uri %}</p>
 \end_layout
 
 \begin_layout Plain Layout
 
-<p><b>application_uri</b> = {% application_uri %}</p>
+<p><b>application_uri</b>: {% application_uri %}</p>
 \end_layout
 
 \begin_layout Plain Layout
 
-<p><b>to_base</b> = {% to_base %}</p>
-\end_layout
-
-\begin_layout Plain Layout
-
-{% cache_duration 5000 %}
-\end_layout
-
-\begin_layout Plain Layout
-
-{% cache_tags 'tag1', 'tag2' %}
+<p><b>to_base</b>: {% to_base %}</p>
 \end_layout
 
 \begin_layout Plain Layout
@@ -20758,8 +20418,7 @@ RESTful Models
 \end_layout
 
 \begin_layout Standard
-In our MVC implementation above, we've implemented our models as classes
- (OOP).
+In our MVC tutorial above, we've implemented our models as classes (OOP).
  However, it may make sense to implement them as RESTful resources instead.
 \end_layout
 
@@ -20783,8 +20442,8 @@ presentation servers
 \end_inset
 
  run elsewhere, providing the direct responses to users.
- The presenters would be calling the models using secured HTTP requests,
- instead of function calls.
+ In this scenario, the presenters would be calling the models using secured
+ HTTP requests, instead of function calls.
 \end_layout
 
 \begin_layout Standard
@@ -20822,8 +20481,8 @@ business logic.
 \end_layout
 
 \begin_layout Standard
-A good compromise, if necessary, can be to still use HTTP, just not RESTfully:
- use Remote Procedure Call (RPC) instead.
+A good compromise, if necessary, can be to still use HTTP to access models,
+ just not RESTfully: use Remote Procedure Call (RPC) instead.
  We discuss this option in the 
 \bar under
 URI-space architecture tips (page 
@@ -20843,8 +20502,7 @@ Tutorial
 \end_layout
 
 \begin_layout Standard
-Let's look at a RESTful example.
- For simplicity, we'll use a mapped resource, 
+For simplicity, we'll use a mapped resource, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -21227,7 +20885,7 @@ We've assumed an internal request here, but it's easy to change it to an
 \end_layout
 
 \begin_layout Standard
-Here's our addition to routing.js, using 
+Finally, here's our addition to routing.js, using 
 \bar under
 capture-and-hide (page 
 \begin_inset CommandInset ref
@@ -21360,8 +21018,8 @@ reference "filtering-route-types"
 \bar default
  used to add effects to resources.
  Though you can often code the same effect directly into a resource, filters
- are decoupled from resources, allowing you to reuse the filter on many
- resources, which is especially useful with 
+ are decoupled from resources, allowing you to reuse the filter, which is
+ especially useful with 
 \bar under
 mapping route types (page 
 \begin_inset CommandInset ref
@@ -21396,7 +21054,7 @@ reference "static-resources"
 
 \begin_layout Standard
 Because it's easy to enable and disable filters just by editing routing.js,
- filters are often used for debugging and testing effects.
+ filters are often used to add debugging and testing effects.
 \end_layout
 
 \begin_layout Subsection
@@ -21417,8 +21075,9 @@ reference "manual-resources"
 \bar default
 : as source code files (in any supported language) with either or both filter
  entry points: handleBefore and handleAfter.
- The former is called before all requests reach the next route type, and
- the latter is called after they finish their processing.
+ The former is called before all requests reach the next (downstream) route
+ type, and the latter is called on the way back, after the downstream finishes
+ its work.
 \end_layout
 
 \begin_layout Standard
@@ -21442,7 +21101,7 @@ reference "filter-route-type"
 )
 \bar default
  in routing.js.
- We'll put it in front of all our main resources:
+ We'll put it in front of all our main mapping resources:
 \end_layout
 
 \begin_layout Standard
@@ -21557,9 +21216,9 @@ rence)
 \begin_layout Standard
 Our filter doesn't do much, but it's easy to test that the code is being
  called by looking at the log.
- But of course you can do many other things here, as detailed in the examples
+ Of course you can do many other things here, as detailed in the examples
  below.
- Many of the 
+ Most of the 
 \begin_inset CommandInset href
 LatexCommand href
 name "conversation APIs"
@@ -21651,7 +21310,7 @@ next
 \begin_inset Quotes erd
 \end_inset
 
- route type and continue to our own handleAfter function
+ route type and go immediately to our own handleAfter
 \end_layout
 
 \begin_layout Itemize
@@ -21762,7 +21421,7 @@ The following example filter always sets the response to a web page displaying
 \begin_inset Quotes eld
 \end_inset
 
-Blocked!
+blocked!
 \begin_inset Quotes erd
 \end_inset
 
@@ -21797,51 +21456,23 @@ status open
 
 \begin_layout Plain Layout
 
-importClass(
-\end_layout
-
-\begin_layout Plain Layout
-
-	org.restlet.representation.StringRepresentation,
-\end_layout
-
-\begin_layout Plain Layout
-
-	org.restlet.data.MediaType)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
 function handleAfter(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-	var cookie = conversation.getCookie('admin')
+	if (!isAuthorized(conversation)) {
 \end_layout
 
 \begin_layout Plain Layout
 
-	if (null !== cookie) {
+		var content = '<html><body>' + conversation.reference + ' is blocked to
+ you!</body></html>'
 \end_layout
 
 \begin_layout Plain Layout
 
-		if (cookie.value == 'magic123') {
-\end_layout
-
-\begin_layout Plain Layout
-
-			return
-\end_layout
-
-\begin_layout Plain Layout
-
-		}
+		conversation.setResponseText(content, 'text/html', 'en', 'UTF-8')
 \end_layout
 
 \begin_layout Plain Layout
@@ -21851,21 +21482,65 @@ function handleAfter(conversation) {
 
 \begin_layout Plain Layout
 
+}
 \end_layout
 
 \begin_layout Plain Layout
 
-	var content = '<html><body>Blocked!</body></html>'
 \end_layout
 
 \begin_layout Plain Layout
 
-	var payload = new StringRepresentation(content , MediaType.valueOf('text/html'))
+function isAuthorized(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-	conversation.response.entity = payload
+	var cookie = conversation.getCookie('admin')
+\end_layout
+
+\begin_layout Plain Layout
+
+	return (null !== cookie) && (cookie.value == 'magic123')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Another, simpler trick, would be to redirect the response:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleAfter(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (!isAuthorized(conversation)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.redirectSeeOther(conversation.base + '/blocked/')
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
 \end_layout
 
 \begin_layout Plain Layout
@@ -21904,8 +21579,8 @@ not
  a good way to do this, because there's no guarantee that response payloads
  returned from resources are textual, even if the content is text: they
  could very well be compressed (gzip) and also chunked.
- You would then need to be prepared to decode, disassemble, make your changes,
- and then reassemble such responses, which is neither trivial nor efficient.
+ You would then need to decode, disassemble, make your changes, and then
+ reassemble such responses, which is neither trivial nor efficient.
  
 \emph on
 Content
@@ -22120,7 +21795,7 @@ Built-in Filters
 \end_layout
 
 \begin_layout Standard
-Prudence comes with a few built in filters, each with 
+Prudence comes with a few built-in filters, each with 
 \bar under
 its own route type (page 
 \begin_inset CommandInset ref
@@ -22144,7 +21819,7 @@ reference "static-resources"
 )
 \bar default
 , and are discussed in that chapter.
- A few others are more generally useful, and discussed here.
+ A few others are more generally useful, and are discussed here.
 \end_layout
 
 \begin_layout Subsubsection
@@ -22171,13 +21846,13 @@ reference "app-globals"
 )
 \bar default
 .
- Globals affect the entire application.
+ Globals,of course, affect the entire application.
  However, you may sometimes need 
 \emph on
 local 
 \emph default
-configuration: the ability to configure multiple instances of resources
- differently.
+configurations: the ability to a specific instance of a resources differently
+ from others.
  That's where the 
 \bar under
 
@@ -22444,7 +22119,7 @@ app.routes = {
  protocol using 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.request.method.name"
+name "conversation.request.protocol.name"
 target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
 
 \end_inset
@@ -25671,6 +25346,982 @@ reference "tutorial"
 \end_layout
 
 \begin_layout Section
+URI-space Tips
+\begin_inset CommandInset label
+LatexCommand label
+name "uri-space-tips"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+REST does not standardize URI-spaces, and indeed has little to say about
+ URI design.
+ However, it does 
+\emph on
+imply
+\emph default
+ a preference for certain architectural principles.
+ We go over much of the impetus in 
+\bar under
+The Case for REST article (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+, and suggest you start there.
+\end_layout
+
+\begin_layout Standard
+It's a good idea to think very carefully about your URI-space.
+ A RESTful URI-space can help you define well-encapsulated RESTful resources.
+ Below are some topics to consider.
+\end_layout
+
+\begin_layout Subsection
+Nouns vs.
+ Verbs
+\end_layout
+
+\begin_layout Standard
+It's useful to think of URIs as syntactic 
+\emph on
+nouns
+\emph default
+, a grammatical counterpart to HTTP's 
+\emph on
+verbs
+\emph default
+.
+ In other worlds, make sure that you do not include verbs in your URIs.
+ Examples:
+\end_layout
+
+\begin_layout Itemize
+Good: 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/status/
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Bad: 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/start/
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/stop/
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+What is wrong with verbs in URIs?
+\end_layout
+
+\begin_layout Standard
+One potential problem is clarity.
+ Which HTTP verb should be used on a verb URI? Do you need to POST, PUT
+ or DELETE to 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/stop/
+\begin_inset Quotes erd
+\end_inset
+
+ in order to stop the service? Of course, you can support all and document
+ this, but it won't be immediately obvious to the user.
+\end_layout
+
+\begin_layout Standard
+A second potential problem is that you need to keep increasing the size
+ of your URI-space the more actions of this sort you want to support.
+ This means more files, more classes, and generally more code.
+ Handling these operations 
+\emph on
+inside
+\emph default
+ a single resource would just mean a simple 
+\begin_inset Quotes eld
+\end_inset
+
+if
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+switch
+\begin_inset Quotes erd
+\end_inset
+
+ statement and an extra method.
+\end_layout
+
+\begin_layout Standard
+A third, more serious potential problem is idempotency.
+ The idempotent verbs PUT and DELETE may be optimized by the HTTP infrastructure
+ (for example, a smart load balancer) such that requests arrive more than
+ once: this is allowed by the very definition of idempotency.
+ However, your operations 
+\emph on
+may
+\emph default
+ not be semantically idempotent.
+ For example, if a 
+\begin_inset Quotes eld
+\end_inset
+
+stop
+\begin_inset Quotes erd
+\end_inset
+
+ is sent to an already-stopped service, it may return an 
+\begin_inset Quotes eld
+\end_inset
+
+already stopped
+\begin_inset Quotes erd
+\end_inset
+
+ 500 error.
+ In this case, if the infrastructure allows for two 
+\begin_inset Quotes eld
+\end_inset
+
+stop
+\begin_inset Quotes erd
+\end_inset
+
+ commands to come through, then the user may get an error even though the
+ operation succeeded for the first 
+\begin_inset Quotes eld
+\end_inset
+
+stop.
+\begin_inset Quotes erd
+\end_inset
+
+ There's an easy way around this: simply allow 
+\emph on
+only
+\emph default
+ POST, the non-idempotent verb, for all such operations.
+ The infrastructure would never allow more than request to come through
+ per POST.
+ However, if you enforce the use of POST, you will lose the ability of the
+ infrastructure to optimize for non-idempotency.
+ POST is the least scalable HTTP verb.
+\end_layout
+
+\begin_layout Standard
+The bottom line is that if you standardize on only using nouns for your
+ URIs, you will avoid many of these semantic pitfalls.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Beware of gerunds!
+\emph default
+ A URI such as 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/stopping/
+\begin_inset Quotes erd
+\end_inset
+
+ is technically a noun, but allows for some verb-related problems to creep
+ in.
+\end_layout
+
+\begin_layout Subsection
+Do You Really Need REST?
+\begin_inset CommandInset label
+LatexCommand label
+name "do-you-really-need-rest"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the above section, it was suggested that you prefer nouns to verbs.
+ However, this preference may seem for constraining for your application.
+ Your application may be very command-oriented, such that you will end up
+ with a very small set of 
+\begin_inset Quotes eld
+\end_inset
+
+noun
+\begin_inset Quotes erd
+\end_inset
+
+ URIs that need to support a vast amount of commands.
+\end_layout
+
+\begin_layout Standard
+REST shines because it is based on a tiny set of very tightly defined verbs:
+ GET, POST, PUT, DELETE.
+ The entire infrastructure is highly optimized around them: load balancers,
+ caches, browsers, gateways, etc., all should know how best to handle each
+ of these for maximum scalability and reliability.
+ But, it's entirely possible that your needs cannot be easily satisfied
+ by just four verbs.
+\end_layout
+
+\begin_layout Standard
+And that's OK.
+ REST is not always the best solution for APIs.
+\end_layout
+
+\begin_layout Standard
+Instead, take a look at RPC (Remote Procedure Call) mechanisms.
+ The Diligence framework, based on Prudence, provides easy and robust support
+ for both 
+\begin_inset CommandInset href
+LatexCommand href
+name "JSON-RPC"
+target "http://json-rpc.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "XML-RPC"
+target "http://www.xmlrpc.com/"
+
+\end_inset
+
+ in its 
+\begin_inset CommandInset href
+LatexCommand href
+name "RPC Service"
+target "http://threecrickets.com/diligence/manual/service/rest/"
+
+\end_inset
+
+ as well as 
+\begin_inset CommandInset href
+LatexCommand href
+name "Ext Direct"
+target "http://www.sencha.com/products/extjs/extdirect"
+
+\end_inset
+
+ in its 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sencha Integration"
+target "http://threecrickets.com/diligence/manual/integration/sencha-ext-direct/"
+
+\end_inset
+
+, allowing you to hook a JavaScript function on the server directly to a
+ URI.
+ In terms of HTTP, these protocols all use HTTP POST, and do not leverage
+ the HTTP infrastructure as well as a more fully RESTful API.
+ But, one size does not fit all, and an RPC-based solution may prove a better
+ match for your project.
+\end_layout
+
+\begin_layout Standard
+It's also perfectly possible to use 
+\emph on
+both
+\emph default
+ REST and RPC in your project.
+ Use each approach where it is most appropriate.
+\end_layout
+
+\begin_layout Subsection
+Hierarchies
+\end_layout
+
+\begin_layout Standard
+It's entirely a matter of convention that the use of 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+ in URIs implies hierarchy.
+ Historically, the convention was likely imported from filesystem paths,
+ where a name before a 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+ signifies a directory rather than a file.
+\end_layout
+
+\begin_layout Standard
+This convention is useful because it's very familiar to users, but additionally
+ it implies semantic properties that can add clarity and power to your resource
+ design.
+ There are two possible semantic principles you may consider:
+\end_layout
+
+\begin_layout Enumerate
+A descendant resource 
+\emph on
+belongs to
+\emph default
+ its ancestor, such that resources have cascading relationships in the hierarchy.
+ This implies two rules:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+may
+\emph default
+ affect descendants.
+ This rule is most obvious when applied to the DELETE verb: for example,
+ if you delete 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+, then it is expected that the resources at 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/profile/
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/preferences/
+\begin_inset Quotes erd
+\end_inset
+
+ also be deleted.
+ A PUT, too, would also affect the descendant resources.
+\end_layout
+
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+should not
+\emph default
+ affect ancestors.
+ In other words, a descendant's state is isolated from its ancestors.
+ For example, if I send a POST to 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/profile/
+\begin_inset Quotes erd
+\end_inset
+
+, the representation at 
+\begin_inset Quotes eld
+\end_inset
+
+/user/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ should remain unaltered.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+A descendant resource 
+\emph on
+belongs to
+\emph default
+ its ancestor and also represents 
+\emph on
+an aspect of
+\emph default
+ its ancestor, such that operations on a resource can be fine-tuned to particula
+r aspects of it.
+ This implies three rules:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Descendant representations 
+\emph on
+are included
+\emph default
+ in ancestor representations.
+ For example, a GET on 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+ would include information about the status that you would see if you GET
+ on 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/status/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The latter URI makes it easier for the client to direct operations at the
+ status aspect.
+\end_layout
+
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+may
+\emph default
+ affect descendants.
+ See above.
+\end_layout
+
+\begin_layout Enumerate
+Operations on a resource 
+\emph on
+will
+\emph default
+ affect ancestors.
+ This is the 
+\emph on
+opposite 
+\emph default
+of the above: the descendant's state is 
+\emph on
+not isolated 
+\emph default
+from its ancestors.
+ For example, a POST to 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/status/
+\begin_inset Quotes erd
+\end_inset
+
+ would surely also affect 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+, which includes the status.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+You can see from the difference between rule 1.b and 2.c.
+ that it's important to carefully define the 
+\emph on
+nature
+\emph default
+ of your hierarchical relationships.
+ Unlike filesystem directory hierarchies, in a URI-space there is no single
+ standard or interpretation of what of a hierarchy means.
+\end_layout
+
+\begin_layout Subsection
+Formats
+\end_layout
+
+\begin_layout Standard
+A format should not be considered 
+\begin_inset Quotes eld
+\end_inset
+
+an aspect
+\begin_inset Quotes erd
+\end_inset
+
+ in the sense used in principle 2.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/html/
+\begin_inset Quotes erd
+\end_inset
+
+ would not be a good way to support an HTML format for 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The reason is that you would be allowing for more than one URI for the
+ same encapsulated resource, creating confusion for users.
+ For example, it's not immediately clear what would happen if they DELETE
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/html/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Would that just remove the ability to represent the service as HTML? Or
+ delete the service itself?
+\end_layout
+
+\begin_layout Standard
+Supporting multiple formats is best handled with content negotiation, within
+ the REST architecture.
+ If further formatting is required, URI query parameters can be used.
+ For example: 
+\begin_inset Quotes eld
+\end_inset
+
+/service/{id}/?indent=2
+\begin_inset Quotes erd
+\end_inset
+
+ might return a JSON representation with 2-space indentation.
+\end_layout
+
+\begin_layout Subsection
+Plural vs.
+ Singular
+\end_layout
+
+\begin_layout Standard
+You'll see RESTful implementations that use either convention.
+ The advantage of using the singular form is that you have less addresses,
+ and what some people would call a more elegant scheme:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/animal/cat/12/ -> Just one cat
+\end_layout
+
+\begin_layout Plain Layout
+
+/animal/cat/ -> All cats
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Why add another URL format when a single one is enough to do the work? 
+ One reason is that you can help the client avoid potential errors.
+ For example, the client probably uses a variable to hold the ID of the
+ cat and then constructs the URL dynamically.
+ But, what if the client forgets to check for empty IDs? It might then construct
+ a URL in the form “/animal/cat//” which would then successfully access
+ 
+\emph on
+all
+\emph default
+ cats.
+ This can cause unintended consequences and be difficult to debug.
+ If, however, we used this scheme:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/animal/cat/12/ -> Just one cat
+\end_layout
+
+\begin_layout Plain Layout
+
+/animal/cats/ -> All cats
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar \ldots{}
+then the form “/animal/cat//” would route to our singular cat resource,
+ which would indeed not find the 
+\begin_inset Quotes eld
+\end_inset
+
+empty
+\begin_inset Quotes erd
+\end_inset
+
+ cat and return the expected, debuggable 404 error.
+\end_layout
+
+\begin_layout Standard
+From this example, we can extract a good rule of thumb: 
+\emph on
+clearly separate URI templates by usage
+\emph default
+, so that mistakes cannot happen.
+ More URI types means more debuggability.
+ 
+\end_layout
+
+\begin_layout Subsection
+Documenting Your URI-Space
+\end_layout
+
+\begin_layout Standard
+If you create a programming language API, you will surely want to document
+ it in a human language.
+ You will want to define the acceptable types and usages of function arguments,
+ describe return values, possible raises exceptions, add implementation
+ and performance notes, etc.
+ Many programming languages include tools for embedding such documentation
+ as comments in the source code, and generating a reference manual from
+ it.
+\end_layout
+
+\begin_layout Standard
+Consider that documenting your URI-space is just as important.
+ A tool to generate such documentation for you is being considered for a
+ future version of Prudence (not available in 2.0).
+ Until we have it, consider adopting a resource documentation standard for
+ your project.
+ Here's a suggestion:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/*
+\end_layout
+
+\begin_layout Plain Layout
+
+ * This resource represents a service running on the server.
+ Servers have unique
+\end_layout
+
+\begin_layout Plain Layout
+
+ * IDs defined by integers.
+ A service can be either active or inactive.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Use POST to change the name or status of an existing service.
+ You may
+\end_layout
+
+\begin_layout Plain Layout
+
+ * not use it change the ID of an existing service.
+ PUT will create a new
+\end_layout
+
+\begin_layout Plain Layout
+
+ * service, and DELETE will stop and remove it.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Implementation note: if you PUT a service with an ID that already exists,
+ then
+\end_layout
+
+\begin_layout Plain Layout
+
+ * it will only stop and restart the service rather than removing/recreate
+ it,
+\end_layout
+
+\begin_layout Plain Layout
+
+ * which would be too resource intensive.
+ Use DELETE if you absolutely need the
+\end_layout
+
+\begin_layout Plain Layout
+
+ * service to be removed first, or set the "clean" query param to "true"
+ to
+\end_layout
+
+\begin_layout Plain Layout
+
+ * force removal.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * URI: /service/{id:decimal}/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Aspects: /service/{id:decimal}/status/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Verbs: GET, POST, PUT, DELETE
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Media types: application/json, application/xml, text/plain (as JSON)
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Query params:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  indent: decimal - if non-zero will return a human-readable indented
+ version
+\end_layout
+
+\begin_layout Plain Layout
+
+ *          of the representation with lines indented by the integer value
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  clean: boolean - if "true" or "yes" or "1" wil force removal of an existing
+\end_layout
+
+\begin_layout Plain Layout
+
+ *         service during a PUT operation on an existing service
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Representation as application/json:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  {
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "id": number,
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "name": string (the service name),
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "status": string:"active"|"inactive"
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  }
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * POST/PUT payload as application/json:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  {
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "name": ...
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "status": ...
+\end_layout
+
+\begin_layout Plain Layout
+
+ *  }
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+/*
+\end_layout
+
+\begin_layout Plain Layout
+
+ * This resource represents the status of a service.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * DELETE on this resource is identical to PUT or POST with "inactive".
+\end_layout
+
+\begin_layout Plain Layout
+
+ * PUT and POST are handled identically.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * URI: /service/{id:decimal}/status/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Aspect of: /service/{id:decimal}/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Verbs: GET, POST, PUT, DELETE
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Media types: text/plain
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Representation as text/plain:
+\end_layout
+
+\begin_layout Plain Layout
+
+ *   "active"|"inactive"
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Scaling Tips
 \begin_inset CommandInset label
 LatexCommand label
@@ -26183,15 +26834,7 @@ If the scope is very large, you will have to pick and choose which pages
  to warm up.
  In Prudence, this is supported via 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.preheat (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-preheat"

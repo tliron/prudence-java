@@ -21,7 +21,9 @@ import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
+import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.representation.Variant;
 import org.restlet.resource.ServerResource;
 
@@ -332,26 +334,36 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	// ConversationService
 	//
 
-	/**
-	 * A shortcut to the resource request.
-	 * 
-	 * @return The request
-	 */
 	@Override
 	public Request getRequest()
 	{
 		return getResource().getRequest();
 	}
 
-	/**
-	 * A shortcut to the resource response.
-	 * 
-	 * @return The response
-	 */
 	@Override
 	public Response getResponse()
 	{
 		return getResource().getResponse();
+	}
+
+	@Override
+	public StringRepresentation setResponseText( String text, String mediaTypeName, String languageName, String characterSetName )
+	{
+		MediaType mediaType = mediaTypeName == null ? getMediaType() : MediaType.valueOf( mediaTypeName );
+		Language language = languageName == null ? getLanguage() : Language.valueOf( languageName );
+		CharacterSet characterSet = characterSetName == null ? getCharacterSet() : CharacterSet.valueOf( characterSetName );
+		StringRepresentation representation = new StringRepresentation( text, mediaType, language, characterSet );
+		getResponse().setEntity( representation );
+		return representation;
+	}
+
+	@Override
+	public ByteArrayRepresentation setResponseBinary( byte[] byteArray, String mediaTypeName )
+	{
+		MediaType mediaType = mediaTypeName == null ? getMediaType() : MediaType.valueOf( mediaTypeName );
+		ByteArrayRepresentation representation = new ByteArrayRepresentation( byteArray, mediaType );
+		getResponse().setEntity( representation );
+		return representation;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

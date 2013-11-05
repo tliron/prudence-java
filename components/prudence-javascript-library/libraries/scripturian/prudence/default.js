@@ -912,6 +912,29 @@ var Prudence = {}
  */
 
 /**
+ * Convenient API to set the response payload to a textual representation.
+ * 
+ * @name conversation.setResponseText
+ * @param {String} text The text
+ * @param {String} mediaType Can be null
+ * @param {String} language Can be null
+ * @param {String} characterSet Can be null
+ * @returns <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/StringRepresentation.html">org.restlet.representation.StringRepresentation</a>
+ * @see conversation#setResponseBinary
+ */
+
+/**
+ * Convenient API to set the response payload to a binary representation.
+ * 
+ * @name conversation.setResponseBinary
+ * @param {byte[]} byteArray The binary data
+ * @param {String} mediaType Can be null
+ * @returns <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html">org.restlet.representation.ByteArrayRepresentation</a>
+ * @see conversation#setResponseText
+ * @see Sincerity.JVM#newArray
+ */
+
+/**
  * Low-level access to the response status code.
  * <p>
  * You may prefer to use {@link conversation#statusCode} instead.
