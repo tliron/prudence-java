@@ -305,7 +305,7 @@ public class ApplicationService
 				}
 			}
 			else
-				executor = application.getTaskService();
+				executor = InstanceUtil.getComponent().getTaskService();
 		}
 
 		return executor;

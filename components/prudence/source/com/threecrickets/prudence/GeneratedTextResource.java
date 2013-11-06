@@ -44,6 +44,7 @@ import com.threecrickets.prudence.service.ConversationStoppedException;
 import com.threecrickets.prudence.service.GeneratedTextResourceConversationService;
 import com.threecrickets.prudence.service.GeneratedTextResourceDocumentService;
 import com.threecrickets.prudence.util.CapturingRedirector;
+import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.prudence.util.IoUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
@@ -545,7 +546,7 @@ public class GeneratedTextResource extends ServerResource
 					if( representation instanceof GeneratedTextDeferredRepresentation )
 					{
 						setAutoCommitting( false );
-						getApplication().getTaskService().submit( (GeneratedTextDeferredRepresentation) representation );
+						InstanceUtil.getComponent().getTaskService().submit( (GeneratedTextDeferredRepresentation) representation );
 						return null;
 					}
 				}

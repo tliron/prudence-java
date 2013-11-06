@@ -71,7 +71,7 @@
 
 	<target name="classes" depends="dependencies" description="Compile Java code">
 		<mkdir dir="${cache.classes}" />
-		<javac srcdir="${component.source}" destdir="${cache.classes}" source="${compile.version}" target="${compile.version}" includeAntRuntime="no" debug="${compile.debug}">
+		<javac srcdir="${component.source}" destdir="${cache.classes}" source="${compile.version}" target="${compile.version}" includeAntRuntime="no" debug="${compile.debug}" bootclasspath="${compile.boot}">
 			<classpath refid="dependencies" />
 			<!--<compilerarg line="-Xlint" />-->
 		</javac>
@@ -95,11 +95,12 @@
 			destdir="${cache.api}" sourcepath="${component.source}" excludepackagenames="**.internal.*"
 			access="protected" source="${compile.version}"
 			windowtitle="${documentation.title} ${component.version}${component.version.postfix}" doctitle="${documentation.title} ${component.version}${component.version.postfix}"
-			author="true" splitindex="true" use="true" version="true" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false">
+			author="true" splitindex="true" use="true" version="true" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false"
+			bootclasspath="${compile.boot}">
 
 			<link href="${documentation.jvm}" />
 			<link href="http://commons.apache.org/daemon/apidocs/" />
-			<link href="http://commons.apache.org/dbcp/api-1.3/" />
+			<link href="http://commons.apache.org/proper/commons-dbcp/apidocs/" />
 			<link href="http://commons.apache.org/fileupload/apidocs/" />
 			<link href="http://commons.apache.org/pool/api-1.6/" />
 			<link href="http://www.sauronsoftware.it/projects/cron4j/api/" />
@@ -109,7 +110,7 @@
 			<link href="http://junit.sourceforge.net/javadoc/" />
 			<!-- Jygments has no online javadocs -->
 			<link href="http://api.mongodb.org/java/current/" />
-			<link href="http://www.orientdb.org/releases/latest/javadoc" />
+			<link href="http://www.orientdb.org/releases/latest/javadoc/" />
 			<link href="http://www.restlet.org/documentation/2.1/jse/api/" />
 			<link href="http://threecrickets.com/api/java/scripturian/" />
 			<link href="http://docs.oracle.com/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/" />

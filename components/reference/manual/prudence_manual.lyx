@@ -12064,7 +12064,7 @@ if (null !== weather) {
 \begin_layout Plain Layout
 
 	print('The max temperature on Mars today is ' + weather.report.max_temp +
- '°C')
+ ' degrees')
 \end_layout
 
 \begin_layout Plain Layout
@@ -12240,7 +12240,7 @@ if (null !== result) {
 \begin_layout Plain Layout
 
 	print('The max temperature on Mars today is ' + weather.report.max_temp +
- '°C')
+ ' degrees')
 \end_layout
 
 \begin_layout Plain Layout
