@@ -20,29 +20,32 @@ To *completely* build Prudence you need [Ant](http://ant.apache.org/),
 You may need to create a file named "/build/private.properties" (see below) and override
 the default locations for Maven and Sincerity.
 
-The, simply change to the "/build/" directory and run "ant".
+Then, simply change to the "/build/" directory and run "ant".
 
-During the build process, build and distribution dependencies will be downloaded from an
-online repository at http://repository.threecrickets.com/, so you will need Internet access.
+During the build process, build and distribution dependencies will be downloaded from
+an online repository at http://repository.threecrickets.com/, so you will need Internet
+access.
 
 The result of the build will go into the "/build/distribution/" directory. Temporary
 files used during the build process will go into "/build/cache/", which you are free to
 delete.
 
 To avoid the "bootstrap class path not set" warning during compilation (harmless),
-configure the "compile.boot" setting in "private.properties".
+configure the "compile.boot" setting in "private.properties" to the location of an
+"rt.jar" file belonging to JVM version 6.
 
-If you *only* want to build the Prudence Jar, then you only need Ant (you don't need Maven
-and Sincerity). Run the "libraries" Ant task instead of the default one.
+If you *only* want to build the Prudence Jar, then you only need Ant (you don't need
+Maven and Sincerity). Run the "libraries" Ant target instead of the default one.
 
 
 Configuring the Build
 ---------------------
 
-The "/build/custom.properties" file contains configurable settings, along with
-some commentary on what they are used for. You are free to edit that file, however
-to avoid git conflicts, it would be better to create your own "/build/private.properties"
-instead, in which you can override any of the settings. That file will be ignored by git.
+The "/build/custom.properties" file contains configurable settings, along with some
+commentary on what they are used for. You are free to edit that file, however to avoid
+git conflicts, it would be better to create your own "/build/private.properties"
+instead, in which you can override any of the settings. That file will be ignored by
+git.
 
 
 Building the Prudence Manual
