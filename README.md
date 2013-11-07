@@ -4,24 +4,18 @@ Prudence
 
 Prudence is a platform on which you can build scalable web frontends and network services.
 Server-side code can be written in JavaScript, Python, Ruby, PHP, Lua, Groovy, or Clojure.
-Though minimalistic, Prudence addresses real-world, practical needs, from URI rewriting and
-virtual hosting to state-of-the-art server- and client-side caching.
+Though minimalistic, Prudence addresses real-world, practical needs, from state-of-the-art
+server- and client-side caching to URI rewriting and virtual hosting.
 
-Please see the main Prudence site for comprehensive documentation:
-
-http://threecrickets.com/prudence/
+Please see the main [Prudence](http://threecrickets.com/prudence/) site for comprehensive
+documentation.
 
 
 Building Prudence
 ----------------- 
 
-To *completely* build Prudence you need Ant, Maven and Sincerity:
-
-http://ant.apache.org/
-
-http://maven.apache.org/
-
-http://threecrickets.com/sincerity/
+To *completely* build Prudence you need [Ant](http://ant.apache.org/),
+[Maven](http://maven.apache.org/) and [Sincerity](http://threecrickets.com/sincerity/).
 
 You may need to create a file named "/build/private.properties" (see below) and override
 the default locations for Maven and Sincerity.
@@ -55,11 +49,8 @@ Building the Prudence Manual
 ----------------------------
 
 To build the manual, as part of the standard build process, you will need to install
-LyX and eLyXer, and configure their paths in "private.properties":
-
-http://www.lyx.org/
-
-http://elyxer.nongnu.org/
+[LyX](http://www.lyx.org/) and [eLyXer](http://elyxer.nongnu.org/), and configure their
+paths in "private.properties".
 
 
 Packaging
@@ -72,9 +63,8 @@ If you wish to sign the deb and rpm packages, you need to install the "dpkg-sig"
 "rpm" tools, and configure their paths and your keys in "private.properties". 
 
 In order to build the platform installers (for Windows and OS X), you will need to
-install InstallBuilder and configure its path in "private.properties":
-
-http://installbuilder.bitrock.com/
+install [InstallBuilder](http://installbuilder.bitrock.com/) and configure its path
+in "private.properties".
 
 BitRock has generously provided the Prudence project with a free license, available
 under "/build/installbuilder/license.xml". It will automatically be used by the build
