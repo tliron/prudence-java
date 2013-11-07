@@ -16092,15 +16092,15 @@ It's very odd that Node.js has become a popular platform for the
 \emph on
 non
 \emph default
--streaming web: 
+-streaming, data-driven web: 
 \begin_inset CommandInset href
 LatexCommand href
-name "Express"
+name "the Express framework"
 target "http://expressjs.com/"
 
 \end_inset
 
-, for example, provides some limited RESTful functionality on top of it.
+, for example, provides some minimal RESTful functionality on top of Node.js.
  But event-driven servers are not designed for REST, and are in fact quite
  a bad fit: consider that in a single-threaded runtime, if a single event
  handler hangs, the whole server will hang.
@@ -16126,20 +16126,34 @@ side effects,
 \end_layout
 
 \begin_layout Standard
-You can utilize more CPU cores by running multiple Node.js processes behind
- a load balancer, but the problems quickly multiply: each process loads
- its own version of the database driver, with its own connection thread
- pool that can't be shared with the other Node.js processes.
- In Prudence, by contrast, the same pool is trivially shared by all threads,
- and this is true for all resources.
- It should be clear that Node.js is simply the wrong tool for the job.
+And even if you did a good job in JavaScript, your implementation will not
+ in 
+\emph on
+any way
+\emph default
+ be more scalable for this use case than by using a thread pool: users still
+ need to wait for their requests to complete, and databases still have to
+ return results before you can complete those requests.
+ There's nothing in an event-driven model that changes these essential facts.
+ (It's worth repeating: both Prudence and Node.js use non-blocking I/O servers:
+ Node.js being event-driven has nothing to do with that.)
 \end_layout
 
 \begin_layout Standard
-So, why is Node.js so misused? One reason is that its raw architecture is
+You can add some parallelism (and make use of more CPU cores) by running
+ multiple Node.js processes behind a load balancer, but the problems quickly
+ multiply: each process loads its own version of the database driver, with
+ its own connection thread pool, which can't be shared with the other Node.js
+ processes.
+ In Prudence, by contrast, the same pool is trivially shared by all requests.
+\end_layout
+
+\begin_layout Standard
+It should be clear that Node.js is simply the wrong tool for the job.
+ So, why is Node.js so misused? One reason is that its raw architecture is
  attractively simple: multi-threaded programming is hard to get right, single-th
 readed easy.
- JavaScript, too, is a draw, as a language that many programmers already
+ JavaScript, too, is attractive as a language that many programmers already
  know.
  So, despite being a problematic web platform, it's one in which you can
  build web services quickly and with little fuss, and sometimes that's more
@@ -16206,7 +16220,7 @@ reference "clusters"
 
 )
 \bar default
- for expanding horizontally in the 
+ for scaling horizontally in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -16315,7 +16329,7 @@ target "https://developer.mozilla.org/en-US/docs/Rhino"
 
 , which can both use the JVM's excellent concurrency management.
  Nashorn is as of this writing still under development, to be released with
- JVM 8 in March 2014.
+ JVM 8 in March 2014 (Prudence already supports it).
  It promises excellent performance, on par with Java code in some cases.
  Rhino is not as fast, but still performs well and is very mature.
 \end_layout
