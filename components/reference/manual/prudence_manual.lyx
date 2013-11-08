@@ -1401,7 +1401,7 @@ $
 \begin_inset CommandInset href
 LatexCommand href
 name "ServerResource"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html"
 
 \end_inset
 
@@ -2671,7 +2671,7 @@ uri
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Restlet.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Restlet.html"
 
 \end_inset
 
@@ -5939,7 +5939,7 @@ reference "../api/|conversation-media-type"
 \begin_inset CommandInset href
 LatexCommand href
 name "ObjectRepresentation instance"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
 
 \end_inset
 
@@ -9792,7 +9792,7 @@ A decent starting point is Restlet's
 \begin_inset CommandInset href
 LatexCommand href
 name "ecosystem of extensions"
-target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?overview-summary.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?overview-summary.html"
 
 \end_inset
 
@@ -10908,7 +10908,9 @@ reference "scriptlet-resources"
 
 \end_inset
 
-).
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -11221,7 +11223,7 @@ Instead of returning a string or a byte array, you can return an instance
 \begin_inset CommandInset href
 LatexCommand href
 name "Representation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html"
 
 \end_inset
 
@@ -11230,7 +11232,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/rep
 \begin_inset CommandInset href
 LatexCommand href
 name "a few basic classes"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/package-summary.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/package-summary.html"
 
 \end_inset
 
@@ -11268,7 +11270,7 @@ Where Restlet really shines is in its
 \begin_inset CommandInset href
 LatexCommand href
 name "ecosystem of extensions"
-target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?overview-summary.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?overview-summary.html"
 
 \end_inset
 
@@ -11763,7 +11765,7 @@ application/java
 \begin_inset CommandInset href
 LatexCommand href
 name "ObjectRepresentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
 
 \end_inset
 
@@ -11803,7 +11805,7 @@ Note that, of course, if you return an instance of a class inheriting from
 \begin_inset CommandInset href
 LatexCommand href
 name "Representation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html"
 
 \end_inset
 
@@ -11811,7 +11813,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/rep
 \begin_inset CommandInset href
 LatexCommand href
 name "ObjectRepresentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
 
 \end_inset
 
@@ -16974,7 +16976,7 @@ Prudence supports many built-in interpolation variables, extracted from
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet API documentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Resolver.html"
 
 \end_inset
 
@@ -22540,7 +22542,7 @@ Note that injectors specially recognize
 \begin_inset CommandInset href
 LatexCommand href
 name "Template"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Template.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Template.html"
 
 \end_inset
 
@@ -23069,7 +23071,7 @@ See Jetty's
 \begin_inset CommandInset href
 LatexCommand href
 name "HttpServerHelper"
-target "http://restlet.org/learn/javadocs/2.1/jse/ext/org/restlet/ext/jetty/HttpServerHelper.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/org/restlet/ext/jetty/HttpServerHelper.html"
 
 \end_inset
 
@@ -23181,7 +23183,7 @@ See the
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet Jetty HttpServerHelper documentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/ext/index.html?org/restlet/ext/ssl/DefaultSslContextFactory.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/ssl/DefaultSslContextFactory.html"
 
 \end_inset
 
@@ -24153,7 +24155,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Filter"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Filter.html"
 
 \end_inset
 
@@ -24172,7 +24174,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Filter"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Filter.html"
 
 \end_inset
 
@@ -24212,7 +24214,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "ByteArrayRepresentation"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html"
 
 \end_inset
 
@@ -24222,7 +24224,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/rep
 \begin_inset CommandInset href
 LatexCommand href
 name "Encoder"
-target "http://restlet.org/learn/javadocs/2.1/jse/engine/index.html?org/restlet/engine/application/Encoder.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/engine/index.html?org/restlet/engine/application/Encoder.html"
 
 \end_inset
 
@@ -24242,7 +24244,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Cookie"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Cookie.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Cookie.html"
 
 \end_inset
 
@@ -24251,7 +24253,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/dat
 \begin_inset CommandInset href
 LatexCommand href
 name "CookieSetting"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/CookieSetting.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/CookieSetting.html"
 
 \end_inset
 
@@ -24259,7 +24261,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/dat
 \begin_inset CommandInset href
 LatexCommand href
 name "Response"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Response.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Response.html"
 
 \end_inset
 
@@ -24279,7 +24281,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "MediaType.MULTIPART_FORM_DATA"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/org/restlet/data/MediaType.html#MULTIPART_FORM_DATA"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/org/restlet/data/MediaType.html#MULTIPART_FORM_DATA"
 
 \end_inset
 
@@ -24327,7 +24329,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Redirector"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Redirector.html"
 
 \end_inset
 
@@ -24346,7 +24348,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Redirector"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Redirector.html"
 
 \end_inset
 
@@ -24391,7 +24393,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet.handle(Request, Response)"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/org/restlet/Restlet.html#handle(org.restlet.Request,%20org.restlet.Response)"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/org/restlet/Restlet.html#handle(org.restlet.Request,%20org.restlet.Response)"
 
 \end_inset
 
@@ -24429,7 +24431,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Router"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Router.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Router.html"
 
 \end_inset
 
@@ -24445,7 +24447,7 @@ Restlet does not provide an easy way to use different
 \begin_inset CommandInset href
 LatexCommand href
 name "template variable resolver"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Resolver.html"
 
 \end_inset
 
@@ -24466,7 +24468,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Template"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Template.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Template.html"
 
 \end_inset
 
@@ -24474,7 +24476,7 @@ target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/rou
 \begin_inset CommandInset href
 LatexCommand href
 name "Resolver"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Resolver.html"
 
 \end_inset
 
@@ -24493,7 +24495,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Redirector"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Redirector.html"
 
 \end_inset
 
@@ -24512,7 +24514,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Router"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Router.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Router.html"
 
 \end_inset
 
@@ -24539,7 +24541,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Filter"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Filter.html"
 
 \end_inset
 
@@ -24571,7 +24573,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Filter"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Filter.html"
 
 \end_inset
 
@@ -24611,7 +24613,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "Filter"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Filter.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Filter.html"
 
 \end_inset
 
@@ -24647,7 +24649,7 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \begin_inset CommandInset href
 LatexCommand href
 name "EncoderService"
-target "http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/service/EncoderService.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/service/EncoderService.html"
 
 \end_inset
 
