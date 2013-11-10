@@ -701,25 +701,6 @@ app.routes = {
 }
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-app.dispatchers = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	javascript: '/resources/'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
 \end_inset
 
 
@@ -4011,7 +3992,7 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-The long-form notation, with all the settings at their default, would look
+The long-form notation, with all the settings at their defaults, would look
  like this:
 \end_layout
 
@@ -4047,7 +4028,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		dispatcher: 'javascript',
+		dispatcher: null,
 \end_layout
 
 \begin_layout Plain Layout
@@ -4133,39 +4114,13 @@ app.routes = {
 
 \end_layout
 
-\begin_layout Standard
-You must also configure your dispatchers.
- There is one dispatcher per programming language.
- We can configure it like so:
+\begin_layout Paragraph
+The Dispatch Map
 \end_layout
 
 \begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.dispatchers = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	javascript: '/dispatched/'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The 
+By default, to implement your dispatched resources, create a library named
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4173,16 +4128,20 @@ The
 \begin_inset Quotes erd
 \end_inset
 
- value is the document name to be executed from your application's 
+, which is expected to change a global dict named 
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/
+resources
 \begin_inset Quotes erd
 \end_inset
 
- subdirectory.
- In our case, we must thus also have a 
+.
+ That dict maps IDs to implementations.
+\end_layout
+
+\begin_layout Standard
+For our example, let's create a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4307,16 +4266,7 @@ resources = {
 \end_layout
 
 \begin_layout Standard
-The dispatcher will execute the above library and look for the 
-\begin_inset Quotes eld
-\end_inset
-
-resources
-\begin_inset Quotes erd
-\end_inset
-
- dict, which maps dispatch IDs to resource implementations.
- In our example we've mapped the 
+We've mapped the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4342,6 +4292,30 @@ user
 \begin_layout Standard
 As you can see, the resources.js file does not refer to URIs, but instead
  to dispatch IDs, which you can dispatch as you see fit.
+ This is true URI/resource separation.
+\end_layout
+
+\begin_layout Standard
+These defaults are all configurable: see 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.dispatchers
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-dispatchers"
+
+\end_inset
+
+)
+\bar default
+ for more information.
 \end_layout
 
 \begin_layout Paragraph
@@ -4350,9 +4324,9 @@ Other Programming Languages
 
 \begin_layout Standard
 Resource dispatching is also supported for Python, Ruby, PHP, Lua, Groovy
- and Clojure.
- To use them, you must specify the dispatcher together with the dispatch
- ID in routing.js, and configure that specific dispatcher.
+ and Clojure, via alternate dispatchers.
+ To use them, you must specify the dispatcher, which is simply the name
+ of the language in lowercase, when you configure the dispatch.
  For example:
 \end_layout
 
@@ -4373,7 +4347,27 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/session/{sessionId}/': '@python:session'
+	'/session/{sessionId}/': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'dispatch',
+\end_layout
+
+\begin_layout Plain Layout
+
+		id: 'session',
+\end_layout
+
+\begin_layout Plain Layout
+
+		dispatcher: 'python'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
 \end_layout
 
 \begin_layout Plain Layout
@@ -4381,13 +4375,27 @@ app.routes = {
 }
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
 
+You can also use the 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+ shortcut like so:
 \end_layout
 
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
 \begin_layout Plain Layout
 
-app.dispatchers = {
+app.routes = {
 \end_layout
 
 \begin_layout Plain Layout
@@ -4397,7 +4405,7 @@ app.dispatchers = {
 
 \begin_layout Plain Layout
 
-	python: '/resources/'
+	'/session/{sessionId}/': '@python:session'
 \end_layout
 
 \begin_layout Plain Layout
@@ -5121,9 +5129,18 @@ name "app-dispatchers"
 \end_layout
 
 \begin_layout Standard
-The common use of app.dispatchers has already been 
+This section is optional, and is used to change the way your application's
+ dispatching works.
+\end_layout
+
+\begin_layout Subsubsection
+Setting the Default Dispatcher
+\end_layout
+
+\begin_layout Standard
+As seen above in 
 \bar under
-discussed above (page 
+resource dispatching (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "resource-dispatching"
@@ -5132,8 +5149,217 @@ reference "resource-dispatching"
 
 )
 \bar default
-.
- Here, we'll delve into more advanced configurations.
+, if you you do not specify the dispatcher when configuring a 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+dispatch
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "dispatch-route-type"
+
+\end_inset
+
+)
+\bar default
+, it will default to the 
+\begin_inset Quotes eld
+\end_inset
+
+javascript
+\begin_inset Quotes erd
+\end_inset
+
+ dispatcher.
+ You may change the default like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/session/{sessionId}/': '@session'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': 'python'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the above, our 
+\begin_inset Quotes eld
+\end_inset
+
+@session
+\begin_inset Quotes erd
+\end_inset
+
+ dispatch will be using the 
+\begin_inset Quotes eld
+\end_inset
+
+python
+\begin_inset Quotes erd
+\end_inset
+
+ dispatcher.
+\end_layout
+
+\begin_layout Subsubsection
+Setting the Dispatch Map
+\end_layout
+
+\begin_layout Standard
+We've also seen that by default the dispatcher will attempt to execute your
+ 
+\begin_inset Quotes eld
+\end_inset
+
+/dispatched/
+\begin_inset Quotes erd
+\end_inset
+
+ library in order to initialize the dispatch map.
+ However, you may change this location per dispatcher like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	javascript: '/mylib/mydispatchmap/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is especially useful if you're using more than one dispatcher in your
+ routing, because each dispatcher would need its own resource map.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/user/{userId}/': '@user',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/session/{sessionId}/': '@python:session',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/page/{pageId}/': '@groovy:page'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.dispatchers = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	javascript: '/mylib/javascript-dispatchmap/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	python: '/mylib/python-dispatchmap/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	groovy: '/mylib/groovy-dispatchmap/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection

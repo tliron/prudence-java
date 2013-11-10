@@ -431,6 +431,27 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Inbound root (a router)
 			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
 
+			// Pass-through dispatchers
+			if (Sincerity.Objects.exists(this.manualPassThroughDocuments)) {
+				var exists = false
+				for (var name in this.dispatchers) {
+					exists = true
+					break
+				}
+				if (exists) {
+					println('  Dispatchers:')
+					for (var name in this.dispatchers) {
+						if (name != 'default') {
+							var dispatcher = this.getDispatcher(name)
+							this.manualPassThroughDocuments.add(dispatcher.dispatcher)
+							if (sincerity.verbosity >= 2) {
+								println('      "{0}" -> "{1}"'.cast(name, dispatcher.uri))
+							}
+						}
+					}
+				}
+			}
+
 			// Internal access to DelegatedResource
 			if (Sincerity.Objects.exists(this.delegatedResource)) {
 				this.instance.inboundRoot.attachBase(this.delegatedResourceInternalUri, this.delegatedResource)
@@ -550,17 +571,6 @@ Prudence.Routing = Prudence.Routing || function() {
 					return restlet
 				}
 				else if (restlet[0] == '/') {
-					/*for (var i = this.instance.inboundRoot.routes.iterator(); i.hasNext(); ) {
-						var route = i.next()
-						var pattern = route.template.pattern
-						if (route.matchingMode == Template.MODE_STARTS_WITH) {
-							pattern += '*'
-						}
-						if (pattern == restlet) {
-							println('Connecting to pattern: ' + pattern)
-							return route.next
-						}
-					}*/
 					return new Module.Capture({uri: restlet}).create(this, uri)
 				}
 				else if (restlet[0] == '>') {
@@ -645,13 +655,15 @@ Prudence.Routing = Prudence.Routing || function() {
 		
 		Public.getDispatcher = function(name) {
 			if (!Sincerity.Objects.exists(name)) {
+				// Use default
 				name = this.dispatchers['default']
 				if (!Sincerity.Objects.exists(name)) {
+					// No default, so default to 'javascript'
 					name = 'javascript'
 				}
 			}
 			
-			var dispatcher = Sincerity.Objects.ensure(this.dispatchers[name], {})
+			var dispatcher = Sincerity.Objects.ensure(this.dispatchers[name], '/dispatched/')
 			if (Sincerity.Objects.isString(dispatcher)) {
 				dispatcher = {resources: dispatcher}
 			}
@@ -897,11 +909,13 @@ Prudence.Routing = Prudence.Routing || function() {
 					println('    Manual:')
 					println('      Root: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
+				
+				app.manualPassThroughDocuments = new CopyOnWriteArraySet()
 
 				var delegatedResource = {
 					documentSource: app.createDocumentSource(this.root, this.preExtension),
 					libraryDocumentSources: app.libraryDocumentSources,
-					passThroughDocuments: new CopyOnWriteArraySet(),
+					passThroughDocuments: app.manualPassThroughDocuments,
 					defaultName: app.settings.code.defaultDocumentName,
 					defaultLanguageTag: app.settings.code.defaultLanguageTag,
 					trailingSlashRequired: this.trailingSlashRequired,
@@ -926,17 +940,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				if (true == app.settings.code.sourceViewable) {
 					app.sourceViewableDocumentSources.add(delegatedResource.documentSource)
 					app.sourceViewableDocumentSources.addAll(app.libraryDocumentSources)
-				}
-
-				// Pass-through dispatchers
-				for (var name in app.dispatchers) {
-					if (name != 'default') {
-						var dispatcher = app.getDispatcher(name)
-						delegatedResource.passThroughDocuments.add(dispatcher.dispatcher)
-						if (sincerity.verbosity >= 2) {
-							println('      Dispatcher: "{0}" -> "{1}"'.cast(name, dispatcher.uri))
-						}
-					}
 				}
 
 				// Defrost
@@ -1277,7 +1280,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			/*if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				throw new SincerityException('A Manual must be attached before a Dispatch can be created')
 	   		}*/
-
+				
 			var dispatcher = app.getDispatcher(this.dispatcher)
 	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.uri + '?{rq}', false)
 			var injector = new Injector(app.context, capture)
