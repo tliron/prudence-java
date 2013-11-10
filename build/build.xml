@@ -7,14 +7,15 @@
 	<property file="${root}/build/custom.properties" />
 	
 	<property name="component.source" location="${root}/components/${component}/source" />
-	<property name="reference" location="${root}/components/reference" />
-	<property name="javascript-library" location="${root}/components/prudence-javascript-library" />
-	<property name="skeleton" location="${root}/components/skeleton" />
-	<property name="example" location="${root}/components/example" />
-	<property name="admin" location="${root}/components/admin" />
-	<property name="three-crickets-style" location="${root}/components/three-crickets-style" />
-	<property name="stickstick-common" location="${root}/components/stickstick-common" />
-	<property name="stickstick-javascript" location="${root}/components/stickstick-javascript" />
+	<property name="component.notices" value="${root}/components/notices" />
+	<property name="component.reference" location="${root}/components/reference" />
+	<property name="component.javascript-library" location="${root}/components/prudence-javascript-library" />
+	<property name="component.skeleton" location="${root}/components/skeleton" />
+	<property name="component.example" location="${root}/components/example" />
+	<property name="component.admin" location="${root}/components/admin" />
+	<property name="component.three-crickets-style" location="${root}/components/three-crickets-style" />
+	<property name="component.stickstick-common" location="${root}/components/stickstick-common" />
+	<property name="component.stickstick-javascript" location="${root}/components/stickstick-javascript" />
 	
 	<property name="dependencies" location="${root}/dependencies" />
 
@@ -157,7 +158,7 @@
 	<target name="manual-overwrite" description="Create manual" unless="manual-present">
 		<mkdir dir="${cache.manual}" />
 		<copy todir="${cache.manual}">
-			<fileset dir="${reference}/manual" excludes="**/*~" />
+			<fileset dir="${component.reference}/manual" excludes="**/*~" />
 			<filterchain>
 				<replacetokens>
 					<token key="VERSION" value="${component.version}${component.version.postfix}" />
@@ -174,7 +175,7 @@
 			classpath="${dependencies}/libraries/jars/org.zkoss.zuss/zuss/${zuss.version}/zuss.jar"
 			classname="org.zkoss.zuss.Zuss">
 			<arg value="-o" />
-			<arg value="${three-crickets-style}/libraries/web/style/three-crickets/soft-cricket.zuss" />
+			<arg value="${component.three-crickets-style}/libraries/web/style/three-crickets/soft-cricket.zuss" />
 			<arg value="${cache.css}/soft-cricket-original.css" />
 		</java>
 	</target>
@@ -197,6 +198,9 @@
 					<token key="SINCERITY.VERSION" value="${sincerity.version}" />
 				</replacetokens>
 			</filterchain>
+		</copy>
+		<copy todir="${distribution.content}">
+			<fileset dir="${component.notices}" />
 		</copy>
 		<exec executable="${sincerity}">
 			<arg value="container:create" />
@@ -318,12 +322,12 @@
 
 	<target name="dirty" description="Quick-and-dirty update of the content">
 		<copy todir="${distribution.content}">
-			<fileset dir="${skeleton}" />
-			<fileset dir="${admin}" />
-			<fileset dir="${example}" />
-			<fileset dir="${javascript-library}" />
-			<fileset dir="${stickstick-common}" />
-			<fileset dir="${stickstick-javascript}" />
+			<fileset dir="${component.skeleton}" />
+			<fileset dir="${component.admiin}" />
+			<fileset dir="${component.example}" />
+			<fileset dir="${component.javascript-library}" />
+			<fileset dir="${component.stickstick-common}" />
+			<fileset dir="${component.stickstick-javascript}" />
 		</copy>
 	</target>
 

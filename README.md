@@ -7,7 +7,7 @@ Server-side code can be written in JavaScript, Python, Ruby, PHP, Lua, Groovy, o
 Though minimalistic, Prudence addresses real-world, practical needs, from state-of-the-art
 server- and client-side caching to URI rewriting and virtual hosting.
 
-Please see the main [Prudence](http://threecrickets.com/prudence/) site for comprehensive
+Please see the [Prudence web site](http://threecrickets.com/prudence/) for comprehensive
 documentation.
 
 
@@ -72,3 +72,10 @@ in "private.properties".
 BitRock has generously provided the Prudence project with a free license, available
 under "/build/installbuilder/license.xml". It will automatically be used by the build
 process.
+
+
+Still Having Trouble?
+---------------------
+
+Join the [Prudence Community](http://groups.google.com/group/prudence-community), and
+tell us where you're stuck! We're very happy to help newcomers get up and running.
