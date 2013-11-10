@@ -12,7 +12,7 @@ documentation.
 
 
 Building Prudence
------------------ 
+-----------------
 
 To *completely* build Prudence you need [Ant](http://ant.apache.org/),
 [Maven](http://maven.apache.org/) and [Sincerity](http://threecrickets.com/sincerity/).
