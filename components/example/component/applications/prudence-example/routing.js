@@ -1,8 +1,4 @@
 
-app.hosts = {
-	'default': '/prudence-example/'
-}
-
 app.routes = {
 	'/*': [
 		'manual',
@@ -32,6 +28,10 @@ app.routes = {
 	'/luaperson/{id}/':     'lua:person',
 	'/groovyperson/{id}/':  'groovy:person',
 	'/clojureperson/{id}/': 'clojure:person'
+}
+
+app.hosts = {
+	'default': '/prudence-example/'
 }
 
 app.dispatchers = {

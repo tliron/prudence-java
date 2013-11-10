@@ -1,8 +1,4 @@
 
-app.hosts = {
-	'default': '/'
-}
-
 app.routes = {
 	'/*': [
 		'manual',
@@ -20,4 +16,8 @@ app.routes = {
 			}
 		}
 	]
+}
+
+app.hosts = {
+	'default': '/'
 }

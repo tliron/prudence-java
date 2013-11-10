@@ -1,8 +1,4 @@
 
-app.hosts = {
-	'default': '/stickstick/'
-}
-
 app.routes = {
 	'/*': [
 		'manual',
@@ -22,4 +18,8 @@ app.routes = {
 	],
 
 	'/data/note/{id}/': '/data/note/!'
+}
+
+app.hosts = {
+	'default': '/stickstick/'
 }

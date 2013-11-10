@@ -1,8 +1,4 @@
 
-app.hosts = {
-	'default': '/${APPLICATION}/'
-}
-
 app.routes = {
 	'/*': [
 		'manual',
@@ -23,4 +19,8 @@ app.routes = {
 
 	'/example1/': '@example', // see /libraries/dispatched/example.js
 	'/example2/': '/example/'  // see /libraries/includes/example.html
+}
+
+app.hosts = {
+	'default': '/${APPLICATION}/'
 }

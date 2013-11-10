@@ -584,25 +584,6 @@ status open
 
 \begin_layout Plain Layout
 
-app.hosts = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	'default': '/myapp/'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
 app.routes = {
 \end_layout
 
@@ -694,6 +675,25 @@ app.routes = {
 \begin_layout Plain Layout
 
 	'/example2/': '/example/' // (captured)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+app.hosts = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'default': '/myapp/'
 \end_layout
 
 \begin_layout Plain Layout
@@ -4616,6 +4616,222 @@ inverted,
 \end_layout
 
 \begin_layout Subsection
+app.errors
+\begin_inset CommandInset label
+LatexCommand label
+name "app-errors"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default, Prudence will display ready-made error pages if the response's
+ HTTP status code is an error (>=400), but you can override these by settings
+ your own custom pages:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.errors = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	404: '/errors/not-found/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	500: '/errors/fail/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The keys of the dict are status codes, while the values work like 
+\bar under
+captures (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-capturing"
+
+\end_inset
+
+)
+\bar default
+.
+ This means that you can implement your error pages using any kind of resource:
+ manual, scriptlet or static.
+\end_layout
+
+\begin_layout Standard
+If your error resource is mapped under 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+, and you don't want it exposed, use the 
+\bar under
+capture-and-hide notation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "capture-and-hide"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.errors = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	404: '/errors/not-found/!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is equivalent to explicitly hiding the URI in app.routes using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+hidden
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hidden-route-type"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/errors/not-found/': '!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 500 (
+\begin_inset Quotes eld
+\end_inset
+
+internal server error
+\begin_inset Quotes erd
+\end_inset
+
+) statuses caused by uncaught exceptions can be handled specially by 
+\bar under
+enabling debug mode (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-errors"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Warning:
+\series default
+ If you decide to implement your error pages using a 
+\emph on
+non
+\emph default
+-static resource, you run the risk of the resource code throwing an exception.
+ If that happens, it would cause a 500 status code.
+ If the original error was 
+\emph on
+not
+\emph default
+ 500, then this would confuse the client and complicate debugging.
+ However, if the original status code 
+\emph on
+was
+\emph default
+ 500, then it could be much worse: the error would trigger your error page
+ to be displayed again, which might throw the exception again\SpecialChar \ldots{}
+ resulting
+ in a stack overflow error.
+ For these reasons, it's probably a good idea to implement your error pages
+ as static resources, at least for production deployments.
+\end_layout
+
+\begin_layout Subsection
 app.hosts
 \begin_inset CommandInset label
 LatexCommand label
@@ -4899,222 +5115,6 @@ if (conversation.reference.baseRef.path == '/myapp/') {
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-app.errors
-\begin_inset CommandInset label
-LatexCommand label
-name "app-errors"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-By default, Prudence will display ready-made error pages if the response's
- HTTP status code is an error (>=400), but you can override these by settings
- your own custom pages:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.errors = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	404: '/errors/not-found/',
-\end_layout
-
-\begin_layout Plain Layout
-
-	500: '/errors/fail/'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The keys of the dict are status codes, while the values work like 
-\bar under
-captures (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "resource-capturing"
-
-\end_inset
-
-)
-\bar default
-.
- This means that you can implement your error pages using any kind of resource:
- manual, scriptlet or static.
-\end_layout
-
-\begin_layout Standard
-If your error resource is mapped under 
-\begin_inset Quotes eld
-\end_inset
-
-/resources/
-\begin_inset Quotes erd
-\end_inset
-
-, and you don't want it exposed, use the 
-\bar under
-capture-and-hide notation (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "capture-and-hide"
-
-\end_inset
-
-)
-\bar default
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.errors = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	404: '/errors/not-found/!'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This is equivalent to explicitly hiding the URI in app.routes using the 
-\bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-hidden
-\begin_inset Quotes erd
-\end_inset
-
- route type (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "hidden-route-type"
-
-\end_inset
-
-)
-\bar default
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/errors/not-found/': '!'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that 500 (
-\begin_inset Quotes eld
-\end_inset
-
-internal server error
-\begin_inset Quotes erd
-\end_inset
-
-) statuses caused by uncaught exceptions can be handled specially by 
-\bar under
-enabling debug mode (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "settings-errors"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Quote
-
-\series bold
-Warning:
-\series default
- If you decide to implement your error pages using a 
-\emph on
-non
-\emph default
--static resource, you run the risk of the resource code throwing an exception.
- If that happens, it would cause a 500 status code.
- If the original error was 
-\emph on
-not
-\emph default
- 500, then this would confuse the client and complicate debugging.
- However, if the original status code 
-\emph on
-was
-\emph default
- 500, then it could be much worse: the error would trigger your error page
- to be displayed again, which might throw the exception again\SpecialChar \ldots{}
- resulting
- in a stack overflow error.
- For these reasons, it's probably a good idea to implement your error pages
- as static resources, at least for production deployments.
 \end_layout
 
 \begin_layout Subsection
@@ -23250,7 +23250,7 @@ server.address = [string]
 \begin_layout Standard
 There are also many configuration parameters for Jetty, the HTTP engine,
  which you can set in the server's context.
- Here we configure the size of the thread pool:
+ Here we'll increase the size of the thread pool and lower the idle timeout:
 \end_layout
 
 \begin_layout Standard
@@ -23260,12 +23260,17 @@ status open
 
 \begin_layout Plain Layout
 
-server.context.parameters.set('minThreads', '6')
+server.context.parameters.set('threadPool.minThreads', '50')
 \end_layout
 
 \begin_layout Plain Layout
 
-server.context.parameters.set('maxThreads', '12')
+server.context.parameters.set('threadPool.maxThreads', '300')
+\end_layout
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('connector.idleTimeout', '10000')
 \end_layout
 
 \end_inset
@@ -23274,34 +23279,34 @@ server.context.parameters.set('maxThreads', '12')
 \end_layout
 
 \begin_layout Standard
-Here we switch to a blocking server:
+Note that parameters are always set as strings, even if they are interpreted
+ as other types.
 \end_layout
 
 \begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('type', '1') // blocking NIO
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-See Jetty's 
+For a complete list of available configuration parameters, see 
 \begin_inset CommandInset href
 LatexCommand href
 name "HttpServerHelper"
-target "http://restlet.org/learn/javadocs/2.2/jse/ext/org/restlet/ext/jetty/HttpServerHelper.html"
+target "http://threecrickets.com/api/java/restlet-jetty9/index.html?org/restlet/ext/jetty9/HttpServerHelper.html"
 
 \end_inset
 
- as well as all inherited parameters from the parent classes.
+.
+ 
+\emph on
+Make sure to check the documentation for all the parent classes
+\emph default
+, because they are inherited.
+ (That link was for Jetty 9; use 
+\begin_inset CommandInset href
+LatexCommand href
+name "this link"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/jetty/HttpServerHelper.html"
+
+\end_inset
+
+ if you are using Jetty 8.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -23405,15 +23410,15 @@ server.context.parameters.set('useForwardedForHeader', 'true')
 \end_layout
 
 \begin_layout Standard
-See the 
+See 
 \begin_inset CommandInset href
 LatexCommand href
-name "Restlet Jetty HttpServerHelper documentation"
+name "DefaultSslContextFactory"
 target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/ssl/DefaultSslContextFactory.html"
 
 \end_inset
 
- for all secuirty configuration parameters.
+ for all security configuration parameters.
 \end_layout
 
 \begin_layout Paragraph
@@ -26124,8 +26129,8 @@ reference "the-cast-for-rest"
 \end_layout
 
 \begin_layout Standard
-It's a good idea to think very carefully about your URI-space.
- A RESTful URI-space can help you define well-encapsulated RESTful resources.
+It's a good idea to think very carefully about your URI-space: a good design
+ will in turn help you define well-encapsulated RESTful resources.
  Below are some topics to consider.
 \end_layout
 
@@ -26144,7 +26149,7 @@ nouns
 verbs
 \emph default
 .
- In other worlds, make sure that you do not include verbs in your URIs.
+ To put it simply: make sure that you do not include verbs in your URIs.
  Examples:
 \end_layout
 
@@ -26231,11 +26236,11 @@ A third, more serious potential problem is idempotency.
  The idempotent verbs PUT and DELETE may be optimized by the HTTP infrastructure
  (for example, a smart load balancer) such that requests arrive more than
  once: this is allowed by the very definition of idempotency.
- However, your operations 
+ However, your intended operations 
 \emph on
-may
+may not be
 \emph default
- not be semantically idempotent.
+ semantically idempotent.
  For example, if a 
 \begin_inset Quotes eld
 \end_inset
@@ -26253,7 +26258,7 @@ already stopped
 \end_inset
 
  500 error.
- In this case, if the infrastructure allows for two 
+ In this case, if the infrastructure indeed allows for two 
 \begin_inset Quotes eld
 \end_inset
 
@@ -26290,7 +26295,7 @@ The bottom line is that if you standardize on only using nouns for your
 \begin_layout Standard
 
 \emph on
-Beware of gerunds!
+Also: beware of gerunds!
 \emph default
  A URI such as 
 \begin_inset Quotes eld
@@ -26300,8 +26305,7 @@ Beware of gerunds!
 \begin_inset Quotes erd
 \end_inset
 
- is technically a noun, but allows for some verb-related problems to creep
- in.
+ is may be a noun, but allows for some verb-related problems to creep in.
 \end_layout
 
 \begin_layout Subsection
@@ -26317,7 +26321,7 @@ name "do-you-really-need-rest"
 
 \begin_layout Standard
 In the above section, it was suggested that you prefer nouns to verbs.
- However, this preference may seem for constraining for your application.
+ However, this preference may be too constraining for your project.
  Your application may be very command-oriented, such that you will end up
  with a very small set of 
 \begin_inset Quotes eld
@@ -26327,15 +26331,16 @@ noun
 \begin_inset Quotes erd
 \end_inset
 
- URIs that need to support a vast amount of commands.
+ URIs that need to support a large amount of commands, meaning less clarity
+ and more cluttered code.
 \end_layout
 
 \begin_layout Standard
-REST shines because it is based on a tiny set of very tightly defined verbs:
- GET, POST, PUT, DELETE.
+REST's best feature it it's tiny set of tightly defined verbs: GET, POST,
+ PUT, DELETE.
  The entire infrastructure is highly optimized around them: load balancers,
- caches, browsers, gateways, etc., all should know how best to handle each
- of these for maximum scalability and reliability.
+ caches, browsers, gateways, etc., all know how best to handle each of these
+ for maximum scalability and reliability.
  But, it's entirely possible that your needs cannot be easily satisfied
  by just four verbs.
 \end_layout
@@ -26406,7 +26411,7 @@ both
 \end_layout
 
 \begin_layout Subsection
-Hierarchies
+Hierarchical URIs
 \end_layout
 
 \begin_layout Standard
@@ -26432,10 +26437,10 @@ It's entirely a matter of convention that the use of
 \end_layout
 
 \begin_layout Standard
-This convention is useful because it's very familiar to users, but additionally
- it implies semantic properties that can add clarity and power to your resource
- design.
- There are two possible semantic principles you may consider:
+This convention is useful because it's very familiar to users, but beyond
+ that it implies a few semantic properties that can add clarity and power
+ to your resource design.
+ There are two possible principles you may consider:
 \end_layout
 
 \begin_layout Enumerate
@@ -26605,11 +26610,13 @@ nature
 \emph default
  of your hierarchical relationships.
  Unlike filesystem directory hierarchies, in a URI-space there is no single
- standard or interpretation of what of a hierarchy means.
+ standard or obvious interpretation of what of a hierarchical relationship
+ would mean.
+ But unless you clarify it for yourself, it cannot be clear to your users.
 \end_layout
 
 \begin_layout Subsection
-Formats
+Formats Are Not Aspects
 \end_layout
 
 \begin_layout Standard
