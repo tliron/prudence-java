@@ -98,6 +98,16 @@ public class ConversationService
 	}
 
 	/**
+	 * The resource reference's remaining part.
+	 * 
+	 * @return The remaining part
+	 */
+	public String getWildcard()
+	{
+		return getReference().getRemainingPart();
+	}
+
+	/**
 	 * The conversation cookies.
 	 * <p>
 	 * This value is cached locally.

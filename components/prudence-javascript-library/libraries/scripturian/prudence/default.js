@@ -600,6 +600,15 @@ var Prudence = {}
  */
 
 /**
+ * When this is true (the default), then <i>all</i> requests will be cached. When false,
+ * <i>only</i> idempotent requests will be cached. Non-idempotent requests, such as HTTP
+ * "POST", will bypass the cache.  
+ * 
+ * @name document.cacheNonIdempotent
+ * @type Boolean
+ */
+
+/**
  * The cache key pattern is used to generate the cache key for the current document
  * by injecting attributes based on the current conversation. See {@link document#cacheKey} to
  * see the actually generate cache key. Defaults to "{ri}|{dn}".
@@ -783,6 +792,15 @@ var Prudence = {}
  *
  * @name conversation.reference
  * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Reference.html">org.restlet.data.Reference</a>
+ */
+
+/**
+ * Provides access to the remaining part of the URI (the "wildcard") for the current request.
+ * <p>
+ * This is a shortcut to calling {@link conversation#reference}.remainingPart.
+ * 
+ * @name conversation.wildcard
+ * @type {String}
  */
 
 /**

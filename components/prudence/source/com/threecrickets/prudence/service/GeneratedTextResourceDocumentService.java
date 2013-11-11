@@ -115,7 +115,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	//
 
 	/**
-	 * The cache duration.
+	 * The cache duration. Defaults to 0.
 	 * 
 	 * @return The cache duration in milliseconds
 	 * @see #setCacheDuration(long)
@@ -134,6 +134,27 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	public void setCacheDuration( long cacheDuration )
 	{
 		getDescriptor().getDocument().getAttributes().put( CACHE_DURATION_ATTRIBUTE, cacheDuration );
+	}
+
+	/**
+	 * Whether to cache non-idempotent requests. Defaults to true,
+	 * 
+	 * @return Whether to cache non-idempotent requests
+	 */
+	public boolean getCacheNonIdempotent()
+	{
+		Boolean cacheNonIdempotent = (Boolean) getDescriptor().getDocument().getAttributes().get( CACHE_NON_IDEMPOTENT_ATTRIBUTE );
+		return cacheNonIdempotent == null ? true : cacheNonIdempotent;
+	}
+
+	/**
+	 * @param cacheNonIdempotent
+	 *        Whether to cache non-idempotent requests
+	 * @see #getCacheNonIdempotent()
+	 */
+	public void setCacheNonIdempotent( boolean cacheNonIdempotent )
+	{
+		getDescriptor().getDocument().getAttributes().put( CACHE_NON_IDEMPOTENT_ATTRIBUTE, cacheNonIdempotent );
 	}
 
 	/**
@@ -425,6 +446,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * Cache duration attribute for an {@link Executable}.
 	 */
 	private static final String CACHE_DURATION_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheDuration";
+
+	/**
+	 * Cache non-idempotent attribute for an {@link Executable}.
+	 */
+	private static final String CACHE_NON_IDEMPOTENT_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheNonIdempotent";
 
 	/**
 	 * Cache key pattern attribute for an {@link Executable}.
@@ -883,23 +909,27 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			if( ( cacheEntry != null ) && ( cacheKey != null ) )
 				return represent( cacheEntry, getEncoding( executable ), cacheKey, executable, writer );
 
-			// Attempt to use cache
-			cacheKey = castCacheKey( documentDescriptor );
-			if( cacheKey != null )
+			// Attempt to use cache for idempotent requests
+			if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
 			{
-				Cache cache = this.attributes.getCache();
-				if( cache != null )
+				cacheKey = castCacheKey( documentDescriptor );
+				if( cacheKey != null )
 				{
-					// Try cache key for encoding first
-					Encoding encoding = getEncoding( executable );
-					String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
-					cacheEntry = cache.fetch( cacheKeyForEncoding );
-					if( cacheEntry == null )
-						cacheEntry = cache.fetch( cacheKey );
+					Cache cache = this.attributes.getCache();
+					if( cache != null )
+					{
+						// Try cache key for encoding first
+						Encoding encoding = getEncoding( executable );
+						String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+						cacheEntry = cache.fetch( cacheKeyForEncoding );
+						if( cacheEntry == null )
+							cacheEntry = cache.fetch( cacheKey );
 
-					// Make sure the document is not newer than the cache entry
-					if( ( cacheEntry != null ) && ( executable.getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() ) )
-						return represent( cacheEntry, encoding, cacheKey, executable, writer );
+						// Make sure the document is not newer than the cache
+						// entry
+						if( ( cacheEntry != null ) && ( executable.getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() ) )
+							return represent( cacheEntry, encoding, cacheKey, executable, writer );
+					}
 				}
 			}
 		}
@@ -953,32 +983,35 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				// Encoded version
 				CacheEntry encodedCacheEntry = new CacheEntry( cacheEntry, encoding );
 
-				// Cache if enabled
+				// Cache idempotent requests
 				if( expirationTimestamp > 0 )
 				{
-					String cacheKey = castCacheKey( documentDescriptor );
-					if( cacheKey != null )
+					if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
 					{
-						// Cache!
-						Cache cache = attributes.getCache();
-						if( cache != null )
+						String cacheKey = castCacheKey( documentDescriptor );
+						if( cacheKey != null )
 						{
-							String[] tags = null;
-							if( cacheTags != null )
-								tags = cacheTags.toArray( new String[] {} );
-
-							String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
-							encodedCacheEntry.setTags( tags );
-							cache.store( cacheKeyForEncoding, encodedCacheEntry );
-
-							// Cache un-encoded entry separately
-							if( encoding != null )
+							// Cache!
+							Cache cache = attributes.getCache();
+							if( cache != null )
 							{
-								cacheEntry.setTags( tags );
-								cache.store( cacheKey, cacheEntry );
-							}
+								String[] tags = null;
+								if( cacheTags != null )
+									tags = cacheTags.toArray( new String[] {} );
 
-							addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
+								String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+								encodedCacheEntry.setTags( tags );
+								cache.store( cacheKeyForEncoding, encodedCacheEntry );
+
+								// Cache un-encoded entry separately
+								if( encoding != null )
+								{
+									cacheEntry.setTags( tags );
+									cache.store( cacheKey, cacheEntry );
+								}
+
+								addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
+							}
 						}
 					}
 				}

@@ -136,100 +136,288 @@ name "tutorial"
 \end_layout
 
 \begin_layout Subsection
-Installing Prudence
+Up and Running
 \end_layout
 
 \begin_layout Standard
-Download a distribution
-\end_layout
+All you need to run Prudence is a JVM: version 7 or above is recommended,
+ though 
+\begin_inset CommandInset href
+LatexCommand href
+name "version 6"
+target "http://threecrickets.com/prudence/download/#jvm6"
 
-\begin_layout Standard
-Starting Prudence
-\end_layout
+\end_inset
 
-\begin_layout Subsubsection
-Further Exploration
-\end_layout
-
-\begin_layout Itemize
-Start Prudence as a system service
-\end_layout
-
-\begin_layout Itemize
-Logging
-\end_layout
-
-\begin_layout Subsection
-At a Glance
-\end_layout
-
-\begin_layout Subsubsection
-/component/
-\end_layout
-
-\begin_layout Standard
-A 
+ can also be supported.
+ You do not need 
 \begin_inset Quotes eld
 \end_inset
 
-component
+J2EE
 \begin_inset Quotes erd
 \end_inset
 
- is the largest logical entity REST.
- It can encapsulate many servers and clients.
+ nor even a 
+\begin_inset Quotes eld
+\end_inset
+
+JDK
+\begin_inset Quotes erd
+\end_inset
+
+: Prudence needs only the basic JVM runtime.
 \end_layout
 
 \begin_layout Standard
-In Prudence, the component is bootstrapped using straightforward JavaScript
- code, starting with default.js.
- The code makes sure to initialize all your applications, servers and clients,
- as well as related services, and bind them to your component.
-\end_layout
+There are two ways to get Prudence: the easiest way is to download the distribut
+ion, which includes most everything and is ready to rumble.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Let's do that now"
+target "http://threecrickets.com/prudence/download/#distribution"
 
-\begin_layout Subsubsection
-/component/applications/
-\end_layout
+\end_inset
 
-\begin_layout Subsubsection
-/component/libraries/scripturian/
-\end_layout
-
-\begin_layout Subsubsection
-/component/libraries/prudence/
-\end_layout
-
-\begin_layout Subsubsection
-/component/libraries/web/
+.
 \end_layout
 
 \begin_layout Standard
-Here you can put static resources that you wish to have shared by all your
- applications.
-\end_layout
+But Prudence is modular: later on, you may prefer to assemble your own distribut
+ion using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity packaging and bootstrapping tool"
+target "http://threecrickets.com/sincerity/"
 
-\begin_layout Standard
-It's a good place to put client-side JavaScript frameworks such as Ext JS
- and jQuery.
-\end_layout
+\end_inset
 
-\begin_layout Subsubsection
-/component/libraries/jars/
-\end_layout
-
-\begin_layout Standard
-This is where JVM libraries are installed.
- This includes all of Prudence's dependencies, and you can add your own,
- too.
-\end_layout
-
-\begin_layout Standard
-You can use JVM APIs from JavaScript almost identically to how they are
- used in Java.
+.
 \end_layout
 
 \begin_layout Subsubsection
-/cache/
+The Command Line
+\end_layout
+
+\begin_layout Standard
+Actually, the distribution you downloaded comes bundled with Sincerity,
+ which we will use to start Prudence.
+\end_layout
+
+\begin_layout Standard
+Let's start by quickly exploring Sincerity.
+ Open a command terminal and change to the Prudence directory.
+ If you're using a *nix operating system, you can run the command as 
+\begin_inset Quotes eld
+\end_inset
+
+./sincerity
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In Windows it's 
+\begin_inset Quotes eld
+\end_inset
+
+sincerity.bat
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To see a list of all Sincerity commands:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity help
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For example, let's print out all installed modules:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity dependencies
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If your operating system supports GUIs, you can start Sincerity without
+ any command to see it (or use the 
+\begin_inset Quotes eld
+\end_inset
+
+gui
+\begin_inset Quotes erd
+\end_inset
+
+ Sincerity command):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GUI is useful for visualizing things, but generally the CLI is better
+ for getting things done.
+ We'll be using the CLI in this tutorial.
+\end_layout
+
+\begin_layout Subsubsection
+Start Your Engines
+\end_layout
+
+\begin_layout Standard
+Let's start Prudence!
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The command will print out some version information, and then block.
+ You should now be able to point your browser to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080"
+target "http://localhost:8080"
+
+\end_inset
+
+ in order to see the Prudence administration application.
+ Or, just go right to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/stickstick/"
+target "http://localhost:8080/stickstick/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/prudence-example/"
+target "http://localhost:8080/prudence-example/"
+
+\end_inset
+
+ to see the included examples.
+ Stickstick is an example of an 
+\begin_inset Quotes eld
+\end_inset
+
+AJAX
+\begin_inset Quotes erd
+\end_inset
+
+ application, implementing sticky notes shared on the web and saved to a
+ relational (SQL) database.
+ It comes with the 
+\begin_inset CommandInset href
+LatexCommand href
+name "H2 database"
+target "http://www.h2database.com/"
+
+\end_inset
+
+, so it does not require a separate database server.
+ The Prudence Example is more general, walking you through Prudence's basic
+ features in all supported programming languages.
+\end_layout
+
+\begin_layout Standard
+While playing around with the examples, you may also want to look at the
+ logs: they are in the 
+\begin_inset Quotes eld
+\end_inset
+
+/logs/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+web.log
+\begin_inset Quotes erd
+\end_inset
+
+ is an 
+\begin_inset CommandInset href
+LatexCommand href
+name "NCSA-style"
+target "http://en.wikipedia.org/wiki/Common_Log_Format"
+
+\end_inset
+
+ log of all web requests.
+ By default, 
+\begin_inset Quotes eld
+\end_inset
+
+common.log
+\begin_inset Quotes erd
+\end_inset
+
+ is used for everything else: your own applications as well as Prudence's
+ subsystems.
+ The logs will automatically roll, so don't worry about them filling your
+ storage.
+\end_layout
+
+\begin_layout Standard
+To quit Prudence, press CTRL+C.
 \end_layout
 
 \begin_layout Subsubsection
@@ -237,19 +425,66 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-Learn about bootstrapping with Sincerity
+Of course, you should not run Prudence in a terminal for deployed systems.
+ Instead, install Sincerity's powerful 
+\begin_inset CommandInset href
+LatexCommand href
+name "service plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+ to run Prudence as a robustly monitored system daemon.
 \end_layout
 
 \begin_layout Itemize
-Configure your component
+Logging uses Sincerity's 
+\begin_inset CommandInset href
+LatexCommand href
+name "logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+, which is fully configurable.
+ You can also use it to centralize logging for your cluster, and even log
+ directly to a database, such as MongoDB.
+\end_layout
+
+\begin_layout Itemize
+Prudence is built on top of Sincerity's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet skeleton"
+target "http://threecrickets.com/sincerity/ecosystem/skeletons/#restlet-skeleton"
+
+\end_inset
+
+.
+ The documentation there applies to Prudence, too.
 \end_layout
 
 \begin_layout Subsection
 Your First Application
 \end_layout
 
+\begin_layout Standard
+You've seen the example applications, and now it's time to create your own.
+\end_layout
+
 \begin_layout Subsubsection
-The 
+\begin_inset Quotes eld
+\end_inset
+
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Create a new application using the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -257,19 +492,360 @@ prudence
 \begin_inset Quotes erd
 \end_inset
 
- Command
+ Sincerity command.
+ Let's build a simple wiki!
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity prudence create wiki
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Restart Prudence, and you should be able to see your new application at
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/"
+target "http://localhost:8080/wiki/"
+
+\end_inset
+
+.
+ There's not much to see at this point.
+ Hello, world!
 \end_layout
 
 \begin_layout Subsubsection
+At a Glance
+\end_layout
+
+\begin_layout Standard
+Let's take a look at our application.
+ Its files are all under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/applications/wiki/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+At the root are three JavaScript files used to configure the application.
+ Take a look at 
+\begin_inset Quotes eld
+\end_inset
+
+routing.js
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+setting.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The former defines your application's URI-space, while the latter controls
+ its general behavior.
+ Note that Prudence's (and Sincerity's) configuration philosophy is to use
+ JavaScript wherever possible, which allows for dynamic, flexible configurations
+ that adapt to the environment in which they are run.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
 /resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory is mapped directly to your URI-space, just like most standard
+ web servers.
+ For example, a file named 
+\begin_inset Quotes eld
+\end_inset
+
+/mydir/myfile.html
+\begin_inset Quotes erd
+\end_inset
+
+ will be mapped to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/mydir/myfile.html"
+target "http://localhost:8080/wiki/mydir/myfile.html"
+
+\end_inset
+
+.
+ Also like standard web servers, 
+\begin_inset Quotes eld
+\end_inset
+
+index.html
+\begin_inset Quotes erd
+\end_inset
+
+ will be mapped to the directory itself.
 \end_layout
 
-\begin_layout Subsubsection
-/libraries/
+\begin_layout Standard
+Actually, you'll notice that our root index is named 
+\begin_inset Quotes eld
+\end_inset
+
+index.s.html
+\begin_inset Quotes erd
+\end_inset
+
+.
+ We call that 
+\begin_inset Quotes eld
+\end_inset
+
+s
+\begin_inset Quotes erd
+\end_inset
+
+ a pre-extension: here, it stands for 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlet,
+\begin_inset Quotes erd
+\end_inset
+
+ and tells Prudence that this is a text file that may include one or more
+ sections of code called 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlets,
+\begin_inset Quotes erd
+\end_inset
+
+ which are delimited by 
+\begin_inset Quotes eld
+\end_inset
+
+<%
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+%>
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This, again, may be familiar to you: it's similar to how PHP, JSP and ASP
+ work.
+ (We'll just quickly let you know that Prudence can automatically cache
+ these scriptlet pages, with powerful, fine-grained control over fragmentation
+ and cache keys, and configurable cache backends.)
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Standard
+Under 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/style/
+\begin_inset Quotes erd
+\end_inset
+
+ you'll see 
+\begin_inset Quotes eld
+\end_inset
+
+site.zuss
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
+
+\end_inset
+
+ is an extended CSS language, inspired by 
+\begin_inset CommandInset href
+LatexCommand href
+name "LESS"
+target "http://lesscss.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "SASS"
+target "http://sass-lang.com/"
+
+\end_inset
+
+.
+ Prudence will automatically recognize the 
+\begin_inset Quotes eld
+\end_inset
+
+.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ extension and create the CSS for us.
+\end_layout
+
+\begin_layout Standard
+Our reusable code is all under the 
+\begin_inset Quotes eld
+\end_inset
+
 /libraries/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory.
+ Specifically, 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/includes/
+\begin_inset Quotes erd
+\end_inset
+
+ contains fragments that can be included into our scriptlet pages.
+ You'll see that our 
+\begin_inset Quotes eld
+\end_inset
+
+index.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ uses them.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%& '/header/' %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\SpecialChar \ldots{}
+includes the file 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/includes/header.html
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Note that included files may have scriptlets in them (and can be cached
+ independently).
+\end_layout
+
+\begin_layout Standard
+All the above might seem quite familiar to you, and this is by intention.
+ But the files under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/dispatched/
+\begin_inset Quotes erd
+\end_inset
+
+ may seem strange: they are 
+\begin_inset Quotes eld
+\end_inset
+
+low-level
+\begin_inset Quotes erd
+\end_inset
+
+ direct implementations of encapsulated RESTful resources.
+ Take a look at 
+\begin_inset Quotes eld
+\end_inset
+
+example.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Moreover, these kinds of RESTful resources are not directly mapped to URIs
+ like those in the 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory.
+ Instead, they are 
+\begin_inset Quotes eld
+\end_inset
+
+dispatched
+\begin_inset Quotes erd
+\end_inset
+
+ using unique IDs.
+ In Prudence, this paradigm is called 
+\begin_inset Quotes eld
+\end_inset
+
+URI/resource separation,
+\begin_inset Quotes erd
+\end_inset
+
+ and it allows you full flexibility in structuring your code vs.
+ structuring your URI-space.
+\end_layout
+
+\begin_layout Standard
+We'll get into all that as we go along this tutorial.
 \end_layout
 
 \begin_layout Subsubsection
@@ -277,15 +853,1402 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-Configure your application
+The 
+\begin_inset Quotes eld
+\end_inset
+
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+ command copies and modifies the application template under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/templates/default/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can create your own templates in that directory, and use their name
+ as a second argument to the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+ command, e.g.: 
+\begin_inset Quotes eld
+\end_inset
+
+sincerity prudence create wiki mytemplate
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
-Managing the URI-space
+Learn how to 
+\bar under
+configure your application (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuring-applications"
+
+\end_inset
+
+)
+\bar default
+ via its settings.js file.
+\end_layout
+
+\begin_layout Itemize
+Learn about 
+\bar under
+the difference between the 
+\begin_inset Quotes eld
+\end_inset
+
+resource mapping
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+URI/resource separation
+\begin_inset Quotes erd
+\end_inset
+
+ paradigms (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "two-routing-paradigms"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsection
-Generating HTML
+HTML Pages
+\end_layout
+
+\begin_layout Standard
+Let's look more closely at our 
+\begin_inset Quotes eld
+\end_inset
+
+index.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ page.
+ The scriptlets are executed, while what's outside the scriptlets is simply
+ output to the HTTP response.
+ You can nest regular output into scriptlets:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% for (var x = 0; x < 10; x++ ) { %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>These are 10 paragraphs.</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% } %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are also a few shortcut scriptlets.
+ For example, to output an expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%= x*2 %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above is equivalent to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% print(x*2) %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also useful is the inclusion scriptlet, which we've already discussed:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%& '/header/' %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above is equivalent to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% document.include('/header/') %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+APIs
+\end_layout
+
+\begin_layout Standard
+What is this 
+\begin_inset Quotes eld
+\end_inset
+
+document
+\begin_inset Quotes erd
+\end_inset
+
+ namespace? It's part of the rich, well-documented API provided by Prudence.
+ Other useful namespaces are 
+\begin_inset Quotes eld
+\end_inset
+
+conversation,
+\begin_inset Quotes erd
+\end_inset
+
+ for accessing the request/response, and 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ for shared application-wide services.
+ The complete API reference is 
+\begin_inset CommandInset href
+LatexCommand href
+name "available online"
+target "http://threecrickets.com/api/javascript/"
+
+\end_inset
+
+, though it can be daunting to start there.
+ Instead, continue reading through the manual: especially important is 
+\bar under
+the web data chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "web-data"
+
+\end_inset
+
+)
+\bar default
+, which goes over much of the interaction with clients.
+\end_layout
+
+\begin_layout Standard
+And remember that you're running on the JVM: the entire JVM standard library
+ is available for you, as well as any other JVM library you install in your
+ container (using Sincerity or manually).
+\end_layout
+
+\begin_layout Subsubsection
+Behind the Scenes
+\end_layout
+
+\begin_layout Standard
+Behind the scenes, Prudence parses 
+\begin_inset Quotes eld
+\end_inset
+
+index.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ and turns it into JavaScript source code.
+ If you'd like to see the generated code, look at the Scripturian cache,
+ specifically under the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/cache/scripturian/container/component/applications/wiki/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ These generated files are not actually used by Prudence, and only available
+ for debugging purposes.
+ Disable their creation by configuring 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ mode to false (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Our First Page
+\end_layout
+
+\begin_layout Standard
+Let's create a new page for our wiki, under our application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ We'll call it 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+.
+ We'll start simple:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>This is our wiki page.</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Browse to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/page/"
+target "http://localhost:8080/wiki/page/"
+
+\end_inset
+
+ to see it.
+ Note that you do not need to restart Prudence if you're only adding or
+ changing pages: Prudence will pick up these changes on-demand, on-the-fly,
+ and make sure to compile and recompile as necessary.
+\end_layout
+
+\begin_layout Standard
+You'll notice that even though the file has a 
+\begin_inset Quotes eld
+\end_inset
+
+.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ extension, Prudence does not use the extension for the URL.
+ This is because that extension is entirely an implementation concern on
+ your end: there's no reason for the user to have to see it, nor to have
+ it clutter the URL.
+\end_layout
+
+\begin_layout Standard
+Also notice the trailing slash: it's 
+\begin_inset Quotes eld
+\end_inset
+
+page/
+\begin_inset Quotes erd
+\end_inset
+
+, not 
+\begin_inset Quotes eld
+\end_inset
+
+page
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\emph on
+Prudence enforces trailing slashes.
+ 
+\emph default
+This allows your relative URLs to be clear and unambiguous.
+ For example, to insert an image in our page, we could do this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<img src="../images/logo.png" />
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Without
+\emph default
+ a trailing slash, you would not need the 
+\begin_inset Quotes eld
+\end_inset
+
+../
+\begin_inset Quotes erd
+\end_inset
+
+, but 
+\emph on
+with 
+\emph default
+the trailing slash, it's 
+\emph on
+necessary
+\emph default
+.
+ If you don't pick one of the two options, handling relative URLs quickly
+ becomes messy.
+ So why have we decided to standardize on trailing slashes? Because it gives
+ you more flexibility: for example, instead of saving our page 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+, we could have saved it as 
+\begin_inset Quotes eld
+\end_inset
+
+page/index.s.html
+\begin_inset Quotes erd
+\end_inset
+
+, and the 
+\emph on
+URL would be identical
+\emph default
+.
+ As you will see, the trailing slash principle is used throughout Prudence
+ to allow many such conveniences, for both external URLs and for internal
+ library URIs.
+ You'll see us constantly ending our URIs in slashes.
+\end_layout
+
+\begin_layout Subsubsection
+A Single Wiki Page
+\end_layout
+
+\begin_layout Standard
+It's time to flesh out out 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (conversation.request.method.name == 'POST') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put('page', form.content)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var page = application.globals.get('page') || 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
+\end_layout
+
+\begin_layout Plain Layout
+
+	<%= page %>
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<form method="post">
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p>Edit this page:</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p><textarea name="content" cols="80" rows="20"><%= page %></textarea></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<p><button type="submit">Submit</button></p>
+\end_layout
+
+\begin_layout Plain Layout
+
+</form>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Not the most exciting wiki, but it works for editing a single page.
+ Let's break it down:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+document.require
+\begin_inset Quotes erd
+\end_inset
+
+ is how we import libraries.
+ (At least for JavaScript: other languages have other import facilities,
+ which you can use instead.) The API will attempt to import libraries from
+ your own application's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory first, and if not found there, will use the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scripturian/
+\begin_inset Quotes erd
+\end_inset
+
+ directory next.
+ Actually, that's where this particular library is located.
+ You'll notice how we use a trailing slash in the library URI.
+ The library URIs also match the JavaScript namespaces: 
+\begin_inset Quotes eld
+\end_inset
+
+/prudence/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ matches Prudence.Resources.
+\end_layout
+
+\begin_layout Itemize
+We're using the 
+\begin_inset Quotes eld
+\end_inset
+
+conversation.request
+\begin_inset Quotes erd
+\end_inset
+
+ API to find out if we're in an HTTP 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If so, we will extract the 
+\begin_inset Quotes eld
+\end_inset
+
+content
+\begin_inset Quotes erd
+\end_inset
+
+ form field (as simple text).
+ We will then save it as an 
+\begin_inset Quotes eld
+\end_inset
+
+application.global
+\begin_inset Quotes erd
+\end_inset
+
+.
+ These globals belong to the entire running application, and can be accessed
+ from any page, for any request.
+ For a real wiki we would want to store this content in a database, but
+ this in-memory wiki should work for now.
+\end_layout
+
+\begin_layout Itemize
+We then go on to display the content as well as the HTML form for editing
+ the content.
+\end_layout
+
+\begin_layout Subsubsection
+Infinite Pages
+\end_layout
+
+\begin_layout Standard
+The above is just a single page: let's multiply it by 
+\emph on
+infinity
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+To do this, we'll configure our URI-space by editing the application's routing.js
+ file.
+ To the 
+\begin_inset Quotes eld
+\end_inset
+
+app.routes
+\begin_inset Quotes erd
+\end_inset
+
+ dict, let's add the following:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/page/*': '/page/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+What this does is 
+\begin_inset Quotes eld
+\end_inset
+
+capture
+\begin_inset Quotes erd
+\end_inset
+
+ all incoming URLs that begin with 
+\begin_inset Quotes eld
+\end_inset
+
+/page/
+\begin_inset Quotes erd
+\end_inset
+
+ to our 
+\begin_inset Quotes eld
+\end_inset
+
+/page/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+ at the end of a URI pattern signifies a wildcard.
+ Restart Prudence for our routing.js changes to take effect.
+\end_layout
+
+\begin_layout Standard
+You'll see that now, indeed, any URL beginning with 
+\begin_inset Quotes eld
+\end_inset
+
+/page/
+\begin_inset Quotes erd
+\end_inset
+
+ will take us to our single, lonely wiki page.
+ For example, this: 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/page/test/"
+target "http://localhost:8080/wiki/page/test/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let's edit our scriptlet in 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ to make it differ per incoming URL:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var id = conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (conversation.request.method.name == 'POST') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put('page.' + id, form.content)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var page = application.globals.get('page.' + id) || 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And\SpecialChar \ldots{}
+ that's it.
+ Now any URL beginning with 
+\begin_inset Quotes eld
+\end_inset
+
+/page/
+\begin_inset Quotes erd
+\end_inset
+
+ becomes an editable wiki page.
+ The only real 
+\begin_inset Quotes eld
+\end_inset
+
+trick
+\begin_inset Quotes erd
+\end_inset
+
+ here is the conversation.wildcard API, which gives us 
+\bar under
+the captured wildcard (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-wildcard"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Caching
+\end_layout
+
+\begin_layout Standard
+In our above example, we're storing the wiki page content in memory, so
+ it's all very fast.
+ However, if we were fetching data from a database, authenticating users,
+ and doing other sorts of heavy lifting, our page would not generate so
+ fast.
+ By smartly caching our pages we can ensure that heavy lifting would be
+ done only when necessary.
+\end_layout
+
+\begin_layout Standard
+Actually, speed is not the issue, exactly: even pulling data from a database
+ is usually very fast.
+ The real issue is scalability: increased load on the database per user
+ request can limit your ability to support many users.
+ Obviously, it's most efficient to do work only when you need it: and that
+ simple principle is the most important tool you have for increasing scalability.
+\end_layout
+
+\begin_layout Standard
+Prudence does caching 
+\emph on
+very 
+\emph default
+well.
+ So, though it might be considered an 
+\begin_inset Quotes eld
+\end_inset
+
+advanced
+\begin_inset Quotes erd
+\end_inset
+
+ issue, it's a crucial one, and worth going over in this tutorial.
+\end_layout
+
+\begin_layout Standard
+It's also easy to do:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var id = conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+document.cacheDuration = 60000
+\end_layout
+
+\begin_layout Plain Layout
+
+document.cacheTags.add(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+document.cacheNonIdempotent = false
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (conversation.request.method.name == 'POST') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put('page.' + id, form.content)
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var page = application.globals.get('page.' + id) || 'This page is empty.' 
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+What we've done:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+document.cacheDuration
+\begin_inset Quotes erd
+\end_inset
+
+ is 0 by default.
+ We set it to 60 seconds.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+document.cacheTags
+\begin_inset Quotes erd
+\end_inset
+
+ allows us to 
+\begin_inset Quotes eld
+\end_inset
+
+tag
+\begin_inset Quotes erd
+\end_inset
+
+ the cache entry.
+ These tags can then be used to invalidate whole swaths of the cache at
+ once.
+ In this case, we only have one cache entry (the current page) that uses
+ each particular tag.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+document.cacheNonIdempotent
+\begin_inset Quotes erd
+\end_inset
+
+ is 
+\begin_inset Quotes eld
+\end_inset
+
+true
+\begin_inset Quotes erd
+\end_inset
+
+ by default, but we set it to 
+\begin_inset Quotes eld
+\end_inset
+
+false
+\begin_inset Quotes erd
+\end_inset
+
+ because we don't want our 
+\begin_inset Quotes eld
+\end_inset
+
+POST
+\begin_inset Quotes erd
+\end_inset
+
+ requests to use the cache (otherwise they would only be processed for cache
+ misses).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+document.cache.invalidate
+\begin_inset Quotes erd
+\end_inset
+
+ is used to invalidate a cache tag.
+ In this case, it's our own.
+\end_layout
+
+\begin_layout Standard
+If you're using Firefox, it's easy to see the caching in action.
+ Turn on Firefox's network inspector by pressing CTRL+SHIFT+Q and refresh
+ the page.
+ You will see the 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ request you just sent.
+ Click on it to see its details, and you will see the response headers returned
+ from the server.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+X-Cache
+\begin_inset Quotes erd
+\end_inset
+
+ family of headers will tell you the status of the server-side cache, such
+ as whether it's a 
+\begin_inset Quotes eld
+\end_inset
+
+hit
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+miss.
+\begin_inset Quotes erd
+\end_inset
+
+ You can disable these headers by configuring 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ mode to false (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+However, Prudence also utilizes the 
+\emph on
+client
+\emph default
+-side cache: if you continue refreshing the page within the 60-second cache
+ window, the web browser's conditional HTTP requests will return a 304 
+\begin_inset Quotes eld
+\end_inset
+
+not modified
+\begin_inset Quotes erd
+\end_inset
+
+ status, which tells the browser that there's no new information on the
+ server, and thus it will efficiently avoid downloading the complete response,
+ using its locally cached value instead.
+\end_layout
+
+\begin_layout Standard
+You've just vastly improved the scalability of your wiki, allowed for a
+ faster user experience, all without ever compromising on the freshness
+ of what users see.
+ Prudence caching is pure win.
+\end_layout
+
+\begin_layout Subsubsection
+Go Multilingual
+\end_layout
+
+\begin_layout Standard
+The above example uses JavaScript (
+\emph on
+server
+\emph default
+-side JavaScript; it has nothing to do with the code running inside web
+ browsers), but Prudence actually also supports Python, Ruby, PHP, Lua,
+ Groovy and Clojure.
+ To use them, you would first need to install them using Sincerity.
+ To try this out, let's install Python like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add python : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We could then create a Python scriptlet like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+for x in range(0, 10):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print x, '<br/>'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The low-level APIs are available for all supported languages.
+ For a Ruby example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%ruby
+\end_layout
+
+\begin_layout Plain Layout
+
+def say_hello name
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+say_hello 'Newton'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You even can mix scriptlets in several languages in the same page.
+ This might seem silly until you realize that you can use the rich ecosystem
+ of libraries available for each language.
 \end_layout
 
 \begin_layout Subsubsection
@@ -293,11 +2256,54 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-Textual Resources
+There's a lot more you can do with 
+\bar under
+scriptlets (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Itemize
-Adding more languages
+We've barely scratched the surface of what's possible with routing.js.
+ See the 
+\bar under
+URI-space chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-uri-space"
+
+\end_inset
+
+)
+\bar default
+ for full details.
+\end_layout
+
+\begin_layout Itemize
+Caching is a 
+\emph on
+big deal
+\emph default
+.
+ 
+\bar under
+Read all about it (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+!
 \end_layout
 
 \begin_layout Subsection
@@ -853,11 +2859,11 @@ any
 \end_inset
 
 .
- You can access the remainder of the URI via the 
+ You can access the captured wildcard via the 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.reference.remainingPart API"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+name "conversation.wildcard API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.wildcard"
 
 \end_inset
 
@@ -2824,6 +4830,13 @@ app.routes = {
 
 \begin_layout Subsection
 Two Routing Paradigms
+\begin_inset CommandInset label
+LatexCommand label
+name "two-routing-paradigms"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3884,10 +5897,10 @@ hidden
 \begin_layout Standard
 Note that it's also possible to 
 \bar under
-capture wildcards (page 
+capture the wildcard (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "interpolating-the-wildcard"
+reference "the-wildcard"
 
 \end_inset
 
@@ -8530,7 +10543,7 @@ target "https://github.com/tomyeh/ZUSS"
 
 \end_inset
 
- is a extended CSS language, inspired by 
+ is an extended CSS language, inspired by 
 \begin_inset CommandInset href
 LatexCommand href
 name "LESS"
@@ -9327,6 +11340,13 @@ Can be added with CacheControlFilter
 
 \begin_layout Section
 Web Data
+\begin_inset CommandInset label
+LatexCommand label
+name "web-data"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9613,6 +11633,13 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 
 \begin_layout Subsubsection
 The Wildcard
+\begin_inset CommandInset label
+LatexCommand label
+name "the-wildcard"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -9638,8 +11665,8 @@ reference "uri-templates"
  value using 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.reference.remainingPart"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+name "conversation.wildcard"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.wildcard"
 
 \end_inset
 
@@ -17443,8 +19470,9 @@ name "interpolating-the-wildcard"
 \end_layout
 
 \begin_layout Standard
-This is a common use case for redirection, worth emphasizing.
- According to the rules above, 
+This is a common use case for redirection, so even though it's included
+ in the documentation above, it's worth emphasizing.
+ According to the rules, the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17511,6 +19539,21 @@ The above would capture a URI such as
 \begin_inset Quotes erd
 \end_inset
 
+.
+\end_layout
+
+\begin_layout Standard
+The wildcard can also be accessed 
+\bar under
+via API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-wildcard"
+
+\end_inset
+
+)
+\bar default
 .
 \end_layout
 
@@ -21756,8 +23799,8 @@ reference "filtering-route-types"
 \bar default
  used to add effects to resources.
  Though you can often code the same effect directly into a resource, filters
- are decoupled from resources, allowing you to reuse the filter, which is
- especially useful with 
+ are decoupled from resources, allowing you to reuse an effect on many resources
+, which is especially useful with 
 \bar under
 mapping route types (page 
 \begin_inset CommandInset ref
@@ -21952,7 +23995,7 @@ rence)
 \end_layout
 
 \begin_layout Standard
-Our filter doesn't do much, but it's easy to test that the code is being
+Our filter doesn't do much yet, but it's easy to test that the code is being
  called by looking at the log.
  Of course you can do many other things here, as detailed in the examples
  below.
@@ -21970,12 +24013,12 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation"
 \begin_layout Standard
 Note that while you need to restart your application for the changes in
  routing.js to take hold, you are free to edit my-filter.js and have the changes
- will be picked up on-the-fly.
+ picked up on-the-fly.
 \end_layout
 
 \begin_layout Standard
-handleAfter is a bit more sophisticated in that it also requires a return
- value:
+handleBefore is a bit more sophisticated than handleAfter, in that it also
+ requires a return value:
 \end_layout
 
 \begin_layout Standard
@@ -22103,7 +24146,7 @@ It may be useful to change user requests for testing purposes.
 
 \begin_layout Standard
 For example, let's say we want to disable compression for all resources,
- even if users declare that they are capable of handling it:
+ even if clients declare that they are capable of handling it:
 \end_layout
 
 \begin_layout Standard
@@ -22141,8 +24184,9 @@ Easy! Note that this would be
 \emph on
 much
 \emph default
- harder to do by changing the response: we would have to decompress all
- compressed responses.
+ harder to achieve retroactively, by changing the response: we would have
+ to decompress all compressed responses.
+ Some effects are much better implemented in handleBefore.
 \end_layout
 
 \begin_layout Subsubsection
@@ -22154,7 +24198,7 @@ Filters can be useful for overriding the response under certain conditions.
 \end_layout
 
 \begin_layout Standard
-The following example filter always sets the response to a web page displaying
+The following example always sets the response to a web page displaying
  
 \begin_inset Quotes eld
 \end_inset
@@ -22309,14 +24353,14 @@ filter out
 \begin_inset Quotes erd
 \end_inset
 
- inappropriate language in HTML pages.
+ data from HTML pages.
  Actually, Prudence filters are 
 \emph on
 not
 \emph default
  a good way to do this, because there's no guarantee that response payloads
- returned from resources are textual, even if the content is text: they
- could very well be compressed (gzip) and also chunked.
+ returned from downstream resources are textual, even if the content is
+ text: they could very well be compressed (gzip) and also chunked.
  You would then need to decode, disassemble, make your changes, and then
  reassemble such responses, which is neither trivial nor efficient.
  
@@ -22341,7 +24385,7 @@ Filters don't have to change anything about the request or the response.
 \end_layout
 
 \begin_layout Standard
-In this example, we'll gather statistic about agent self-identification:
+In this example, we'll gather statistics about agent self-identification:
  specifically web browser product names and operating systems (via the 
 \begin_inset CommandInset href
 LatexCommand href
