@@ -431,24 +431,12 @@ Prudence.Routing = Prudence.Routing || function() {
 			// Inbound root (a router)
 			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
 
-			// Pass-through dispatchers
-			if (Sincerity.Objects.exists(this.manualPassThroughDocuments)) {
-				var exists = false
-				for (var name in this.dispatchers) {
-					exists = true
-					break
-				}
-				if (exists) {
-					println('  Dispatchers:')
-					for (var name in this.dispatchers) {
-						if (name != 'default') {
-							var dispatcher = this.getDispatcher(name)
-							this.manualPassThroughDocuments.add(dispatcher.dispatcher)
-							if (sincerity.verbosity >= 2) {
-								println('      "{0}" -> "{1}"'.cast(name, dispatcher.uri))
-							}
-						}
-					}
+			// Source viewer
+			if (true == this.settings.code.sourceViewable) {
+				var sourceViewer = new Finder(this.context, Sincerity.JVM.getClass('com.threecrickets.prudence.SourceCodeResource'))
+				this.instance.inboundRoot.attach(this.settings.code.sourceViewer, sourceViewer).matchingMode = Template.MODE_EQUALS
+				if (sincerity.verbosity >= 2) {
+					println('    "{0}" -> "{1}"'.cast(this.settings.code.sourceViewer, sourceViewer['class'].simpleName))
 				}
 			}
 
@@ -459,24 +447,50 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 
 			// Errors
+			var exists = false
 			for (var code in this.errors) {
-				var uri = this.errors[code]
-				if (uri.endsWith('!')) {
-					uri = uri.substring(0, uri.length - 1)
-					this.hidden.push(uri)
-				}
+				exists = true
+				break
+			}
+			if (exists) {
 				if (sincerity.verbosity >= 2) {
-					println('    Capturing error code {0} to "{1}"'.cast(code, uri))
+					println('  Errors:')
 				}
-				this.instance.statusService.capture(code, this.internalName, uri, this.context)
+				for (var code in this.errors) {
+					var uri = this.errors[code]
+					if (uri.endsWith('!')) {
+						uri = uri.substring(0, uri.length - 1)
+						this.hidden.push(uri)
+					}
+					if (sincerity.verbosity >= 2) {
+						println('    {0} -> "{1}"'.cast(code, uri))
+					}
+					this.instance.statusService.capture(code, this.internalName, uri, this.context)
+				}
 			}
 
-			// Source viewer
-			if (true == this.settings.code.sourceViewable) {
-				var sourceViewer = new Finder(this.context, Sincerity.JVM.getClass('com.threecrickets.prudence.SourceCodeResource'))
-				this.instance.inboundRoot.attach(this.settings.code.sourceViewer, sourceViewer).matchingMode = Template.MODE_EQUALS
-				if (sincerity.verbosity >= 2) {
-					println('    "{0}" -> "{1}"'.cast(this.settings.code.sourceViewer, sourceViewer['class'].simpleName))
+			// Pass-through dispatchers
+			if (Sincerity.Objects.exists(this.manualPassThroughDocuments)) {
+				var exists = false
+				for (var name in this.dispatchers) {
+					if (name != 'default') {
+						exists = true
+						break
+					}
+				}
+				if (exists) {
+					if (sincerity.verbosity >= 2) {
+						println('  Dispatchers:')
+					}
+					for (var name in this.dispatchers) {
+						if (name != 'default') {
+							var dispatcher = this.getDispatcher(name)
+							this.manualPassThroughDocuments.add(dispatcher.dispatcher)
+							if (sincerity.verbosity >= 2) {
+								println('    "{0}" -> "{1}"'.cast(name, dispatcher.uri))
+							}
+						}
+					}
 				}
 			}
 

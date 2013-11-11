@@ -116,7 +116,7 @@ public class DebugRepresentation extends StringRepresentation
 		else
 		{
 			html.append( "<h2>Cause: " );
-			appendSafe( html, throwable.getClass().getName() );
+			appendSafe( html, throwable.getClass().getCanonicalName() );
 			html.append( "</h2>\n" );
 		}
 

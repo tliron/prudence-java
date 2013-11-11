@@ -377,7 +377,7 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	/**
 	 * Executed attribute for an {@link ExecutionContext}.
 	 */
-	private static final String EXECUTED_ATTRIBUTE = "com.threecrickets.prudence.service.DocumentService.executed";
+	private static final String EXECUTED_ATTRIBUTE = DocumentService.class.getCanonicalName() + ".executed";
 
 	/**
 	 * Get a media type by its MIME type name.

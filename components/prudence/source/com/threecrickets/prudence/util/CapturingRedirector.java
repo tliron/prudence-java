@@ -35,7 +35,7 @@ public class CapturingRedirector extends ResolvingRedirector
 	 * @see #getCapturedReference(Request)
 	 * @see #setCapturedReference(Request, Reference)
 	 */
-	public static final String CAPTURED_REFERENCE = "com.threecrickets.prudence.util.CapturingRedirector.capturedReference";
+	public static final String CAPTURED_REFERENCE = CapturingRedirector.class.getCanonicalName() + ".capturedReference";
 
 	//
 	// Static attributes

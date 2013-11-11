@@ -150,11 +150,11 @@ target "http://threecrickets.com/prudence/download/#jvm6"
 \end_inset
 
  can also be supported.
- You do not need 
+ You do not need then 
 \begin_inset Quotes eld
 \end_inset
 
-J2EE
+Enterprise Edition
 \begin_inset Quotes erd
 \end_inset
 
@@ -206,8 +206,16 @@ Actually, the distribution you downloaded comes bundled with Sincerity,
 \end_layout
 
 \begin_layout Standard
-Let's start by quickly exploring Sincerity.
+Before we do that, let's quickly familiarize ourselves with Sincerity.
  Open a command terminal and change to the Prudence directory.
+ We'll call it our 
+\begin_inset Quotes eld
+\end_inset
+
+container.
+\begin_inset Quotes erd
+\end_inset
+
  If you're using a *nix operating system, you can run the command as 
 \begin_inset Quotes eld
 \end_inset
@@ -268,7 +276,7 @@ sincerity dependencies
 
 \begin_layout Standard
 If your operating system supports GUIs, you can start Sincerity without
- any command to see it (or use the 
+ any command to start its GUI (or use the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -301,11 +309,13 @@ The GUI is useful for visualizing things, but generally the CLI is better
 \end_layout
 
 \begin_layout Subsubsection
-Start Your Engines
+Ready\SpecialChar \ldots{}
+ Set\SpecialChar \ldots{}
+
 \end_layout
 
 \begin_layout Standard
-Let's start Prudence!
+Go!
 \end_layout
 
 \begin_layout Standard
@@ -324,7 +334,8 @@ sincerity start prudence
 \end_layout
 
 \begin_layout Standard
-The command will print out some version information, and then block.
+The command will print out some version information, tell you which applications
+ are installed, and then hold.
  You should now be able to point your browser to 
 \begin_inset CommandInset href
 LatexCommand href
@@ -376,7 +387,7 @@ target "http://www.h2database.com/"
 
 \begin_layout Standard
 While playing around with the examples, you may also want to look at the
- logs: they are in the 
+ logs: they are in the container's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -425,6 +436,18 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
+Sincerity has 
+\begin_inset CommandInset href
+LatexCommand href
+name "its own tutorial"
+target "http://threecrickets.com/sincerity/manual/tutorial/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
 Of course, you should not run Prudence in a terminal for deployed systems.
  Instead, install Sincerity's powerful 
 \begin_inset CommandInset href
@@ -465,11 +488,13 @@ target "http://threecrickets.com/sincerity/ecosystem/skeletons/#restlet-skeleton
 \end_layout
 
 \begin_layout Subsection
-Your First Application
+Let's Make a Wiki
 \end_layout
 
 \begin_layout Standard
-You've seen the example applications, and now it's time to create your own.
+You've played with the example applications, and now it's time to create
+ your own.
+ Let's build a simple wiki!
 \end_layout
 
 \begin_layout Subsubsection
@@ -492,8 +517,7 @@ prudence
 \begin_inset Quotes erd
 \end_inset
 
- Sincerity command.
- Let's build a simple wiki!
+ Sincerity command:
 \end_layout
 
 \begin_layout Standard
@@ -523,11 +547,11 @@ target "http://localhost:8080/wiki/"
 
 .
  There's not much to see at this point.
- Hello, world!
+ Hello, world.
 \end_layout
 
 \begin_layout Subsubsection
-At a Glance
+Our Application's Subdirectory
 \end_layout
 
 \begin_layout Standard
@@ -567,6 +591,10 @@ setting.js
  Note that Prudence's (and Sincerity's) configuration philosophy is to use
  JavaScript wherever possible, which allows for dynamic, flexible configurations
  that adapt to the environment in which they are run.
+\end_layout
+
+\begin_layout Subsubsection
+Resources
 \end_layout
 
 \begin_layout Standard
@@ -849,95 +877,7 @@ We'll get into all that as we go along this tutorial.
 \end_layout
 
 \begin_layout Subsubsection
-Further Exploration
-\end_layout
-
-\begin_layout Itemize
-The 
-\begin_inset Quotes eld
-\end_inset
-
-prudence create
-\begin_inset Quotes erd
-\end_inset
-
- command copies and modifies the application template under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/templates/default/
-\begin_inset Quotes erd
-\end_inset
-
-.
- You can create your own templates in that directory, and use their name
- as a second argument to the 
-\begin_inset Quotes eld
-\end_inset
-
-prudence create
-\begin_inset Quotes erd
-\end_inset
-
- command, e.g.: 
-\begin_inset Quotes eld
-\end_inset
-
-sincerity prudence create wiki mytemplate
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-Learn how to 
-\bar under
-configure your application (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "configuring-applications"
-
-\end_inset
-
-)
-\bar default
- via its settings.js file.
-\end_layout
-
-\begin_layout Itemize
-Learn about 
-\bar under
-the difference between the 
-\begin_inset Quotes eld
-\end_inset
-
-resource mapping
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-URI/resource separation
-\begin_inset Quotes erd
-\end_inset
-
- paradigms (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "two-routing-paradigms"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-HTML Pages
+Scriptlets
 \end_layout
 
 \begin_layout Standard
@@ -952,7 +892,7 @@ index.s.html
  page.
  The scriptlets are executed, while what's outside the scriptlets is simply
  output to the HTTP response.
- You can nest regular output into scriptlets:
+ You can freely mix regular output and scriptlets:
 \end_layout
 
 \begin_layout Standard
@@ -1057,12 +997,56 @@ status open
 
 \end_layout
 
+\begin_layout Standard
+Behind the scenes, Prudence parses 
+\begin_inset Quotes eld
+\end_inset
+
+index.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ and turns it into JavaScript source code.
+ If you'd like to see the generated code, look at the Scripturian cache,
+ specifically under the container's 
+\begin_inset Quotes eld
+\end_inset
+
+/cache/scripturian/container/component/applications/wiki/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ These generated files are not actually used by Prudence, and only available
+ for debugging purposes.
+ Disable their creation by configuring 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ mode to false (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
 \begin_layout Subsubsection
 APIs
 \end_layout
 
 \begin_layout Standard
-What is this 
+What is that 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1070,7 +1054,8 @@ document
 \begin_inset Quotes erd
 \end_inset
 
- namespace? It's part of the rich, well-documented API provided by Prudence.
+ namespace mentioned above? It's part of the rich, well-documented API provided
+ by Prudence.
  Other useful namespaces are 
 \begin_inset Quotes eld
 \end_inset
@@ -1118,45 +1103,225 @@ And remember that you're running on the JVM: the entire JVM standard library
 \end_layout
 
 \begin_layout Subsubsection
-Behind the Scenes
+Multilingual
 \end_layout
 
 \begin_layout Standard
-Behind the scenes, Prudence parses 
+The application skeleton uses JavaScript (
+\emph on
+server
+\emph default
+-side JavaScript; it has nothing to do with the code running inside web
+ browsers), but Prudence actually also supports Python, Ruby, PHP, Lua,
+ Groovy and Clojure.
+ To use them, you would first need to install them using Sincerity.
+ To try this out, let's install Python like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add python : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We could then create a Python scriptlet like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+for x in range(0, 10):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print x, '<br/>'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The low-level APIs are available for all supported languages.
+ For a Ruby example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%ruby
+\end_layout
+
+\begin_layout Plain Layout
+
+def say_hello name
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+say_hello 'Newton'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You even can mix scriptlets in several languages in the same page.
+ This might seem silly until you realize that you can use the rich ecosystem
+ of libraries available for each language.
+\end_layout
+
+\begin_layout Subsubsection
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+The 
 \begin_inset Quotes eld
 \end_inset
 
-index.s.html
+prudence create
 \begin_inset Quotes erd
 \end_inset
 
- and turns it into JavaScript source code.
- If you'd like to see the generated code, look at the Scripturian cache,
- specifically under the container's 
+ command copies and modifies the application template under 
 \begin_inset Quotes eld
 \end_inset
 
-/cache/scripturian/container/component/applications/wiki/resources/
+/component/templates/default/
 \begin_inset Quotes erd
 \end_inset
 
- directory.
- These generated files are not actually used by Prudence, and only available
- for debugging purposes.
- Disable their creation by configuring 
+.
+ You can create your own templates in that directory, and use their name
+ as a second argument to the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+ command, e.g.: 
+\begin_inset Quotes eld
+\end_inset
+
+sincerity prudence create wiki mytemplate
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Learn how to 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-debug
-\begin_inset Quotes erd
-\end_inset
-
- mode to false (page 
+configure your application (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "settings-code"
+reference "configuring-applications"
+
+\end_inset
+
+)
+\bar default
+ via its settings.js file.
+\end_layout
+
+\begin_layout Itemize
+Learn about 
+\bar under
+the difference between the 
+\begin_inset Quotes eld
+\end_inset
+
+resource mapping
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+URI/resource separation
+\begin_inset Quotes erd
+\end_inset
+
+ paradigms (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "two-routing-paradigms"
 
 \end_inset
 
@@ -1165,8 +1330,8 @@ reference "settings-code"
 .
 \end_layout
 
-\begin_layout Subsubsection
-Our First Page
+\begin_layout Subsection
+Wiki Pages
 \end_layout
 
 \begin_layout Standard
@@ -1178,7 +1343,7 @@ Let's create a new page for our wiki, under our application's
 \begin_inset Quotes erd
 \end_inset
 
- directory.
+ subdirectory.
  We'll call it 
 \begin_inset Quotes eld
 \end_inset
@@ -1351,7 +1516,7 @@ URL would be identical
 \end_layout
 
 \begin_layout Subsubsection
-A Single Wiki Page
+An Editable Page
 \end_layout
 
 \begin_layout Standard
@@ -2109,146 +2274,6 @@ You've just vastly improved the scalability of your wiki, allowed for a
  faster user experience, all without ever compromising on the freshness
  of what users see.
  Prudence caching is pure win.
-\end_layout
-
-\begin_layout Subsubsection
-Go Multilingual
-\end_layout
-
-\begin_layout Standard
-The above example uses JavaScript (
-\emph on
-server
-\emph default
--side JavaScript; it has nothing to do with the code running inside web
- browsers), but Prudence actually also supports Python, Ruby, PHP, Lua,
- Groovy and Clojure.
- To use them, you would first need to install them using Sincerity.
- To try this out, let's install Python like so:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-sincerity add python : install
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We could then create a Python scriptlet like so:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%python
-\end_layout
-
-\begin_layout Plain Layout
-
-for x in range(0, 10):
-\end_layout
-
-\begin_layout Plain Layout
-
-	print x, '<br/>'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The low-level APIs are available for all supported languages.
- For a Ruby example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%ruby
-\end_layout
-
-\begin_layout Plain Layout
-
-def say_hello name
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\begin_layout Plain Layout
-
-<p>
-\end_layout
-
-\begin_layout Plain Layout
-
-	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
-\end_layout
-
-\begin_layout Plain Layout
-
-</p>
-\end_layout
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-end
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-say_hello 'Newton'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You even can mix scriptlets in several languages in the same page.
- This might seem silly until you realize that you can use the rich ecosystem
- of libraries available for each language.
 \end_layout
 
 \begin_layout Subsubsection

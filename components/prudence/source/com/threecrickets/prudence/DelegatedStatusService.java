@@ -42,7 +42,7 @@ public class DelegatedStatusService extends StatusService
 	 * Response attribute to signify to upstream instances that the status has
 	 * already been handled for a {@link Response}.
 	 */
-	public static final String PASSTHROUGH_ATTRIBUTE = "com.threecrickets.prudence.DelegatedStatusService.passThrough";
+	public static final String PASSTHROUGH_ATTRIBUTE = DelegatedStatusService.class.getCanonicalName() + ".passThrough";
 
 	//
 	// Construction

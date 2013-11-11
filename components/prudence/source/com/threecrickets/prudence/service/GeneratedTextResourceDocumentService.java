@@ -435,52 +435,52 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	/**
 	 * Writer stack attribute for an {@link Request}.
 	 */
-	private static final String WRITER_STACK_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.writerStack";
+	private static final String WRITER_STACK_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".writerStack";
 
 	/**
 	 * Encoding attribute for an {@link Executable}.
 	 */
-	private static final String ENCODING_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.encoding";
+	private static final String ENCODING_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".encoding";
 
 	/**
 	 * Cache duration attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_DURATION_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheDuration";
+	private static final String CACHE_DURATION_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheDuration";
 
 	/**
 	 * Cache non-idempotent attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_NON_IDEMPOTENT_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheNonIdempotent";
+	private static final String CACHE_NON_IDEMPOTENT_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheNonIdempotent";
 
 	/**
 	 * Cache key pattern attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_KEY_PATTERN_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheKeyPattern";
+	private static final String CACHE_KEY_PATTERN_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheKeyPattern";
 
 	/**
 	 * Cache key pattern handlers attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheKeyPatternHandlers";
+	private static final String CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheKeyPatternHandlers";
 
 	/**
 	 * Cache tags attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_TAGS_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheTags";
+	private static final String CACHE_TAGS_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheTags";
 
 	/**
 	 * Document descriptor attribute for a {@link Request}.
 	 */
-	private static final String DOCUMENT_DESCRIPTOR_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.documentDescriptor";
+	private static final String DOCUMENT_DESCRIPTOR_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".documentDescriptor";
 
 	/**
 	 * Cache key attribute for a {@link Request}.
 	 */
-	private static final String CACHE_KEY_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheKey";
+	private static final String CACHE_KEY_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheKey";
 
 	/**
 	 * Cache entry attribute for a {@link Request}.
 	 */
-	private static final String CACHE_ENTRY_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.cacheEntry";
+	private static final String CACHE_ENTRY_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheEntry";
 
 	/**
 	 * Cache header.

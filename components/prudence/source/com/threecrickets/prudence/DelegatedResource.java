@@ -457,7 +457,7 @@ public class DelegatedResource extends ServerResource
 	/**
 	 * Entry point validity cache attribute for an {@link Executable}.
 	 */
-	private static final String ENTRY_POINT_VALIDITY_CACHE_ATTRIBUTE = "com.threecrickets.prudence.DelegatedResource.entryPointValidityCache";
+	private static final String ENTRY_POINT_VALIDITY_CACHE_ATTRIBUTE = DelegatedResource.class.getCanonicalName() + ".entryPointValidityCache";
 
 	/**
 	 * Constant.

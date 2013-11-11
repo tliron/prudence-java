@@ -38,14 +38,14 @@ public class ResolvingTemplate extends Template
 	 * 
 	 * @see #getMapResolverConstructor()
 	 */
-	public static final String MAP_RESOLVER_CONSTRUCTOR = "com.threecrickets.prudence.util.ResolvingTemplate.mapResolverConstructor";
+	public static final String MAP_RESOLVER_CONSTRUCTOR = ResolvingTemplate.class.getCanonicalName() + ".mapResolverConstructor";
 
 	/**
 	 * Attribute of the call resolver constructor for an {@link Application}.
 	 * 
 	 * @see #getCallResolverConstructor()
 	 */
-	public static final String CALL_RESOLVER_CONSTRUCTOR = "com.threecrickets.prudence.util.ResolvingTemplate.mapResolverConstructor";
+	public static final String CALL_RESOLVER_CONSTRUCTOR = ResolvingTemplate.class.getCanonicalName() + ".mapResolverConstructor";
 
 	//
 	// Construction
