@@ -79,12 +79,12 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The context
 	 * @param targetTemplate
 	 *        The target template
-	 * @param alwaysUseHostRoot
+	 * @param alwaysUseHostAsBase
 	 *        Whether to always set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetTemplate, boolean alwaysUseHostRoot )
+	public CapturingRedirector( Context context, String targetTemplate, boolean alwaysUseHostAsBase )
 	{
-		this( context, targetTemplate, alwaysUseHostRoot, MODE_SERVER_OUTBOUND );
+		this( context, targetTemplate, alwaysUseHostAsBase, MODE_SERVER_OUTBOUND );
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The target pattern
 	 * @param mode
 	 *        The redirection mode
-	 * @param alwaysUseHostRoot
+	 * @param alwaysUseHostAsBase
 	 *        Whether to always set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetPattern, boolean alwaysUseHostRoot, int mode )
+	public CapturingRedirector( Context context, String targetPattern, boolean alwaysUseHostAsBase, int mode )
 	{
 		super( context, targetPattern, mode, false );
 		describe();
-		this.alwaysUseHostRoot = alwaysUseHostRoot;
+		this.alwaysUseHostAsBase = alwaysUseHostAsBase;
 	}
 
 	//
@@ -113,15 +113,17 @@ public class CapturingRedirector extends ResolvingRedirector
 	@Override
 	public void handle( Request request, Response response )
 	{
-		Reference resourceRef = request.getResourceRef();
-
-		Reference rootRef = alwaysUseHostRoot ? null : request.getRootRef();
-		if( rootRef == null )
-			// The root reference could be null (e.g. in RIAP)
-			rootRef = new Reference( resourceRef.getHostIdentifier() + "/" );
-
 		if( getCapturedReference( request ) == null )
-			setCapturedReference( request, new Reference( rootRef, resourceRef ) );
+		{
+			Reference resourceRef = request.getResourceRef();
+
+			// Make sure the base reference is never null (it might be so in
+			// RIAP)
+			if( alwaysUseHostAsBase || ( resourceRef.getBaseRef() == null ) )
+				resourceRef = new Reference( new Reference( resourceRef.getHostIdentifier() + "/" ), resourceRef );
+
+			setCapturedReference( request, resourceRef );
+		}
 
 		super.handle( request, response );
 	}
@@ -132,7 +134,7 @@ public class CapturingRedirector extends ResolvingRedirector
 	/**
 	 * Whether to always set the base reference to the host root URI.
 	 */
-	private final boolean alwaysUseHostRoot;
+	private final boolean alwaysUseHostAsBase;
 
 	/**
 	 * Add description.
