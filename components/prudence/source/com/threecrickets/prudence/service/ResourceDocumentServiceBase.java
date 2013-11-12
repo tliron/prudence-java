@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.restlet.resource.ServerResource;
 
+import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
 
 /**
@@ -55,6 +56,16 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	public Set<String> getPassThroughDocuments()
 	{
 		return attributes.getPassThroughDocuments();
+	}
+
+	/**
+	 * The cache.
+	 * 
+	 * @return The cache
+	 */
+	public Cache getCache()
+	{
+		return attributes.getCache();
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

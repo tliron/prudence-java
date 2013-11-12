@@ -207,16 +207,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		return getCacheTags( getDescriptor().getDocument(), true );
 	}
 
-	/**
-	 * The cache.
-	 * 
-	 * @return The cache
-	 */
-	public Cache getCache()
-	{
-		return attributes.getCache();
-	}
-
 	//
 	// Operations
 	//

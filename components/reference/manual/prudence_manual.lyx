@@ -488,13 +488,13 @@ target "http://threecrickets.com/sincerity/ecosystem/skeletons/#restlet-skeleton
 \end_layout
 
 \begin_layout Subsection
-Let's Make a Wiki
+First Steps
 \end_layout
 
 \begin_layout Standard
 You've played with the example applications, and now it's time to create
  your own.
- Let's build a simple wiki!
+ Let's make a wiki!
 \end_layout
 
 \begin_layout Subsubsection
@@ -547,7 +547,6 @@ target "http://localhost:8080/wiki/"
 
 .
  There's not much to see at this point.
- Hello, world.
 \end_layout
 
 \begin_layout Subsubsection
@@ -747,6 +746,10 @@ target "http://sass-lang.com/"
 \end_inset
 
  extension and create the CSS for us.
+\end_layout
+
+\begin_layout Subsubsection
+Libraries
 \end_layout
 
 \begin_layout Standard
@@ -1082,7 +1085,9 @@ target "http://threecrickets.com/api/javascript/"
 \end_inset
 
 , though it can be daunting to start there.
- Instead, continue reading through the manual: especially important is 
+ Instead, continue reading through this tutorial, where we'll explain APIs
+ as we go along, and eventually hit the manual: especially important is
+ 
 \bar under
 the web data chapter (page 
 \begin_inset CommandInset ref
@@ -1103,235 +1108,7 @@ And remember that you're running on the JVM: the entire JVM standard library
 \end_layout
 
 \begin_layout Subsubsection
-Multilingual
-\end_layout
-
-\begin_layout Standard
-The application skeleton uses JavaScript (
-\emph on
-server
-\emph default
--side JavaScript; it has nothing to do with the code running inside web
- browsers), but Prudence actually also supports Python, Ruby, PHP, Lua,
- Groovy and Clojure.
- To use them, you would first need to install them using Sincerity.
- To try this out, let's install Python like so:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-sincerity add python : install
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We could then create a Python scriptlet like so:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%python
-\end_layout
-
-\begin_layout Plain Layout
-
-for x in range(0, 10):
-\end_layout
-
-\begin_layout Plain Layout
-
-	print x, '<br/>'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The low-level APIs are available for all supported languages.
- For a Ruby example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%ruby
-\end_layout
-
-\begin_layout Plain Layout
-
-def say_hello name
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\begin_layout Plain Layout
-
-<p>
-\end_layout
-
-\begin_layout Plain Layout
-
-	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
-\end_layout
-
-\begin_layout Plain Layout
-
-</p>
-\end_layout
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-end
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-say_hello 'Newton'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You even can mix scriptlets in several languages in the same page.
- This might seem silly until you realize that you can use the rich ecosystem
- of libraries available for each language.
-\end_layout
-
-\begin_layout Subsubsection
-Further Exploration
-\end_layout
-
-\begin_layout Itemize
-The 
-\begin_inset Quotes eld
-\end_inset
-
-prudence create
-\begin_inset Quotes erd
-\end_inset
-
- command copies and modifies the application template under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/templates/default/
-\begin_inset Quotes erd
-\end_inset
-
-.
- You can create your own templates in that directory, and use their name
- as a second argument to the 
-\begin_inset Quotes eld
-\end_inset
-
-prudence create
-\begin_inset Quotes erd
-\end_inset
-
- command, e.g.: 
-\begin_inset Quotes eld
-\end_inset
-
-sincerity prudence create wiki mytemplate
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-Learn how to 
-\bar under
-configure your application (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "configuring-applications"
-
-\end_inset
-
-)
-\bar default
- via its settings.js file.
-\end_layout
-
-\begin_layout Itemize
-Learn about 
-\bar under
-the difference between the 
-\begin_inset Quotes eld
-\end_inset
-
-resource mapping
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-URI/resource separation
-\begin_inset Quotes erd
-\end_inset
-
- paradigms (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "two-routing-paradigms"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-Wiki Pages
+Hello, World
 \end_layout
 
 \begin_layout Standard
@@ -1373,7 +1150,8 @@ status open
 
 \begin_layout Plain Layout
 
-	<p>This is our wiki page.</p>
+	<p>Hello, world.
+ This page will become a wiki very soon!</p>
 \end_layout
 
 \begin_layout Plain Layout
@@ -1516,7 +1294,253 @@ URL would be identical
 \end_layout
 
 \begin_layout Subsubsection
-An Editable Page
+Multilingual
+\end_layout
+
+\begin_layout Standard
+The application skeleton uses JavaScript (
+\emph on
+server
+\emph default
+-side JavaScript; it has nothing to do with the code running inside web
+ browsers), but Prudence also supports Python, Ruby, PHP, Lua, Groovy and
+ Clojure.
+ To use them, you would first need to 
+\begin_inset CommandInset href
+LatexCommand href
+name "install them using Sincerity"
+target "http://threecrickets.com/sincerity/ecosystem/language-plugins/"
+
+\end_inset
+
+.
+ To try this out, let's install Python like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add python : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We could then create a Python scriptlet:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+for x in range(0, 10):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print x, '<br/>'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The low-level APIs are available for all supported languages.
+ Here's a Ruby example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%ruby
+\end_layout
+
+\begin_layout Plain Layout
+
+def say_hello name
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+say_hello 'Newton'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You even can mix scriptlets in several languages in the same page, 
+\begin_inset CommandInset href
+LatexCommand href
+name "like magic"
+target "http://threecrickets.com/scripturian/manual/faq/#in-flow"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+The 
+\begin_inset Quotes eld
+\end_inset
+
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+ command copies and modifies the application template under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/templates/default/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can create your own templates in that directory, and use their name
+ as a second argument to the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+ command, e.g.: 
+\begin_inset Quotes eld
+\end_inset
+
+sincerity prudence create wiki mytemplate
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Learn how to 
+\bar under
+configure your application (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuring-applications"
+
+\end_inset
+
+)
+\bar default
+ via its settings.js file.
+\end_layout
+
+\begin_layout Itemize
+Learn about 
+\bar under
+the difference between the 
+\begin_inset Quotes eld
+\end_inset
+
+resource mapping
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+URI/resource separation
+\begin_inset Quotes erd
+\end_inset
+
+ paradigms (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "two-routing-paradigms"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+Let's Make a Wiki
+\end_layout
+
+\begin_layout Subsubsection
+One Editable Page
 \end_layout
 
 \begin_layout Standard
@@ -1743,7 +1767,7 @@ We then go on to display the content as well as the HTML form for editing
 \end_layout
 
 \begin_layout Subsubsection
-Infinite Pages
+Infinite Editable Pages
 \end_layout
 
 \begin_layout Standard
@@ -1948,7 +1972,11 @@ And\SpecialChar \ldots{}
 \end_inset
 
  becomes an editable wiki page.
- The only real 
+ If that page does not exist it, it will be created.
+\end_layout
+
+\begin_layout Standard
+The only real 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1956,7 +1984,15 @@ trick
 \begin_inset Quotes erd
 \end_inset
 
- here is the conversation.wildcard API, which gives us 
+ here is the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.wildcard API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.wildcard"
+
+\end_inset
+
+, which gives us 
 \bar under
 the captured wildcard (page 
 \begin_inset CommandInset ref
@@ -1975,18 +2011,18 @@ Caching
 \end_layout
 
 \begin_layout Standard
-In our above example, we're storing the wiki page content in memory, so
- it's all very fast.
- However, if we were fetching data from a database, authenticating users,
- and doing other sorts of heavy lifting, our page would not generate so
- fast.
+In our above example, we're storing the wiki page content in in-process
+ memory, so it's all quite fast.
+ However, if we were fetching data from a database server, authenticating
+ users, and doing other sorts of heavy lifting, our page would not generate
+ so fast.
  By smartly caching our pages we can ensure that heavy lifting would be
  done only when necessary.
 \end_layout
 
 \begin_layout Standard
-Actually, speed is not the issue, exactly: even pulling data from a database
- is usually very fast.
+Actually, talking about speed is a shorthand for the real issue: even pulling
+ data from a database is usually very fast.
  The real issue is scalability: increased load on the database per user
  request can limit your ability to support many users.
  Obviously, it's most efficient to do work only when you need it: and that
@@ -2007,7 +2043,7 @@ advanced
 \begin_inset Quotes erd
 \end_inset
 
- issue, it's a crucial one, and worth going over in this tutorial.
+ topic, it's a crucial one, and worth going over in this tutorial.
 \end_layout
 
 \begin_layout Standard
@@ -2088,7 +2124,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-var page = application.globals.get('page.' + id) || 'This page is empty.' 
+var page = application.globals.get('page.' + id) || 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2106,23 +2142,23 @@ What we've done:
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Quotes eld
+\begin_inset CommandInset href
+LatexCommand href
+name "document.cacheDuration"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheDuration"
+
 \end_inset
 
-document.cacheDuration
-\begin_inset Quotes erd
-\end_inset
-
- is 0 by default.
+ is 0 milliseconds by default.
  We set it to 60 seconds.
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
+\begin_inset CommandInset href
+LatexCommand href
+name "document.cacheTags"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheTags"
 
-document.cacheTags
-\begin_inset Quotes erd
 \end_inset
 
  allows us to 
@@ -2141,11 +2177,11 @@ tag
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
+\begin_inset CommandInset href
+LatexCommand href
+name "document.cacheNonIdempotent"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheNonIdempotent"
 
-document.cacheNonIdempotent
-\begin_inset Quotes erd
 \end_inset
 
  is 
@@ -2177,11 +2213,11 @@ POST
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
+\begin_inset CommandInset href
+LatexCommand href
+name "document.cache.invalidate"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cache"
 
-document.cache.invalidate
-\begin_inset Quotes erd
 \end_inset
 
  is used to invalidate a cache tag.
@@ -2189,10 +2225,29 @@ document.cache.invalidate
 \end_layout
 
 \begin_layout Standard
-If you're using Firefox, it's easy to see the caching in action.
- Turn on Firefox's network inspector by pressing CTRL+SHIFT+Q and refresh
- the page.
- You will see the 
+It's easy to see the caching in action via your browser's developer tools.
+ In Firefox, turn on the 
+\begin_inset CommandInset href
+LatexCommand href
+name "network monitor"
+target "https://developer.mozilla.org/en-US/docs/Tools/Network_Monitor"
+
+\end_inset
+
+ by pressing CTRL+SHIFT+Q.
+ In Chromium/Chrome, use CTRL+SHIFT+I and 
+\begin_inset CommandInset href
+LatexCommand href
+name "select the “network” tab"
+target "https://developers.google.com/chrome-developer-tools/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Refresh the page and you will see the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2228,7 +2283,7 @@ miss.
 \begin_inset Quotes erd
 \end_inset
 
- You can disable these headers by configuring 
+ You can disable these debug headers by configuring 
 \bar under
 
 \begin_inset Quotes eld
@@ -2255,8 +2310,9 @@ However, Prudence also utilizes the
 \emph on
 client
 \emph default
--side cache: if you continue refreshing the page within the 60-second cache
- window, the web browser's conditional HTTP requests will return a 304 
+-side cache: if you continue refreshing the page from the same browser within
+ the 60-second cache window, the web browser's conditional HTTP requests
+ will return a 304 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2272,7 +2328,7 @@ not modified
 \begin_layout Standard
 You've just vastly improved the scalability of your wiki, allowed for a
  faster user experience, all without ever compromising on the freshness
- of what users see.
+ of user data.
  Prudence caching is pure win.
 \end_layout
 
@@ -2332,7 +2388,513 @@ reference "caching"
 \end_layout
 
 \begin_layout Subsection
-A Manual Resource
+Let's Make a Wiki API
+\end_layout
+
+\begin_layout Standard
+Our wiki is currently limited to web 
+\emph on
+pages
+\emph default
+, but we can make it much better by opening it up as a RESTful web
+\emph on
+ API
+\emph default
+.
+ This would allow all kinds of clients to access our wiki: dedicated mobile
+ and desktop applications, 
+\begin_inset Quotes eld
+\end_inset
+
+rich
+\begin_inset Quotes erd
+\end_inset
+
+ web applications (using 
+\begin_inset Quotes eld
+\end_inset
+
+AJAX
+\begin_inset Quotes erd
+\end_inset
+
+).
+ It would also allow 3rd-party web sites and services to use our wiki as
+ a service, rather than as an application (in business buzzword land this
+ is called 
+\begin_inset CommandInset href
+LatexCommand href
+name "“SaaS”"
+target "http://en.wikipedia.org/wiki/Software_as_a_service"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsubsection
+Hello, API World
+\end_layout
+
+\begin_layout Standard
+As we've seen, scriptlets are Prudence's way of making scalable web pages.
+ The other side of Prudence is manual resources.
+\end_layout
+
+\begin_layout Standard
+We'll want our API in the 
+\begin_inset Quotes eld
+\end_inset
+
+/api/
+\begin_inset Quotes erd
+\end_inset
+
+ URL, so let's create a 
+\begin_inset Quotes eld
+\end_inset
+
+api.m.js
+\begin_inset Quotes erd
+\end_inset
+
+ file:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return '{"message": "Hello, API world."}'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Remember those pre-extensions? 
+\begin_inset Quotes eld
+\end_inset
+
+m
+\begin_inset Quotes erd
+\end_inset
+
+ stands for 
+\begin_inset Quotes eld
+\end_inset
+
+manual.
+\begin_inset Quotes erd
+\end_inset
+
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+.js
+\begin_inset Quotes erd
+\end_inset
+
+ extension means that our resource is implemented in JavaScript, though
+ we can end it in 
+\begin_inset Quotes eld
+\end_inset
+
+.py
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+.rb
+\begin_inset Quotes erd
+\end_inset
+
+, etc., if we want to use other supported programming languages.
+\end_layout
+
+\begin_layout Standard
+You 
+\emph on
+could
+\emph default
+ test the resource in a web browser by browsing to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/api/"
+target "http://localhost:8080/wiki/api/"
+
+\end_inset
+
+, however that's not the best way: the web browser doesn't know how to display
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+application/json
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type, and will likely ask you save the JSON content to a file.
+ Also, the web browser only knows how to do 
+\begin_inset Quotes eld
+\end_inset
+
+GET
+\begin_inset Quotes erd
+\end_inset
+
+ by default.
+ So instead, we recommend testing APIs using 
+\begin_inset CommandInset href
+LatexCommand href
+name "cURL"
+target "http://curl.haxx.se/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let's test our API using this cURL command line:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl "http://localhost:8080/wiki/api/"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Hi!
+\end_layout
+
+\begin_layout Subsubsection
+Full API
+\end_layout
+
+\begin_layout Standard
+We can now fully flesh out our API.
+ It will look quite similar to the scriptlet we wrote above:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/prudence/resources/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/sincerity/json/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+	var content = application.globals.get('page.' + id) || 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.JSON.to({content: content})
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handlePut(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+	var payload = Prudence.Resources.getEntity(conversation, 'json')
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put('page.' + id, payload.content)
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.JSON.to({content: payload.content})
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleDelete(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.remove('page.' + id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return null
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We also want to change our routing.js to capture the wildcard, again similar
+ to what we did with the scriptlet:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/page/*': '/page/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/api/*': '/api/'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Restart Prudence for the routing.js change to take effect, and then test
+ it again:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl "http://localhost:8080/wiki/api/test/"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now, let's test an HTTP 
+\begin_inset Quotes eld
+\end_inset
+
+PUT
+\begin_inset Quotes erd
+\end_inset
+
+ with new page content:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl -X PUT -d '{"content": "New page content!"}' "http://localhost:8080/wiki/ap
+i/test/"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And we can also 
+\begin_inset Quotes eld
+\end_inset
+
+DELETE
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl -X DELETE "http://localhost:8080/wiki/api/test/"
+\end_layout
+
+\begin_layout Plain Layout
+
+curl "http://localhost:8080/wiki/api/test/"
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+While testing with cURL, you can simultaneously test our wiki pages uses
+ the browser, as we did earlier.
+ Both the API and the pages see the same data.
 \end_layout
 
 \begin_layout Subsubsection
