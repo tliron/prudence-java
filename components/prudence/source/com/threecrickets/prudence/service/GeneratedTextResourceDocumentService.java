@@ -15,41 +15,26 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.restlet.Request;
-import org.restlet.Response;
 import org.restlet.data.Encoding;
-import org.restlet.data.Reference;
-import org.restlet.engine.header.Header;
-import org.restlet.engine.header.HeaderConstants;
 import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.representation.Variant;
-import org.restlet.routing.Template;
-import org.restlet.util.Series;
 
-import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.cache.CacheEntry;
-import com.threecrickets.prudence.internal.CacheKeyPatternResolver;
+import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.CaptureWriter;
 import com.threecrickets.prudence.internal.GeneratedTextDeferredRepresentation;
 import com.threecrickets.prudence.internal.attributes.GeneratedTextResourceAttributes;
-import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.PrudenceScriptletPlugin;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
@@ -63,7 +48,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * 
  * @author Tal Liron
  */
-public class GeneratedTextResourceDocumentService extends ResourceDocumentServiceBase<GeneratedTextResource, GeneratedTextResourceAttributes>
+public class GeneratedTextResourceDocumentService extends ResourceDocumentServiceBase<GeneratedTextResource, GeneratedTextResourceAttributes, GeneratedTextResourceConversationService>
 {
 	//
 	// Construction
@@ -81,11 +66,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * @param preferences
 	 *        The negotiated client preferences or null
 	 */
-	public GeneratedTextResourceDocumentService( GeneratedTextResource resource, ExecutionContext executionContext, Representation entity, Variant preferences )
+	public GeneratedTextResourceDocumentService( GeneratedTextResource resource, ExecutionContext executionContext, Representation entity, Variant preferences,
+		CachingUtil<GeneratedTextResource, GeneratedTextResourceAttributes> cachingUtil )
 	{
-		super( resource, resource.getAttributes() );
+		super( resource, resource.getAttributes(), new GeneratedTextResourceConversationService( resource, entity, preferences, resource.getAttributes().getDefaultCharacterSet() ), cachingUtil );
 		this.executionContext = executionContext;
-		conversationService = new GeneratedTextResourceConversationService( resource, entity, preferences, attributes.getDefaultCharacterSet() );
 	}
 
 	/**
@@ -97,8 +82,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 */
 	public GeneratedTextResourceDocumentService( GeneratedTextResourceDocumentService documentService )
 	{
-		super( documentService.resource, documentService.attributes );
-		conversationService = documentService.conversationService;
+		super( documentService.resource, documentService.attributes, documentService.conversationService, documentService.cachingUtil );
 		pushDocumentDescriptor( documentService.getDescriptor() );
 		executionContext = new ExecutionContext();
 		attributes.addLibraryLocations( executionContext );
@@ -109,103 +93,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		executionContext.getServices().put( attributes.getConversationServiceName(), conversationService );
 
 		conversationService.isDeferred = true;
-	}
-
-	//
-	// Attributes
-	//
-
-	/**
-	 * The cache duration. Defaults to 0.
-	 * 
-	 * @return The cache duration in milliseconds
-	 * @see #setCacheDuration(long)
-	 */
-	public long getCacheDuration()
-	{
-		Long cacheDuration = (Long) getDescriptor().getDocument().getAttributes().get( CACHE_DURATION_ATTRIBUTE );
-		return cacheDuration == null ? 0 : cacheDuration;
-	}
-
-	/**
-	 * @param cacheDuration
-	 *        The cache duration in milliseconds
-	 * @see #getCacheDuration()
-	 */
-	public void setCacheDuration( long cacheDuration )
-	{
-		getDescriptor().getDocument().getAttributes().put( CACHE_DURATION_ATTRIBUTE, cacheDuration );
-	}
-
-	/**
-	 * Whether to cache non-idempotent requests. Defaults to true,
-	 * 
-	 * @return Whether to cache non-idempotent requests
-	 */
-	public boolean getCacheNonIdempotent()
-	{
-		Boolean cacheNonIdempotent = (Boolean) getDescriptor().getDocument().getAttributes().get( CACHE_NON_IDEMPOTENT_ATTRIBUTE );
-		return cacheNonIdempotent == null ? true : cacheNonIdempotent;
-	}
-
-	/**
-	 * @param cacheNonIdempotent
-	 *        Whether to cache non-idempotent requests
-	 * @see #getCacheNonIdempotent()
-	 */
-	public void setCacheNonIdempotent( boolean cacheNonIdempotent )
-	{
-		getDescriptor().getDocument().getAttributes().put( CACHE_NON_IDEMPOTENT_ATTRIBUTE, cacheNonIdempotent );
-	}
-
-	/**
-	 * The cache key pattern.
-	 * 
-	 * @return The cache key pattern
-	 * @see #setCacheKeyPattern(String)
-	 */
-	public String getCacheKeyPattern()
-	{
-		return getCacheKeyPattern( getDescriptor().getDocument() );
-	}
-
-	/**
-	 * @param cacheKeyPattern
-	 *        The cache key pattern
-	 * @see #getCacheKeyPattern()
-	 */
-	public void setCacheKeyPattern( String cacheKeyPattern )
-	{
-		getDescriptor().getDocument().getAttributes().put( CACHE_KEY_PATTERN_ATTRIBUTE, cacheKeyPattern );
-	}
-
-	/**
-	 * The cache key pattern handlers.
-	 * 
-	 * @return The cache key pattern handlers
-	 */
-	public ConcurrentMap<String, String> getCacheKeyPatternHandlers()
-	{
-		return getCacheKeyPatternHandlers( getDescriptor().getDocument(), true );
-	}
-
-	/**
-	 * Casts the cache key pattern for the current executable and encoding.
-	 * 
-	 * @return The cache key or null
-	 */
-	public String getCacheKey()
-	{
-		DocumentDescriptor<Executable> currentDocumentDescriptor = getDescriptor();
-		return getCacheKeyForEncoding( castCacheKey( currentDocumentDescriptor ), conversationService.getEncoding() );
-	}
-
-	/**
-	 * @return The cache tags
-	 */
-	public Set<String> getCacheTags()
-	{
-		return getCacheTags( getDescriptor().getDocument(), true );
 	}
 
 	//
@@ -260,9 +147,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		// in the request
 		if( currentDocumentDescriptor == null )
 		{
-			@SuppressWarnings("unchecked")
-			DocumentDescriptor<Executable> existing = (DocumentDescriptor<Executable>) resource.getRequest().getAttributes().remove( DOCUMENT_DESCRIPTOR_ATTRIBUTE );
-			documentDescriptor = existing;
+			documentDescriptor = cachingUtil.getExistingDocumentDescriptor( true );
 			allowEncoding = true;
 		}
 
@@ -291,65 +176,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		{
 			popDocumentDescriptor();
 		}
-	}
-
-	/**
-	 * Gets the cache entry for a document, if it exists and is valid.
-	 * 
-	 * @param documentName
-	 *        The document name
-	 * @param includeExtraSources
-	 *        Whether to force looking for the document in the extra document
-	 *        sources
-	 * @return The cache entry
-	 * @throws ParsingException
-	 * @throws DocumentException
-	 */
-	public CacheEntry getCacheEntry( String documentName, boolean includeExtraSources ) throws ParsingException, DocumentException
-	{
-		documentName = attributes.validateDocumentName( documentName, attributes.getDefaultIncludedName() );
-
-		DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, true, true, includeExtraSources, false );
-
-		// Cache the document descriptor in the request
-		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-		attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
-
-		// Set initial media type according to the document's tag
-		if( conversationService.getMediaType() == null )
-			conversationService.setMediaTypeExtension( documentDescriptor.getTag() );
-
-		String cacheKey = castCacheKey( documentDescriptor );
-		if( cacheKey != null )
-		{
-			Cache cache = this.attributes.getCache();
-			if( cache != null )
-			{
-				Encoding encoding = conversationService.getEncoding();
-
-				// Try cache key for encoding first
-				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
-				CacheEntry cacheEntry = cache.fetch( cacheKeyForEncoding );
-				if( cacheEntry == null )
-					cacheEntry = cache.fetch( cacheKey );
-
-				if( cacheEntry != null )
-				{
-					// Make sure the document is not newer than the cache
-					// entry
-					if( documentDescriptor.getDocument().getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() )
-					{
-						// Cache the cache entry in the request
-						attributes.put( CACHE_KEY_ATTRIBUTE, cacheKey );
-						attributes.put( CACHE_ENTRY_ATTRIBUTE, cacheEntry );
-
-						return cacheEntry;
-					}
-				}
-			}
-		}
-
-		return null;
 	}
 
 	/**
@@ -425,76 +251,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	private static final String WRITER_STACK_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".writerStack";
 
 	/**
-	 * Cache duration attribute for an {@link Executable}.
-	 */
-	private static final String CACHE_DURATION_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheDuration";
-
-	/**
-	 * Cache non-idempotent attribute for an {@link Executable}.
-	 */
-	private static final String CACHE_NON_IDEMPOTENT_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheNonIdempotent";
-
-	/**
-	 * Cache key pattern attribute for an {@link Executable}.
-	 */
-	private static final String CACHE_KEY_PATTERN_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheKeyPattern";
-
-	/**
-	 * Cache key pattern handlers attribute for an {@link Executable}.
-	 */
-	private static final String CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheKeyPatternHandlers";
-
-	/**
-	 * Cache tags attribute for an {@link Executable}.
-	 */
-	private static final String CACHE_TAGS_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheTags";
-
-	/**
-	 * Document descriptor attribute for a {@link Request}.
-	 */
-	private static final String DOCUMENT_DESCRIPTOR_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".documentDescriptor";
-
-	/**
-	 * Cache key attribute for a {@link Request}.
-	 */
-	private static final String CACHE_KEY_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheKey";
-
-	/**
-	 * Cache entry attribute for a {@link Request}.
-	 */
-	private static final String CACHE_ENTRY_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheEntry";
-
-	/**
-	 * Cache header.
-	 */
-	private static final String CACHE_HEADER = "X-Cache";
-
-	/**
-	 * Cache key header.
-	 */
-	private static final String CACHE_KEY_HEADER = "X-Cache-Key";
-
-	/**
-	 * Cache tags header.
-	 */
-	private static final String CACHE_TAGS_HEADER = "X-Cache-Tags";
-
-	/**
-	 * Cache expiration header.
-	 */
-	private static final String CACHE_EXPIRATION_HEADER = "X-Cache-Expiration";
-
-	/**
-	 * Cache expiration header date-time format.
-	 */
-	private static final String CACHE_EXPIRATION_HEADER_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
-
-	/**
-	 * The conversation service.
-	 */
-	private final GeneratedTextResourceConversationService conversationService;
-
-	/**
 	 * The application service.
 	 */
 	private final ApplicationService applicationService = ApplicationService.create();
@@ -508,96 +264,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * Buffer used for caching.
 	 */
 	private StringBuffer writerBuffer;
-
-	/**
-	 * The cache key pattern.
-	 * 
-	 * @param executable
-	 *        The executable
-	 * @return The cache key pattern
-	 */
-	private static String getCacheKeyPattern( Executable executable )
-	{
-		return (String) executable.getAttributes().get( CACHE_KEY_PATTERN_ATTRIBUTE );
-	}
-
-	/**
-	 * @param executable
-	 *        The executable
-	 * @param create
-	 *        Whether to create a handler map if it doesn't exist
-	 * @return The handler map or null
-	 */
-	private static ConcurrentMap<String, String> getCacheKeyPatternHandlers( Executable executable, boolean create )
-	{
-		@SuppressWarnings("unchecked")
-		ConcurrentMap<String, String> handlers = (ConcurrentMap<String, String>) executable.getAttributes().get( CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE );
-		if( handlers == null && create )
-		{
-			handlers = new ConcurrentHashMap<String, String>();
-			@SuppressWarnings("unchecked")
-			ConcurrentMap<String, String> existing = (ConcurrentMap<String, String>) executable.getAttributes().putIfAbsent( CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE, handlers );
-			if( existing != null )
-				handlers = existing;
-		}
-
-		return handlers;
-	}
-
-	/**
-	 * @param executable
-	 *        The executable
-	 * @param create
-	 *        Whether to create a cache tag set if it doesn't exist
-	 * @return The cache tags or null
-	 */
-	private static Set<String> getCacheTags( Executable executable, boolean create )
-	{
-		@SuppressWarnings("unchecked")
-		Set<String> cacheTags = (Set<String>) executable.getAttributes().get( CACHE_TAGS_ATTRIBUTE );
-		if( cacheTags == null && create )
-		{
-			cacheTags = new CopyOnWriteArraySet<String>();
-			@SuppressWarnings("unchecked")
-			Set<String> existing = (Set<String>) executable.getAttributes().putIfAbsent( CACHE_TAGS_ATTRIBUTE, cacheTags );
-			if( existing != null )
-				cacheTags = existing;
-		}
-
-		return cacheTags;
-	}
-
-	/**
-	 * Adds encoding to a cache key.
-	 * 
-	 * @param cacheKey
-	 *        The cache key
-	 * @param encoding
-	 *        The encoding or null
-	 * @return The cache key for the encoding
-	 */
-	private static String getCacheKeyForEncoding( String cacheKey, Encoding encoding )
-	{
-		if( encoding != null )
-			return cacheKey + "|" + encoding.getName();
-		else
-			return cacheKey;
-	}
-
-	/**
-	 * The cache expiration timestamp for the executable.
-	 * 
-	 * @return The cache expiration timestamp
-	 */
-	private static long getExpirationTimestamp( Executable executable )
-	{
-		Long cacheDurationLong = (Long) executable.getAttributes().get( CACHE_DURATION_ATTRIBUTE );
-		long cacheDuration = cacheDurationLong == null ? 0 : cacheDurationLong;
-		if( cacheDuration <= 0 )
-			return 0;
-		else
-			return executable.getLastExecutedTimestamp() + cacheDuration;
-	}
 
 	/**
 	 * The writer stack used for nesting in {@link #startCapture(String)} and
@@ -616,111 +282,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			attributes.put( WRITER_STACK_ATTRIBUTE, writerStack );
 		}
 		return writerStack;
-	}
-
-	/**
-	 * Calls all installed cache key pattern handlers for the cache key pattern.
-	 * 
-	 * @param template
-	 *        The cache key pattern template
-	 * @param documentDescriptor
-	 *        The document descriptor
-	 */
-	private void callCacheKeyPatternHandlers( Template template, DocumentDescriptor<Executable> documentDescriptor )
-	{
-		Map<String, String> resourceCacheKeyPatternHandlers = attributes.getCacheKeyPatternHandlers();
-		Map<String, String> documentCacheKeyPatternHandlers = getCacheKeyPatternHandlers( documentDescriptor.getDocument(), false );
-
-		// Make sure we have handlers
-		if( ( ( resourceCacheKeyPatternHandlers == null ) || resourceCacheKeyPatternHandlers.isEmpty() ) && ( ( documentCacheKeyPatternHandlers == null ) || documentCacheKeyPatternHandlers.isEmpty() ) )
-			return;
-
-		// Merge all handlers
-		Map<String, String> cacheKeyPatternHandlers = new HashMap<String, String>();
-		if( resourceCacheKeyPatternHandlers != null )
-			cacheKeyPatternHandlers.putAll( resourceCacheKeyPatternHandlers );
-		if( documentCacheKeyPatternHandlers != null )
-			cacheKeyPatternHandlers.putAll( documentCacheKeyPatternHandlers );
-
-		// Group variables together per handler
-		Map<String, Set<String>> delegatedHandlers = new HashMap<String, Set<String>>();
-		List<String> variableNames = template.getVariableNames();
-		for( Map.Entry<String, String> entry : cacheKeyPatternHandlers.entrySet() )
-		{
-			String name = entry.getKey();
-			String documentName = entry.getValue();
-
-			if( variableNames.contains( name ) )
-			{
-				Set<String> variables = delegatedHandlers.get( documentName );
-				if( variables == null )
-				{
-					variables = new HashSet<String>();
-					delegatedHandlers.put( documentName, variables );
-				}
-
-				variables.add( name );
-			}
-		}
-
-		// Call handlers
-		if( !delegatedHandlers.isEmpty() )
-		{
-			for( Map.Entry<String, Set<String>> entry : delegatedHandlers.entrySet() )
-			{
-				String documentName = entry.getKey();
-				String[] variableNamesArray = entry.getValue().toArray( new String[] {} );
-
-				DelegatedCacheKeyPatternHandler delegatedHandler = new DelegatedCacheKeyPatternHandler( documentName, resource.getContext() );
-				delegatedHandler.handleCacheKeyPattern( variableNamesArray );
-			}
-		}
-	}
-
-	/**
-	 * Casts the cache key pattern for an executable.
-	 * 
-	 * @param documentDescriptor
-	 *        The document descriptor
-	 * @param encoding
-	 *        The encoding or null
-	 * @return The cache key or null
-	 */
-	private String castCacheKey( DocumentDescriptor<Executable> documentDescriptor )
-	{
-		String cacheKeyPattern = getCacheKeyPattern( documentDescriptor.getDocument() );
-		if( cacheKeyPattern == null )
-			return null;
-		else
-		{
-			Request request = resource.getRequest();
-			Response response = resource.getResponse();
-
-			// Template and its resolver
-			Template template = new Template( cacheKeyPattern );
-			CacheKeyPatternResolver resolver = new CacheKeyPatternResolver( documentDescriptor, resource, conversationService, request, response );
-
-			// Cache key pattern handlers
-			callCacheKeyPatternHandlers( template, documentDescriptor );
-
-			// Use captive reference as the resource reference
-			Reference captiveReference = CapturingRedirector.getCapturedReference( request );
-			Reference resourceReference = request.getResourceRef();
-			if( captiveReference != null )
-				request.setResourceRef( captiveReference );
-
-			try
-			{
-				// Cast it
-				return template.format( resolver );
-			}
-			finally
-			{
-				// Return regular reference
-				if( captiveReference != null )
-					request.setResourceRef( resourceReference );
-			}
-		}
 	}
 
 	/**
@@ -753,7 +314,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		{
 			DocumentDescriptor<Executable> currentDocumentDescriptor = popDocumentDescriptor();
 			for( DocumentDescriptor<Executable> documentDescriptor : documentDescriptorStack )
-				getCacheTags( documentDescriptor.getDocument(), true ).addAll( propagatedCacheTags );
+				CachingUtil.getCacheTags( documentDescriptor.getDocument(), true ).addAll( propagatedCacheTags );
 			pushDocumentDescriptor( currentDocumentDescriptor );
 		}
 
@@ -777,7 +338,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * @return The representation
 	 * @throws IOException
 	 */
-	private Representation represent( CacheEntry cacheEntry, Encoding encoding, String cacheKey, Executable executable, Writer writer ) throws IOException
+	private Representation reencode( CacheEntry cacheEntry, Encoding encoding, String cacheKey, Executable executable, Writer writer ) throws IOException
 	{
 		if( ( cacheEntry.getEncoding() == null ) && ( encoding != null ) && ( cacheEntry.getSize() >= attributes.getEncodeSizeThreshold() ) )
 		{
@@ -788,8 +349,8 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			Cache cache = attributes.getCache();
 			if( cache != null )
 			{
-				cacheKey = getCacheKeyForEncoding( cacheKey, encoding );
-				Set<String> cacheTags = getCacheTags( executable, false );
+				cacheKey = CachingUtil.getCacheKeyForEncoding( cacheKey, encoding );
+				Set<String> cacheTags = CachingUtil.getCacheTags( executable, false );
 				if( cacheTags != null )
 					cacheEntry.setTags( cacheTags.toArray( new String[] {} ) );
 				cache.store( cacheKey, cacheEntry );
@@ -800,62 +361,9 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		if( ( writer != null ) && ( cacheEntry.getString() != null ) )
 			writer.write( cacheEntry.getString() );
 
-		addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable );
+		cachingUtil.addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable );
 
 		return cacheEntry.represent();
-	}
-
-	/**
-	 * Adds the caching debug headers if enabled.
-	 * 
-	 * @param cacheEntry
-	 *        The cache entry
-	 * @param cacheKey
-	 *        The cache key
-	 * @param executable
-	 *        The executable
-	 */
-	private void addCachingDebugHeaders( String event, CacheEntry cacheEntry, String cacheKey, Executable executable )
-	{
-		if( !attributes.isCacheDebug() )
-			return;
-
-		Series<Header> headers = cacheEntry.getHeaders();
-
-		if( headers == null )
-			headers = new Series<Header>( Header.class );
-		else
-		{
-			// Copy headers
-			Series<Header> newHeaders = new Series<Header>( Header.class );
-			for( Header header : headers )
-				newHeaders.add( header );
-			headers = newHeaders;
-		}
-
-		// Override headers set by includes
-		headers.removeAll( CACHE_HEADER );
-		headers.removeAll( CACHE_KEY_HEADER );
-		headers.removeAll( CACHE_EXPIRATION_HEADER );
-		headers.removeAll( CACHE_TAGS_HEADER );
-
-		SimpleDateFormat format = new SimpleDateFormat( CACHE_EXPIRATION_HEADER_FORMAT );
-		format.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
-
-		headers.add( new Header( CACHE_HEADER, event ) );
-		headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
-		headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
-
-		Set<String> cacheTags = getCacheTags( executable, false );
-		if( cacheTags != null )
-		{
-			for( String cacheTag : cacheTags )
-				headers.add( new Header( CACHE_TAGS_HEADER, cacheTag ) );
-		}
-
-		// Apply headers
-		if( headers != null )
-			resource.getResponse().getAttributes().put( HeaderConstants.ATTRIBUTE_HEADERS, headers );
 	}
 
 	/**
@@ -881,21 +389,21 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		Writer writer = executionContext.getWriter();
 		Encoding encoding = allowEncoding ? conversationService.getEncoding() : null;
 
-		// Optimized handling for pure text
-		String pureText = executable.getAsPureLiteral();
-		if( pureText != null )
+		// Optimized handling for pure literals
+		String pureLiteral = executable.getAsPureLiteral();
+		if( pureLiteral != null )
 		{
 			// We want to write this, too, for includes
 			if( writer != null )
-				writer.write( pureText );
+				writer.write( pureLiteral );
 
-			return new CacheEntry( pureText, conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), encoding, conversationService.getHeaders(),
-				executable.getDocumentTimestamp(), getExpirationTimestamp( executable ) ).represent();
+			return new CacheEntry( pureLiteral, conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), encoding, conversationService.getHeaders(),
+				executable.getDocumentTimestamp(), CachingUtil.getExpirationTimestamp( executable ) ).represent();
 		}
 
 		int startPosition = 0;
 
-		// Make sure we have a valid writer for caching mode
+		// Make sure we have a valid writer if not deferred
 		if( !conversationService.isDeferred )
 		{
 			if( writer == null )
@@ -912,23 +420,22 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			}
 
 			// See if a valid cache entry has already been cached in the request
-			ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-			CacheEntry cacheEntry = (CacheEntry) attributes.remove( CACHE_ENTRY_ATTRIBUTE );
-			String cacheKey = (String) attributes.remove( CACHE_KEY_ATTRIBUTE );
+			CacheEntry cacheEntry = cachingUtil.getExistingCacheEntry( true );
+			String cacheKey = cachingUtil.getExistingCacheKey( true );
 			if( ( cacheEntry != null ) && ( cacheKey != null ) )
-				return represent( cacheEntry, encoding, cacheKey, executable, writer );
+				return reencode( cacheEntry, encoding, cacheKey, executable, writer );
 
 			// Attempt to use cache for idempotent requests
 			if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
 			{
-				cacheKey = castCacheKey( documentDescriptor );
+				cacheKey = cachingUtil.castCacheKey( documentDescriptor, conversationService );
 				if( cacheKey != null )
 				{
 					Cache cache = this.attributes.getCache();
 					if( cache != null )
 					{
 						// Try cache key for encoding first
-						String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+						String cacheKeyForEncoding = CachingUtil.getCacheKeyForEncoding( cacheKey, encoding );
 						cacheEntry = cache.fetch( cacheKeyForEncoding );
 						if( cacheEntry == null )
 							cacheEntry = cache.fetch( cacheKey );
@@ -936,7 +443,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 						// Make sure the document is not newer than the cache
 						// entry
 						if( ( cacheEntry != null ) && ( executable.getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() ) )
-							return represent( cacheEntry, encoding, cacheKey, executable, writer );
+							return reencode( cacheEntry, encoding, cacheKey, executable, writer );
 					}
 				}
 			}
@@ -957,7 +464,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			executable.execute( executionContext, this, attributes.getExecutionController() );
 
 			// Propagate cache tags up the stack
-			Set<String> cacheTags = getCacheTags( executable, false );
+			Set<String> cacheTags = CachingUtil.getCacheTags( executable, false );
 			if( ( cacheTags != null ) && !cacheTags.isEmpty() )
 				cacheTags = propagateCacheTags( cacheTags );
 
@@ -981,7 +488,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			{
 				writer.flush();
 
-				long expirationTimestamp = getExpirationTimestamp( executable );
+				long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable );
 
 				// Get the buffer from when we executed the executable
 				CacheEntry cacheEntry = new CacheEntry( writerBuffer.substring( startPosition ), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), null,
@@ -999,7 +506,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				{
 					if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
 					{
-						String cacheKey = castCacheKey( documentDescriptor );
+						String cacheKey = cachingUtil.castCacheKey( documentDescriptor, conversationService );
 						if( cacheKey != null )
 						{
 							// Cache!
@@ -1010,7 +517,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 								if( cacheTags != null )
 									tags = cacheTags.toArray( new String[] {} );
 
-								String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+								String cacheKeyForEncoding = CachingUtil.getCacheKeyForEncoding( cacheKey, encoding );
 								encodedCacheEntry.setTags( tags );
 								cache.store( cacheKeyForEncoding, encodedCacheEntry );
 
@@ -1021,17 +528,17 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 									cache.store( cacheKey, cacheEntry );
 								}
 
-								addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
+								cachingUtil.addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
 							}
 						}
 					}
 				}
 
-				// Return a representation of the entire buffer
-				if( startPosition == 0 )
-					return encodedCacheEntry.represent();
-				else
-					return new CacheEntry( encodedCacheEntry, writerBuffer.toString() ).represent();
+				// Make sure we're including the entire buffer
+				if( startPosition > 0 )
+					encodedCacheEntry = new CacheEntry( encodedCacheEntry, writerBuffer.toString() );
+
+				return encodedCacheEntry.represent();
 			}
 		}
 		catch( ExecutionException x )

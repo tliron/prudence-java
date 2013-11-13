@@ -13,11 +13,11 @@ package com.threecrickets.prudence.internal;
 
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.resource.ServerResource;
 import org.restlet.util.Resolver;
 
 import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
-import com.threecrickets.prudence.GeneratedTextResource;
-import com.threecrickets.prudence.service.GeneratedTextResourceConversationService;
+import com.threecrickets.prudence.service.ResourceConversationServiceBase;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 
@@ -27,23 +27,23 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
  * @author Tal Liron
  * @see DelegatedCacheKeyPatternHandler
  */
-public class CacheKeyPatternResolver extends Resolver<Object>
+public class CacheKeyPatternResolver<R extends ServerResource> extends Resolver<Object>
 {
 	//
 	// Construction
 	//
 
-	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, GeneratedTextResource resource, GeneratedTextResourceConversationService conversationService )
+	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService )
 	{
 		this( documentDescriptor, resource, conversationService, resource.getRequest(), resource.getResponse() );
 	}
 
-	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, GeneratedTextResource resource, GeneratedTextResourceConversationService conversationService, Request request, Response response )
+	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Request request, Response response )
 	{
 		this( documentDescriptor, resource, conversationService, Resolver.createResolver( request, response ) );
 	}
 
-	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, GeneratedTextResource resource, GeneratedTextResourceConversationService conversationService, Resolver<?> callResolver )
+	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Resolver<?> callResolver )
 	{
 		this.documentDescriptor = documentDescriptor;
 		this.resource = resource;
@@ -79,9 +79,9 @@ public class CacheKeyPatternResolver extends Resolver<Object>
 
 	private final DocumentDescriptor<Executable> documentDescriptor;
 
-	private final GeneratedTextResource resource;
+	private final R resource;
 
-	private final GeneratedTextResourceConversationService conversationService;
+	private final ResourceConversationServiceBase<R> conversationService;
 
 	private final Resolver<?> callResolver;
 }

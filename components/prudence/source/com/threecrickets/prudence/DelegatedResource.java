@@ -38,6 +38,8 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import com.threecrickets.prudence.cache.Cache;
+import com.threecrickets.prudence.cache.CacheEntry;
+import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.JygmentsDocumentFormatter;
 import com.threecrickets.prudence.internal.attributes.DelegatedResourceAttributes;
 import com.threecrickets.prudence.service.ApplicationService;
@@ -93,6 +95,12 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.applicationServiceName</code>
  * : Defaults to "application".</li>
+ * <li>
+ * <code>com.threecrickets.prudence.DelegatedResource.cacheKeyPatternHandlers</code>
+ * : {@link ConcurrentMap}<String, String></li>
+ * <li>
+ * <code>com.threecrickets.prudence.DelegatedResource.defaultCacheKeyPattern:</code>
+ * {@link String}, defaults to "{ri}|{dn}".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCharacterSet:</code>
  * {@link CharacterSet}, defaults to {@link CharacterSet#UTF_8}.</li>
@@ -165,12 +173,21 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * </ul>
  * <p>
  * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Noelios Technologies</a>.</i>
+ * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */
 public class DelegatedResource extends ServerResource
 {
+	//
+	// Constants
+	//
+
+	/**
+	 * Document name attribute for a {@link Request}.
+	 */
+	public static final String DOCUMENT_NAME_ATTRIBUTE = DelegatedResource.class.getCanonicalName() + ".documentName";
+
 	//
 	// Attributes
 	//
@@ -306,9 +323,32 @@ public class DelegatedResource extends ServerResource
 	public RepresentationInfo getInfo( Variant variant ) throws ResourceException
 	{
 		DelegatedResourceConversationService conversationService = new DelegatedResourceConversationService( this, null, variant, attributes.getDefaultCharacterSet() );
+
+		String documentName = cachingUtil.getValidDocumentName( getRequest() );
+		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+
 		try
 		{
-			Object r = enter( attributes.getEntryPointNameForGetInfo(), conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( documentName, isPassThrough, conversationService );
+			if( cacheEntry != null )
+				return cacheEntry.getInfo();
+		}
+		catch( ParsingException x )
+		{
+			throw new ResourceException( x );
+		}
+		catch( DocumentNotFoundException x )
+		{
+			throw new ResourceException( Status.CLIENT_ERROR_NOT_FOUND );
+		}
+		catch( DocumentException x )
+		{
+			throw new ResourceException( x );
+		}
+
+		try
+		{
+			Object r = enter( this.attributes.getEntryPointNameForGetInfo(), conversationService );
 			return getRepresentationInfo( r, conversationService );
 		}
 		catch( ResourceException x )
@@ -480,6 +520,11 @@ public class DelegatedResource extends ServerResource
 	private final DelegatedResourceAttributes attributes = new DelegatedResourceAttributes( this );
 
 	/**
+	 * Caching utilities.
+	 */
+	private final CachingUtil<DelegatedResource, DelegatedResourceAttributes> cachingUtil = new CachingUtil<DelegatedResource, DelegatedResourceAttributes>( this, attributes );
+
+	/**
 	 * Returns a representation based on the object. If the object is not
 	 * already a representation, creates a new string representation based on
 	 * the container's attributes.
@@ -623,8 +668,7 @@ public class DelegatedResource extends ServerResource
 	 */
 	private Object enter( String entryPointName, DelegatedResourceConversationService conversationService ) throws ResourceException
 	{
-		String documentName = getRequest().getResourceRef().getRemainingPart( true, false );
-		documentName = attributes.validateDocumentName( documentName );
+		String documentName = cachingUtil.getValidDocumentName( getRequest() );
 		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
 
 		ConcurrentMap<String, Boolean> entryPointValidityCache = null;
@@ -635,12 +679,14 @@ public class DelegatedResource extends ServerResource
 			Executable executable = documentDescriptor.getDocument();
 			Object enteringKey = getApplication().hashCode();
 
+			DelegatedResourceDocumentService documentService = new DelegatedResourceDocumentService( this, documentDescriptor, conversationService, cachingUtil );
+
 			if( executable.getEnterableExecutionContext( enteringKey ) == null )
 			{
 				ExecutionContext executionContext = new ExecutionContext( attributes.getWriter(), attributes.getErrorWriter() );
 				attributes.addLibraryLocations( executionContext );
 
-				executionContext.getServices().put( attributes.getDocumentServiceName(), new DelegatedResourceDocumentService( this, documentDescriptor ) );
+				executionContext.getServices().put( attributes.getDocumentServiceName(), documentService );
 				executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create() );
 
 				try

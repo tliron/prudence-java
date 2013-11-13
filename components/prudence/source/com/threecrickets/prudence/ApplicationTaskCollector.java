@@ -37,7 +37,7 @@ import com.threecrickets.scripturian.ParsingContext;
  * Empty lines and comment lines (beginning with a "#") are ignored.
  * <p>
  * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Noelios Technologies</a>.</i>
+ * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  * @see ApplicationTask

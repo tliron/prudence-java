@@ -24,7 +24,7 @@ import com.threecrickets.prudence.ApplicationTaskCollector;
  * {@link Task} wrapper for an {@link ApplicationTask}.
  * <p>
  * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Noelios Technologies</a>.</i>
+ * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  * @see ApplicationTaskCollector

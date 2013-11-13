@@ -23,6 +23,7 @@ import org.restlet.representation.Representation;
 import org.restlet.routing.Redirector;
 import org.restlet.service.StatusService;
 
+import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.DebugRepresentation;
 
@@ -212,7 +213,7 @@ public class DelegatedStatusService extends StatusService
 				response.setEntity( null );
 
 				// Clean up cached document name for generated text resource
-				request.getAttributes().remove( GeneratedTextResource.DOCUMENT_NAME_ATTRIBUTE );
+				CachingUtil.clearValidDocumentName( request );
 
 				// Delegate
 				errorHandler.handle( request, response );

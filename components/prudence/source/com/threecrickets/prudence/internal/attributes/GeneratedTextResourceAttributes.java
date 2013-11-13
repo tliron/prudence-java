@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Context;
+import org.restlet.resource.ResourceException;
 
 import com.threecrickets.prudence.DelegatedScriptletPlugin;
 import com.threecrickets.prudence.GeneratedTextResource;
@@ -124,45 +125,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	/**
-	 * The default cache key pattern to use if the executable doesn't specify
-	 * one. Defaults to "{ri}|{dn}".
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>defaultCacheKeyPattern</code> in the application's {@link Context}.
-	 * 
-	 * @return The default cache key
-	 */
-	public String getDefaultCacheKeyPattern()
-	{
-		if( defaultCacheKeyPattern == null )
-		{
-			defaultCacheKeyPattern = (String) getAttributes().get( prefix + ".defaultCacheKeyPattern" );
-
-			if( defaultCacheKeyPattern == null )
-				defaultCacheKeyPattern = "{ri}|{dn}";
-		}
-
-		return defaultCacheKeyPattern;
-	}
-
-	/**
-	 * The cache key pattern handlers.
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>cacheKeyPatternHandlers</code> in the application's {@link Context}.
-	 * 
-	 * @return The cache key pattern handlers or null
-	 */
-	@SuppressWarnings("unchecked")
-	public ConcurrentMap<String, String> getCacheKeyPatternHandlers()
-	{
-		if( cacheKeyPatternHandlers == null )
-			cacheKeyPatternHandlers = (ConcurrentMap<String, String>) getAttributes().get( prefix + ".cacheKeyPatternHandlers" );
-
-		return cacheKeyPatternHandlers;
-	}
-
-	/**
 	 * Whether or not to negotiate encoding by default. Defaults to true.
 	 * <p>
 	 * This setting can be configured by setting an attribute named
@@ -206,27 +168,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 		}
 
 		return encodeSizeThreshold;
-	}
-
-	/**
-	 * Whether or not to enable cache debugging. Defaults to false.
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>cacheDebug</code> in the application's {@link Context}.
-	 * 
-	 * @return Whether to allow cache debugging
-	 */
-	public boolean isCacheDebug()
-	{
-		if( cacheDebug == null )
-		{
-			cacheDebug = (Boolean) getAttributes().get( prefix + ".cacheDebug" );
-
-			if( cacheDebug == null )
-				cacheDebug = false;
-		}
-
-		return cacheDebug;
 	}
 
 	/**
@@ -356,6 +297,12 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	//
 
 	@Override
+	public String validateDocumentName( String documentName ) throws ResourceException
+	{
+		return validateDocumentName( documentName, getDefaultIncludedName() );
+	}
+
+	@Override
 	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
 		throws ParsingException, DocumentException
 	{
@@ -424,17 +371,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	private String conversationServiceName;
 
 	/**
-	 * The default cache key pattern to use if the executable doesn't specify
-	 * one.
-	 */
-	private String defaultCacheKeyPattern;
-
-	/**
-	 * The cache key pattern handlers.
-	 */
-	private ConcurrentMap<String, String> cacheKeyPatternHandlers;
-
-	/**
 	 * Whether or not to negotiate encoding by default.
 	 */
 	private Boolean negotiateEncoding;
@@ -443,11 +379,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	 * The size in bytes beyond which responses could be encoded.
 	 */
 	private Integer encodeSizeThreshold;
-
-	/**
-	 * Whether or not to enable cache debugging.
-	 */
-	private Boolean cacheDebug;
 
 	/**
 	 * Whether or not to send information to the client about cache expiration.

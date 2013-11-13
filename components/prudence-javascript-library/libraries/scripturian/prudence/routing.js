@@ -1134,7 +1134,6 @@ Prudence.Routing = Prudence.Routing || function() {
 					passThroughDocuments: new CopyOnWriteArraySet(),
 					trailingSlashRequired: this.trailingSlashRequired,
 					cacheKeyPatternHandlers: new ConcurrentHashMap(),
-					cacheDebug: app.settings.errors.debug,
 					clientCachingMode: this.clientCachingMode,
 					maxClientCachingDuration: this.maxClientCachingDuration, 
 					defaultIncludedName: this.defaultDocumentName,

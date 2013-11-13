@@ -41,6 +41,8 @@ import com.threecrickets.prudence.util.IoUtil;
  * be created.
  * <p>
  * Instances are not thread safe.
+ * <p>
+ * TODO: add getTag()
  * 
  * @author Tal Liron
  * @see Cache
@@ -171,16 +173,16 @@ public class CacheEntry implements Externalizable
 	 *        The encoding
 	 * @param headers
 	 *        The headers
-	 * @param docmuentModificationTimestamp
+	 * @param documentModificationTimestamp
 	 *        The document modification timestamp
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
 	 * @throws IOException
 	 */
-	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long docmuentModificationTimestamp, long expirationTimestamp )
+	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long documentModificationTimestamp, long expirationTimestamp )
 		throws IOException
 	{
-		this( string, mediaType, language, characterSet, encoding, headers, new Date( docmuentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
+		this( string, mediaType, language, characterSet, encoding, headers, new Date( documentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
 	}
 
 	/**
@@ -198,15 +200,34 @@ public class CacheEntry implements Externalizable
 	 *        The encoding
 	 * @param headers
 	 *        The headers
-	 * @param docmuentModificationTimestamp
+	 * @param documentModificationTimestamp
 	 *        The document modification timestamp
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
 	 * @throws IOException
 	 */
-	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long docmuentModificationTimestamp, long expirationTimestamp )
+	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long documentModificationTimestamp, long expirationTimestamp )
 	{
-		this( bytes, mediaType, language, characterSet, encoding, headers, new Date( docmuentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
+		this( bytes, mediaType, language, characterSet, encoding, headers, new Date( documentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param representation
+	 *        The representation
+	 * @param headers
+	 *        The headers
+	 * @param documentModificationTimestamp
+	 *        The document modification timestamp
+	 * @param expirationTimestamp
+	 *        The expiration timestamp or 0 for no expiration
+	 * @throws IOException
+	 */
+	public CacheEntry( Representation representation, Series<Header> headers, long documentModificationTimestamp, long expirationTimestamp ) throws IOException
+	{
+		this( representation.getText(), representation.getMediaType(), representation.getLanguages().get( 0 ), representation.getCharacterSet(), representation.getEncodings().get( 0 ), headers,
+			documentModificationTimestamp, expirationTimestamp );
 	}
 
 	/**

@@ -23,7 +23,7 @@ import org.restlet.data.Status;
  * {@link Status#CLIENT_ERROR_NOT_FOUND} when it is stopped.
  * <p>
  * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Noelios Technologies</a>.</i>
+ * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  * @see Restlet#start()

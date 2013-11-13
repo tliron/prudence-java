@@ -47,9 +47,6 @@ import com.threecrickets.prudence.util.FormWithFiles;
  * 
  * @author Tal Liron
  */
-/**
- * @author emblemparade
- */
 public class ConversationService
 {
 	//
@@ -94,13 +91,13 @@ public class ConversationService
 	}
 
 	/**
-	 * The resource reference's remaining part.
+	 * The resource reference's remaining part (not including the query).
 	 * 
 	 * @return The remaining part
 	 */
 	public String getWildcard()
 	{
-		return getReference().getRemainingPart();
+		return getReference().getRemainingPart( true, false );
 	}
 
 	/**
@@ -291,25 +288,12 @@ public class ConversationService
 	 * @return True if the request was received via the RIAP protocol
 	 * @see LocalReference
 	 */
-	public boolean isInternal()
+	public boolean getInternal()
 	{
 		if( internal == null )
 			internal = getReference().getSchemeProtocol().equals( Protocol.RIAP );
 
 		return internal;
-	}
-
-	/**
-	 * Identical to {@link #isInternal()}. Supports scripting engines which
-	 * don't know how to recognize the "is" getter notation, but can recognize
-	 * the "get" notation.
-	 * 
-	 * @return True if the request was received via the RIAP protocol
-	 * @see #isInternal()
-	 */
-	public boolean getIsInternal()
-	{
-		return isInternal();
 	}
 
 	/**

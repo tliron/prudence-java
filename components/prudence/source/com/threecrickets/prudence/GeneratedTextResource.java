@@ -36,6 +36,7 @@ import org.restlet.resource.ServerResource;
 
 import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.cache.CacheEntry;
+import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.GeneratedTextDeferredRepresentation;
 import com.threecrickets.prudence.internal.JygmentsDocumentFormatter;
 import com.threecrickets.prudence.internal.attributes.GeneratedTextResourceAttributes;
@@ -95,15 +96,18 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.applicationServiceName</code>
  * : Defaults to "application".</li>
  * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.cacheKeyPatternHandlers</code>
+ * : {@link ConcurrentMap}<String, String></li>
+ * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.clientCachingMode:</code>
  * {@link Integer}, defaults to {@link #CLIENT_CACHING_MODE_CONDITIONAL}.</li>
- * <li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
+ * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyPattern:</code>
  * {@link String}, defaults to "{ri}|{dn}".</li>
  * <li>
@@ -160,7 +164,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * </ul>
  * <p>
  * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Noelios Technologies</a>.</i>
+ * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */
@@ -169,11 +173,6 @@ public class GeneratedTextResource extends ServerResource
 	//
 	// Constants
 	//
-
-	/**
-	 * Document name attribute for a {@link Request}.
-	 */
-	public static final String DOCUMENT_NAME_ATTRIBUTE = "com.threecrickets.prudence.GeneratedTextResource.documentName";
 
 	/**
 	 * Constant.
@@ -229,28 +228,19 @@ public class GeneratedTextResource extends ServerResource
 		setAnnotated( false );
 
 		Request request = getRequest();
-		ConcurrentMap<String, Object> attributes = request.getAttributes();
 
-		// Check for cached document name in the request
-		String documentName = (String) attributes.get( DOCUMENT_NAME_ATTRIBUTE );
-		if( documentName == null )
-		{
-			documentName = request.getResourceRef().getRemainingPart( true, false );
-			documentName = this.attributes.validateDocumentName( documentName, this.attributes.getDefaultIncludedName() );
-			attributes.put( DOCUMENT_NAME_ATTRIBUTE, documentName );
-		}
-
-		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+		String documentName = cachingUtil.getValidDocumentName( request );
+		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
 		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
 		try
 		{
-			DocumentDescriptor<Executable> documentDescriptor = this.attributes.getDocument( documentName, isPassThrough || isCaptured );
+			DocumentDescriptor<Executable> documentDescriptor = attributes.getDocument( documentName, isPassThrough || isCaptured );
 
 			// Media type is chosen according to the document descriptor tag
 			MediaType mediaType = getMetadataService().getMediaType( documentDescriptor.getTag() );
 
-			if( this.attributes.isNegotiateEncoding() )
+			if( attributes.isNegotiateEncoding() )
 			{
 				// Add a variant for each supported encoding
 				if( mediaType != null )
@@ -355,28 +345,17 @@ public class GeneratedTextResource extends ServerResource
 	public RepresentationInfo getInfo( Variant variant ) throws ResourceException
 	{
 		Request request = getRequest();
-		ConcurrentMap<String, Object> attributes = request.getAttributes();
 
-		// Check for cached document name in the request
-		String documentName = (String) attributes.get( DOCUMENT_NAME_ATTRIBUTE );
-		if( documentName == null )
-		{
-			documentName = request.getResourceRef().getRemainingPart( true, false );
-			documentName = this.attributes.validateDocumentName( documentName, this.attributes.getDefaultIncludedName() );
-			attributes.put( DOCUMENT_NAME_ATTRIBUTE, documentName );
-		}
-
-		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+		String documentName = cachingUtil.getValidDocumentName( request );
+		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
 		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
-		GeneratedTextResourceDocumentService documentService = new GeneratedTextResourceDocumentService( this, null, null, variant );
 		try
 		{
-			CacheEntry cacheEntry = documentService.getCacheEntry( documentName, isPassThrough || isCaptured );
+			GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( documentName, isPassThrough || isCaptured, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
-			else
-				return get( variant );
 		}
 		catch( ParsingException x )
 		{
@@ -390,6 +369,8 @@ public class GeneratedTextResource extends ServerResource
 		{
 			throw new ResourceException( x );
 		}
+
+		return get( variant );
 	}
 
 	@Override
@@ -423,9 +404,32 @@ public class GeneratedTextResource extends ServerResource
 	private final GeneratedTextResourceAttributes attributes = new GeneratedTextResourceAttributes( this );
 
 	/**
+	 * Caching utilities.
+	 */
+	private final CachingUtil<GeneratedTextResource, GeneratedTextResourceAttributes> cachingUtil = new CachingUtil<GeneratedTextResource, GeneratedTextResourceAttributes>( this, attributes );
+
+	/**
 	 * Flag for asynchronous support (experimental).
 	 */
 	private final boolean asynchronousSupport = false;
+
+	/**
+	 * Gets the cache entry for a document, if it exists and is valid.
+	 * 
+	 * @param documentName
+	 *        The document name
+	 * @param includeExtraSources
+	 *        Whether to force looking for the document in the extra document
+	 *        sources
+	 * @return The cache entry
+	 * @throws ParsingException
+	 * @throws DocumentException
+	 */
+	public CacheEntry getCacheEntry( String documentName, boolean includeExtraSources ) throws ParsingException, DocumentException
+	{
+		GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
+		return cachingUtil.fetchCacheEntry( documentName, includeExtraSources, conversationService );
+	}
 
 	/**
 	 * Generates and possibly caches a textual representation. The returned
@@ -443,23 +447,14 @@ public class GeneratedTextResource extends ServerResource
 	private Representation generateText( Representation entity, Variant variant ) throws ResourceException
 	{
 		Request request = getRequest();
-		ConcurrentMap<String, Object> attributes = request.getAttributes();
 
-		// Check for cached document name in the request
-		String documentName = (String) attributes.get( DOCUMENT_NAME_ATTRIBUTE );
-		if( documentName == null )
-		{
-			documentName = request.getResourceRef().getRemainingPart( true, false );
-			documentName = this.attributes.validateDocumentName( documentName, this.attributes.getDefaultIncludedName() );
-			attributes.put( DOCUMENT_NAME_ATTRIBUTE, documentName );
-		}
-
-		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
+		String documentName = cachingUtil.getValidDocumentName( request );
+		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
 		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
 		try
 		{
-			if( this.attributes.isSourceViewable() )
+			if( attributes.isSourceViewable() )
 			{
 				Form query = request.getResourceRef().getQueryAsForm();
 				if( TRUE.equals( query.getFirstValue( SOURCE ) ) )
@@ -477,8 +472,8 @@ public class GeneratedTextResource extends ServerResource
 						}
 					}
 
-					DocumentDescriptor<Executable> documentDescriptor = this.attributes.getDocumentSource().getDocument( documentName );
-					DocumentFormatter<Executable> documentFormatter = this.attributes.getDocumentFormatter();
+					DocumentDescriptor<Executable> documentDescriptor = attributes.getDocumentSource().getDocument( documentName );
+					DocumentFormatter<Executable> documentFormatter = attributes.getDocumentFormatter();
 					if( documentFormatter != null )
 						return new StringRepresentation( documentFormatter.format( documentDescriptor, documentName, lineNumber ), MediaType.TEXT_HTML );
 					else
@@ -487,9 +482,9 @@ public class GeneratedTextResource extends ServerResource
 			}
 
 			ExecutionContext executionContext = new ExecutionContext();
-			this.attributes.addLibraryLocations( executionContext );
+			attributes.addLibraryLocations( executionContext );
 
-			GeneratedTextResourceDocumentService documentService = new GeneratedTextResourceDocumentService( this, executionContext, entity, variant );
+			GeneratedTextResourceDocumentService documentService = new GeneratedTextResourceDocumentService( this, executionContext, entity, variant, cachingUtil );
 			Representation representation = null;
 			try
 			{
@@ -497,7 +492,7 @@ public class GeneratedTextResource extends ServerResource
 				representation = documentService.include( documentName, isPassThrough || isCaptured );
 
 				List<CacheDirective> cacheDirectives = getResponse().getCacheDirectives();
-				switch( this.attributes.getClientCachingMode() )
+				switch( attributes.getClientCachingMode() )
 				{
 					case CLIENT_CACHING_MODE_DISABLED:
 					{
@@ -529,7 +524,7 @@ public class GeneratedTextResource extends ServerResource
 							long maxAge = ( expirationDate.getTime() - System.currentTimeMillis() );
 							if( maxAge > 0 )
 							{
-								long maxClientCachingDuration = this.attributes.getMaxClientCachingDuration();
+								long maxClientCachingDuration = attributes.getMaxClientCachingDuration();
 								if( maxClientCachingDuration != -1L )
 									// Limit the cache duration
 									maxAge = Math.min( maxAge, maxClientCachingDuration );

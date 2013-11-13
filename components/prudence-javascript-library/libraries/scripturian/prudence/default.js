@@ -795,9 +795,10 @@ var Prudence = {}
  */
 
 /**
- * Provides access to the remaining part of the URI (the "wildcard") for the current request.
+ * Provides access to the remaining part of the URI (the "wildcard") for the current request
+ * (not including the query).
  * <p>
- * This is a shortcut to calling {@link conversation#reference}.remainingPart.
+ * This is a shortcut to calling {@link conversation#reference}.remainingPart(true,false).
  * 
  * @name conversation.wildcard
  * @type {String}
