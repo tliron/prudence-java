@@ -31,6 +31,7 @@ import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
+import org.restlet.engine.header.HeaderConstants;
 import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.util.Series;
@@ -54,11 +55,6 @@ public class ConversationService
 	//
 	// Constants
 	//
-
-	/**
-	 * The headers response attribute.
-	 */
-	public static final String HEADERS_ATTRIBUTE = "org.restlet.http.headers";
 
 	//
 	// Construction
@@ -447,11 +443,11 @@ public class ConversationService
 	{
 		ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
 		@SuppressWarnings("unchecked")
-		Series<Header> headers = (Series<Header>) attributes.get( HEADERS_ATTRIBUTE );
+		Series<Header> headers = (Series<Header>) attributes.get( HeaderConstants.ATTRIBUTE_HEADERS );
 		if( headers == null )
 		{
 			headers = new Series<Header>( Header.class );
-			attributes.put( HEADERS_ATTRIBUTE, headers );
+			attributes.put( HeaderConstants.ATTRIBUTE_HEADERS, headers );
 		}
 
 		return headers;

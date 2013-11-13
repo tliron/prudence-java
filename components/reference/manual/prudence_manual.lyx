@@ -1679,11 +1679,11 @@ Not the most exciting wiki, but it works for editing a single page.
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
+\begin_inset CommandInset href
+LatexCommand href
+name "document.require"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.require"
 
-document.require
-\begin_inset Quotes erd
 \end_inset
 
  is how we import libraries.
@@ -1706,8 +1706,7 @@ document.require
 \end_inset
 
  directory next.
- Actually, that's where this particular library is located.
- You'll notice how we use a trailing slash in the library URI.
+ You'll notice that we use a trailing slash in the library URI.
  The library URIs also match the JavaScript namespaces: 
 \begin_inset Quotes eld
 \end_inset
@@ -1717,18 +1716,28 @@ document.require
 \end_inset
 
  matches Prudence.Resources.
+ This particular namespace is very useful for working with web data.
+ In this case we're using 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.getForm"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.getForm"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
 We're using the 
-\begin_inset Quotes eld
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.request"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
+
 \end_inset
 
-conversation.request
-\begin_inset Quotes erd
-\end_inset
-
- API to find out if we're in an HTTP 
+ to find out if we're in an HTTP 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1747,6 +1756,8 @@ content
 
  form field (as simple text).
  We will then save it as an 
+\bar under
+
 \begin_inset Quotes eld
 \end_inset
 
@@ -1754,11 +1765,18 @@ application.global
 \begin_inset Quotes erd
 \end_inset
 
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
 .
  These globals belong to the entire running application, and can be accessed
  from any page, for any request.
- For a real wiki we would want to store this content in a database, but
- this in-memory wiki should work for now.
 \end_layout
 
 \begin_layout Itemize
@@ -2337,12 +2355,60 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-There's a lot more you can do with 
+For a real wiki you would probably want to store the wiki content in a database.
+ Check out the 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB driver for JVM languages"
+target "http://code.google.com/p/mongodb-jvm/"
+
+\end_inset
+
+, designed to work with Sincerity/Prudence: it's especially natural to use
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+ from JavaScript.
+ And of course there's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence"
+target "http://threecrickets.com/diligence/"
+
+\end_inset
+
+, a comprehensive framework based on Prudence and MongoDB.
+ Otherwise, relational (SQL) databases are easy to access using 
+\begin_inset CommandInset href
+LatexCommand href
+name "JDBC"
+target "http://www.oracle.com/technetwork/java/javase/jdbc/"
+
+\end_inset
+
+, which is included in the JVM platform: for a complete example, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "Stickstick"
+target "http://threecrickets.com/prudence/download/#stickstick"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Read more about 
 \bar under
-scriptlets (page 
+HTML forms (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "html-forms"
 
 \end_inset
 
@@ -2385,6 +2451,21 @@ reference "caching"
 )
 \bar default
 !
+\end_layout
+
+\begin_layout Itemize
+There's, of course, a lot more you can do with 
+\bar under
+scriptlets (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsection
@@ -2563,16 +2644,7 @@ target "http://localhost:8080/wiki/api/"
 
 \end_inset
 
-, however that's not the best way: the web browser doesn't know how to display
- the 
-\begin_inset Quotes eld
-\end_inset
-
-application/json
-\begin_inset Quotes erd
-\end_inset
-
- MIME type, and will likely ask you save the JSON content to a file.
+, however that's not the best way.
  Also, the web browser only knows how to do 
 \begin_inset Quotes eld
 \end_inset
@@ -2604,7 +2676,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl "http://localhost:8080/wiki/api/"
+curl http://localhost:8080/wiki/api/
 \end_layout
 
 \end_inset
@@ -2772,8 +2844,95 @@ function handleDelete(conversation) {
 \end_layout
 
 \begin_layout Standard
-We also want to change our routing.js to capture the wildcard, again similar
- to what we did with the scriptlet:
+What we did:
+\end_layout
+
+\begin_layout Itemize
+The 
+\begin_inset Quotes eld
+\end_inset
+
+handle-
+\begin_inset Quotes erd
+\end_inset
+
+ functions are 
+\begin_inset Quotes eld
+\end_inset
+
+entry points
+\begin_inset Quotes erd
+\end_inset
+
+ into our program, with one per HTTP verb.
+ From Prudence's perspective they are all encapsulated as a single resource
+ class, with each resource instance having its own 
+\begin_inset Quotes eld
+\end_inset
+
+conversation
+\begin_inset Quotes erd
+\end_inset
+
+ instance.
+\end_layout
+
+\begin_layout Itemize
+handleInit is a bit different in that it dynamically sets up our resource.
+ The MIME type we've added will be used for content negotiation with the
+ client: if several are available, Prudence will automatically select the
+ best type according to the client's preferences.
+ Note that order matters here: the first MIME types you add are preferred
+ over the later ones.
+ For our example, we'll only support JSON responses, though it's possible
+ to support XML and others.
+\end_layout
+
+\begin_layout Itemize
+We've used the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.getEntity API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.getEntity"
+
+\end_inset
+
+ to get the 
+\bar under
+request payload (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "request-payloads"
+
+\end_inset
+
+)
+\bar default
+.
+ We're expecting the client to send us JSON, but again it's possible to
+ 
+\bar under
+support other formats (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "request-payloads-mime-types"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+Note that we're making sure to invalidate the cached tag: this guarantees
+ that the scriptlet pages will be updated even though the wiki is changed
+ from here.
+\end_layout
+
+\begin_layout Standard
+We'll also need to change our routing.js to capture the wildcard, again similar
+ to what we did with the scriptlet page:
 \end_layout
 
 \begin_layout Standard
@@ -2850,8 +3009,8 @@ status open
 
 \begin_layout Plain Layout
 
-curl -X PUT -d '{"content": "New page content!"}' "http://localhost:8080/wiki/ap
-i/test/"
+curl -X PUT -d '{"content": "New page content!"}' http://localhost:8080/wiki/api
+/test/
 \end_layout
 
 \end_inset
@@ -2878,7 +3037,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl -X DELETE "http://localhost:8080/wiki/api/test/"
+curl -X DELETE http://localhost:8080/wiki/api/test/
 \end_layout
 
 \begin_layout Plain Layout
@@ -2892,9 +3051,26 @@ curl "http://localhost:8080/wiki/api/test/"
 \end_layout
 
 \begin_layout Standard
-While testing with cURL, you can simultaneously test our wiki pages uses
+While testing with cURL, you can simultaneously test the wiki pages uses
  the browser, as we did earlier.
- Both the API and the pages see the same data.
+ Both the API and the pages see the exact same data stored in the application.glo
+bals.
+\end_layout
+
+\begin_layout Subsection
+More Caching
+\end_layout
+
+\begin_layout Standard
+Manual resources are 
+\begin_inset Quotes eld
+\end_inset
+
+raw
+\begin_inset Quotes erd
+\end_inset
+
+: completely open to your specific implementation.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2902,7 +3078,18 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-Manual Resources
+Read all about 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Section
@@ -12486,6 +12673,13 @@ reference "html-forms"
 
 \begin_layout Subsubsection
 MIME Types
+\begin_inset CommandInset label
+LatexCommand label
+name "request-payloads-mime-types"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

@@ -282,7 +282,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			for (var name in this.hosts) {
 				var host = Restlet.getHost(component, name)
 				if (!Sincerity.Objects.exists(host)) {
-					throw new SavoryException('Unknown host: ' + name)
+					throw new SincerityException('Unknown host: ' + name)
 				}
 				var uri = Module.cleanBaseUri(this.hosts[name])
 				if (name == 'internal') {
@@ -430,6 +430,12 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			// Inbound root (a router)
 			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
+			
+			// Outbound root
+			// (By default, Restlet's ApplicationHelper will wrap the client dispatcher with filters
+			// created by all the services, which includes the DecoderService, which would interfere
+			// with our capturing mechanism)
+			this.instance.outboundRoot = this.context.clientDispatcher
 
 			// Source viewer
 			if (true == this.settings.code.sourceViewable) {
@@ -831,8 +837,9 @@ Prudence.Routing = Prudence.Routing || function() {
 				// Put a custom encoder before the directory
 				var encoder = new CustomEncoder(app.instance)
 				encoder.encoderService.minimumSize = this.compressThreshold
+				var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
+				ignoredMediaTypes.add(MediaType.APPLICATION_JAVA)
 				if (Sincerity.Objects.exists(this.compressExclude)) {
-					var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
 					for (var c in this.compressExclude) {
 						var mediaType = MediaType.valueOf(this.compressExclude[c])
 						ignoredMediaTypes.add(mediaType)
@@ -891,6 +898,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String} [preExtension='m']
 	 * @param {Boolean} [trailingSlashRequired=true]
 	 * @param {String} [internalUri='/_manual/']
+	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {Number|String} [compressThreshold=1024] The minumum size in bytes for which to enable compression
+	 * @param {String[]} [compressExclude] Don't compress these media (MIME) types even when compress is true
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Manual */
@@ -900,12 +910,13 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri']
+		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri', 'compress', 'compressThreshold', 'compressExclude']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				importClass(
 					org.restlet.resource.Finder,
+					com.threecrickets.prudence.util.CustomEncoder,
 					java.util.concurrent.CopyOnWriteArraySet,
 					java.io.File)
 
@@ -916,6 +927,10 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
 				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
+
+				this.compress = Sincerity.Objects.ensure(this.compress, true)
+				this.compressThreshold = Sincerity.Objects.ensure(this.compressThreshold, 1024)
+				this.compressThreshold = Sincerity.Localization.toBytes(this.compressThreshold)
 				
 				app.delegatedResourceInternalUri = Sincerity.Objects.ensure(this.internalUri, '/_manual/')
 
@@ -963,6 +978,22 @@ Prudence.Routing = Prudence.Routing || function() {
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
 
 				app.delegatedResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
+
+				if (this.compress) {
+					// Put a custom encoder before the finder
+					var encoder = new CustomEncoder(app.instance)
+					encoder.encoderService.minimumSize = this.compressThreshold
+					var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
+					ignoredMediaTypes.add(MediaType.APPLICATION_JAVA)
+					if (Sincerity.Objects.exists(this.compressExclude)) {
+						for (var c in this.compressExclude) {
+							var mediaType = MediaType.valueOf(this.compressExclude[c])
+							ignoredMediaTypes.add(mediaType)
+						}
+					}
+					encoder.next = app.delegatedResource
+					app.delegatedResource = encoder
+				}
 			}
 			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.internalUri)) {
 				throw new SincerityException('You can configure a Manual only once per application')
@@ -1077,7 +1108,7 @@ Prudence.Routing = Prudence.Routing || function() {
 						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_OFFLINE
 					}
 					else {
-						throw new SavoryException('Unsupported clientCachingMode: ' + this.clientCachingMode)
+						throw new SincerityException('Unsupported clientCachingMode: ' + this.clientCachingMode)
 					}
 				}
 				else if (!Sincerity.Objects.exists(this.clientCachingMode)) {
@@ -1752,7 +1783,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			var theClass = Sincerity.JVM.getClass(this['class'])
 			if (null === theClass) {
-				throw new SavoryException('Cannot load class: ' + this['class'])
+				throw new SincerityException('Cannot load class: ' + this['class'])
 			}
 			return new Finder(app.context, theClass)
 		}
