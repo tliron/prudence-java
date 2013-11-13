@@ -23,6 +23,11 @@ app.settings = {
 		sourceViewable: true
 	},
 	
+	compression: {
+		sizeThreshold: '1kb',
+		exclude: []
+	},
+	
 	mediaTypes: {
 		php: 'text/html'
 	}

@@ -777,7 +777,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 */
 	private Representation represent( CacheEntry cacheEntry, Encoding encoding, String cacheKey, Executable executable, Writer writer ) throws IOException
 	{
-		if( ( cacheEntry.getEncoding() == null ) && ( encoding != null ) )
+		if( ( cacheEntry.getEncoding() == null ) && ( encoding != null ) && ( cacheEntry.getSize() >= attributes.getEncodeSizeThreshold() ) )
 		{
 			// Re-encode it
 			cacheEntry = new CacheEntry( cacheEntry, encoding );
@@ -981,6 +981,10 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				// Get the buffer from when we executed the executable
 				CacheEntry cacheEntry = new CacheEntry( writerBuffer.substring( startPosition ), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), null,
 					conversationService.getHeaders(), executable.getDocumentTimestamp(), expirationTimestamp );
+
+				// Disable encoding for small representations
+				if( cacheEntry.getSize() < attributes.getEncodeSizeThreshold() )
+					encoding = null;
 
 				// Encoded version
 				CacheEntry encodedCacheEntry = new CacheEntry( cacheEntry, encoding );

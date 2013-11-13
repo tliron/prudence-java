@@ -105,6 +105,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
 	 * @property {String} [settings.code.sourceViewer='/source-code/'] Only used when settings.code.sourceViewable=true
 	 * 
+	 * @property {Object} [settings.compression] Compression settings
+	 * @property {Number|String} [settings.compression.sizeThreshold=1024] The size in bytes beyond which responses may be compressed
+	 * @property {String[]} [settings.compression.exclude] Additional media types excluded from compression
 	 * @property {Object} [settings.uploads] File upload settings
 	 * @property {String} [settings.uploads.root='uploads'] Path in which to store uploaded files; the path is relative to the
 	 *                    application directory
@@ -195,6 +198,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
 			this.settings.code = Sincerity.Objects.ensure(this.settings.code, {})
+			this.settings.compression = Sincerity.Objects.ensure(this.settings.compression, {})
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
 			this.settings.mediaTypes = Sincerity.Objects.ensure(this.settings.mediaTypes, {})
 			this.settings.scriptletPlugins = Sincerity.Objects.ensure(this.settings.scriptletPlugins, {})
@@ -216,7 +220,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.scriptletPlugins['{{'] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['{{'], prudenceScriptletPlugin)
 			this.settings.scriptletPlugins['}}'] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['}}'], prudenceScriptletPlugin)
 			this.settings.scriptletPlugins['=='] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['=='], prudenceScriptletPlugin)
-			
+
+			this.settings.compression.sizeThreshold = Sincerity.Objects.ensure(this.settings.compression.sizeThreshold, 1024)
+
 			this.settings.uploads.sizeThreshold = Sincerity.Objects.ensure(this.settings.uploads.sizeThreshold, 0)
 			this.settings.uploads.root = Sincerity.Objects.ensure(this.settings.uploads.root, 'uploads')
 			if (!(this.settings.uploads.root instanceof File)) {
@@ -225,6 +231,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Localization.toMilliseconds(this.settings.code.minimumTimeBetweenValidityChecks)
 			this.settings.uploads.sizeThreshold = Sincerity.Localization.toBytes(this.settings.uploads.sizeThreshold)
+			this.settings.compression.sizeThreshold = Sincerity.Localization.toBytes(this.settings.compression.sizeThreshold)
 
 			// Hazelcast
 			this.globals['com.threecrickets.prudence.hazelcastInstanceName'] = this.settings.distributed.hazelcast.instance
@@ -698,6 +705,26 @@ Prudence.Routing = Prudence.Routing || function() {
 			return dispatcher
 		}
 		
+		Public.createEncoder = function(next) {
+			importClass(
+					com.threecrickets.prudence.util.CustomEncoder,
+					org.restlet.data.MediaType)
+
+			var encoder = new CustomEncoder(this.instance)
+			encoder.encoderService.minimumSize = this.settings.compression.sizeThreshold
+			var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
+			ignoredMediaTypes.add(MediaType.APPLICATION_JAVA)
+			var exclude = this.settings.compression.exclude
+			if (Sincerity.Objects.exists(exclude)) {
+				for (var e in exclude) {
+					var mediaType = MediaType.valueOf(exclude[e])
+					ignoredMediaTypes.add(mediaType)
+				}
+			}
+			encoder.next = next
+			return encoder
+		}
+		
 		return Public
 	}(Public))
 
@@ -753,7 +780,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Note that each application has its own extension mapping table, which can
 	 * be configured in its settings.js, under "settings.mediaTypes".
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Directory.html">Directory</a> instance.
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Directory.html">Directory</a> instance.
 	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html">CustomEncoder</a>
 	 * filter before the Directory.
 	 * 
@@ -766,8 +793,6 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
 	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
 	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
-	 * @param {Number|String} [compressThreshold=1024] The minumum size in bytes for which to enable compression
-	 * @param {String[]} [compressExclude] Don't compress these media (MIME) types even when compress is true
 	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Static = Sincerity.Classes.define(function(Module) {
@@ -778,15 +803,13 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'compressThreshold', 'compressExclude', 'cacheDuration']
+		Public._configure = ['root', 'roots', 'listingAllowed', 'negotiate', 'compress', 'cacheDuration']
 
 		Public.create = function(app, uri) {
 			importClass(
 				com.threecrickets.prudence.util.Fallback)
 				
 			this.compress = Sincerity.Objects.ensure(this.compress, true)
-			this.compressThreshold = Sincerity.Objects.ensure(this.compressThreshold, 1024)
-			this.compressThreshold = Sincerity.Localization.toBytes(this.compressThreshold)
 			
 			if (Sincerity.Objects.exists(this.root)) {
 				this.roots = [this.root]
@@ -821,8 +844,6 @@ Prudence.Routing = Prudence.Routing || function() {
 		function createDirectory(app, root) {
 			importClass(
 					org.restlet.resource.Directory,
-					org.restlet.data.MediaType,
-					com.threecrickets.prudence.util.CustomEncoder,
 					java.io.File)
 
 			if (!(root instanceof File)) {
@@ -835,18 +856,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			
 			if (this.compress) {
 				// Put a custom encoder before the directory
-				var encoder = new CustomEncoder(app.instance)
-				encoder.encoderService.minimumSize = this.compressThreshold
-				var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
-				ignoredMediaTypes.add(MediaType.APPLICATION_JAVA)
-				if (Sincerity.Objects.exists(this.compressExclude)) {
-					for (var c in this.compressExclude) {
-						var mediaType = MediaType.valueOf(this.compressExclude[c])
-						ignoredMediaTypes.add(mediaType)
-					}
-				}
-				encoder.next = restlet
-				restlet = encoder
+				restlet = app.createEncoder(restlet)
 			}
 			
 			return restlet
@@ -887,7 +897,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * be thrown.
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedResource.html">DelegatedResource</a>
-	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html">CustomEncoder</a>
+	 * filter before the Finder.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.Manual
@@ -899,8 +911,6 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Boolean} [trailingSlashRequired=true]
 	 * @param {String} [internalUri='/_manual/']
 	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
-	 * @param {Number|String} [compressThreshold=1024] The minumum size in bytes for which to enable compression
-	 * @param {String[]} [compressExclude] Don't compress these media (MIME) types even when compress is true
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Manual */
@@ -910,13 +920,12 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri', 'compress', 'compressThreshold', 'compressExclude']
+		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri', 'compress']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				importClass(
 					org.restlet.resource.Finder,
-					com.threecrickets.prudence.util.CustomEncoder,
 					java.util.concurrent.CopyOnWriteArraySet,
 					java.io.File)
 
@@ -929,8 +938,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
 
 				this.compress = Sincerity.Objects.ensure(this.compress, true)
-				this.compressThreshold = Sincerity.Objects.ensure(this.compressThreshold, 1024)
-				this.compressThreshold = Sincerity.Localization.toBytes(this.compressThreshold)
 				
 				app.delegatedResourceInternalUri = Sincerity.Objects.ensure(this.internalUri, '/_manual/')
 
@@ -981,18 +988,7 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				if (this.compress) {
 					// Put a custom encoder before the finder
-					var encoder = new CustomEncoder(app.instance)
-					encoder.encoderService.minimumSize = this.compressThreshold
-					var ignoredMediaTypes = encoder.encoderService.ignoredMediaTypes
-					ignoredMediaTypes.add(MediaType.APPLICATION_JAVA)
-					if (Sincerity.Objects.exists(this.compressExclude)) {
-						for (var c in this.compressExclude) {
-							var mediaType = MediaType.valueOf(this.compressExclude[c])
-							ignoredMediaTypes.add(mediaType)
-						}
-					}
-					encoder.next = app.delegatedResource
-					app.delegatedResource = encoder
+					app.delegatedResource = app.createEncoder(app.delegatedResource)
 				}
 			}
 			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.internalUri)) {
@@ -1049,7 +1045,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * be thrown.
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/GeneratedTextResource.html">GeneratedTextResource</a>
-	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.Scriptlet
@@ -1064,6 +1060,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String} [defaultExtension='html']
 	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
 	 * @param {Number|String} [maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
+	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
 	 * @param {Object} [plugins] Scriptlet plugins
 	 */
 	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
@@ -1074,7 +1071,7 @@ Prudence.Routing = Prudence.Routing || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins', 'maxClientCachingDuration']
+		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins', 'maxClientCachingDuration', 'compress']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
@@ -1123,6 +1120,8 @@ Prudence.Routing = Prudence.Routing || function() {
 
 				this.maxClientCachingDuration = Sincerity.Localization.toMilliseconds(this.maxClientCachingDuration)
 
+				this.compress = Sincerity.Objects.ensure(this.compress, true)
+				
 				if (sincerity.verbosity >= 2) {
 					println('    Scriptlet:')
 					println('      Root: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
@@ -1142,6 +1141,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					executionController: new PhpExecutionController(), // Adds PHP predefined variables
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
+					negotiateEncoding: this.compress,
+					encodeSizeThreshold: app.settings.compression.sizeThreshold,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
@@ -1230,7 +1231,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * </pre>
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ExecutionResource.html">ExecutionResource</a>
-	 * via a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.Execute
@@ -1365,7 +1366,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * <p>
 	 * Note that the target URI is in the URI template format, and can use variables from the
 	 * request. Not only that, but you can also use a host of Restlet-specific special variables:
-	 * see the <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Resolver.html">Resolver</a>
+	 * see the <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Resolver.html">Resolver</a>
 	 * documentation for a complete list.
 	 * <p>
 	 * Optionally supports value injection via the "locals" param.
@@ -1725,7 +1726,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Furthermore, clients may or may not cache the permament redirection
 	 * information.
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
 	 * singleton instance shared by all usages in the application.
 	 * 
 	 * @class
@@ -1751,7 +1752,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * <p>
 	 * The "class" param (note that "class" is a reserved word in JavaScript and must be placed
 	 * in quotes for a dict key) must be the full classname of a JVM class that inherits
-	 * from <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>.
+	 * from <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>.
 	 * <p>
 	 * These classes are often written in Java, but can be written in any language that can
 	 * produce JVM classes, such as Groovy, Clojure, etc. 
@@ -1760,7 +1761,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * beginning with '$' followed by the class name. For example, '$org.myapp.PersonResource' is equivalent
 	 * to {type: 'resource', 'class': 'org.myapp.PersonResource'}.
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 *
 	 * @class
 	 * @name Prudence.Routing.Resource
@@ -2241,7 +2242,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	/**
 	 *
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
+	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.HttpAuthenticator

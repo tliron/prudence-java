@@ -10209,17 +10209,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		compress: true,
-\end_layout
-
-\begin_layout Plain Layout
-
-		compressThreshold: '1kb',
-\end_layout
-
-\begin_layout Plain Layout
-
-		compressExclude: []
+		compress: true
 \end_layout
 
 \begin_layout Plain Layout
@@ -10445,25 +10435,17 @@ also
 \emph default
  true, Prudence will negotiate the best compression format (gzip and zip
  are supported) and compress on the fly.
- Only files with a size of at least 
-\begin_inset Quotes eld
+ Compression can be 
+\bar under
+configured in settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-compression"
+
 \end_inset
 
-compressThreshold
-\begin_inset Quotes erd
-\end_inset
-
- will be compressed.
- Also, common archive and media formats are excluded from compression, under
- the assumption that they are already optimally compressed.
- You can add more exclusions using 
-\begin_inset Quotes eld
-\end_inset
-
-compressExclude
-\begin_inset Quotes erd
-\end_inset
-
+)
+\bar default
 .
 \end_layout
 
@@ -16849,6 +16831,45 @@ defaultLanguageTag
 \series default
 : If a scriptlet tag does not specify a language, then this value will be
  the default.
+\end_layout
+
+\begin_layout Subsection
+app.settings.compression
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-compression"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Global settings for resource compression.
+ Note that compression can be turned on or off per individual resource type.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+sizeThreshold
+\series default
+: Responses smaller than this will not be compressed.
+ Defaults to 1024.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+exclude
+\series default
+: An array of MIME types that will be 
+\emph on
+additionally
+\emph default
+ excluded from compression.
+ Note that several common types are automatically excluded, specifically
+ compressed archives and media formats.
 \end_layout
 
 \begin_layout Subsection

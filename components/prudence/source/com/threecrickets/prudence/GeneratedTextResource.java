@@ -128,6 +128,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.documentSource:</code>
  * {@link DocumentSource}. <b>Required.</b></li>
  * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.encodeSizeThreshold:</code>
+ * {@link Integer}, defaults to 1024.</li>
+ * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.executionController:</code>
  * {@link ExecutionController}.</li>
  * <li>
