@@ -34,6 +34,7 @@ import org.restlet.representation.StringRepresentation;
 
 import com.threecrickets.prudence.DelegatedStatusService;
 import com.threecrickets.prudence.SourceCodeResource;
+import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.GlobalScope;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
@@ -434,6 +435,15 @@ public class DebugRepresentation extends StringRepresentation
 			html.append( "<h2>executable.globals</h2>\n" );
 			html.append( "<div id=\"executable-globals\">\n" );
 			appendMap( html, GlobalScope.getInstance().getAttributes() );
+			html.append( "</div>\n" );
+		}
+
+		ExecutionContext executionContext = ExecutionContext.getCurrent();
+		if( executionContext != null )
+		{
+			html.append( "<h2>Execution Context</h2>\n" );
+			html.append( "<div id=\"execution-context\">\n" );
+			appendMap( html, executionContext.getAttributes() );
 			html.append( "</div>\n" );
 		}
 
