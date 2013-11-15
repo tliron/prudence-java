@@ -293,7 +293,7 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	//
-	// DocumentExecutionAttributes
+	// ContextualAttributes
 	//
 
 	@Override
@@ -301,6 +301,10 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	{
 		return validateDocumentName( documentName, getDefaultIncludedName() );
 	}
+
+	//
+	// DocumentExecutionAttributes
+	//
 
 	@Override
 	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )

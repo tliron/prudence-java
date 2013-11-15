@@ -47,4 +47,18 @@ public class DelegatedResourceDocumentService extends ResourceDocumentServiceBas
 		super( resource, resource.getAttributes(), conversationService, cachingUtil );
 		pushDocumentDescriptor( documentDescriptor );
 	}
+
+	//
+	// Attributes
+	//
+
+	/**
+	 * Casts the cache key pattern for the current executable and encoding.
+	 * 
+	 * @return The cache key or null
+	 */
+	public String getCacheKey()
+	{
+		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), false, conversationService ), conversationService.getEncoding() );
+	}
 }

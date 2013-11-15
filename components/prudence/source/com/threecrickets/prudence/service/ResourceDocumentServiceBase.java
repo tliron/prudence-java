@@ -19,7 +19,6 @@ import org.restlet.resource.ServerResource;
 import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
-import com.threecrickets.scripturian.Executable;
 
 /**
  * Document service exposed to executables.
@@ -104,27 +103,6 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	}
 
 	/**
-	 * Whether to cache non-idempotent requests. Defaults to true,
-	 * 
-	 * @return Whether to cache non-idempotent requests
-	 */
-	public boolean getCacheNonIdempotent()
-	{
-		Boolean cacheNonIdempotent = (Boolean) getDescriptor().getDocument().getAttributes().get( CACHE_NON_IDEMPOTENT_ATTRIBUTE );
-		return cacheNonIdempotent == null ? true : cacheNonIdempotent;
-	}
-
-	/**
-	 * @param cacheNonIdempotent
-	 *        Whether to cache non-idempotent requests
-	 * @see #getCacheNonIdempotent()
-	 */
-	public void setCacheNonIdempotent( boolean cacheNonIdempotent )
-	{
-		getDescriptor().getDocument().getAttributes().put( CACHE_NON_IDEMPOTENT_ATTRIBUTE, cacheNonIdempotent );
-	}
-
-	/**
 	 * The cache key pattern.
 	 * 
 	 * @return The cache key pattern
@@ -163,16 +141,6 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 		return CachingUtil.getCacheTags( getDescriptor().getDocument(), true );
 	}
 
-	/**
-	 * Casts the cache key pattern for the current executable and encoding.
-	 * 
-	 * @return The cache key or null
-	 */
-	public String getCacheKey()
-	{
-		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), conversationService ), conversationService.getEncoding() );
-	}
-
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -190,12 +158,4 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 * Caching utilities;
 	 */
 	protected final CachingUtil<R, A> cachingUtil;
-
-	// //////////////////////////////////////////////////////////////////////////
-	// Private
-
-	/**
-	 * Cache non-idempotent attribute for an {@link Executable}.
-	 */
-	private static final String CACHE_NON_IDEMPOTENT_ATTRIBUTE = ResourceDocumentServiceBase.class.getCanonicalName() + ".cacheNonIdempotent";
 }

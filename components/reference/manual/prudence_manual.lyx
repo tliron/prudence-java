@@ -15415,7 +15415,27 @@ name "caching"
 \end_layout
 
 \begin_layout Subsection
-Introduction: Integrated Caching
+The Best Caching
+\end_layout
+
+\begin_layout Standard
+We are proud of Prudence's caching system.
+\end_layout
+
+\begin_layout Paragraph
+Integrated
+\end_layout
+
+\begin_layout Paragraph
+Efficient Compression
+\end_layout
+
+\begin_layout Paragraph
+Server and Client
+\end_layout
+
+\begin_layout Paragraph
+Fine-Grained
 \end_layout
 
 \begin_layout Subsection
@@ -16869,7 +16889,7 @@ additionally
 \emph default
  excluded from compression.
  Note that several common types are automatically excluded, specifically
- compressed archives and media formats.
+ compressed archive and media formats.
 \end_layout
 
 \begin_layout Subsection

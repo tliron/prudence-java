@@ -33,7 +33,6 @@ import org.restlet.routing.Template;
 import org.restlet.util.Series;
 
 import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
-import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.cache.CacheEntry;
 import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
@@ -212,6 +211,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	{
 		this.resource = resource;
 		this.attributes = attributes;
+		prefix = resource.getClass().getCanonicalName();
 	}
 
 	//
@@ -231,12 +231,12 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	public String getValidDocumentName( Request request )
 	{
 		ConcurrentMap<String, Object> attributes = request.getAttributes();
-		String documentName = (String) attributes.get( VALID_DOCUMENT_NAME_ATTRIBUTE );
+		String documentName = (String) attributes.get( prefix + VALID_DOCUMENT_NAME_ATTRIBUTE );
 		if( documentName == null )
 		{
 			documentName = request.getResourceRef().getRemainingPart( true, false );
 			documentName = this.attributes.validateDocumentName( documentName );
-			attributes.put( VALID_DOCUMENT_NAME_ATTRIBUTE, documentName );
+			attributes.put( prefix + VALID_DOCUMENT_NAME_ATTRIBUTE, documentName );
 		}
 		return documentName;
 	}
@@ -317,11 +317,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
 		attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
 
-		// Set initial media type according to the document's tag
-		if( conversationService.getMediaType() == null )
-			conversationService.setMediaTypeExtension( documentDescriptor.getTag() );
-
-		String cacheKey = castCacheKey( documentDescriptor, conversationService );
+		String cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
 		if( cacheKey != null )
 		{
 			Cache cache = this.attributes.getCache();
@@ -418,11 +414,13 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param documentDescriptor
 	 *        The document descriptor
+	 * @param isTextWithScriptlets
+	 *        Whether the document is text with scriptlets
 	 * @param conversationService
 	 *        The conversation service
 	 * @return The cache key or null
 	 */
-	public String castCacheKey( DocumentDescriptor<Executable> documentDescriptor, ResourceConversationServiceBase<R> conversationService )
+	public String castCacheKey( DocumentDescriptor<Executable> documentDescriptor, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService )
 	{
 		String cacheKeyPattern = getCacheKeyPattern( documentDescriptor.getDocument() );
 		if( cacheKeyPattern == null )
@@ -431,6 +429,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		{
 			Request request = resource.getRequest();
 			Response response = resource.getResponse();
+
+			if( isTextWithScriptlets )
+			{
+				// Set initial media type according to the document's tag (might
+				// be used by resolver)
+				if( conversationService.getMediaType() == null )
+					conversationService.setMediaTypeExtension( documentDescriptor.getTag() );
+			}
 
 			// Template and its resolver
 			Template template = new Template( cacheKeyPattern );
@@ -523,6 +529,11 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	private final A attributes;
 
 	/**
+	 * Prefix for executable attributes.
+	 */
+	private final String prefix;
+
+	/**
 	 * Cache duration attribute for an {@link Executable}.
 	 */
 	private static final String CACHE_DURATION_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheDuration";
@@ -545,7 +556,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	/**
 	 * Valid document name attribute for a {@link Request}.
 	 */
-	public static final String VALID_DOCUMENT_NAME_ATTRIBUTE = GeneratedTextResource.class.getCanonicalName() + ".validDocumentName";
+	public static final String VALID_DOCUMENT_NAME_ATTRIBUTE = ".validDocumentName";
 
 	/**
 	 * Document descriptor attribute for a {@link Request}.

@@ -96,6 +96,31 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	}
 
 	//
+	// Attributes
+	//
+
+	/**
+	 * Whether to cache non-idempotent requests. Defaults to true,
+	 * 
+	 * @return Whether to cache non-idempotent requests
+	 */
+	public boolean getCacheNonIdempotent()
+	{
+		Boolean cacheNonIdempotent = (Boolean) getDescriptor().getDocument().getAttributes().get( CACHE_NON_IDEMPOTENT_ATTRIBUTE );
+		return cacheNonIdempotent == null ? true : cacheNonIdempotent;
+	}
+
+	/**
+	 * @param cacheNonIdempotent
+	 *        Whether to cache non-idempotent requests
+	 * @see #getCacheNonIdempotent()
+	 */
+	public void setCacheNonIdempotent( boolean cacheNonIdempotent )
+	{
+		getDescriptor().getDocument().getAttributes().put( CACHE_NON_IDEMPOTENT_ATTRIBUTE, cacheNonIdempotent );
+	}
+
+	//
 	// Operations
 	//
 
@@ -232,6 +257,16 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		return null;
 	}
 
+	/**
+	 * Casts the cache key pattern for the current executable and encoding.
+	 * 
+	 * @return The cache key or null
+	 */
+	public String getCacheKey()
+	{
+		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), true, conversationService ), conversationService.getEncoding() );
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -249,6 +284,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * Writer stack attribute for an {@link Request}.
 	 */
 	private static final String WRITER_STACK_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".writerStack";
+
+	/**
+	 * Cache non-idempotent attribute for an {@link Executable}.
+	 */
+	private static final String CACHE_NON_IDEMPOTENT_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".cacheNonIdempotent";
 
 	/**
 	 * The application service.
@@ -428,7 +468,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			// Attempt to use cache for idempotent requests
 			if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
 			{
-				cacheKey = cachingUtil.castCacheKey( documentDescriptor, conversationService );
+				cacheKey = cachingUtil.castCacheKey( documentDescriptor, true, conversationService );
 				if( cacheKey != null )
 				{
 					Cache cache = this.attributes.getCache();
@@ -501,35 +541,32 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				// Encoded version
 				CacheEntry encodedCacheEntry = new CacheEntry( cacheEntry, encoding );
 
-				// Cache idempotent requests
-				if( expirationTimestamp > 0 )
+				// Cache successful idempotent requests
+				if( ( expirationTimestamp > 0 ) && resource.getResponse().getStatus().isSuccess() && ( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() ) )
 				{
-					if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
+					String cacheKey = cachingUtil.castCacheKey( documentDescriptor, true, conversationService );
+					if( cacheKey != null )
 					{
-						String cacheKey = cachingUtil.castCacheKey( documentDescriptor, conversationService );
-						if( cacheKey != null )
+						// Cache!
+						Cache cache = attributes.getCache();
+						if( cache != null )
 						{
-							// Cache!
-							Cache cache = attributes.getCache();
-							if( cache != null )
+							String[] tags = null;
+							if( cacheTags != null )
+								tags = cacheTags.toArray( new String[] {} );
+
+							String cacheKeyForEncoding = CachingUtil.getCacheKeyForEncoding( cacheKey, encoding );
+							encodedCacheEntry.setTags( tags );
+							cache.store( cacheKeyForEncoding, encodedCacheEntry );
+
+							// Cache un-encoded entry separately
+							if( encoding != null )
 							{
-								String[] tags = null;
-								if( cacheTags != null )
-									tags = cacheTags.toArray( new String[] {} );
-
-								String cacheKeyForEncoding = CachingUtil.getCacheKeyForEncoding( cacheKey, encoding );
-								encodedCacheEntry.setTags( tags );
-								cache.store( cacheKeyForEncoding, encodedCacheEntry );
-
-								// Cache un-encoded entry separately
-								if( encoding != null )
-								{
-									cacheEntry.setTags( tags );
-									cache.store( cacheKey, cacheEntry );
-								}
-
-								cachingUtil.addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
+								cacheEntry.setTags( tags );
+								cache.store( cacheKey, cacheEntry );
 							}
+
+							cachingUtil.addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
 						}
 					}
 				}

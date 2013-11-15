@@ -26,9 +26,9 @@ import org.restlet.data.CharacterSet;
 import org.restlet.data.Form;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
+import org.restlet.data.Method;
 import org.restlet.data.Status;
 import org.restlet.data.Tag;
-import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.ObjectRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.RepresentationInfo;
@@ -327,23 +327,26 @@ public class DelegatedResource extends ServerResource
 		String documentName = cachingUtil.getValidDocumentName( getRequest() );
 		boolean isPassThrough = this.attributes.getPassThroughDocuments().contains( "/" + documentName );
 
-		try
+		if( getRequest().getMethod().equals( Method.GET ) )
 		{
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( documentName, isPassThrough, conversationService );
-			if( cacheEntry != null )
-				return cacheEntry.getInfo();
-		}
-		catch( ParsingException x )
-		{
-			throw new ResourceException( x );
-		}
-		catch( DocumentNotFoundException x )
-		{
-			throw new ResourceException( Status.CLIENT_ERROR_NOT_FOUND );
-		}
-		catch( DocumentException x )
-		{
-			throw new ResourceException( x );
+			try
+			{
+				CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( documentName, isPassThrough, conversationService );
+				if( cacheEntry != null )
+					return cacheEntry.getInfo();
+			}
+			catch( ParsingException x )
+			{
+				throw new ResourceException( x );
+			}
+			catch( DocumentNotFoundException x )
+			{
+				throw new ResourceException( Status.CLIENT_ERROR_NOT_FOUND );
+			}
+			catch( DocumentException x )
+			{
+				throw new ResourceException( x );
+			}
 		}
 
 		try
@@ -524,6 +527,10 @@ public class DelegatedResource extends ServerResource
 	 */
 	private final CachingUtil<DelegatedResource, DelegatedResourceAttributes> cachingUtil = new CachingUtil<DelegatedResource, DelegatedResourceAttributes>( this, attributes );
 
+	private DocumentDescriptor<Executable> documentDescriptor;
+
+	private Executable executable;
+
 	/**
 	 * Returns a representation based on the object. If the object is not
 	 * already a representation, creates a new string representation based on
@@ -537,13 +544,21 @@ public class DelegatedResource extends ServerResource
 	 */
 	private Representation getRepresentation( Object object, DelegatedResourceConversationService conversationService )
 	{
+		long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable );
+		CacheEntry cacheEntry = null;
+		Representation representation = null;
+		boolean configure = true;
+
 		if( object == null )
 		{
 			return null;
 		}
 		else if( object instanceof Representation )
 		{
-			return (Representation) object;
+			representation = (Representation) object;
+			configure = false;
+
+			// TODO: create cache entry
 		}
 		else if( object instanceof Number )
 		{
@@ -554,7 +569,6 @@ public class DelegatedResource extends ServerResource
 		}
 		else
 		{
-			Representation representation;
 			MediaType mediaType = conversationService.getMediaType();
 
 			if( MediaType.APPLICATION_JAVA.includes( mediaType ) )
@@ -568,21 +582,59 @@ public class DelegatedResource extends ServerResource
 			}
 			else if( object instanceof byte[] )
 			{
-				representation = new ByteArrayRepresentation( (byte[]) object, mediaType );
+				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
+					executable.getDocumentTimestamp(), expirationTimestamp );
+
+				// representation = new ByteArrayRepresentation( (byte[])
+				// object, mediaType );
 			}
 			else
 			{
 				// Convert to string
-				representation = new StringRepresentation( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet() );
-			}
+				try
+				{
+					cacheEntry = new CacheEntry( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
+						executable.getDocumentTimestamp(), expirationTimestamp );
+				}
+				catch( IOException x )
+				{
+					// TODO
+				}
 
+				// representation = new StringRepresentation( object.toString(),
+				// mediaType, conversationService.getLanguage(),
+				// conversationService.getCharacterSet() );
+			}
+		}
+
+		// Cache successful requests
+		if( ( expirationTimestamp > 0 ) && ( cacheEntry != null ) && getResponse().getStatus().isSuccess() )
+		{
+			String cacheKey = cachingUtil.castCacheKey( documentDescriptor, false, conversationService );
+			if( cacheKey != null )
+			{
+				Cache cache = attributes.getCache();
+				if( cache != null )
+				{
+					attributes.getCache().store( cacheKey, cacheEntry );
+					cachingUtil.addCachingDebugHeaders( "miss", cacheEntry, cacheKey, executable );
+				}
+			}
+			configure = false;
+		}
+
+		if( ( representation == null ) && ( cacheEntry != null ) )
+			representation = cacheEntry.represent();
+
+		if( configure && ( representation != null ) )
+		{
 			representation.setTag( conversationService.getTag() );
 			representation.setExpirationDate( conversationService.getExpirationDate() );
 			representation.setModificationDate( conversationService.getModificationDate() );
 			representation.setDisposition( conversationService.getDisposition() );
-
-			return representation;
 		}
+
+		return representation;
 	}
 
 	/**
@@ -671,12 +723,44 @@ public class DelegatedResource extends ServerResource
 		String documentName = cachingUtil.getValidDocumentName( getRequest() );
 		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
 
+		// See if a valid cache entry has already been cached in the request
+		CacheEntry cacheEntry = cachingUtil.getExistingCacheEntry( true );
+		String cacheKey = cachingUtil.getExistingCacheKey( true );
+
+		// Attempt to use cache for GET
+		if( ( cacheEntry == null ) && getRequest().getMethod().equals( Method.GET ) )
+		{
+			try
+			{
+				cachingUtil.fetchCacheEntry( documentName, isPassThrough, conversationService );
+			}
+			catch( ParsingException x )
+			{
+				throw new ResourceException( x );
+			}
+			catch( DocumentNotFoundException x )
+			{
+				throw new ResourceException( Status.CLIENT_ERROR_NOT_FOUND );
+			}
+			catch( DocumentException x )
+			{
+				throw new ResourceException( x );
+			}
+		}
+
+		if( ( cacheEntry != null ) && ( cacheKey != null ) )
+		{
+			cachingUtil.addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable );
+			return cacheEntry.represent();
+			// TODO reencode
+		}
+
 		ConcurrentMap<String, Boolean> entryPointValidityCache = null;
 
 		try
 		{
-			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough );
-			Executable executable = documentDescriptor.getDocument();
+			documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough );
+			executable = documentDescriptor.getDocument();
 			Object enteringKey = getApplication().hashCode();
 
 			DelegatedResourceDocumentService documentService = new DelegatedResourceDocumentService( this, documentDescriptor, conversationService, cachingUtil );
@@ -716,6 +800,13 @@ public class DelegatedResource extends ServerResource
 			Boolean isValid = entryPointValidityCache.get( entryPointName );
 			if( ( isValid != null ) && !isValid.booleanValue() )
 				throw new NoSuchMethodException( entryPointName );
+
+			if( entryPointName.equals( attributes.getEntryPointNameForInit() ) )
+			{
+				documentService.setCacheDuration( 0 );
+				documentService.setCacheKeyPattern( attributes.getDefaultCacheKeyPattern() );
+				documentService.getCacheTags().clear();
+			}
 
 			// Enter!
 			Object r = executable.enter( enteringKey, entryPointName, conversationService );
