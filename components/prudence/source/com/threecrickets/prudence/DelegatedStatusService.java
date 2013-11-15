@@ -213,7 +213,7 @@ public class DelegatedStatusService extends StatusService
 				response.setEntity( null );
 
 				// Clean up cached document name for generated text resource
-				CachingUtil.clearValidDocumentName( request );
+				CachingUtil.clearExistingValidDocumentName( request );
 
 				// Delegate
 				errorHandler.handle( request, response );

@@ -33,6 +33,8 @@ import org.restlet.routing.Template;
 import org.restlet.util.Series;
 
 import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
+import com.threecrickets.prudence.DelegatedResource;
+import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.cache.CacheEntry;
 import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
@@ -189,10 +191,72 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		return cacheTags;
 	}
 
-	public static void clearValidDocumentName( Request request )
+	/**
+	 * The existing document descriptor.
+	 * 
+	 * @param request
+	 *        The request
+	 * @param clear
+	 *        Whether to clear it
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static DocumentDescriptor<Executable> getExistingDocumentDescriptor( Request request, boolean clear )
 	{
 		ConcurrentMap<String, Object> attributes = request.getAttributes();
-		attributes.remove( VALID_DOCUMENT_NAME_ATTRIBUTE );
+		if( clear )
+			return (DocumentDescriptor<Executable>) attributes.remove( DOCUMENT_DESCRIPTOR_ATTRIBUTE );
+		else
+			return (DocumentDescriptor<Executable>) attributes.get( DOCUMENT_DESCRIPTOR_ATTRIBUTE );
+	}
+
+	/**
+	 * The existing cache key.
+	 * 
+	 * @param request
+	 *        The request
+	 * @param clear
+	 *        Whether to clear it
+	 * @return
+	 */
+	public static String getExistingCacheKey( Request request, boolean clear )
+	{
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
+		if( clear )
+			return (String) attributes.remove( CACHE_KEY_ATTRIBUTE );
+		else
+			return (String) attributes.get( CACHE_KEY_ATTRIBUTE );
+	}
+
+	/**
+	 * The existing cache entry.
+	 * 
+	 * @param request
+	 *        The request
+	 * @param clear
+	 *        Whether to clear it
+	 * @return
+	 */
+	public static CacheEntry getExistingCacheEntry( Request request, boolean clear )
+	{
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
+		if( clear )
+			return (CacheEntry) attributes.remove( CACHE_ENTRY_ATTRIBUTE );
+		else
+			return (CacheEntry) attributes.get( CACHE_ENTRY_ATTRIBUTE );
+	}
+
+	/**
+	 * Removes existing valid document names.
+	 * 
+	 * @param request
+	 *        The request
+	 */
+	public static void clearExistingValidDocumentName( Request request )
+	{
+		ConcurrentMap<String, Object> attributes = request.getAttributes();
+		attributes.remove( DelegatedResource.class.getCanonicalName() + VALID_DOCUMENT_NAME_ATTRIBUTE );
+		attributes.remove( GeneratedTextResource.class.getCanonicalName() + VALID_DOCUMENT_NAME_ATTRIBUTE );
 	}
 
 	//
@@ -239,55 +303,6 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			attributes.put( prefix + VALID_DOCUMENT_NAME_ATTRIBUTE, documentName );
 		}
 		return documentName;
-	}
-
-	/**
-	 * The existing document descriptor.
-	 * 
-	 * @param clear
-	 *        Whether to clear it
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public DocumentDescriptor<Executable> getExistingDocumentDescriptor( boolean clear )
-	{
-		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-		if( clear )
-			return (DocumentDescriptor<Executable>) attributes.remove( DOCUMENT_DESCRIPTOR_ATTRIBUTE );
-		else
-			return (DocumentDescriptor<Executable>) attributes.get( DOCUMENT_DESCRIPTOR_ATTRIBUTE );
-	}
-
-	/**
-	 * The existing cache key.
-	 * 
-	 * @param clear
-	 *        Whether to clear it
-	 * @return
-	 */
-	public String getExistingCacheKey( boolean clear )
-	{
-		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-		if( clear )
-			return (String) attributes.remove( CACHE_KEY_ATTRIBUTE );
-		else
-			return (String) attributes.get( CACHE_KEY_ATTRIBUTE );
-	}
-
-	/**
-	 * The existing cache entry.
-	 * 
-	 * @param clear
-	 *        Whether to clear it
-	 * @return
-	 */
-	public CacheEntry getExistingCacheEntry( boolean clear )
-	{
-		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-		if( clear )
-			return (CacheEntry) attributes.remove( CACHE_ENTRY_ATTRIBUTE );
-		else
-			return (CacheEntry) attributes.get( CACHE_ENTRY_ATTRIBUTE );
 	}
 
 	/**

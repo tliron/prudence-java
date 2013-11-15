@@ -720,12 +720,13 @@ public class DelegatedResource extends ServerResource
 	 */
 	private Object enter( String entryPointName, DelegatedResourceConversationService conversationService ) throws ResourceException
 	{
-		String documentName = cachingUtil.getValidDocumentName( getRequest() );
+		Request request = getRequest();
+		String documentName = cachingUtil.getValidDocumentName( request );
 		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
 
 		// See if a valid cache entry has already been cached in the request
-		CacheEntry cacheEntry = cachingUtil.getExistingCacheEntry( true );
-		String cacheKey = cachingUtil.getExistingCacheKey( true );
+		CacheEntry cacheEntry = CachingUtil.getExistingCacheEntry( request, true );
+		String cacheKey = CachingUtil.getExistingCacheKey( request, true );
 
 		// Attempt to use cache for GET
 		if( ( cacheEntry == null ) && getRequest().getMethod().equals( Method.GET ) )

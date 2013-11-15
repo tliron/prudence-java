@@ -2733,6 +2733,21 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
+	var id = conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cacheDuration = 30000
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cacheTags.add(id) 
+\end_layout
+
+\begin_layout Plain Layout
+
 }
 \end_layout
 
@@ -2889,6 +2904,10 @@ handleInit is a bit different in that it dynamically sets up our resource.
 \end_layout
 
 \begin_layout Itemize
+handleInit is also where we should setup caching.
+\end_layout
+
+\begin_layout Itemize
 We've used the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -2925,9 +2944,10 @@ reference "request-payloads-mime-types"
 \end_layout
 
 \begin_layout Itemize
-Note that we're making sure to invalidate the cached tag: this guarantees
- that the scriptlet pages will be updated even though the wiki is changed
- from here.
+Note that the cache tag is exactly the same as we're using for scriptlet
+ pages: this guarantees that the scriptlet pages will be updated even though
+ the wiki is changed from here, and vice versa, even though what is being
+ cached is quite different.
 \end_layout
 
 \begin_layout Standard
@@ -3059,18 +3079,6 @@ bals.
 
 \begin_layout Subsection
 More Caching
-\end_layout
-
-\begin_layout Standard
-Manual resources are 
-\begin_inset Quotes eld
-\end_inset
-
-raw
-\begin_inset Quotes erd
-\end_inset
-
-: completely open to your specific implementation.
 \end_layout
 
 \begin_layout Subsubsection

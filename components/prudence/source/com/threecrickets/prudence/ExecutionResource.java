@@ -205,9 +205,11 @@ public class ExecutionResource extends ServerResource
 			executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create() );
 			executionContext.getServices().put( attributes.getConversationServiceName(), conversationService );
 
+			Executable executable = documentDescriptor.getDocument();
+
 			try
 			{
-				documentDescriptor.getDocument().execute( executionContext, documentService, attributes.getExecutionController() );
+				executable.execute( executionContext, documentService, attributes.getExecutionController() );
 
 				StringRepresentation representation = new StringRepresentation( output.toString(), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet() );
 

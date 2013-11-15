@@ -172,7 +172,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		// in the request
 		if( currentDocumentDescriptor == null )
 		{
-			documentDescriptor = cachingUtil.getExistingDocumentDescriptor( true );
+			documentDescriptor = CachingUtil.getExistingDocumentDescriptor( resource.getRequest(), true );
 			allowEncoding = true;
 		}
 
@@ -442,6 +442,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		}
 
 		int startPosition = 0;
+		Request request = resource.getRequest();
 
 		// Make sure we have a valid writer if not deferred
 		if( !conversationService.isDeferred )
@@ -460,13 +461,13 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			}
 
 			// See if a valid cache entry has already been cached in the request
-			CacheEntry cacheEntry = cachingUtil.getExistingCacheEntry( true );
-			String cacheKey = cachingUtil.getExistingCacheKey( true );
+			CacheEntry cacheEntry = CachingUtil.getExistingCacheEntry( request, true );
+			String cacheKey = CachingUtil.getExistingCacheKey( request, true );
 			if( ( cacheEntry != null ) && ( cacheKey != null ) )
 				return reencode( cacheEntry, encoding, cacheKey, executable, writer );
 
 			// Attempt to use cache for idempotent requests
-			if( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() )
+			if( request.getMethod().isIdempotent() || getCacheNonIdempotent() )
 			{
 				cacheKey = cachingUtil.castCacheKey( documentDescriptor, true, conversationService );
 				if( cacheKey != null )
@@ -542,7 +543,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				CacheEntry encodedCacheEntry = new CacheEntry( cacheEntry, encoding );
 
 				// Cache successful idempotent requests
-				if( ( expirationTimestamp > 0 ) && resource.getResponse().getStatus().isSuccess() && ( resource.getRequest().getMethod().isIdempotent() || getCacheNonIdempotent() ) )
+				if( ( expirationTimestamp > 0 ) && resource.getResponse().getStatus().isSuccess() && ( request.getMethod().isIdempotent() || getCacheNonIdempotent() ) )
 				{
 					String cacheKey = cachingUtil.castCacheKey( documentDescriptor, true, conversationService );
 					if( cacheKey != null )

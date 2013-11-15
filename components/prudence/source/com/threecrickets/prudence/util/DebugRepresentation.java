@@ -34,6 +34,7 @@ import org.restlet.representation.StringRepresentation;
 
 import com.threecrickets.prudence.DelegatedStatusService;
 import com.threecrickets.prudence.SourceCodeResource;
+import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.GlobalScope;
 import com.threecrickets.scripturian.exception.ExecutionException;
@@ -95,18 +96,21 @@ public class DebugRepresentation extends StringRepresentation
 		html.append( "<h1>Prudence Debug Page</h1>\n" );
 
 		Iterable<StackFrame> stack = null;
+		Executable executable = null;
 
 		if( throwable instanceof ExecutionException )
 		{
 			html.append( "<h2>Cause: Scripturian Execution Error</h2>\n" );
 			ExecutionException executionException = (ExecutionException) throwable;
 			stack = executionException.getStack();
+			executable = executionException.getExecutable();
 		}
 		else if( throwable instanceof PreparationException )
 		{
 			html.append( "<h2>Cause: Scripturian Preparation Error</h2>\n" );
 			PreparationException preparationException = (PreparationException) throwable;
 			stack = preparationException.getStack();
+			executable = preparationException.getExecutable();
 		}
 		else if( throwable instanceof ParsingException )
 		{
@@ -438,11 +442,22 @@ public class DebugRepresentation extends StringRepresentation
 			html.append( "</div>\n" );
 		}
 
+		if( executable != null )
+		{
+			html.append( "<h2>Executable Attributes</h2>\n" );
+			html.append( "<h3>" );
+			html.append( executable.getDocumentName() );
+			html.append( "</h3>\n" );
+			html.append( "<div id=\"executable-attributes\">\n" );
+			appendMap( html, executable.getAttributes() );
+			html.append( "</div>\n" );
+		}
+
 		ExecutionContext executionContext = ExecutionContext.getCurrent();
 		if( executionContext != null )
 		{
-			html.append( "<h2>Execution Context</h2>\n" );
-			html.append( "<div id=\"execution-context\">\n" );
+			html.append( "<h2>Execution Context Attributes</h2>\n" );
+			html.append( "<div id=\"execution-context-attributes\">\n" );
 			appendMap( html, executionContext.getAttributes() );
 			html.append( "</div>\n" );
 		}
