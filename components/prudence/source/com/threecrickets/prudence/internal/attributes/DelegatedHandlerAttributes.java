@@ -65,11 +65,12 @@ public class DelegatedHandlerAttributes extends VolatileContextualAttributes
 	public ConcurrentMap<String, Boolean> getEntryPointValidityCache( Executable executable )
 	{
 		ConcurrentMap<String, Object> attributes = executable.getAttributes();
-		entryPointValidityCache = (ConcurrentMap<String, Boolean>) attributes.get( prefix + ".entryPointValidityCache" );
+		String key = prefix + ".entryPointValidityCache";
+		entryPointValidityCache = (ConcurrentMap<String, Boolean>) attributes.get( key );
 		if( entryPointValidityCache == null )
 		{
 			entryPointValidityCache = new ConcurrentHashMap<String, Boolean>();
-			ConcurrentMap<String, Boolean> existing = (ConcurrentMap<String, Boolean>) attributes.putIfAbsent( prefix + ".entryPointValidityCache", entryPointValidityCache );
+			ConcurrentMap<String, Boolean> existing = (ConcurrentMap<String, Boolean>) attributes.putIfAbsent( key, entryPointValidityCache );
 			if( existing != null )
 				entryPointValidityCache = existing;
 		}

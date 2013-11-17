@@ -49,13 +49,14 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 		if( passThroughDocuments == null )
 		{
 			ConcurrentMap<String, Object> attributes = getAttributes();
-			passThroughDocuments = (Set<String>) attributes.get( prefix + ".passThroughDocuments" );
+			String key = prefix + ".passThroughDocuments";
+			passThroughDocuments = (Set<String>) attributes.get( key );
 
 			if( passThroughDocuments == null )
 			{
 				passThroughDocuments = new CopyOnWriteArraySet<String>();
 
-				Set<String> existing = (Set<String>) attributes.putIfAbsent( prefix + ".passThroughDocuments", passThroughDocuments );
+				Set<String> existing = (Set<String>) attributes.putIfAbsent( key, passThroughDocuments );
 				if( existing != null )
 					passThroughDocuments = existing;
 			}

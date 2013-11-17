@@ -62,14 +62,15 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 		if( fileUploadDirectory == null )
 		{
 			ConcurrentMap<String, Object> attributes = getAttributes();
-			fileUploadDirectory = (File) attributes.get( prefix + ".fileUploadDirectory" );
+			String key = prefix + ".fileUploadDirectory";
+			fileUploadDirectory = (File) attributes.get( key );
 
 			if( fileUploadDirectory == null )
 			{
 				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
 				fileUploadDirectory = new File( root, "uploads" );
 
-				File existing = (File) attributes.putIfAbsent( prefix + ".fileUploadDirectory", fileUploadDirectory );
+				File existing = (File) attributes.putIfAbsent( key, fileUploadDirectory );
 				if( existing != null )
 					fileUploadDirectory = existing;
 			}
