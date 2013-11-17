@@ -1932,7 +1932,7 @@ document.require('/prudence/resources/')
 
 \begin_layout Plain Layout
 
-var id = conversation.wildcard
+var id = 'page.' + conversation.wildcard
 \end_layout
 
 \begin_layout Plain Layout
@@ -1951,7 +1951,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	application.globals.put('page.' + id, form.content)
+	application.globals.put(id, form.content)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1965,7 +1965,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-var page = application.globals.get('page.' + id) || 'This page is empty.'
+var page = application.globals.get(id) || 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2089,7 +2089,7 @@ document.require('/prudence/resources/')
 
 \begin_layout Plain Layout
 
-var id = conversation.wildcard
+var id = 'page.' + conversation.wildcard
 \end_layout
 
 \begin_layout Plain Layout
@@ -2123,7 +2123,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	application.globals.put('page.' + id, form.content)
+	application.globals.put(id, form.content)
 \end_layout
 
 \begin_layout Plain Layout
@@ -2142,7 +2142,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-var page = application.globals.get('page.' + id) || 'This page is empty.'
+var page = application.globals.get(id) || 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2461,7 +2461,7 @@ reference "scriptlet-resources"
 \end_layout
 
 \begin_layout Subsection
-Let's Make a Wiki API
+Wiki API
 \end_layout
 
 \begin_layout Standard
@@ -2474,8 +2474,8 @@ pages
  API
 \emph default
 .
- This would allow all kinds of clients to access our wiki: dedicated mobile
- and desktop applications, 
+ This would allow all kinds of clients to access our wiki, such as dedicated
+ mobile apps, desktop applications, and 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2681,7 +2681,7 @@ Hi!
 \end_layout
 
 \begin_layout Subsubsection
-Full API
+Fleshed Out
 \end_layout
 
 \begin_layout Standard
@@ -2725,21 +2725,6 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-	var id = conversation.wildcard
-\end_layout
-
-\begin_layout Plain Layout
-
-	document.cacheDuration = 60000
-\end_layout
-
-\begin_layout Plain Layout
-
-	document.cacheTags.add(id) 
-\end_layout
-
-\begin_layout Plain Layout
-
 }
 \end_layout
 
@@ -2754,12 +2739,12 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-	var id = conversation.wildcard
+	var id = 'page.' + conversation.wildcard
 \end_layout
 
 \begin_layout Plain Layout
 
-	var content = application.globals.get('page.' + id) || 'This page is empty.'
+	var content = application.globals.get(id) || 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2783,7 +2768,7 @@ function handlePut(conversation) {
 
 \begin_layout Plain Layout
 
-	var id = conversation.wildcard
+	var id = 'page.' + conversation.wildcard
 \end_layout
 
 \begin_layout Plain Layout
@@ -2793,7 +2778,7 @@ function handlePut(conversation) {
 
 \begin_layout Plain Layout
 
-	application.globals.put('page.' + id, payload.content)
+	application.globals.put(id, payload.content)
 \end_layout
 
 \begin_layout Plain Layout
@@ -2822,12 +2807,12 @@ function handleDelete(conversation) {
 
 \begin_layout Plain Layout
 
-	var id = conversation.wildcard
+	var id = 'page.' + conversation.wildcard
 \end_layout
 
 \begin_layout Plain Layout
 
-	application.globals.remove('page.' + id)
+	application.globals.remove(id)
 \end_layout
 
 \begin_layout Plain Layout
@@ -2896,10 +2881,6 @@ handleInit is a bit different in that it dynamically sets up our resource.
 \end_layout
 
 \begin_layout Itemize
-handleInit is also where we should setup caching.
-\end_layout
-
-\begin_layout Itemize
 We've used the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -2936,10 +2917,8 @@ reference "request-payloads-mime-types"
 \end_layout
 
 \begin_layout Itemize
-Note that the cache tag is exactly the same as we're using for scriptlet
- pages: this guarantees that the scriptlet pages will be updated even though
- the wiki is changed from here, and vice versa, even though what is being
- cached is quite different.
+Note that we're making sure to invalidate the cache when we change the data:
+ this is to make sure that the wiki pages will be updated accordingly.
 \end_layout
 
 \begin_layout Standard
@@ -2994,7 +2973,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl "http://localhost:8080/wiki/api/test/"
+curl http://localhost:8080/wiki/api/test/
 \end_layout
 
 \end_inset
@@ -3021,8 +3000,8 @@ status open
 
 \begin_layout Plain Layout
 
-curl -X PUT -d '{"content": "New page content!"}' http://localhost:8080/wiki/api
-/test/
+curl --request PUT --data '{"content": "New page content!"}' http://localhost:80
+80/wiki/api/test/
 \end_layout
 
 \end_inset
@@ -3049,12 +3028,12 @@ status open
 
 \begin_layout Plain Layout
 
-curl -X DELETE http://localhost:8080/wiki/api/test/
+curl --request DELETE http://localhost:8080/wiki/api/test/
 \end_layout
 
 \begin_layout Plain Layout
 
-curl "http://localhost:8080/wiki/api/test/"
+curl http://localhost:8080/wiki/api/test/
 \end_layout
 
 \end_inset
@@ -3063,14 +3042,258 @@ curl "http://localhost:8080/wiki/api/test/"
 \end_layout
 
 \begin_layout Standard
-While testing with cURL, you can simultaneously test the wiki pages uses
+While testing with cURL, you can simultaneously test the wiki pages using
  the browser, as we did earlier.
- Both the API and the pages see the exact same data stored in the application.glo
-bals.
+ Both the API and the pages see the exact same data, as it's stored in the
+ application.globals.
 \end_layout
 
-\begin_layout Subsection
-More Caching
+\begin_layout Subsubsection
+Caching
+\end_layout
+
+\begin_layout Standard
+Let's add support for caching our API results.
+ Again, it's very similar to what we did with our scriptlet, except that
+ caching should be set up in handleInit:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cacheDuration = 60000
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cacheTags.add(id) 
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also note that the cache tag is exactly the same as we're using for scriptlet
+ pages: this guarantees that the scriptlet pages will be updated even though
+ the wiki is changed from here, and vice versa, even though what is being
+ cached is quite different.
+ Because the cache key depends on the URI, and the URIs for the pages and
+ APIs are different, there will be no conflict.
+\end_layout
+
+\begin_layout Standard
+To see the caching headers when using cURL, add the 
+\begin_inset Quotes eld
+\end_inset
+
+verbose
+\begin_inset Quotes erd
+\end_inset
+
+ flag:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --verbose http://localhost:8080/wiki/api/test/
+\end_layout
+
+\begin_layout Plain Layout
+
+curl --verbose --request PUT --data '{"content": "New page content!"}' http://lo
+calhost:8080/wiki/api/test/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Compression
+\end_layout
+
+\begin_layout Standard
+Prudence will automatically compress responses (using gzip or DEFLATE) if
+ their size in bytes exceeds a certain threshold.
+ Our wiki pages were likely too small, which is why you likely haven't seen
+ compression.
+ Let's lower the threshold, just for testing purposes.
+ (You'll usually want that threshold: there are little or no bandwidth savings
+ to be gained by compressing tiny responses, so the extra CPU load required
+ for compression will be wasted.)
+\end_layout
+
+\begin_layout Standard
+Open the application's setting.js and edit the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.settings.compression
+\begin_inset Quotes erd
+\end_inset
+
+ setting (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-compression"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	compression: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		sizeThreshold: 0,
+\end_layout
+
+\begin_layout Plain Layout
+
+		exclude: []
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Restart Prudence for the setting to take effect.
+ With a threshold of zero bytes, 
+\emph on
+all
+\emph default
+ responses should now be compressed---assuming the client accepts compression,
+ as indeed web browsers do.
+\end_layout
+
+\begin_layout Standard
+Actually, Prudence integrates compression with caching: both compressed
+ and uncompressed versions of the response are cached, so that compression
+ will not have to be redone.
+ This can result in significant savings for CPU usage in high loads.
+ (And if a client needs a different kind of compression than the one that
+ was stored in the cache---say, gzip was stored, but the client needs DEFLATE---
+then Prudence will use the uncompressed cache entry, compress it, and then
+ cache.
+ Smart!)
+\end_layout
+
+\begin_layout Standard
+Let's see it in action.
+ Using the web browser's network monitor, you'll notice that the response
+ headers now include 
+\begin_inset Quotes eld
+\end_inset
+
+Content-Encoding
+\begin_inset Quotes erd
+\end_inset
+
+, which means that our responses are compressed.
+ gzip or DEFLATE will be chosen according to the web browser's preferences.
+ Other than that (and the different response byte size) it should look identical.
+\end_layout
+
+\begin_layout Standard
+To test using cURL, we'll have to do two things: explicitly tell the server
+ that we support compression by sending the 
+\begin_inset Quotes eld
+\end_inset
+
+Accept-Encoding
+\begin_inset Quotes erd
+\end_inset
+
+ header, and also be ready to uncompress the result in order to display
+ it, using cURL's 
+\begin_inset Quotes eld
+\end_inset
+
+compressed
+\begin_inset Quotes erd
+\end_inset
+
+ flag:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
+80/wiki/api/test/
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -3090,6 +3313,18 @@ reference "manual-resources"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsection
+Extra Touches
+\end_layout
+
+\begin_layout Subsubsection
+Markup Languages
+\end_layout
+
+\begin_layout Subsubsection
+CSS with ZUSS
 \end_layout
 
 \begin_layout Section

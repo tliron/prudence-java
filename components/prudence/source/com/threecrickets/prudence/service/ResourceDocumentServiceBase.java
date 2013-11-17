@@ -89,7 +89,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public long getCacheDuration()
 	{
-		return CachingUtil.getCacheDuration( getDescriptor().getDocument() );
+		return CachingUtil.getCacheDuration( getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**
@@ -99,7 +99,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public void setCacheDuration( long cacheDuration )
 	{
-		CachingUtil.setCacheDuration( getDescriptor().getDocument(), cacheDuration );
+		CachingUtil.setCacheDuration( getDescriptor().getDocument(), getSuffix(), cacheDuration );
 	}
 
 	/**
@@ -109,7 +109,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public boolean getCacheOnlyGet()
 	{
-		return CachingUtil.getCacheOnlyGet( getDescriptor().getDocument() );
+		return CachingUtil.getCacheOnlyGet( getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**
@@ -119,7 +119,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public void setCacheOnlyGet( boolean cacheOnlyGet )
 	{
-		CachingUtil.setCacheOnlyGet( getDescriptor().getDocument(), cacheOnlyGet );
+		CachingUtil.setCacheOnlyGet( getDescriptor().getDocument(), getSuffix(), cacheOnlyGet );
 	}
 
 	/**
@@ -130,7 +130,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public String getCacheKeyPattern()
 	{
-		return CachingUtil.getCacheKeyPattern( getDescriptor().getDocument() );
+		return CachingUtil.getCacheKeyPattern( getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**
@@ -140,7 +140,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public void setCacheKeyPattern( String cacheKeyPattern )
 	{
-		CachingUtil.setCacheKeyPattern( getDescriptor().getDocument(), cacheKeyPattern );
+		CachingUtil.setCacheKeyPattern( getDescriptor().getDocument(), getSuffix(), cacheKeyPattern );
 	}
 
 	/**
@@ -150,7 +150,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public ConcurrentMap<String, String> getCacheKeyPatternHandlers()
 	{
-		return CachingUtil.getCacheKeyPatternHandlers( getDescriptor().getDocument(), true );
+		return CachingUtil.getCacheKeyPatternHandlers( getDescriptor().getDocument(), getSuffix(), true );
 	}
 
 	/**
@@ -158,7 +158,7 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 */
 	public Set<String> getCacheTags()
 	{
-		return CachingUtil.getCacheTags( getDescriptor().getDocument(), true );
+		return CachingUtil.getCacheTags( getDescriptor().getDocument(), getSuffix(), true );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -178,4 +178,14 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 * Caching utilities;
 	 */
 	protected final CachingUtil<R, A> cachingUtil;
+
+	/**
+	 * The optional attribute suffix.
+	 * 
+	 * @return The attribute suffix or null
+	 */
+	protected String getSuffix()
+	{
+		return null;
+	}
 }

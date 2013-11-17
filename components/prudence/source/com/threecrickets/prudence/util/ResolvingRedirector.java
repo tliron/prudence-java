@@ -21,7 +21,8 @@ import org.restlet.routing.Redirector;
 import org.restlet.routing.Template;
 
 /**
- * A {@link Redirector} that uses {@link ResolvingTemplate}.
+ * A {@link Redirector} that uses {@link ResolvingTemplate}, and also makes
+ * header cleaning optional.
  * 
  * @author Tal Liron
  */
@@ -126,7 +127,7 @@ public class ResolvingRedirector extends Redirector
 	protected void serverRedirect( Restlet next, Reference targetRef, Request request, Response response )
 	{
 		// This is essentially the original Restlet code modified to use
-		// ResolvingTemplate.
+		// ResolvingTemplate and allow for cleaning to be optional
 
 		if( next == null )
 			getLogger().warning( "No next Restlet provided for server redirection to " + targetRef );

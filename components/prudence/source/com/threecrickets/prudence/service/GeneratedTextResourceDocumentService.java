@@ -238,7 +238,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 */
 	public String getCacheKey()
 	{
-		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), true, conversationService ), conversationService.getEncoding() );
+		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), null, true, conversationService ), conversationService.getEncoding() );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -323,7 +323,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		{
 			DocumentDescriptor<Executable> currentDocumentDescriptor = popDocumentDescriptor();
 			for( DocumentDescriptor<Executable> documentDescriptor : documentDescriptorStack )
-				CachingUtil.getCacheTags( documentDescriptor.getDocument(), true ).addAll( propagatedCacheTags );
+				CachingUtil.getCacheTags( documentDescriptor.getDocument(), null, true ).addAll( propagatedCacheTags );
 			pushDocumentDescriptor( currentDocumentDescriptor );
 		}
 
@@ -362,7 +362,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 				writer.write( pureLiteral );
 
 			return new CacheEntry( pureLiteral, conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), encoding, conversationService.getHeaders(),
-				executable.getDocumentTimestamp(), CachingUtil.getExpirationTimestamp( executable ) ).represent();
+				executable.getDocumentTimestamp(), CachingUtil.getExpirationTimestamp( executable, null ) ).represent();
 		}
 
 		int startPosition = 0;
@@ -385,9 +385,9 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			}
 
 			// Try fetching from cache
-			if( CachingUtil.mayFetch( request, executable ) )
+			if( CachingUtil.mayFetch( request, executable, null ) )
 			{
-				Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, true, request, encoding, writer, conversationService );
+				Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, null, true, request, encoding, writer, conversationService );
 				if( representation != null )
 					return representation;
 			}
@@ -409,7 +409,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			executable.execute( executionContext, this, attributes.getExecutionController() );
 
 			// Propagate cache tags up the stack
-			Set<String> cacheTags = CachingUtil.getCacheTags( executable, false );
+			Set<String> cacheTags = CachingUtil.getCacheTags( executable, null, false );
 			if( ( cacheTags != null ) && !cacheTags.isEmpty() )
 				cacheTags = propagateCacheTags( cacheTags );
 
@@ -433,7 +433,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			{
 				writer.flush();
 
-				long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable );
+				long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable, null );
 
 				// Get the buffer from when we executed the executable
 				CacheEntry cacheEntry = new CacheEntry( writerBuffer.substring( startPosition ), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), null,
@@ -448,7 +448,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 
 				// Cache successful requests
 				if( ( expirationTimestamp > 0 ) && resource.getResponse().getStatus().isSuccess() )
-					cachingUtil.storeCacheEntry( encodedCacheEntry, cacheEntry, documentDescriptor, true, cacheTags, conversationService );
+					cachingUtil.storeCacheEntry( encodedCacheEntry, cacheEntry, documentDescriptor, null, true, cacheTags, conversationService );
 
 				// Make sure we're including the entire buffer for the
 				// representation

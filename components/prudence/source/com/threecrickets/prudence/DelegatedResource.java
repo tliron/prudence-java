@@ -335,9 +335,9 @@ public class DelegatedResource extends ServerResource
 	{
 		DelegatedResourceConversationService conversationService = new DelegatedResourceConversationService( this, null, variant, attributes.getDefaultCharacterSet() );
 
-		if( CachingUtil.mayFetch( getRequest(), executable ) )
+		if( CachingUtil.mayFetch( getRequest(), executable, getDispatchedSuffix() ) )
 		{
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( false, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( getDispatchedSuffix(), false, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 		}
@@ -543,6 +543,31 @@ public class DelegatedResource extends ServerResource
 	private Executable executable;
 
 	/**
+	 * The dispatched suffix.
+	 */
+	private String dispatchedSuffix;
+
+	/**
+	 * Whether we fetched the dispatched suffix.
+	 */
+	private boolean fetchedDispatchedSuffix;
+
+	/**
+	 * The dispatched suffix.
+	 * 
+	 * @return The dispatched suffix or null
+	 */
+	private String getDispatchedSuffix()
+	{
+		if( !fetchedDispatchedSuffix )
+		{
+			dispatchedSuffix = CachingUtil.getDispatchedSuffix( getRequest() );
+			fetchedDispatchedSuffix = true;
+		}
+		return dispatchedSuffix;
+	}
+
+	/**
 	 * Returns a representation based on the object. If the object is not
 	 * already a representation, creates a new string representation based on
 	 * the container's attributes.
@@ -558,7 +583,7 @@ public class DelegatedResource extends ServerResource
 	{
 		Response response = getResponse();
 		Encoding encoding = conversationService.getEncoding();
-		long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable );
+		long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable, getDispatchedSuffix() );
 		CacheEntry cacheEntry = null;
 		Representation representation = null;
 		boolean configure = true;
@@ -634,7 +659,8 @@ public class DelegatedResource extends ServerResource
 
 				// Cache successful requests
 				if( ( expirationTimestamp > 0 ) && response.getStatus().isSuccess() )
-					cachingUtil.storeCacheEntry( encodedCacheEntry, cacheEntry, documentDescriptor, false, CachingUtil.getCacheTags( executable, false ), conversationService );
+					cachingUtil
+						.storeCacheEntry( encodedCacheEntry, cacheEntry, documentDescriptor, getDispatchedSuffix(), false, CachingUtil.getCacheTags( executable, getDispatchedSuffix(), false ), conversationService );
 
 				cacheEntry = encodedCacheEntry;
 			}
@@ -741,9 +767,9 @@ public class DelegatedResource extends ServerResource
 	private Representation fetchCachedRepresentation( DelegatedResourceConversationService conversationService ) throws ResourceException
 	{
 		Request request = getRequest();
-		if( CachingUtil.mayFetch( request, executable ) )
+		if( CachingUtil.mayFetch( request, executable, getDispatchedSuffix() ) )
 		{
-			Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, false, request, conversationService.getEncoding(), null, conversationService );
+			Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, getDispatchedSuffix(), false, request, conversationService.getEncoding(), null, conversationService );
 			if( representation != null )
 				return representation;
 		}

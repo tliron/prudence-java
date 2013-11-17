@@ -89,24 +89,28 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @return The cache duration
 	 */
-	public static long getCacheDuration( Executable executable )
+	public static long getCacheDuration( Executable executable, String suffix )
 	{
-		Long cacheDuration = (Long) executable.getAttributes().get( CACHE_DURATION_ATTRIBUTE );
+		Long cacheDuration = (Long) executable.getAttributes().get( suffix == null ? CACHE_DURATION_ATTRIBUTE : CACHE_DURATION_ATTRIBUTE + suffix );
 		return cacheDuration == null ? 0 : cacheDuration;
 	}
 
 	/**
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param cacheDuration
 	 *        The cache duration
 	 * @see #getCacheDuration(Executable)
 	 */
-	public static void setCacheDuration( Executable executable, long cacheDuration )
+	public static void setCacheDuration( Executable executable, String suffix, long cacheDuration )
 	{
-		executable.getAttributes().put( CACHE_DURATION_ATTRIBUTE, cacheDuration );
+		executable.getAttributes().put( suffix == null ? CACHE_DURATION_ATTRIBUTE : CACHE_DURATION_ATTRIBUTE + suffix, cacheDuration );
 	}
 
 	/**
@@ -114,12 +118,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @return The cache expiration timestamp
 	 * @see #getCacheDuration(Executable)
 	 */
-	public static long getExpirationTimestamp( Executable executable )
+	public static long getExpirationTimestamp( Executable executable, String suffix )
 	{
-		long cacheDuration = getCacheDuration( executable );
+		long cacheDuration = getCacheDuration( executable, suffix );
 		if( cacheDuration <= 0 )
 			return 0;
 		else
@@ -131,24 +137,28 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @return Whether to cache only GET requests
 	 */
-	public static boolean getCacheOnlyGet( Executable executable )
+	public static boolean getCacheOnlyGet( Executable executable, String suffix )
 	{
-		Boolean cacheOnlyGet = (Boolean) executable.getAttributes().get( CACHE_ONLY_GET_ATTRIBUTE );
+		Boolean cacheOnlyGet = (Boolean) executable.getAttributes().get( suffix == null ? CACHE_ONLY_GET_ATTRIBUTE : CACHE_ONLY_GET_ATTRIBUTE + suffix );
 		return cacheOnlyGet != null ? cacheOnlyGet : false;
 	}
 
 	/**
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param cacheOnlyGet
 	 *        Whether to cache only GET requests
 	 * @see #getCacheOnlyGet()
 	 */
-	public static void setCacheOnlyGet( Executable executable, boolean cacheOnlyGet )
+	public static void setCacheOnlyGet( Executable executable, String suffix, boolean cacheOnlyGet )
 	{
-		executable.getAttributes().put( CACHE_ONLY_GET_ATTRIBUTE, cacheOnlyGet );
+		executable.getAttributes().put( suffix == null ? CACHE_ONLY_GET_ATTRIBUTE : CACHE_ONLY_GET_ATTRIBUTE + suffix, cacheOnlyGet );
 	}
 
 	/**
@@ -156,23 +166,27 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @return The cache key pattern
 	 */
-	public static String getCacheKeyPattern( Executable executable )
+	public static String getCacheKeyPattern( Executable executable, String suffix )
 	{
-		return (String) executable.getAttributes().get( CACHE_KEY_PATTERN_ATTRIBUTE );
+		return (String) executable.getAttributes().get( suffix == null ? CACHE_KEY_PATTERN_ATTRIBUTE : CACHE_KEY_PATTERN_ATTRIBUTE + suffix );
 	}
 
 	/**
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param cacheKeyPattern
 	 *        The cache key pattern
 	 * @see #setCacheDuration(Executable, long)
 	 */
-	public static void setCacheKeyPattern( Executable executable, String cacheKeyPattern )
+	public static void setCacheKeyPattern( Executable executable, String suffix, String cacheKeyPattern )
 	{
-		executable.getAttributes().put( CACHE_KEY_PATTERN_ATTRIBUTE, cacheKeyPattern );
+		executable.getAttributes().put( suffix == null ? CACHE_KEY_PATTERN_ATTRIBUTE : CACHE_KEY_PATTERN_ATTRIBUTE + suffix, cacheKeyPattern );
 	}
 
 	/**
@@ -180,19 +194,22 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param create
 	 *        Whether to create a handler map if it doesn't exist
 	 * @return The handler map or null
 	 */
-	public static ConcurrentMap<String, String> getCacheKeyPatternHandlers( Executable executable, boolean create )
+	public static ConcurrentMap<String, String> getCacheKeyPatternHandlers( Executable executable, String suffix, boolean create )
 	{
+		String key = suffix == null ? CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE : CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE + suffix;
 		@SuppressWarnings("unchecked")
-		ConcurrentMap<String, String> handlers = (ConcurrentMap<String, String>) executable.getAttributes().get( CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE );
+		ConcurrentMap<String, String> handlers = (ConcurrentMap<String, String>) executable.getAttributes().get( key );
 		if( handlers == null && create )
 		{
 			handlers = new ConcurrentHashMap<String, String>();
 			@SuppressWarnings("unchecked")
-			ConcurrentMap<String, String> existing = (ConcurrentMap<String, String>) executable.getAttributes().putIfAbsent( CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE, handlers );
+			ConcurrentMap<String, String> existing = (ConcurrentMap<String, String>) executable.getAttributes().putIfAbsent( key, handlers );
 			if( existing != null )
 				handlers = existing;
 		}
@@ -222,24 +239,40 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param create
 	 *        Whether to create a cache tag set if it doesn't exist
 	 * @return The cache tags or null
 	 */
-	public static Set<String> getCacheTags( Executable executable, boolean create )
+	public static Set<String> getCacheTags( Executable executable, String suffix, boolean create )
 	{
+		String key = suffix == null ? CACHE_TAGS_ATTRIBUTE : CACHE_TAGS_ATTRIBUTE + suffix;
 		@SuppressWarnings("unchecked")
-		Set<String> cacheTags = (Set<String>) executable.getAttributes().get( CACHE_TAGS_ATTRIBUTE );
+		Set<String> cacheTags = (Set<String>) executable.getAttributes().get( key );
 		if( cacheTags == null && create )
 		{
 			cacheTags = new CopyOnWriteArraySet<String>();
 			@SuppressWarnings("unchecked")
-			Set<String> existing = (Set<String>) executable.getAttributes().putIfAbsent( CACHE_TAGS_ATTRIBUTE, cacheTags );
+			Set<String> existing = (Set<String>) executable.getAttributes().putIfAbsent( key, cacheTags );
 			if( existing != null )
 				cacheTags = existing;
 		}
 
 		return cacheTags;
+	}
+
+	/**
+	 * The dispatched attribute suffix for a request.
+	 * 
+	 * @param request
+	 *        The request
+	 * @return The attribute suffix
+	 */
+	public static String getDispatchedSuffix( Request request )
+	{
+		String dispatchedId = (String) request.getAttributes().get( DISPATCHED_ID_ATTRIBUTE );
+		return dispatchedId == null ? null : "." + dispatchedId;
 	}
 
 	/**
@@ -249,7 +282,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The request
 	 * @param clear
 	 *        Whether to clear it
-	 * @return
+	 * @return The existing document descriptor
 	 */
 	@SuppressWarnings("unchecked")
 	public static DocumentDescriptor<Executable> getExistingDocumentDescriptor( Request request, boolean clear )
@@ -268,7 +301,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The request
 	 * @param clear
 	 *        Whether to clear it
-	 * @return
+	 * @return The existing cache key
 	 */
 	public static String getExistingCacheKey( Request request, boolean clear )
 	{
@@ -286,7 +319,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The request
 	 * @param clear
 	 *        Whether to clear it
-	 * @return
+	 * @return The existing cache entry
 	 */
 	public static CacheEntry getExistingCacheEntry( Request request, boolean clear )
 	{
@@ -304,12 +337,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The request
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @return Whether we may fetch from the cache
 	 */
-	public static boolean mayFetch( Request request, Executable executable )
+	public static boolean mayFetch( Request request, Executable executable, String suffix )
 	{
 		if( executable != null )
-			return getCacheOnlyGet( executable ) ? request.getMethod().equals( Method.GET ) : true;
+			return getCacheOnlyGet( executable, suffix ) ? request.getMethod().equals( Method.GET ) : true;
 		else
 			return request.getMethod().equals( Method.GET );
 	}
@@ -341,7 +376,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * @param resource
 	 *        The resource
 	 * @param attributes
-	 *        The atrributes
+	 *        The attributes
 	 */
 	public CachingUtil( R resource, A attributes )
 	{
@@ -351,7 +386,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	//
-	// Operations
+	// Attributes
 	//
 
 	/**
@@ -378,6 +413,10 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		return documentName;
 	}
 
+	//
+	// Operations
+	//
+
 	/**
 	 * Fetches the cache entry for a document, if it exists and is valid.
 	 * <p>
@@ -387,6 +426,8 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * If successful, you can also call {@link #getExistingCacheKey(boolean)}
 	 * and {@link #getExistingCacheEntry(boolean)}.
 	 * 
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param isTextWithScriptlets
 	 *        Whether the document is text with scriptlets
 	 * @param conversationService
@@ -394,7 +435,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * @return The cache entry
 	 * @throws ResourceException
 	 */
-	public CacheEntry fetchCacheEntry( boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
+	public CacheEntry fetchCacheEntry( String suffix, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Request request = resource.getRequest();
 		String documentName = getValidDocumentName( request );
@@ -407,7 +448,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			ConcurrentMap<String, Object> attributes = request.getAttributes();
 			attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
 
-			String cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
+			String cacheKey = castCacheKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService );
 			if( cacheKey != null )
 			{
 				Cache cache = this.attributes.getCache();
@@ -454,16 +495,26 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	/**
+	 * Fetches a cached representation, re-encoding it if necessary.
+	 * 
 	 * @param documentDescriptor
+	 *        The document descriptor
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param isTextWithScriptlets
+	 *        Whether the document is text with scriptlets
 	 * @param request
+	 *        The request
 	 * @param encoding
+	 *        The encoding or null
 	 * @param writer
+	 *        The writer or null
 	 * @param conversationService
-	 * @return
+	 *        The conversation service
+	 * @return The cached, re-encoded representation or null if not found
 	 * @throws ResourceException
 	 */
-	public Representation fetchRepresentation( DocumentDescriptor<Executable> documentDescriptor, boolean isTextWithScriptlets, Request request, Encoding encoding, Writer writer,
+	public Representation fetchRepresentation( DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, Request request, Encoding encoding, Writer writer,
 		ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Executable executable = documentDescriptor.getDocument();
@@ -472,10 +523,10 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		CacheEntry cacheEntry = getExistingCacheEntry( request, true );
 		String cacheKey = getExistingCacheKey( request, true );
 		if( ( cacheEntry != null ) && ( cacheKey != null ) )
-			return reencode( cacheEntry, encoding, cacheKey, executable, writer );
+			return reencode( cacheEntry, encoding, cacheKey, executable, suffix, writer );
 
 		// Attempt to use cache
-		cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
+		cacheKey = castCacheKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService );
 		if( cacheKey != null )
 		{
 			Cache cache = attributes.getCache();
@@ -484,29 +535,45 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 				// Try cache key for encoding first
 				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
 				cacheEntry = cache.fetch( cacheKeyForEncoding );
-				System.out.println( "<<<<<<<<<<<<< " + cacheKeyForEncoding + " " + cacheEntry );
 				if( cacheEntry == null )
-				{
 					cacheEntry = cache.fetch( cacheKey );
-					System.out.println( "<<<<<<<<<<<<< " + cacheKey + " " + cacheEntry );
-				}
 
 				// Make sure the document is not newer than the cache
 				// entry
 				if( ( cacheEntry != null ) && ( executable.getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() ) )
-					return reencode( cacheEntry, encoding, cacheKey, executable, writer );
+					return reencode( cacheEntry, encoding, cacheKey, executable, suffix, writer );
 			}
 		}
 
 		return null;
 	}
 
-	public void storeCacheEntry( CacheEntry encodedCacheEntry, CacheEntry cacheEntry, DocumentDescriptor<Executable> documentDescriptor, boolean isTextWithScriptlets, Set<String> cacheTags,
+	/**
+	 * Stores an encoded entry in the cache, optionally also storing an
+	 * un-encoded entry.
+	 * 
+	 * @param encodedCacheEntry
+	 *        The encoded cache entry
+	 * @param cacheEntry
+	 *        The un-encoded cache entry or null
+	 * @param documentDescriptor
+	 *        The document descriptor
+	 * @param suffix
+	 *        The optional attribute suffix
+	 * @param isTextWithScriptlets
+	 *        Whether the document is text with scriptlets
+	 * @param cacheTags
+	 *        The cache tags or null
+	 * @param conversationService
+	 *        The conversation service
+	 * @throws ResourceException
+	 */
+	public void storeCacheEntry( CacheEntry encodedCacheEntry, CacheEntry cacheEntry, DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, Set<String> cacheTags,
 		ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Executable executable = documentDescriptor.getDocument();
 
-		String cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
+		String cacheKey = castCacheKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService );
 		if( cacheKey != null )
 		{
 			// Cache!
@@ -521,17 +588,15 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
 				encodedCacheEntry.setTags( tags );
 				cache.store( cacheKeyForEncoding, encodedCacheEntry );
-				System.out.println( ">>>>>>>>>>>>> " + cacheKeyForEncoding + " " + encodedCacheEntry );
 
 				// Cache un-encoded entry separately
 				if( encoding != null )
 				{
 					cacheEntry.setTags( tags );
 					cache.store( cacheKey, cacheEntry );
-					System.out.println( ">>>>>>>>>>>>> " + cacheKey + " " + cacheEntry );
 				}
 
-				addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
+				addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable, suffix );
 			}
 		}
 	}
@@ -543,11 +608,13 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The cache key pattern template
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 */
-	public void callCacheKeyPatternHandlers( Template template, Executable executable )
+	public void callCacheKeyPatternHandlers( Template template, Executable executable, String suffix )
 	{
 		Map<String, String> resourceCacheKeyPatternHandlers = attributes.getCacheKeyPatternHandlers();
-		Map<String, String> documentCacheKeyPatternHandlers = getCacheKeyPatternHandlers( executable, false );
+		Map<String, String> documentCacheKeyPatternHandlers = getCacheKeyPatternHandlers( executable, suffix, false );
 
 		// Make sure we have handlers
 		if( ( ( resourceCacheKeyPatternHandlers == null ) || resourceCacheKeyPatternHandlers.isEmpty() ) && ( ( documentCacheKeyPatternHandlers == null ) || documentCacheKeyPatternHandlers.isEmpty() ) )
@@ -600,54 +667,55 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param documentDescriptor
 	 *        The document descriptor
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param isTextWithScriptlets
 	 *        Whether the document is text with scriptlets
 	 * @param conversationService
 	 *        The conversation service
 	 * @return The cache key or null
 	 */
-	public String castCacheKey( DocumentDescriptor<Executable> documentDescriptor, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService )
+	public String castCacheKey( DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService )
 	{
-		String cacheKeyPattern = getCacheKeyPattern( documentDescriptor.getDocument() );
+		Executable executable = documentDescriptor.getDocument();
+		String cacheKeyPattern = getCacheKeyPattern( executable, suffix );
 		if( cacheKeyPattern == null )
 			return null;
-		else
+
+		Request request = resource.getRequest();
+		Response response = resource.getResponse();
+
+		if( isTextWithScriptlets )
 		{
-			Request request = resource.getRequest();
-			Response response = resource.getResponse();
+			// Set initial media type according to the document's tag (might
+			// be used by resolver)
+			if( conversationService.getMediaType() == null )
+				conversationService.setMediaTypeExtension( documentDescriptor.getTag() );
+		}
 
-			if( isTextWithScriptlets )
-			{
-				// Set initial media type according to the document's tag (might
-				// be used by resolver)
-				if( conversationService.getMediaType() == null )
-					conversationService.setMediaTypeExtension( documentDescriptor.getTag() );
-			}
+		// Template and its resolver
+		Template template = new Template( cacheKeyPattern );
+		CacheKeyPatternResolver<R> resolver = new CacheKeyPatternResolver<R>( documentDescriptor, resource, conversationService, request, response );
 
-			// Template and its resolver
-			Template template = new Template( cacheKeyPattern );
-			CacheKeyPatternResolver<R> resolver = new CacheKeyPatternResolver<R>( documentDescriptor, resource, conversationService, request, response );
+		// Cache key pattern handlers
+		callCacheKeyPatternHandlers( template, executable, suffix );
 
-			// Cache key pattern handlers
-			callCacheKeyPatternHandlers( template, documentDescriptor.getDocument() );
+		// Temporarily use captive reference as the resource reference
+		Reference captiveReference = CapturingRedirector.getCapturedReference( request );
+		Reference resourceReference = request.getResourceRef();
+		if( captiveReference != null )
+			request.setResourceRef( captiveReference );
 
-			// Use captive reference as the resource reference
-			Reference captiveReference = CapturingRedirector.getCapturedReference( request );
-			Reference resourceReference = request.getResourceRef();
+		try
+		{
+			// Cast it
+			return template.format( resolver );
+		}
+		finally
+		{
+			// Return to original reference
 			if( captiveReference != null )
-				request.setResourceRef( captiveReference );
-
-			try
-			{
-				// Cast it
-				return template.format( resolver );
-			}
-			finally
-			{
-				// Return regular reference
-				if( captiveReference != null )
-					request.setResourceRef( resourceReference );
-			}
+				request.setResourceRef( resourceReference );
 		}
 	}
 
@@ -660,8 +728,10 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The cache key
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 */
-	public void addCachingDebugHeaders( String event, CacheEntry cacheEntry, String cacheKey, Executable executable )
+	public void addCachingDebugHeaders( String event, CacheEntry cacheEntry, String cacheKey, Executable executable, String suffix )
 	{
 		if( !attributes.isDebug() )
 			return;
@@ -692,7 +762,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
 		headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
 
-		Set<String> cacheTags = getCacheTags( executable, false );
+		Set<String> cacheTags = getCacheTags( executable, suffix, false );
 		if( cacheTags != null )
 		{
 			for( String cacheTag : cacheTags )
@@ -716,12 +786,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The cache key
 	 * @param executable
 	 *        The executable
+	 * @param suffix
+	 *        The optional attribute suffix
 	 * @param writer
 	 *        The writer
 	 * @return The representation
 	 * @throws ResourceException
 	 */
-	public Representation reencode( CacheEntry cacheEntry, Encoding encoding, String cacheKey, Executable executable, Writer writer ) throws ResourceException
+	public Representation reencode( CacheEntry cacheEntry, Encoding encoding, String cacheKey, Executable executable, String suffix, Writer writer ) throws ResourceException
 	{
 		try
 		{
@@ -735,7 +807,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 				if( cache != null )
 				{
 					cacheKey = getCacheKeyForEncoding( cacheKey, encoding );
-					Set<String> cacheTags = getCacheTags( executable, false );
+					Set<String> cacheTags = getCacheTags( executable, suffix, false );
 					if( cacheTags != null )
 						cacheEntry.setTags( cacheTags.toArray( new String[] {} ) );
 					cache.store( cacheKey, cacheEntry );
@@ -751,7 +823,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			throw new ResourceException( x );
 		}
 
-		addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable );
+		addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable, suffix );
 
 		return cacheEntry.represent();
 	}
@@ -795,6 +867,11 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * Cache tags attribute for an {@link Executable}.
 	 */
 	private static final String CACHE_TAGS_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheTags";
+
+	/**
+	 * The dispatched ID attribute for a {@link Request}.
+	 */
+	private static final String DISPATCHED_ID_ATTRIBUTE = "com.threecrickets.prudence.dispatcher.id";
 
 	/**
 	 * Valid document name attribute for a {@link Request}.

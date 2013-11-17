@@ -334,10 +334,10 @@ public class GeneratedTextResource extends ServerResource
 	@Override
 	public RepresentationInfo getInfo( Variant variant ) throws ResourceException
 	{
-		if( CachingUtil.mayFetch( getRequest(), null ) )
+		if( CachingUtil.mayFetch( getRequest(), null, null ) )
 		{
 			GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( true, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( null, true, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 		}

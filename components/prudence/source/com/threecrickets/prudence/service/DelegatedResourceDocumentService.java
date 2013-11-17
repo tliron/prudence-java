@@ -59,6 +59,15 @@ public class DelegatedResourceDocumentService extends ResourceDocumentServiceBas
 	 */
 	public String getCacheKey()
 	{
-		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), false, conversationService ), conversationService.getEncoding() );
+		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), getSuffix(), false, conversationService ), conversationService.getEncoding() );
+	}
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Protected
+
+	@Override
+	protected String getSuffix()
+	{
+		return CachingUtil.getDispatchedSuffix( resource.getRequest() );
 	}
 }
