@@ -309,7 +309,7 @@ public class ConversationService
 			Reference reference = getReference();
 
 			// Reverse relative reference
-			base = reference.getBaseRef().getRelativeRef( reference ).getPath();
+			base = getRequest().getRootRef().getRelativeRef( reference ).getPath();
 		}
 
 		return base;
