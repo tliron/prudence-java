@@ -103,6 +103,26 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	}
 
 	/**
+	 * Whether to cache only GET requests
+	 * 
+	 * @return Whether to cache only GET requests
+	 */
+	public boolean getCacheOnlyGet()
+	{
+		return CachingUtil.getCacheOnlyGet( getDescriptor().getDocument() );
+	}
+
+	/**
+	 * @param cacheOnlyGet
+	 *        Whether to cache only GET requests
+	 * @see #getCacheOnlyGet()
+	 */
+	public void setCacheOnlyGet( boolean cacheOnlyGet )
+	{
+		CachingUtil.setCacheOnlyGet( getDescriptor().getDocument(), cacheOnlyGet );
+	}
+
+	/**
 	 * The cache key pattern.
 	 * 
 	 * @return The cache key pattern

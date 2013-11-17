@@ -600,11 +600,10 @@ var Prudence = {}
  */
 
 /**
- * When this is true (the default), then <i>all</i> requests will be cached. When false,
- * <i>only</i> idempotent requests will be cached. Non-idempotent requests, such as HTTP
- * "POST", will bypass the cache.  
+ * When this is true, then <i>only</i> "GET" requests will be cached.
+ * Defaults to false.
  * 
- * @name document.cacheNonIdempotent
+ * @name document.cacheOnlyGet
  * @type Boolean
  */
 

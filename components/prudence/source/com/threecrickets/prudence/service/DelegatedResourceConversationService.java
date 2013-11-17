@@ -13,9 +13,11 @@ package com.threecrickets.prudence.service;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.restlet.data.CacheDirective;
 import org.restlet.data.CharacterSet;
+import org.restlet.data.Encoding;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Tag;
@@ -24,6 +26,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 
 import com.threecrickets.prudence.DelegatedResource;
+import com.threecrickets.prudence.internal.CachingUtil;
 
 /**
  * Conversation service exposed to executables.
@@ -51,7 +54,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public DelegatedResourceConversationService( DelegatedResource resource, Representation entity, Variant preferences, CharacterSet defaultCharacterSet )
 	{
-		super( resource, entity, preferences, defaultCharacterSet, null, resource.getAttributes().getFileUploadSizeThreshold(), resource.getAttributes().getFileUploadDirectory() );
+		super( resource, entity, preferences, defaultCharacterSet, CachingUtil.SUPPORTED_ENCODINGS, resource.getAttributes().getFileUploadSizeThreshold(), resource.getAttributes().getFileUploadDirectory() );
 	}
 
 	//
@@ -223,7 +226,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public void addMediaType( MediaType mediaType )
 	{
-		getResource().getVariants().add( new Variant( mediaType ) );
+		addVariant( mediaType, null );
 	}
 
 	/**
@@ -236,7 +239,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public void addMediaTypeWithLanguage( MediaType mediaType, Language language )
 	{
-		getResource().getVariants().add( new Variant( mediaType, language ) );
+		addVariant( mediaType, language );
 	}
 
 	/**
@@ -247,7 +250,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public void addMediaTypeByName( String mediaTypeName )
 	{
-		getResource().getVariants().add( new Variant( MediaType.valueOf( mediaTypeName ) ) );
+		addVariant( MediaType.valueOf( mediaTypeName ), null );
 	}
 
 	/**
@@ -260,7 +263,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public void addMediaTypeByNameWithLanguage( String mediaTypeName, String languageName )
 	{
-		getResource().getVariants().add( new Variant( MediaType.valueOf( mediaTypeName ), Language.valueOf( languageName ) ) );
+		addVariant( MediaType.valueOf( mediaTypeName ), Language.valueOf( languageName ) );
 	}
 
 	/**
@@ -271,7 +274,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public void addMediaTypeByExtension( String mediaTypeExtension )
 	{
-		getResource().getVariants().add( new Variant( getResource().getApplication().getMetadataService().getMediaType( mediaTypeExtension ) ) );
+		addVariant( getResource().getApplication().getMetadataService().getMediaType( mediaTypeExtension ), null );
 	}
 
 	/**
@@ -284,7 +287,7 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 */
 	public void addMediaTypeByExtensionWithLanguage( String mediaTypeExtension, String languageName )
 	{
-		getResource().getVariants().add( new Variant( getResource().getApplication().getMetadataService().getMediaType( mediaTypeExtension ), Language.valueOf( languageName ) ) );
+		addVariant( getResource().getApplication().getMetadataService().getMediaType( mediaTypeExtension ), Language.valueOf( languageName ) );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -304,4 +307,21 @@ public class DelegatedResourceConversationService extends ResourceConversationSe
 	 * The tag.
 	 */
 	private Tag tag;
+
+	private void addVariant( MediaType mediaType, Language language )
+	{
+		DelegatedResource resource = getResource();
+		List<Variant> variants = resource.getVariants();
+		if( resource.getAttributes().isNegotiateEncoding() )
+		{
+			for( Encoding encoding : CachingUtil.SUPPORTED_ENCODINGS )
+			{
+				Variant variant = new Variant( mediaType, language );
+				variant.getEncodings().add( encoding );
+				variants.add( variant );
+			}
+		}
+		else
+			variants.add( new Variant( mediaType, language ) );
+	}
 }

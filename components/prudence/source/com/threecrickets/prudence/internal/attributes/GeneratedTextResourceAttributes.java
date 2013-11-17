@@ -125,52 +125,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	/**
-	 * Whether or not to negotiate encoding by default. Defaults to true.
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>negotiateEncoding</code> in the application's {@link Context}.
-	 * 
-	 * @return Whether to allow content negotiation
-	 */
-	public boolean isNegotiateEncoding()
-	{
-		if( negotiateEncoding == null )
-		{
-			negotiateEncoding = (Boolean) getAttributes().get( prefix + ".negotiateEncoding" );
-
-			if( negotiateEncoding == null )
-				negotiateEncoding = true;
-		}
-
-		return negotiateEncoding;
-	}
-
-	/**
-	 * The size in bytes beyond which responses could be encoded. Defaults to
-	 * 1024.
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>encodeSizeThreshold</code> in the application's {@link Context}.
-	 * 
-	 * @return Whether to allow content negotiation
-	 */
-	public int getEncodeSizeThreshold()
-	{
-		if( encodeSizeThreshold == null )
-		{
-			Number number = (Number) getAttributes().get( prefix + ".encodeSizeThreshold" );
-
-			if( number != null )
-				encodeSizeThreshold = number.intValue();
-
-			if( encodeSizeThreshold == null )
-				encodeSizeThreshold = 1024;
-		}
-
-		return encodeSizeThreshold;
-	}
-
-	/**
 	 * Whether or not to send information to the client about cache expiration.
 	 * Defaults to {@link GeneratedTextResource#CLIENT_CACHING_MODE_CONDITIONAL}
 	 * .
@@ -373,16 +327,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	 * service.
 	 */
 	private String conversationServiceName;
-
-	/**
-	 * Whether or not to negotiate encoding by default.
-	 */
-	private Boolean negotiateEncoding;
-
-	/**
-	 * The size in bytes beyond which responses could be encoded.
-	 */
-	private Integer encodeSizeThreshold;
 
 	/**
 	 * Whether or not to send information to the client about cache expiration.

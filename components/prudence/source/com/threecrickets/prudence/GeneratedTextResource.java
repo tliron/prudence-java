@@ -13,7 +13,6 @@ package com.threecrickets.prudence;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
@@ -46,7 +45,6 @@ import com.threecrickets.prudence.service.GeneratedTextResourceConversationServi
 import com.threecrickets.prudence.service.GeneratedTextResourceDocumentService;
 import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.InstanceUtil;
-import com.threecrickets.prudence.util.IoUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
@@ -153,6 +151,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.libraryDocumentSources:</code>
  * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
  * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.negotiateEncoding:</code>
+ * defaults to a true.</li>
+ * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
  * <li>
@@ -188,17 +189,6 @@ public class GeneratedTextResource extends ServerResource
 	 * Constant.
 	 */
 	public static final int CLIENT_CACHING_MODE_OFFLINE = 2;
-
-	/**
-	 * Global list of supported encodings.
-	 */
-	public static final List<Encoding> SUPPORTED_ENCODINGS = new ArrayList<Encoding>();
-
-	static
-	{
-		SUPPORTED_ENCODINGS.addAll( IoUtil.SUPPORTED_COMPRESSION_ENCODINGS );
-		SUPPORTED_ENCODINGS.add( Encoding.IDENTITY );
-	}
 
 	//
 	// Attributes
@@ -245,7 +235,7 @@ public class GeneratedTextResource extends ServerResource
 				// Add a variant for each supported encoding
 				if( mediaType != null )
 				{
-					for( Encoding encoding : SUPPORTED_ENCODINGS )
+					for( Encoding encoding : CachingUtil.SUPPORTED_ENCODINGS )
 					{
 						Variant variant = new Variant( mediaType );
 						variant.getEncodings().add( encoding );
@@ -254,7 +244,7 @@ public class GeneratedTextResource extends ServerResource
 				}
 				else
 				{
-					for( Encoding encoding : SUPPORTED_ENCODINGS )
+					for( Encoding encoding : CachingUtil.SUPPORTED_ENCODINGS )
 					{
 						Variant variant = new Variant();
 						variant.getEncodings().add( encoding );
@@ -344,30 +334,12 @@ public class GeneratedTextResource extends ServerResource
 	@Override
 	public RepresentationInfo getInfo( Variant variant ) throws ResourceException
 	{
-		Request request = getRequest();
-
-		String documentName = cachingUtil.getValidDocumentName( request );
-		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
-		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
-
-		try
+		if( CachingUtil.mayFetch( getRequest(), null ) )
 		{
 			GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( documentName, isPassThrough || isCaptured, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( true, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
-		}
-		catch( ParsingException x )
-		{
-			throw new ResourceException( x );
-		}
-		catch( DocumentNotFoundException x )
-		{
-			throw new ResourceException( Status.CLIENT_ERROR_NOT_FOUND );
-		}
-		catch( DocumentException x )
-		{
-			throw new ResourceException( x );
 		}
 
 		return get( variant );
@@ -412,24 +384,6 @@ public class GeneratedTextResource extends ServerResource
 	 * Flag for asynchronous support (experimental).
 	 */
 	private final boolean asynchronousSupport = false;
-
-	/**
-	 * Gets the cache entry for a document, if it exists and is valid.
-	 * 
-	 * @param documentName
-	 *        The document name
-	 * @param includeExtraSources
-	 *        Whether to force looking for the document in the extra document
-	 *        sources
-	 * @return The cache entry
-	 * @throws ParsingException
-	 * @throws DocumentException
-	 */
-	public CacheEntry getCacheEntry( String documentName, boolean includeExtraSources ) throws ParsingException, DocumentException
-	{
-		GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
-		return cachingUtil.fetchCacheEntry( documentName, includeExtraSources, conversationService );
-	}
 
 	/**
 	 * Generates and possibly caches a textual representation. The returned

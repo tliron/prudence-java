@@ -898,8 +898,6 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedResource.html">DelegatedResource</a>
 	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
-	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html">CustomEncoder</a>
-	 * filter before the Finder.
 	 * 
 	 * @class
 	 * @name Prudence.Routing.Manual
@@ -910,7 +908,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String} [preExtension='m']
 	 * @param {Boolean} [trailingSlashRequired=true]
 	 * @param {String} [internalUri='/_manual/']
-	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Manual */
@@ -957,6 +955,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					trailingSlashRequired: this.trailingSlashRequired,
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
+					negotiateEncoding: this.compress,
+					encodeSizeThreshold: app.settings.compression.sizeThreshold,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					debug: app.settings.errors.debug
@@ -985,11 +985,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
 
 				app.delegatedResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.DelegatedResource'))
-
-				if (this.compress) {
-					// Put a custom encoder before the finder
-					app.delegatedResource = app.createEncoder(app.delegatedResource)
-				}
 			}
 			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.internalUri)) {
 				throw new SincerityException('You can configure a Manual only once per application')

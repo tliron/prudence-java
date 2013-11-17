@@ -45,7 +45,7 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 *        The resource
 	 * @param entity
 	 *        The client entity or null
-	 * @param negotiated
+	 * @param preferences
 	 *        The negotiated client preferences or null
 	 * @param defaultCharacterSet
 	 *        The character set to use if unspecified by variant
@@ -57,14 +57,14 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 * @param fileUploadDirectory
 	 *        The directory in which to place uploaded files
 	 */
-	public ResourceConversationServiceBase( R resource, Representation entity, Variant negotiated, CharacterSet defaultCharacterSet, List<Encoding> supportedEncodings, int fileUploadSizeThreshold,
+	public ResourceConversationServiceBase( R resource, Representation entity, Variant preferences, CharacterSet defaultCharacterSet, List<Encoding> supportedEncodings, int fileUploadSizeThreshold,
 		File fileUploadDirectory )
 	{
 		super( fileUploadSizeThreshold, fileUploadDirectory );
 
 		this.resource = resource;
 		this.entity = entity;
-		this.negotiated = negotiated != null ? negotiated : resource.getConnegService().getPreferredVariant( resource.getVariants(), resource.getRequest(), resource.getMetadataService() );
+		negotiated = preferences != null ? preferences : resource.getConnegService().getPreferredVariant( resource.getVariants(), resource.getRequest(), resource.getMetadataService() );
 
 		if( negotiated != null )
 		{

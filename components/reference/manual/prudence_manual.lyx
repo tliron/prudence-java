@@ -2104,7 +2104,7 @@ document.cacheTags.add(id)
 
 \begin_layout Plain Layout
 
-document.cacheNonIdempotent = false
+document.cacheOnlyGet = true
 \end_layout
 
 \begin_layout Plain Layout
@@ -2197,24 +2197,16 @@ tag
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
-name "document.cacheNonIdempotent"
-target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheNonIdempotent"
+name "document.cacheOnlyGet"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheOnlyGet"
 
 \end_inset
 
- is 
+ is set to 
 \begin_inset Quotes eld
 \end_inset
 
 true
-\begin_inset Quotes erd
-\end_inset
-
- by default, but we set it to 
-\begin_inset Quotes eld
-\end_inset
-
-false
 \begin_inset Quotes erd
 \end_inset
 
@@ -2738,7 +2730,7 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-	document.cacheDuration = 30000
+	document.cacheDuration = 60000
 \end_layout
 
 \begin_layout Plain Layout

@@ -115,7 +115,7 @@ public class CacheEntry implements Externalizable
 		this.mediaType = mediaType;
 		this.language = language;
 		this.characterSet = characterSet;
-		this.encoding = encoding;
+		this.encoding = Encoding.IDENTITY.equals( encoding ) ? null : encoding;
 		this.headers = headers;
 		this.documentModificationDate = documentModificationDate;
 		this.expirationDate = expirationDate;
@@ -152,7 +152,7 @@ public class CacheEntry implements Externalizable
 		this.mediaType = mediaType;
 		this.language = language;
 		this.characterSet = characterSet;
-		this.encoding = encoding;
+		this.encoding = Encoding.IDENTITY.equals( encoding ) ? null : encoding;
 		this.headers = headers;
 		this.documentModificationDate = documentModificationDate;
 		this.expirationDate = expirationDate;

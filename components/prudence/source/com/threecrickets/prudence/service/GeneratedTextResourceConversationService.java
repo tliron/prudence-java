@@ -16,6 +16,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 
 import com.threecrickets.prudence.GeneratedTextResource;
+import com.threecrickets.prudence.internal.CachingUtil;
 
 /**
  * Conversation service exposed to executables.
@@ -43,7 +44,7 @@ public class GeneratedTextResourceConversationService extends ResourceConversati
 	 */
 	public GeneratedTextResourceConversationService( GeneratedTextResource resource, Representation entity, Variant preferences, CharacterSet defaultCharacterSet )
 	{
-		super( resource, entity, preferences, defaultCharacterSet, GeneratedTextResource.SUPPORTED_ENCODINGS, resource.getAttributes().getFileUploadSizeThreshold(), resource.getAttributes().getFileUploadDirectory() );
+		super( resource, entity, preferences, defaultCharacterSet, CachingUtil.SUPPORTED_ENCODINGS, resource.getAttributes().getFileUploadSizeThreshold(), resource.getAttributes().getFileUploadDirectory() );
 	}
 
 	//

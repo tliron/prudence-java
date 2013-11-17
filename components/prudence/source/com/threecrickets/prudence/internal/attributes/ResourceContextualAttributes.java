@@ -65,6 +65,52 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	}
 
 	/**
+	 * Whether or not to negotiate encoding by default. Defaults to true.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>negotiateEncoding</code> in the application's {@link Context}.
+	 * 
+	 * @return Whether to allow content negotiation
+	 */
+	public boolean isNegotiateEncoding()
+	{
+		if( negotiateEncoding == null )
+		{
+			negotiateEncoding = (Boolean) getAttributes().get( prefix + ".negotiateEncoding" );
+
+			if( negotiateEncoding == null )
+				negotiateEncoding = true;
+		}
+
+		return negotiateEncoding;
+	}
+
+	/**
+	 * The size in bytes beyond which responses could be encoded. Defaults to
+	 * 1024.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>encodeSizeThreshold</code> in the application's {@link Context}.
+	 * 
+	 * @return Whether to allow content negotiation
+	 */
+	public int getEncodeSizeThreshold()
+	{
+		if( encodeSizeThreshold == null )
+		{
+			Number number = (Number) getAttributes().get( prefix + ".encodeSizeThreshold" );
+
+			if( number != null )
+				encodeSizeThreshold = number.intValue();
+
+			if( encodeSizeThreshold == null )
+				encodeSizeThreshold = 1024;
+		}
+
+		return encodeSizeThreshold;
+	}
+
+	/**
 	 * The default cache key pattern to use if the executable doesn't specify
 	 * one. Defaults to "{ri}|{dn}".
 	 * <p>
@@ -133,6 +179,16 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	 * well as in {@link GeneratedTextResourceAttributes#getDocumentSource()}.
 	 */
 	private Set<String> passThroughDocuments;
+
+	/**
+	 * Whether or not to negotiate encoding by default.
+	 */
+	private Boolean negotiateEncoding;
+
+	/**
+	 * The size in bytes beyond which responses could be encoded.
+	 */
+	private Integer encodeSizeThreshold;
 
 	/**
 	 * The default cache key pattern to use if the executable doesn't specify

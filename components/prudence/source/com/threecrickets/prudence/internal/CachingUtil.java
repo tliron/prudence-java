@@ -11,7 +11,10 @@
 
 package com.threecrickets.prudence.internal;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +28,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Encoding;
+import org.restlet.data.Method;
 import org.restlet.data.Reference;
+import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
 import org.restlet.engine.header.HeaderConstants;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.restlet.routing.Template;
 import org.restlet.util.Series;
@@ -40,9 +47,11 @@ import com.threecrickets.prudence.cache.CacheEntry;
 import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
 import com.threecrickets.prudence.service.ResourceConversationServiceBase;
 import com.threecrickets.prudence.util.CapturingRedirector;
+import com.threecrickets.prudence.util.IoUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.exception.DocumentException;
+import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ParsingException;
 
 /**
@@ -56,6 +65,21 @@ import com.threecrickets.scripturian.exception.ParsingException;
  */
 public class CachingUtil<R extends ServerResource, A extends ResourceContextualAttributes>
 {
+	//
+	// Constants
+	//
+
+	/**
+	 * Global list of supported encodings.
+	 */
+	public static final List<Encoding> SUPPORTED_ENCODINGS = new ArrayList<Encoding>();
+
+	static
+	{
+		SUPPORTED_ENCODINGS.addAll( IoUtil.SUPPORTED_COMPRESSION_ENCODINGS );
+		SUPPORTED_ENCODINGS.add( Encoding.IDENTITY );
+	}
+
 	//
 	// Static operations
 	//
@@ -88,6 +112,8 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	/**
 	 * The cache expiration timestamp for the executable.
 	 * 
+	 * @param executable
+	 *        The executable
 	 * @return The cache expiration timestamp
 	 * @see #getCacheDuration(Executable)
 	 */
@@ -97,7 +123,32 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		if( cacheDuration <= 0 )
 			return 0;
 		else
-			return executable.getLastExecutedTimestamp() + cacheDuration;
+			return executable.getLastUsedTimestamp() + cacheDuration;
+	}
+
+	/**
+	 * Whether to cache only GET requests
+	 * 
+	 * @param executable
+	 *        The executable
+	 * @return Whether to cache only GET requests
+	 */
+	public static boolean getCacheOnlyGet( Executable executable )
+	{
+		Boolean cacheOnlyGet = (Boolean) executable.getAttributes().get( CACHE_ONLY_GET_ATTRIBUTE );
+		return cacheOnlyGet != null ? cacheOnlyGet : false;
+	}
+
+	/**
+	 * @param executable
+	 *        The executable
+	 * @param cacheOnlyGet
+	 *        Whether to cache only GET requests
+	 * @see #getCacheOnlyGet()
+	 */
+	public static void setCacheOnlyGet( Executable executable, boolean cacheOnlyGet )
+	{
+		executable.getAttributes().put( CACHE_ONLY_GET_ATTRIBUTE, cacheOnlyGet );
 	}
 
 	/**
@@ -247,6 +298,27 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	/**
+	 * Whether we may fetch from the cache.
+	 * 
+	 * @param request
+	 *        The request
+	 * @param executable
+	 *        The executable
+	 * @return Whether we may fetch from the cache
+	 */
+	public static boolean mayFetch( Request request, Executable executable )
+	{
+		if( executable != null )
+			return getCacheOnlyGet( executable ) ? request.getMethod().equals( Method.GET ) : true;
+		else
+			return request.getMethod().equals( Method.GET );
+	}
+
+	//
+	// Static operations
+	//
+
+	/**
 	 * Removes existing valid document names.
 	 * 
 	 * @param request
@@ -291,8 +363,9 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * @param request
 	 *        The request
 	 * @return The valid document name
+	 * @throws ResourceException
 	 */
-	public String getValidDocumentName( Request request )
+	public String getValidDocumentName( Request request ) throws ResourceException
 	{
 		ConcurrentMap<String, Object> attributes = request.getAttributes();
 		String documentName = (String) attributes.get( prefix + VALID_DOCUMENT_NAME_ATTRIBUTE );
@@ -314,55 +387,153 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * If successful, you can also call {@link #getExistingCacheKey(boolean)}
 	 * and {@link #getExistingCacheEntry(boolean)}.
 	 * 
-	 * @param documentName
-	 *        The document name
 	 * @param isTextWithScriptlets
 	 *        Whether the document is text with scriptlets
 	 * @param conversationService
 	 *        The conversation service
 	 * @return The cache entry
-	 * @throws ParsingException
-	 * @throws DocumentException
+	 * @throws ResourceException
 	 */
-	public CacheEntry fetchCacheEntry( String documentName, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService ) throws ParsingException, DocumentException
+	public CacheEntry fetchCacheEntry( boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
-		DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, isTextWithScriptlets, true, false, false );
+		Request request = resource.getRequest();
+		String documentName = getValidDocumentName( request );
 
-		// Cache the document descriptor in the request
-		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-		attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
-
-		String cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
-		if( cacheKey != null )
+		try
 		{
-			Cache cache = this.attributes.getCache();
-			if( cache != null )
+			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, isTextWithScriptlets, true, false, false );
+
+			// Cache the document descriptor in the request
+			ConcurrentMap<String, Object> attributes = request.getAttributes();
+			attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
+
+			String cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
+			if( cacheKey != null )
 			{
-				Encoding encoding = conversationService.getEncoding();
-
-				// Try cache key for encoding first
-				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
-				CacheEntry cacheEntry = cache.fetch( cacheKeyForEncoding );
-				if( cacheEntry == null )
-					cacheEntry = cache.fetch( cacheKey );
-
-				if( cacheEntry != null )
+				Cache cache = this.attributes.getCache();
+				if( cache != null )
 				{
-					// Make sure the document is not newer than the cache
-					// entry
-					if( documentDescriptor.getDocument().getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() )
-					{
-						// Cache the cache entry and key in the request
-						attributes.put( CACHE_KEY_ATTRIBUTE, cacheKey );
-						attributes.put( CACHE_ENTRY_ATTRIBUTE, cacheEntry );
+					Encoding encoding = conversationService.getEncoding();
 
-						return cacheEntry;
+					// Try cache key for encoding first
+					String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+					CacheEntry cacheEntry = cache.fetch( cacheKeyForEncoding );
+					if( cacheEntry == null )
+						cacheEntry = cache.fetch( cacheKey );
+
+					if( cacheEntry != null )
+					{
+						// Make sure the document is not newer than the cache
+						// entry
+						if( documentDescriptor.getDocument().getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() )
+						{
+							// Cache the cache entry and key in the request
+							attributes.put( CACHE_KEY_ATTRIBUTE, cacheKey );
+							attributes.put( CACHE_ENTRY_ATTRIBUTE, cacheEntry );
+
+							return cacheEntry;
+						}
 					}
 				}
 			}
 		}
+		catch( ParsingException x )
+		{
+			throw new ResourceException( x );
+		}
+		catch( DocumentNotFoundException x )
+		{
+			throw new ResourceException( Status.CLIENT_ERROR_NOT_FOUND );
+		}
+		catch( DocumentException x )
+		{
+			throw new ResourceException( x );
+		}
 
 		return null;
+	}
+
+	/**
+	 * @param documentDescriptor
+	 * @param isTextWithScriptlets
+	 * @param request
+	 * @param encoding
+	 * @param writer
+	 * @param conversationService
+	 * @return
+	 * @throws ResourceException
+	 */
+	public Representation fetchRepresentation( DocumentDescriptor<Executable> documentDescriptor, boolean isTextWithScriptlets, Request request, Encoding encoding, Writer writer,
+		ResourceConversationServiceBase<R> conversationService ) throws ResourceException
+	{
+		Executable executable = documentDescriptor.getDocument();
+
+		// See if a valid cache entry has already been cached in the request
+		CacheEntry cacheEntry = getExistingCacheEntry( request, true );
+		String cacheKey = getExistingCacheKey( request, true );
+		if( ( cacheEntry != null ) && ( cacheKey != null ) )
+			return reencode( cacheEntry, encoding, cacheKey, executable, writer );
+
+		// Attempt to use cache
+		cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
+		if( cacheKey != null )
+		{
+			Cache cache = attributes.getCache();
+			if( cache != null )
+			{
+				// Try cache key for encoding first
+				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+				cacheEntry = cache.fetch( cacheKeyForEncoding );
+				System.out.println( "<<<<<<<<<<<<< " + cacheKeyForEncoding + " " + cacheEntry );
+				if( cacheEntry == null )
+				{
+					cacheEntry = cache.fetch( cacheKey );
+					System.out.println( "<<<<<<<<<<<<< " + cacheKey + " " + cacheEntry );
+				}
+
+				// Make sure the document is not newer than the cache
+				// entry
+				if( ( cacheEntry != null ) && ( executable.getDocumentTimestamp() <= cacheEntry.getDocumentModificationDate().getTime() ) )
+					return reencode( cacheEntry, encoding, cacheKey, executable, writer );
+			}
+		}
+
+		return null;
+	}
+
+	public void storeCacheEntry( CacheEntry encodedCacheEntry, CacheEntry cacheEntry, DocumentDescriptor<Executable> documentDescriptor, boolean isTextWithScriptlets, Set<String> cacheTags,
+		ResourceConversationServiceBase<R> conversationService ) throws ResourceException
+	{
+		Executable executable = documentDescriptor.getDocument();
+
+		String cacheKey = castCacheKey( documentDescriptor, isTextWithScriptlets, conversationService );
+		if( cacheKey != null )
+		{
+			// Cache!
+			Cache cache = attributes.getCache();
+			if( cache != null )
+			{
+				String[] tags = null;
+				if( cacheTags != null )
+					tags = cacheTags.toArray( new String[] {} );
+
+				Encoding encoding = encodedCacheEntry.getEncoding();
+				String cacheKeyForEncoding = getCacheKeyForEncoding( cacheKey, encoding );
+				encodedCacheEntry.setTags( tags );
+				cache.store( cacheKeyForEncoding, encodedCacheEntry );
+				System.out.println( ">>>>>>>>>>>>> " + cacheKeyForEncoding + " " + encodedCacheEntry );
+
+				// Cache un-encoded entry separately
+				if( encoding != null )
+				{
+					cacheEntry.setTags( tags );
+					cache.store( cacheKey, cacheEntry );
+					System.out.println( ">>>>>>>>>>>>> " + cacheKey + " " + cacheEntry );
+				}
+
+				addCachingDebugHeaders( "miss", encodedCacheEntry, cacheKey, executable );
+			}
+		}
 	}
 
 	/**
@@ -533,6 +704,58 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			resource.getResponse().getAttributes().put( HeaderConstants.ATTRIBUTE_HEADERS, headers );
 	}
 
+	/**
+	 * Represents a cache entry, making sure to re-encode it (and store the
+	 * re-encoded entry in the cache) if necessary.
+	 * 
+	 * @param cacheEntry
+	 *        The cache entry
+	 * @param encoding
+	 *        The encoding
+	 * @param cacheKey
+	 *        The cache key
+	 * @param executable
+	 *        The executable
+	 * @param writer
+	 *        The writer
+	 * @return The representation
+	 * @throws ResourceException
+	 */
+	public Representation reencode( CacheEntry cacheEntry, Encoding encoding, String cacheKey, Executable executable, Writer writer ) throws ResourceException
+	{
+		try
+		{
+			if( ( cacheEntry.getEncoding() == null ) && ( encoding != null ) && ( cacheEntry.getSize() >= attributes.getEncodeSizeThreshold() ) )
+			{
+				// Re-encode it
+				cacheEntry = new CacheEntry( cacheEntry, encoding );
+
+				// Cache re-encoded entry
+				Cache cache = attributes.getCache();
+				if( cache != null )
+				{
+					cacheKey = getCacheKeyForEncoding( cacheKey, encoding );
+					Set<String> cacheTags = getCacheTags( executable, false );
+					if( cacheTags != null )
+						cacheEntry.setTags( cacheTags.toArray( new String[] {} ) );
+					cache.store( cacheKey, cacheEntry );
+				}
+			}
+
+			// We want to write this, too, for includes
+			if( ( writer != null ) && ( cacheEntry.getString() != null ) )
+				writer.write( cacheEntry.getString() );
+		}
+		catch( IOException x )
+		{
+			throw new ResourceException( x );
+		}
+
+		addCachingDebugHeaders( "hit", cacheEntry, cacheKey, executable );
+
+		return cacheEntry.represent();
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
@@ -552,6 +775,11 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * Cache duration attribute for an {@link Executable}.
 	 */
 	private static final String CACHE_DURATION_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheDuration";
+
+	/**
+	 * Cache only GET attribute for an {@link Executable}.
+	 */
+	private static final String CACHE_ONLY_GET_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheOnlyGet";
 
 	/**
 	 * Cache key pattern attribute for an {@link Executable}.
