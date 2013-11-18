@@ -56,7 +56,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	// ContextualAttributes
 	//
 
-	@Override
 	public Writer getWriter()
 	{
 		if( writer == null )
@@ -70,7 +69,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return writer;
 	}
 
-	@Override
 	public Writer getErrorWriter()
 	{
 		if( errorWriter == null )
@@ -116,7 +114,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return libraryDocumentSources;
 	}
 
-	@Override
 	public String getDocumentServiceName()
 	{
 		if( documentServiceName == null )
@@ -130,7 +127,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return documentServiceName;
 	}
 
-	@Override
 	public String getApplicationServiceName()
 	{
 		if( applicationServiceName == null )
@@ -144,7 +140,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return applicationServiceName;
 	}
 
-	@Override
 	public boolean isSourceViewable()
 	{
 		if( sourceViewable == null )
@@ -159,7 +154,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public DocumentFormatter<Executable> getDocumentFormatter()
 	{
 		if( documentFormatter == null )
@@ -181,7 +175,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return documentFormatter;
 	}
 
-	@Override
 	public CharacterSet getDefaultCharacterSet()
 	{
 		if( defaultCharacterSet == null )
@@ -195,7 +188,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return defaultCharacterSet;
 	}
 
-	@Override
 	public File getFileUploadDirectory()
 	{
 		if( fileUploadDirectory == null )
@@ -218,7 +210,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		return fileUploadDirectory;
 	}
 
-	@Override
 	public int getFileUploadSizeThreshold()
 	{
 		if( fileUploadSizeThreshold == null )
@@ -233,15 +224,6 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		}
 
 		return fileUploadSizeThreshold;
-	}
-
-	@Override
-	public Cache getCache()
-	{
-		if( cache == null )
-			cache = (Cache) getAttributes().get( InstanceUtil.CACHE_ATTRIBUTE );
-
-		return cache;
 	}
 
 	//
@@ -349,6 +331,14 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		}
 
 		return trailingSlashRequired;
+	}
+
+	public Cache getCache()
+	{
+		if( cache == null )
+			cache = (Cache) getAttributes().get( InstanceUtil.CACHE_ATTRIBUTE );
+
+		return cache;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

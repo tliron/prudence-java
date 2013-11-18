@@ -70,6 +70,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	{
 		super( resource, resource.getAttributes(), new GeneratedTextResourceConversationService( resource, entity, preferences, resource.getAttributes().getDefaultCharacterSet() ), cachingUtil );
 		this.executionContext = executionContext;
+		cachingService = new GeneratedTextResourceCachingService( resource, this, conversationService, cachingUtil );
 	}
 
 	/**
@@ -85,9 +86,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		pushDocumentDescriptor( documentService.getDescriptor() );
 		executionContext = new ExecutionContext();
 		attributes.addLibraryLocations( executionContext );
+		cachingService = new GeneratedTextResourceCachingService( resource, this, conversationService, cachingUtil );
 
 		// Initialize execution context
 		executionContext.getServices().put( attributes.getDocumentServiceName(), this );
+		executionContext.getServices().put( attributes.getCachingServiceName(), cachingService );
 		executionContext.getServices().put( attributes.getApplicationServiceName(), applicationService );
 		executionContext.getServices().put( attributes.getConversationServiceName(), conversationService );
 
@@ -265,6 +268,11 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	private final ApplicationService applicationService = ApplicationService.create();
 
 	/**
+	 * The caching service.
+	 */
+	private final GeneratedTextResourceCachingService cachingService;
+
+	/**
 	 * The execution context.
 	 */
 	private final ExecutionContext executionContext;
@@ -393,15 +401,17 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			}
 		}
 
-		setCacheDuration( 0 );
-		setCacheOnlyGet( false );
-		setCacheKeyPattern( attributes.getDefaultCacheKeyPattern() );
-		getCacheTags().clear();
+		// Reset caching attributes
+		CachingUtil.setCacheDuration( executable, null, 0 );
+		CachingUtil.setCacheOnlyGet( executable, null, false );
+		CachingUtil.setCacheKeyPattern( executable, null, attributes.getDefaultCacheKeyPattern() );
+		CachingUtil.getCacheTags( executable, null, true ).clear();
 
 		try
 		{
 			executionContext.setWriter( writer );
 			executionContext.getServices().put( attributes.getDocumentServiceName(), this );
+			executionContext.getServices().put( attributes.getCachingServiceName(), cachingService );
 			executionContext.getServices().put( attributes.getApplicationServiceName(), applicationService );
 			executionContext.getServices().put( attributes.getConversationServiceName(), conversationService );
 

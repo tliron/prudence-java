@@ -24,6 +24,7 @@ import org.restlet.data.LocalReference;
 import org.restlet.data.MediaType;
 import org.restlet.resource.ClientResource;
 
+import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.internal.attributes.DocumentExecutionAttributes;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
@@ -75,6 +76,16 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	//
 	// Attributes
 	//
+
+	/**
+	 * The cache.
+	 * 
+	 * @return The cache
+	 */
+	public Cache getCache()
+	{
+		return attributes.getCache();
+	}
 
 	/**
 	 * The {@link DocumentSource} used to fetch executables.

@@ -97,6 +97,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.cacheKeyPatternHandlers</code>
  * : {@link ConcurrentMap}<String, String></li>
  * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.cachingServiceName</code>
+ * : Defaults to "caching".</li>
+ * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.clientCachingMode:</code>
  * {@link Integer}, defaults to {@link #CLIENT_CACHING_MODE_CONDITIONAL}.</li>
  * <li>

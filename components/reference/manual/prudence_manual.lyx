@@ -2094,17 +2094,17 @@ var id = 'page.' + conversation.wildcard
 
 \begin_layout Plain Layout
 
-document.cacheDuration = 60000
+caching.duration = 60000
 \end_layout
 
 \begin_layout Plain Layout
 
-document.cacheTags.add(id)
+caching.tags.add(id)
 \end_layout
 
 \begin_layout Plain Layout
 
-document.cacheOnlyGet = true
+caching.onlyGet = true
 \end_layout
 
 \begin_layout Plain Layout
@@ -2162,8 +2162,8 @@ What we've done:
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
-name "document.cacheDuration"
-target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheDuration"
+name "caching.duration"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.duration"
 
 \end_inset
 
@@ -2174,8 +2174,8 @@ target "http://threecrickets.com/api/javascript/?namespace=document&item=documen
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
-name "document.cacheTags"
-target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheTags"
+name "caching.tags"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.tags"
 
 \end_inset
 
@@ -2197,8 +2197,8 @@ tag
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
-name "document.cacheOnlyGet"
-target "http://threecrickets.com/api/javascript/?namespace=document&item=document.cacheOnlyGet"
+name "caching.onlyGet"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.onlyGet"
 
 \end_inset
 
@@ -3102,12 +3102,12 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-	document.cacheDuration = 60000
+	caching.duration = 60000
 \end_layout
 
 \begin_layout Plain Layout
 
-	document.cacheTags.add(id) 
+	caching.tags.add(id) 
 \end_layout
 
 \begin_layout Plain Layout
@@ -15715,19 +15715,19 @@ The APIs:
 \end_layout
 
 \begin_layout Subsubsection
-document.cacheDuration
+caching.duration
 \end_layout
 
 \begin_layout Subsubsection
-document.cacheTags
+caching.tags
 \end_layout
 
 \begin_layout Subsubsection
-document.cacheKeyPattern
+caching.keyPattern
 \end_layout
 
 \begin_layout Subsubsection
-document.cacheKey
+caching.key
 \end_layout
 
 \begin_layout Subsection
@@ -23960,7 +23960,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            prudence_document=None,
+            prudence_caching=None,
 \end_layout
 
 \begin_layout Plain Layout
@@ -24091,7 +24091,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            self.environment.prudence_document.cacheDuration = duration
+            self.environment.prudence_caching.duration = duration
 \end_layout
 
 \begin_layout Plain Layout
@@ -24124,7 +24124,7 @@ class Prudence(Extension):
 
 \begin_layout Plain Layout
 
-            cache_tags = self.environment.prudence_document.cacheTags
+            cache_tags = self.environment.prudence_caching.tags
 \end_layout
 
 \begin_layout Plain Layout
@@ -24191,7 +24191,7 @@ env = Environment(loader=loader, extensions=['jinja_extensions.Prudence'])
 
 \begin_layout Plain Layout
 
-env.prudence_document = document
+env.prudence_caching = caching
 \end_layout
 
 \begin_layout Plain Layout

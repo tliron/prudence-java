@@ -72,7 +72,6 @@ public class ApplicationTaskAttributes extends NonVolatileContextualAttributes
 	// ContextualAttributes
 	//
 
-	@Override
 	public ConcurrentMap<String, Object> getAttributes()
 	{
 		return application.getContext().getAttributes();

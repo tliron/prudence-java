@@ -57,7 +57,6 @@ public class ExecutionResourceAttributes extends NonVolatileContextualAttributes
 	// ContextualAttributes
 	//
 
-	@Override
 	public ConcurrentMap<String, Object> getAttributes()
 	{
 		if( attributes == null )

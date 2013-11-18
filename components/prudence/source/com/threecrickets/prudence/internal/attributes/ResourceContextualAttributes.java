@@ -112,6 +112,28 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	}
 
 	/**
+	 * The name of the global variable with which to access the caching service.
+	 * Defaults to "caching".
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>cachingServiceName</code> in the application's {@link Context}.
+	 * 
+	 * @return The caching service name
+	 */
+	public String getCachingServiceName()
+	{
+		if( cachingServiceName == null )
+		{
+			cachingServiceName = (String) getAttributes().get( prefix + ".cachingServiceName" );
+
+			if( cachingServiceName == null )
+				cachingServiceName = "caching";
+		}
+
+		return cachingServiceName;
+	}
+
+	/**
 	 * The default cache key pattern to use if the executable doesn't specify
 	 * one. Defaults to "{ri}|{dn}".
 	 * <p>
@@ -154,7 +176,6 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	// ContextualAttributes
 	//
 
-	@Override
 	public ConcurrentMap<String, Object> getAttributes()
 	{
 		if( attributes == null )
@@ -190,6 +211,11 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	 * The size in bytes beyond which responses could be encoded.
 	 */
 	private Integer encodeSizeThreshold;
+
+	/**
+	 * The name of the global variable with which to access the caching service.
+	 */
+	private String cachingServiceName;
 
 	/**
 	 * The default cache key pattern to use if the executable doesn't specify

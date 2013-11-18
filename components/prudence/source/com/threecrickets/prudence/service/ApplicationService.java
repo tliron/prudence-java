@@ -105,7 +105,9 @@ public class ApplicationService
 	 */
 	public Component getComponent()
 	{
-		return (Component) getGlobals().get( InstanceUtil.COMPONENT_ATTRIBUTE );
+		if( component == null )
+			component = (Component) getGlobals().get( InstanceUtil.COMPONENT_ATTRIBUTE );
+		return component;
 	}
 
 	/**
@@ -115,7 +117,9 @@ public class ApplicationService
 	 */
 	public ConcurrentMap<String, Object> getGlobals()
 	{
-		return getApplication().getContext().getAttributes();
+		if( globals == null )
+			globals = application.getContext().getAttributes();
+		return globals;
 	}
 
 	/**
@@ -156,11 +160,13 @@ public class ApplicationService
 	 */
 	public ConcurrentMap<String, Object> getSharedGlobals()
 	{
-		Component component = getComponent();
-		if( component != null )
-			return component.getContext().getAttributes();
-		else
-			return null;
+		if( sharedGlobals == null )
+		{
+			Component component = getComponent();
+			if( component != null )
+				sharedGlobals = component.getContext().getAttributes();
+		}
+		return sharedGlobals;
 	}
 
 	/**
@@ -211,7 +217,6 @@ public class ApplicationService
 	{
 		if( logger == null )
 			logger = LoggingUtil.getLogger( application );
-
 		return logger;
 	}
 
@@ -236,7 +241,9 @@ public class ApplicationService
 	 */
 	public File getRoot()
 	{
-		return (File) getGlobals().get( InstanceUtil.ROOT_ATTRIBUTE );
+		if( root == null )
+			root = (File) getGlobals().get( InstanceUtil.ROOT_ATTRIBUTE );
+		return root;
 	}
 
 	/**
@@ -246,7 +253,9 @@ public class ApplicationService
 	 */
 	public File getContainerRoot()
 	{
-		return new File( System.getProperty( "sincerity.container.root" ) );
+		if( containerRoot == null )
+			containerRoot = new File( System.getProperty( "sincerity.container.root" ) );
+		return containerRoot;
 	}
 
 	/**
@@ -270,7 +279,7 @@ public class ApplicationService
 	 */
 	public MediaType getMediaTypeByExtension( String extension )
 	{
-		return getApplication().getMetadataService().getMediaType( extension );
+		return application.getMetadataService().getMediaType( extension );
 	}
 
 	/**
@@ -340,10 +349,7 @@ public class ApplicationService
 	 */
 	public <T> Future<T> executeTask( String applicationName, String documentName, String entryPointName, Object context, int delay, int repeatEvery, boolean fixedRepeat )
 	{
-		Application application = this.application;
-		if( applicationName != null )
-			application = InstanceUtil.getApplication( applicationName );
-
+		Application application = applicationName == null ? this.application : InstanceUtil.getApplication( applicationName );
 		ApplicationTask<T> task = new ApplicationTask<T>( application, documentName, entryPointName, context );
 		return task( task, delay, repeatEvery, fixedRepeat );
 	}
@@ -371,10 +377,7 @@ public class ApplicationService
 	 */
 	public <T> Future<T> codeTask( String applicationName, String code, Object context, int delay, int repeatEvery, boolean fixedRepeat )
 	{
-		Application application = this.application;
-		if( applicationName != null )
-			application = InstanceUtil.getApplication( applicationName );
-
+		Application application = applicationName == null ? this.application : InstanceUtil.getApplication( applicationName );
 		ApplicationTask<T> task = new ApplicationTask<T>( application, code, context );
 		return task( task, delay, repeatEvery, fixedRepeat );
 	}
@@ -402,6 +405,21 @@ public class ApplicationService
 	private final Application application;
 
 	/**
+	 * The component.
+	 */
+	private Component component;
+
+	/**
+	 * The globals.
+	 */
+	private ConcurrentMap<String, Object> globals;
+
+	/**
+	 * The shared globals.
+	 */
+	private ConcurrentMap<String, Object> sharedGlobals;
+
+	/**
 	 * The executor service.
 	 */
 	private ExecutorService executor;
@@ -410,6 +428,16 @@ public class ApplicationService
 	 * The logger.
 	 */
 	private Logger logger;
+
+	/**
+	 * The application root directory.
+	 */
+	private File root;
+
+	/**
+	 * The container root directory.
+	 */
+	private File containerRoot;
 
 	/**
 	 * Submits or schedules an {@link ApplicationTask} on the the shared

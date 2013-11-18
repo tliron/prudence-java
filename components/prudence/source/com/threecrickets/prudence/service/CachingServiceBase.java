@@ -1,0 +1,180 @@
+/**
+ * Copyright 2009-2013 Three Crickets LLC.
+ * <p>
+ * The contents of this file are subject to the terms of the LGPL version 3.0:
+ * http://www.gnu.org/copyleft/lesser.html
+ * <p>
+ * Alternatively, you can obtain a royalty free commercial license with less
+ * limitations, transferable or non-transferable, directly from Three Crickets
+ * at http://threecrickets.com/
+ */
+
+package com.threecrickets.prudence.service;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
+
+import org.restlet.resource.ServerResource;
+
+import com.threecrickets.prudence.internal.CachingUtil;
+import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
+
+/**
+ * Caching service exposed to executables.
+ * 
+ * @author Tal Liron
+ * @param <R>
+ *        The resource
+ * @param <A>
+ *        The resource attributes
+ * @param <C>
+ *        The conversation service
+ */
+public abstract class CachingServiceBase<R extends ServerResource, A extends ResourceContextualAttributes, C extends ResourceConversationServiceBase<R>>
+{
+	//
+	// Construction
+	//
+
+	/**
+	 * Constructor.
+	 */
+	public CachingServiceBase( R resource, A attributes, DocumentService<A> documentService, C conversationService, CachingUtil<R, A> cachingUtil )
+	{
+		this.resource = resource;
+		this.attributes = attributes;
+		this.documentService = documentService;
+		this.conversationService = conversationService;
+		this.cachingUtil = cachingUtil;
+
+	}
+
+	//
+	// Attributes
+	//
+
+	/**
+	 * The cache duration. Defaults to 0.
+	 * 
+	 * @return The cache duration in milliseconds
+	 * @see #setDuration(long)
+	 */
+	public long getDuration()
+	{
+		return CachingUtil.getCacheDuration( documentService.getDescriptor().getDocument(), getSuffix() );
+	}
+
+	/**
+	 * @param cacheDuration
+	 *        The cache duration in milliseconds
+	 * @see #getDuration()
+	 */
+	public void setDuration( long cacheDuration )
+	{
+		CachingUtil.setCacheDuration( documentService.getDescriptor().getDocument(), getSuffix(), cacheDuration );
+	}
+
+	/**
+	 * Whether to cache only GET requests
+	 * 
+	 * @return Whether to cache only GET requests
+	 */
+	public boolean getOnlyGet()
+	{
+		return CachingUtil.getCacheOnlyGet( documentService.getDescriptor().getDocument(), getSuffix() );
+	}
+
+	/**
+	 * @param cacheOnlyGet
+	 *        Whether to cache only GET requests
+	 * @see #getOnlyGet()
+	 */
+	public void setOnlyGet( boolean cacheOnlyGet )
+	{
+		CachingUtil.setCacheOnlyGet( documentService.getDescriptor().getDocument(), getSuffix(), cacheOnlyGet );
+	}
+
+	/**
+	 * The cache key pattern.
+	 * 
+	 * @return The cache key pattern
+	 * @see #setCacheKeyPattern(String)
+	 */
+	public String getKeyPattern()
+	{
+		return CachingUtil.getCacheKeyPattern( documentService.getDescriptor().getDocument(), getSuffix() );
+	}
+
+	/**
+	 * @param cacheKeyPattern
+	 *        The cache key pattern
+	 * @see #getKeyPattern()
+	 */
+	public void setCacheKeyPattern( String cacheKeyPattern )
+	{
+		CachingUtil.setCacheKeyPattern( documentService.getDescriptor().getDocument(), getSuffix(), cacheKeyPattern );
+	}
+
+	/**
+	 * The cache key pattern handlers.
+	 * 
+	 * @return The cache key pattern handlers
+	 */
+	public ConcurrentMap<String, String> getKeyPatternHandlers()
+	{
+		return CachingUtil.getCacheKeyPatternHandlers( documentService.getDescriptor().getDocument(), getSuffix(), true );
+	}
+
+	/**
+	 * @return The cache tags
+	 */
+	public Set<String> getTags()
+	{
+		return CachingUtil.getCacheTags( documentService.getDescriptor().getDocument(), getSuffix(), true );
+	}
+
+	/**
+	 * Casts the cache key pattern for the current executable and encoding.
+	 * 
+	 * @return The cache key or null
+	 */
+	public abstract String getKey();
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Protected
+
+	/**
+	 * The resource.
+	 */
+	protected final R resource;
+
+	/**
+	 * The attributes.
+	 */
+	protected final A attributes;
+
+	/**
+	 * The document service.
+	 */
+	protected final DocumentService<A> documentService;
+
+	/**
+	 * The conversation service.
+	 */
+	protected final C conversationService;
+
+	/**
+	 * The caching utilities.
+	 */
+	protected final CachingUtil<R, A> cachingUtil;
+
+	/**
+	 * The optional attribute suffix.
+	 * 
+	 * @return The attribute suffix or null
+	 */
+	protected String getSuffix()
+	{
+		return null;
+	}
+}

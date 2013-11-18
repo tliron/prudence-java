@@ -56,7 +56,6 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 	// ContextualAttributes
 	//
 
-	@Override
 	public Writer getWriter()
 	{
 		if( writer == null )
@@ -70,7 +69,6 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 		return writer;
 	}
 
-	@Override
 	public Writer getErrorWriter()
 	{
 		if( errorWriter == null )
@@ -83,6 +81,122 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 
 		return errorWriter;
 	}
+
+	public String getDocumentServiceName()
+	{
+		if( documentServiceName == null )
+		{
+			documentServiceName = (String) getAttributes().get( prefix + ".documentServiceName" );
+
+			if( documentServiceName == null )
+				documentServiceName = "document";
+		}
+
+		return documentServiceName;
+	}
+
+	public String getApplicationServiceName()
+	{
+		if( applicationServiceName == null )
+		{
+			applicationServiceName = (String) getAttributes().get( prefix + ".applicationServiceName" );
+
+			if( applicationServiceName == null )
+				applicationServiceName = "application";
+		}
+
+		return applicationServiceName;
+	}
+
+	public boolean isSourceViewable()
+	{
+		if( sourceViewable == null )
+		{
+			sourceViewable = (Boolean) getAttributes().get( prefix + ".sourceViewable" );
+
+			if( sourceViewable == null )
+				sourceViewable = false;
+		}
+
+		return sourceViewable;
+	}
+
+	@SuppressWarnings("unchecked")
+	public DocumentFormatter<Executable> getDocumentFormatter()
+	{
+		if( documentFormatter == null )
+		{
+			ConcurrentMap<String, Object> attributes = getAttributes();
+			String key = prefix + ".documentFormatter";
+			documentFormatter = (DocumentFormatter<Executable>) attributes.get( key );
+
+			if( documentFormatter == null )
+			{
+				documentFormatter = new JygmentsDocumentFormatter<Executable>();
+
+				DocumentFormatter<Executable> existing = (DocumentFormatter<Executable>) attributes.putIfAbsent( key, documentFormatter );
+				if( existing != null )
+					documentFormatter = existing;
+			}
+		}
+
+		return documentFormatter;
+	}
+
+	public CharacterSet getDefaultCharacterSet()
+	{
+		if( defaultCharacterSet == null )
+		{
+			defaultCharacterSet = (CharacterSet) getAttributes().get( prefix + ".defaultCharacterSet" );
+
+			if( defaultCharacterSet == null )
+				defaultCharacterSet = CharacterSet.UTF_8;
+		}
+
+		return defaultCharacterSet;
+	}
+
+	public File getFileUploadDirectory()
+	{
+		if( fileUploadDirectory == null )
+		{
+			ConcurrentMap<String, Object> attributes = getAttributes();
+			String key = prefix + ".fileUploadDirectory";
+			fileUploadDirectory = (File) attributes.get( key );
+
+			if( fileUploadDirectory == null )
+			{
+				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
+				fileUploadDirectory = new File( root, "uploads" );
+
+				File existing = (File) attributes.putIfAbsent( key, fileUploadDirectory );
+				if( existing != null )
+					fileUploadDirectory = existing;
+			}
+		}
+
+		return fileUploadDirectory;
+	}
+
+	public int getFileUploadSizeThreshold()
+	{
+		if( fileUploadSizeThreshold == null )
+		{
+			Number number = (Number) getAttributes().get( prefix + ".fileUploadSizeThreshold" );
+
+			if( number != null )
+				fileUploadSizeThreshold = number.intValue();
+
+			if( fileUploadSizeThreshold == null )
+				fileUploadSizeThreshold = 0;
+		}
+
+		return fileUploadSizeThreshold;
+	}
+
+	//
+	// DocumentExecutionAttributes
+	//
 
 	@SuppressWarnings("unchecked")
 	public DocumentSource<Executable> getDocumentSource()
@@ -115,138 +229,6 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 
 		return libraryDocumentSources;
 	}
-
-	@Override
-	public String getDocumentServiceName()
-	{
-		if( documentServiceName == null )
-		{
-			documentServiceName = (String) getAttributes().get( prefix + ".documentServiceName" );
-
-			if( documentServiceName == null )
-				documentServiceName = "document";
-		}
-
-		return documentServiceName;
-	}
-
-	@Override
-	public String getApplicationServiceName()
-	{
-		if( applicationServiceName == null )
-		{
-			applicationServiceName = (String) getAttributes().get( prefix + ".applicationServiceName" );
-
-			if( applicationServiceName == null )
-				applicationServiceName = "application";
-		}
-
-		return applicationServiceName;
-	}
-
-	@Override
-	public boolean isSourceViewable()
-	{
-		if( sourceViewable == null )
-		{
-			sourceViewable = (Boolean) getAttributes().get( prefix + ".sourceViewable" );
-
-			if( sourceViewable == null )
-				sourceViewable = false;
-		}
-
-		return sourceViewable;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public DocumentFormatter<Executable> getDocumentFormatter()
-	{
-		if( documentFormatter == null )
-		{
-			ConcurrentMap<String, Object> attributes = getAttributes();
-			String key = prefix + ".documentFormatter";
-			documentFormatter = (DocumentFormatter<Executable>) attributes.get( key );
-
-			if( documentFormatter == null )
-			{
-				documentFormatter = new JygmentsDocumentFormatter<Executable>();
-
-				DocumentFormatter<Executable> existing = (DocumentFormatter<Executable>) attributes.putIfAbsent( key, documentFormatter );
-				if( existing != null )
-					documentFormatter = existing;
-			}
-		}
-
-		return documentFormatter;
-	}
-
-	@Override
-	public CharacterSet getDefaultCharacterSet()
-	{
-		if( defaultCharacterSet == null )
-		{
-			defaultCharacterSet = (CharacterSet) getAttributes().get( prefix + ".defaultCharacterSet" );
-
-			if( defaultCharacterSet == null )
-				defaultCharacterSet = CharacterSet.UTF_8;
-		}
-
-		return defaultCharacterSet;
-	}
-
-	@Override
-	public File getFileUploadDirectory()
-	{
-		if( fileUploadDirectory == null )
-		{
-			ConcurrentMap<String, Object> attributes = getAttributes();
-			String key = prefix + ".fileUploadDirectory";
-			fileUploadDirectory = (File) attributes.get( key );
-
-			if( fileUploadDirectory == null )
-			{
-				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
-				fileUploadDirectory = new File( root, "uploads" );
-
-				File existing = (File) attributes.putIfAbsent( key, fileUploadDirectory );
-				if( existing != null )
-					fileUploadDirectory = existing;
-			}
-		}
-
-		return fileUploadDirectory;
-	}
-
-	@Override
-	public int getFileUploadSizeThreshold()
-	{
-		if( fileUploadSizeThreshold == null )
-		{
-			Number number = (Number) getAttributes().get( prefix + ".fileUploadSizeThreshold" );
-
-			if( number != null )
-				fileUploadSizeThreshold = number.intValue();
-
-			if( fileUploadSizeThreshold == null )
-				fileUploadSizeThreshold = 0;
-		}
-
-		return fileUploadSizeThreshold;
-	}
-
-	@Override
-	public Cache getCache()
-	{
-		if( cache == null )
-			cache = (Cache) getAttributes().get( InstanceUtil.CACHE_ATTRIBUTE );
-
-		return cache;
-	}
-
-	//
-	// DocumentExecutionAttributes
-	//
 
 	public LanguageManager getLanguageManager()
 	{
@@ -349,6 +331,14 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 		}
 
 		return trailingSlashRequired;
+	}
+
+	public Cache getCache()
+	{
+		if( cache == null )
+			cache = (Cache) getAttributes().get( InstanceUtil.CACHE_ATTRIBUTE );
+
+		return cache;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

@@ -46,6 +46,7 @@ import com.threecrickets.prudence.internal.JygmentsDocumentFormatter;
 import com.threecrickets.prudence.internal.attributes.DelegatedResourceAttributes;
 import com.threecrickets.prudence.service.ApplicationService;
 import com.threecrickets.prudence.service.ConversationStoppedException;
+import com.threecrickets.prudence.service.DelegatedResourceCachingService;
 import com.threecrickets.prudence.service.DelegatedResourceConversationService;
 import com.threecrickets.prudence.service.DelegatedResourceDocumentService;
 import com.threecrickets.scripturian.Executable;
@@ -100,6 +101,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.cacheKeyPatternHandlers</code>
  * : {@link ConcurrentMap}<String, String></li>
+ * <li>
+ * <code>com.threecrickets.prudence.DelegatedResource.cachingServiceName</code>
+ * : Defaults to "caching".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCacheKeyPattern:</code>
  * {@link String}, defaults to "{ri}|{dn}".</li>
@@ -809,6 +813,7 @@ public class DelegatedResource extends ServerResource
 				attributes.addLibraryLocations( executionContext );
 
 				executionContext.getServices().put( attributes.getDocumentServiceName(), documentService );
+				executionContext.getServices().put( attributes.getCachingServiceName(), new DelegatedResourceCachingService( this, documentService, conversationService, cachingUtil ) );
 				executionContext.getServices().put( attributes.getApplicationServiceName(), ApplicationService.create() );
 
 				try
@@ -841,10 +846,12 @@ public class DelegatedResource extends ServerResource
 
 			if( isInit )
 			{
-				documentService.setCacheDuration( 0 );
-				documentService.setCacheOnlyGet( true );
-				documentService.setCacheKeyPattern( attributes.getDefaultCacheKeyPattern() );
-				documentService.getCacheTags().clear();
+				// Reset caching attributes
+				String suffix = getDispatchedSuffix();
+				CachingUtil.setCacheDuration( executable, suffix, 0 );
+				CachingUtil.setCacheOnlyGet( executable, suffix, true );
+				CachingUtil.setCacheKeyPattern( executable, suffix, attributes.getDefaultCacheKeyPattern() );
+				CachingUtil.getCacheTags( executable, suffix, true ).clear();
 			}
 
 			// Enter!

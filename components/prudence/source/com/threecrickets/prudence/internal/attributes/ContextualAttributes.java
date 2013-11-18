@@ -21,9 +21,6 @@ import org.restlet.data.CharacterSet;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
-import com.threecrickets.prudence.DelegatedResource;
-import com.threecrickets.prudence.GeneratedTextResource;
-import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ParsingContext;
@@ -166,21 +163,6 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 	 * @return The file upload size threshold
 	 */
 	public abstract int getFileUploadSizeThreshold();
-
-	/**
-	 * Cache used for caching mode. It is stored in the application's
-	 * {@link Context} for persistence across requests and for sharing among
-	 * instances of {@link GeneratedTextResource}.
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>com.threecrickets.prudence.cache</code> in the application's
-	 * {@link Context}.
-	 * <p>
-	 * Note that this instance is shared with {@link DelegatedResource}.
-	 * 
-	 * @return The cache or null
-	 */
-	public abstract Cache getCache();
 
 	//
 	// Operations

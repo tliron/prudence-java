@@ -56,29 +56,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	// Attributes
 	//
 
-	@Override
-	public File getFileUploadDirectory()
-	{
-		if( fileUploadDirectory == null )
-		{
-			ConcurrentMap<String, Object> attributes = getAttributes();
-			String key = prefix + ".fileUploadDirectory";
-			fileUploadDirectory = (File) attributes.get( key );
-
-			if( fileUploadDirectory == null )
-			{
-				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
-				fileUploadDirectory = new File( root, "uploads" );
-
-				File existing = (File) attributes.putIfAbsent( key, fileUploadDirectory );
-				if( existing != null )
-					fileUploadDirectory = existing;
-			}
-		}
-
-		return fileUploadDirectory;
-	}
-
 	/**
 	 * If the URL points to a directory rather than a file, and that directory
 	 * contains a file with this name, then it will be used. This allows you to
@@ -248,6 +225,33 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	//
+	// NonVolatileContextualAttributes
+	//
+
+	@Override
+	public File getFileUploadDirectory()
+	{
+		if( fileUploadDirectory == null )
+		{
+			ConcurrentMap<String, Object> attributes = getAttributes();
+			String key = prefix + ".fileUploadDirectory";
+			fileUploadDirectory = (File) attributes.get( key );
+
+			if( fileUploadDirectory == null )
+			{
+				File root = (File) attributes.get( InstanceUtil.ROOT_ATTRIBUTE );
+				fileUploadDirectory = new File( root, "uploads" );
+
+				File existing = (File) attributes.putIfAbsent( key, fileUploadDirectory );
+				if( existing != null )
+					fileUploadDirectory = existing;
+			}
+		}
+
+		return fileUploadDirectory;
+	}
+
+	//
 	// ContextualAttributes
 	//
 
@@ -256,10 +260,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	{
 		return validateDocumentName( documentName, getDefaultIncludedName() );
 	}
-
-	//
-	// DocumentExecutionAttributes
-	//
 
 	@Override
 	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )

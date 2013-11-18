@@ -14,6 +14,7 @@ package com.threecrickets.prudence.internal.attributes;
 import org.restlet.Context;
 import org.restlet.resource.ResourceException;
 
+import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
@@ -142,6 +143,18 @@ public interface DocumentExecutionAttributes
 	 * @return Whether to allow client caching
 	 */
 	public boolean isTrailingSlashRequired();
+
+	/**
+	 * Cache used for caching mode. It is stored in the application's
+	 * {@link Context} for persistence across requests.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>com.threecrickets.prudence.cache</code> in the application's
+	 * {@link Context}.
+	 * 
+	 * @return The cache or null
+	 */
+	public Cache getCache();
 
 	//
 	// Operations

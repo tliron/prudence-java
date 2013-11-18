@@ -12,11 +12,9 @@
 package com.threecrickets.prudence.service;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.resource.ServerResource;
 
-import com.threecrickets.prudence.cache.Cache;
 import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.attributes.ResourceContextualAttributes;
 
@@ -71,96 +69,6 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 		return attributes.getPassThroughDocuments();
 	}
 
-	/**
-	 * The cache.
-	 * 
-	 * @return The cache
-	 */
-	public Cache getCache()
-	{
-		return attributes.getCache();
-	}
-
-	/**
-	 * The cache duration. Defaults to 0.
-	 * 
-	 * @return The cache duration in milliseconds
-	 * @see #setCacheDuration(long)
-	 */
-	public long getCacheDuration()
-	{
-		return CachingUtil.getCacheDuration( getDescriptor().getDocument(), getSuffix() );
-	}
-
-	/**
-	 * @param cacheDuration
-	 *        The cache duration in milliseconds
-	 * @see #getCacheDuration()
-	 */
-	public void setCacheDuration( long cacheDuration )
-	{
-		CachingUtil.setCacheDuration( getDescriptor().getDocument(), getSuffix(), cacheDuration );
-	}
-
-	/**
-	 * Whether to cache only GET requests
-	 * 
-	 * @return Whether to cache only GET requests
-	 */
-	public boolean getCacheOnlyGet()
-	{
-		return CachingUtil.getCacheOnlyGet( getDescriptor().getDocument(), getSuffix() );
-	}
-
-	/**
-	 * @param cacheOnlyGet
-	 *        Whether to cache only GET requests
-	 * @see #getCacheOnlyGet()
-	 */
-	public void setCacheOnlyGet( boolean cacheOnlyGet )
-	{
-		CachingUtil.setCacheOnlyGet( getDescriptor().getDocument(), getSuffix(), cacheOnlyGet );
-	}
-
-	/**
-	 * The cache key pattern.
-	 * 
-	 * @return The cache key pattern
-	 * @see #setCacheKeyPattern(String)
-	 */
-	public String getCacheKeyPattern()
-	{
-		return CachingUtil.getCacheKeyPattern( getDescriptor().getDocument(), getSuffix() );
-	}
-
-	/**
-	 * @param cacheKeyPattern
-	 *        The cache key pattern
-	 * @see #getCacheKeyPattern()
-	 */
-	public void setCacheKeyPattern( String cacheKeyPattern )
-	{
-		CachingUtil.setCacheKeyPattern( getDescriptor().getDocument(), getSuffix(), cacheKeyPattern );
-	}
-
-	/**
-	 * The cache key pattern handlers.
-	 * 
-	 * @return The cache key pattern handlers
-	 */
-	public ConcurrentMap<String, String> getCacheKeyPatternHandlers()
-	{
-		return CachingUtil.getCacheKeyPatternHandlers( getDescriptor().getDocument(), getSuffix(), true );
-	}
-
-	/**
-	 * @return The cache tags
-	 */
-	public Set<String> getCacheTags()
-	{
-		return CachingUtil.getCacheTags( getDescriptor().getDocument(), getSuffix(), true );
-	}
-
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -178,14 +86,4 @@ public abstract class ResourceDocumentServiceBase<R extends ServerResource, A ex
 	 * Caching utilities;
 	 */
 	protected final CachingUtil<R, A> cachingUtil;
-
-	/**
-	 * The optional attribute suffix.
-	 * 
-	 * @return The attribute suffix or null
-	 */
-	protected String getSuffix()
-	{
-		return null;
-	}
 }
