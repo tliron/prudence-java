@@ -122,7 +122,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name application.application
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Application.html">org.restlet.Application</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Application.html">org.restlet.Application</a>
  */
 
 /**
@@ -136,7 +136,7 @@ var Prudence = {}
  * not, however, affect {@link application#distributedGlobals}.
  * 
  * @name application.component
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Component.html">org.restlet.Component</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Component.html">org.restlet.Component</a>
  */
 
 /**
@@ -189,7 +189,7 @@ var Prudence = {}
  * @name application.getMediaTypeByExtension
  * @function
  * @param {String} extension The extension
- * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} The mapped media type, or null if the extension is not mapped
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} The mapped media type, or null if the extension is not mapped
  */
 
 /**
@@ -523,7 +523,7 @@ var Prudence = {}
  * @function
  * @param {String} uri The full URI
  * @param {String} mediaTypeName The preferred MIME type or null
- * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
@@ -537,7 +537,7 @@ var Prudence = {}
  * @function
  * @param {String} uri The relative URI
  * @param {String} mediaTypeName The preferred MIME type or null
- * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
@@ -552,7 +552,7 @@ var Prudence = {}
  * @param {String} applicationInternalName The internal name of the application (defaults to its subdirectory name)
  * @param {String} uri The relative URI
  * @param {String} mediaTypeName The preferred MIME type or null
- * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
@@ -621,7 +621,7 @@ var Prudence = {}
  * @name document.include
  * @function
  * @param {String} uri The document URI
- * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} The representation
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} The representation
  */
 
 /**
@@ -789,7 +789,7 @@ var Prudence = {}
  * </ul>
  *
  * @name conversation.reference
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Reference.html">org.restlet.data.Reference</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Reference.html">org.restlet.data.Reference</a>
  */
 
 /**
@@ -812,12 +812,12 @@ var Prudence = {}
  * <p>
  * It's also, importantly, less error-prone than hardcoding URIs. For example, here is snippet from a textual HTML resource:
  * <pre>
- * Click <a href="&lt;%= conversation.base %&gt;/contact/">here</a> to contact us.
+ * Click &lt;a href="&lt;%= conversation.base %&gt;/contact/"&gt;here&lt;/a&gt; to contact us.
  * </pre>
  * The above snippet can be used in <i>any</i> textual resource, no matter its URI, and will alwaus refer to the "/contact/"
  * URI starting at the root URI of the application.
  * <p>
- * Note that it can also be useful to use the base as part of your {@link document#cacheKeyPattern}, where it is
+ * Note that it can also be useful to use the base as part of your {@link caching#keyPattern}, where it is
  * available as "{cb}".
  *
  * @name conversation.base
@@ -852,7 +852,7 @@ var Prudence = {}
  * </ul>
  * 
  * @name conversation.queryAll
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
  */
 
 /**
@@ -880,7 +880,7 @@ var Prudence = {}
  * <i>Availability: only present in PUT and POST handling.</i>
  * 
  * @name conversation.entity
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>
   */
 
 /**
@@ -897,7 +897,7 @@ var Prudence = {}
  * <li>file: a JVM File instance for uploaded files stored on disk; uploaded files are stored in the application's "/uploads/" subdirectory by default</li>
  * <li>size: in bytes</li>
  * <li>mediaTypeName: the MIME type set by the client, such as "image/jpeg"</li>
- * <li>mediaType: the <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">MediaType</a> mapped to the mediaTypeName, if available</li>
+ * <li>mediaType: the <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/MediaType.html">MediaType</a> mapped to the mediaTypeName, if available</li>
  * </ul>
  * <p>
  * Note that either "data" or "file" are valid, but not both. One will always be null. You can control how uploaded data is managed
@@ -925,7 +925,7 @@ var Prudence = {}
  * </ul>
  *
  * @name conversation.formAll
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
  */
 
 /**
@@ -936,7 +936,7 @@ var Prudence = {}
  * @param {String} mediaType Can be null
  * @param {String} language Can be null
  * @param {String} characterSet Can be null
- * @returns <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/StringRepresentation.html">org.restlet.representation.StringRepresentation</a>
+ * @returns <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/StringRepresentation.html">org.restlet.representation.StringRepresentation</a>
  * @see conversation#setResponseBinary
  */
 
@@ -946,7 +946,7 @@ var Prudence = {}
  * @name conversation.setResponseBinary
  * @param {byte[]} byteArray The binary data
  * @param {String} mediaType Can be null
- * @returns <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html">org.restlet.representation.ByteArrayRepresentation</a>
+ * @returns <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html">org.restlet.representation.ByteArrayRepresentation</a>
  * @see conversation#setResponseText
  * @see Sincerity.JVM#newArray
  */
@@ -957,7 +957,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#statusCode} instead.
  * 
  * @name conversation.status
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Status.html">org.restlet.data.Status</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Status.html">org.restlet.data.Status</a>
  */
 
 /**
@@ -986,7 +986,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#encodingName} instead.
  * 
  * @name conversation.encoding
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Encoding.html">org.restlet.data.Encoding</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Encoding.html">org.restlet.data.Encoding</a>
  */
 
 /**
@@ -1012,7 +1012,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#characterSetName} or {@link conversation#characterSetShortName} instead.
  * 
  * @name conversation.characterSet
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/CharacterSet.html">org.restlet.data.CharacterSet</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/CharacterSet.html">org.restlet.data.CharacterSet</a>
  */
 
 /**
@@ -1048,7 +1048,7 @@ var Prudence = {}
  * language is included in the "en" language.
  * 
  * @name conversation.language
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>
  */
 
 /**
@@ -1067,7 +1067,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#mediaTypeName} or {@link conversation#mediaTypeExtension} instead.
  * 
  * @name conversation.mediaType
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>
  */
 
 /**
@@ -1104,7 +1104,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name conversation.disposition
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Disposition.html">org.restlet.data.Disposition</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Disposition.html">org.restlet.data.Disposition</a>
  */
 
 /**
@@ -1116,7 +1116,7 @@ var Prudence = {}
  * header, use the {@link conversation#modificationTimestamp} API.
  * <p>
  * Also note that extra headers you add are cached together with the rest of the response characteristics.
- * (See {@link document#cacheDuration})
+ * (See {@link caching#duration})
  * <p>
  * Example:
  * <pre>
@@ -1124,7 +1124,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name conversation.headers
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
  */
 
 /**
@@ -1150,7 +1150,7 @@ var Prudence = {}
  * negotiation.
  * 
  * @name conversation.negotiated
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/Variant.html">org.restlet.representation.Variant</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Variant.html">org.restlet.representation.Variant</a>
  */
 
 /**
@@ -1214,28 +1214,28 @@ var Prudence = {}
  * Provides low-level access to the underlying Restlet request instance for the current conversation.
  *
  * @name conversation.request
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Request.html">org.restlet.Request</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Request.html">org.restlet.Request</a>
  */
 
 /**
  * Provides low-level access to the underlying Restlet client info instance for the current conversation.
  *
  * @name conversation.client
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/ClientInfo.html">org.restlet.data.ClientInfo</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/ClientInfo.html">org.restlet.data.ClientInfo</a>
  */
 
 /**
  * Provides low-level access to the underlying Restlet response instance for the current conversation.
  *
  * @name conversation.response
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Response.html">org.restlet.Response</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Response.html">org.restlet.Response</a>
  */
 
 /**
  * Provides low-level access to the underlying Restlet resource instance for the current conversation.
  *
  * @name conversation.resource
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>
  */
 
 /**
@@ -1383,7 +1383,7 @@ var Prudence = {}
  * <i>Availability: only available for manual resources.</i>
  *
  * @name conversation.tag
- * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Tag.html">org.restlet.data.Tag</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Tag.html">org.restlet.data.Tag</a>
  */
 
 /**
@@ -1518,7 +1518,7 @@ var Prudence = {}
  *
  * @name conversation.addMediaType
  * @function
- * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
+ * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
  * @see conversation#addMediaTypeWithLanguage
  */
 
@@ -1527,8 +1527,8 @@ var Prudence = {}
  * 
  * @name conversation.addMediaTypeWithLanguage
  * @function
- * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
- * @type {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
+ * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
+ * @type {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
  */
 
 /**
