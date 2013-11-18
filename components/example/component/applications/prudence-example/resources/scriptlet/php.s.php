@@ -20,7 +20,7 @@ if($_GET['defer'] == 'true') if($conversation->defer()) $conversation->stop();
 // Cache this page
 //
 
-$document->cacheDuration = 5000;
+$caching->duration = 5000;
 
 //
 // Calling Java

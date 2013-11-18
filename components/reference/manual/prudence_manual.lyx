@@ -140,8 +140,8 @@ Up and Running
 \end_layout
 
 \begin_layout Standard
-All you need to run Prudence is a JVM: version 7 or above is recommended,
- though 
+All you need to run Prudence is a JVM.
+ Version 7 or above is recommended, though 
 \begin_inset CommandInset href
 LatexCommand href
 name "version 6"
@@ -150,7 +150,7 @@ target "http://threecrickets.com/prudence/download/#jvm6"
 \end_inset
 
  can also be supported.
- You do not need then 
+ You do not need the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -303,8 +303,8 @@ sincerity
 \end_layout
 
 \begin_layout Standard
-The GUI is useful for visualizing things, but generally the CLI is better
- for getting things done.
+The GUI is useful for visualization, but generally the CLI is better for
+ getting things done.
  We'll be using the CLI in this tutorial.
 \end_layout
 
@@ -495,17 +495,6 @@ First Steps
 You've played with the example applications, and now it's time to create
  your own.
  Let's make a wiki!
-\end_layout
-
-\begin_layout Subsubsection
-\begin_inset Quotes eld
-\end_inset
-
-prudence create
-\begin_inset Quotes erd
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1385,10 +1374,6 @@ reference "two-routing-paradigms"
 Let's Make a Wiki
 \end_layout
 
-\begin_layout Subsubsection
-One Editable Page
-\end_layout
-
 \begin_layout Standard
 It's time to flesh out out 
 \begin_inset Quotes eld
@@ -1466,7 +1451,7 @@ var page = application.globals.get('page') || 'This page is empty.'
 
 \begin_layout Plain Layout
 
-<p style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
+<div style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
 \end_layout
 
 \begin_layout Plain Layout
@@ -1476,7 +1461,7 @@ var page = application.globals.get('page') || 'This page is empty.'
 
 \begin_layout Plain Layout
 
-</p>
+</div>
 \end_layout
 
 \begin_layout Plain Layout
@@ -1578,7 +1563,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&it
 We're using the 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.request"
+name "conversation.request API"
 target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
 
 \end_inset
@@ -1954,7 +1939,7 @@ reference "the-uri-space"
 \end_layout
 
 \begin_layout Itemize
-There's, of course, a lot more you can do with 
+There's also, of course, a lot more you can do with 
 \bar under
 scriptlets (page 
 \begin_inset CommandInset ref
@@ -1969,7 +1954,8 @@ reference "scriptlet-resources"
 \end_layout
 
 \begin_layout Itemize
-Are you a fan of MVC? It's possible to treat scriptlet pages as 
+Are you a fan of MVC (Model-View-Controller)? It's possible to treat scriptlet
+ pages as 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1988,7 +1974,7 @@ target "http://jinja.pocoo.org/docs/"
 .
  There's a 
 \bar under
-whole chapter about it (page 
+whole, very detailed chapter about it (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "mvc"
@@ -2004,9 +1990,13 @@ reference "mvc"
 A Scalable Wiki
 \end_layout
 
+\begin_layout Subsubsection
+Caching
+\end_layout
+
 \begin_layout Standard
-In our above example, we're storing the wiki page content in in-process
- memory, so it's all quite fast.
+In this tutorial, we're storing the wiki page content in in-process memory,
+ so it's all quite fast.
  However, if we were fetching data from a database server, authenticating
  users, and doing other sorts of heavy lifting, our page would not generate
  so fast.
@@ -2338,6 +2328,162 @@ any
 all
 \emph default
  files that include it.
+\end_layout
+
+\begin_layout Subsubsection
+Compression
+\end_layout
+
+\begin_layout Standard
+Prudence will automatically compress responses (using gzip or DEFLATE) if
+ their size in bytes exceeds a certain threshold.
+ Our wiki pages were likely too small, which is why you likely haven't seen
+ compression.
+ You'll usually want that threshold: there are little or no bandwidth savings
+ to be gained by compressing tiny responses, so the extra CPU load required
+ for compression will be wasted.
+ For now, let's lower the threshold, just for demonstration purposes.
+\end_layout
+
+\begin_layout Standard
+Open the application's setting.js and edit the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.settings.compression
+\begin_inset Quotes erd
+\end_inset
+
+ setting (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-compression"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	compression: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		sizeThreshold: 0,
+\end_layout
+
+\begin_layout Plain Layout
+
+		exclude: []
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Restart Prudence for the setting to take effect.
+ With a threshold of zero bytes, 
+\emph on
+all
+\emph default
+ responses should now be compressed---assuming the client accepts compression,
+ as indeed web browsers do.
+\end_layout
+
+\begin_layout Standard
+Actually, Prudence integrates compression with caching: both compressed
+ and uncompressed versions of the response are cached, so that compression
+ will not have to be redone.
+ This can result in significant savings for CPU usage in high loads.
+ (And if a client needs a different kind of compression than the one that
+ was stored in the cache---say, gzip was stored, but the client needs DEFLATE---
+then Prudence will use the uncompressed cache entry, compress it, and then
+ cache.
+ Smart!)
+\end_layout
+
+\begin_layout Standard
+Let's see it in action.
+ Using the web browser's network monitor, you'll notice that the response
+ headers now include 
+\begin_inset Quotes eld
+\end_inset
+
+Content-Encoding
+\begin_inset Quotes erd
+\end_inset
+
+, which means that our responses are compressed.
+ gzip or DEFLATE will be chosen according to the web browser's preferences.
+ Other than that (and the different response byte size) it should look identical.
+\end_layout
+
+\begin_layout Standard
+To test using cURL, we'll have to do two things: explicitly tell the server
+ that we support compression by sending the 
+\begin_inset Quotes eld
+\end_inset
+
+Accept-Encoding
+\begin_inset Quotes erd
+\end_inset
+
+ header, and also be ready to uncompress the result in order to display
+ it, using cURL's 
+\begin_inset Quotes eld
+\end_inset
+
+compressed
+\begin_inset Quotes erd
+\end_inset
+
+ flag:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
+80/wiki/api/test/
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -2796,7 +2942,7 @@ handleInit is a bit different in that it dynamically sets up our resource.
  best type according to the client's preferences.
  Note that order matters here: the first MIME types you add are preferred
  over the later ones.
- For our example, we'll only support JSON responses, though it's possible
+ For our tutorial, we'll only support JSON responses, though it's possible
  to support XML and others.
 \end_layout
 
@@ -3083,41 +3229,193 @@ reference "manual-resources"
 Finishing Touches
 \end_layout
 
+\begin_layout Standard
+Here, we'll beef up our wiki a bit more, and also introduce you to a few
+ more Prudence features.
+\end_layout
+
 \begin_layout Subsubsection
-Exploring Compression
+CSS with ZUSS
 \end_layout
 
 \begin_layout Standard
-Prudence will automatically compress responses (using gzip or DEFLATE) if
- their size in bytes exceeds a certain threshold.
- Our wiki pages were likely too small, which is why you likely haven't seen
- compression.
- You'll usually want that threshold: there are little or no bandwidth savings
- to be gained by compressing tiny responses, so the extra CPU load required
- for compression will be wasted.
- For now, let's lower the threshold, just for demonstration purposes.
+Prudence comes with 
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
+
+\end_inset
+
+ built in: it's an extended CSS language inspired by 
+\begin_inset CommandInset href
+LatexCommand href
+name "LESS"
+target "http://lesscss.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "SASS"
+target "http://sass-lang.com/"
+
+\end_inset
+
+.
+ ZUSS greatly increases the power of CSS by allowing for code re-usability,
+ variables and expressions, as well as nesting CSS.
 \end_layout
 
 \begin_layout Standard
-Open the application's setting.js and edit the 
-\bar under
-
+Let's zuss up our wiki pages! First, let's include the CSS in our 
 \begin_inset Quotes eld
 \end_inset
 
-app.settings.compression
+page.s.html
 \begin_inset Quotes erd
 \end_inset
 
- setting (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "settings-compression"
+ by adding an HTML 
+\begin_inset Quotes eld
+\end_inset
+
+head
+\begin_inset Quotes erd
+\end_inset
+
+ tag:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<head>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/site.
+css" />
+\end_layout
+
+\begin_layout Plain Layout
+
+</head>
+\end_layout
 
 \end_inset
 
-)
-\bar default
+
+\end_layout
+
+\begin_layout Standard
+You'll notice our use of the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.base API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.base"
+
+\end_inset
+
+: it return a 
+\emph on
+relative
+\emph default
+ URI path from our currently requested URI to the base URI of the application.
+ For example, if our URI is 
+\begin_inset Quotes eld
+\end_inset
+
+http://localhost:8080/wiki/page/one/two/three/
+\begin_inset Quotes erd
+\end_inset
+
+ then conversation.base would be 
+\begin_inset Quotes eld
+\end_inset
+
+../../../..
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This frees us from having to hardcode complete URI paths, and guarantees
+ portability even if we move the application to a different URI, or attach
+ it to multiple virtual hosts.
+\end_layout
+
+\begin_layout Standard
+Now, let's edit the 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/style/site.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ file, which was created for us from the application template.
+ Note that there's also a 
+\begin_inset Quotes eld
+\end_inset
+
+.css
+\begin_inset Quotes erd
+\end_inset
+
+ file in that directory: Prudence will update it for us when we edit the
+ 
+\begin_inset Quotes eld
+\end_inset
+
+.zuss
+\begin_inset Quotes erd
+\end_inset
+
+ file.
+ How about this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+x
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As a final treat, Prudence can also minify the CSS file us, to save some
+ bandwidth (it will 
+\emph on
+also
+\emph default
+ compress it for us using gzip or DEFLATE, as was mentioned above).
+ To turn on minification, simply change the resource URI to include 
+\begin_inset Quotes eld
+\end_inset
+
+.min
+\begin_inset Quotes erd
+\end_inset
+
 :
 \end_layout
 
@@ -3128,110 +3426,18 @@ status open
 
 \begin_layout Plain Layout
 
-app.settings = {
+<head>
 \end_layout
 
 \begin_layout Plain Layout
 
-	...
+	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/site.
+min.css" />
 \end_layout
 
 \begin_layout Plain Layout
 
-	compression: {
-\end_layout
-
-\begin_layout Plain Layout
-
-		sizeThreshold: 0,
-\end_layout
-
-\begin_layout Plain Layout
-
-		exclude: []
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Restart Prudence for the setting to take effect.
- With a threshold of zero bytes, 
-\emph on
-all
-\emph default
- responses should now be compressed---assuming the client accepts compression,
- as indeed web browsers do.
-\end_layout
-
-\begin_layout Standard
-Actually, Prudence integrates compression with caching: both compressed
- and uncompressed versions of the response are cached, so that compression
- will not have to be redone.
- This can result in significant savings for CPU usage in high loads.
- (And if a client needs a different kind of compression than the one that
- was stored in the cache---say, gzip was stored, but the client needs DEFLATE---
-then Prudence will use the uncompressed cache entry, compress it, and then
- cache.
- Smart!)
-\end_layout
-
-\begin_layout Standard
-Let's see it in action.
- Using the web browser's network monitor, you'll notice that the response
- headers now include 
-\begin_inset Quotes eld
-\end_inset
-
-Content-Encoding
-\begin_inset Quotes erd
-\end_inset
-
-, which means that our responses are compressed.
- gzip or DEFLATE will be chosen according to the web browser's preferences.
- Other than that (and the different response byte size) it should look identical.
-\end_layout
-
-\begin_layout Standard
-To test using cURL, we'll have to do two things: explicitly tell the server
- that we support compression by sending the 
-\begin_inset Quotes eld
-\end_inset
-
-Accept-Encoding
-\begin_inset Quotes erd
-\end_inset
-
- header, and also be ready to uncompress the result in order to display
- it, using cURL's 
-\begin_inset Quotes eld
-\end_inset
-
-compressed
-\begin_inset Quotes erd
-\end_inset
-
- flag:
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
-80/wiki/api/test/
+</head>
 \end_layout
 
 \end_inset
@@ -3243,12 +3449,306 @@ curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
 Markup Languages
 \end_layout
 
+\begin_layout Standard
+Another stylistic flourish would be to use an HTML markup language instead
+ of raw HTML.
+ It's useful for this tutorial, because it will show us how easy it is to
+ use JVM libraries from within Prudence.
+\end_layout
+
+\begin_layout Standard
+First let's install our library using Sincerity.
+ We'll use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Pegdown"
+target "https://github.com/sirthias/pegdown"
+
+\end_inset
+
+, a JVM implementation of 
+\begin_inset CommandInset href
+LatexCommand href
+name "Markdown"
+target "http://daringfireball.net/projects/markdown/syntax"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add org.pegdown pegdown : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now let's edit our 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ to render using the Pegdown API:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<div style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
+\end_layout
+
+\begin_layout Plain Layout
+
+	<%= new org.pegdown.PegDownProcessor().markdownToHtml(page) %>
+\end_layout
+
+\begin_layout Plain Layout
+
+</div>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+After restarting Prudence we would be able to use Markdown in our wiki.
+ Try to edit a wiki page using this content:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+This is a title
+\end_layout
+
+\begin_layout Plain Layout
+
+===============
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+And a subtitle
+\end_layout
+
+\begin_layout Plain Layout
+
+--------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+* And these
+\end_layout
+
+\begin_layout Plain Layout
+
+* Are bullet points
+\end_layout
+
+\begin_layout Plain Layout
+
+* In a list
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Markup Scriptlets
+\end_layout
+
+\begin_layout Standard
+Actually, there's another nice trick we can do with markup languages: once
+ the library is installed, Prudence will allow you to write scriptlets in
+ markup.
+ Here's a complete page you can try, saved as 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/markup.s.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%md
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+My Todo List
+\end_layout
+
+\begin_layout Plain Layout
+
+============
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+* The first item of business
+\end_layout
+
+\begin_layout Plain Layout
+
+* The second item of business
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Browse to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/markup/"
+target "http://localhost:8080/wiki/markup/"
+
+\end_inset
+
+ to see it.
+\end_layout
+
+\begin_layout Standard
+This nifty feature works with Markdown, Confluence, MediaWiki, Twiki, Trac
+ and Textile.
+\end_layout
+
 \begin_layout Subsubsection
-CSS with ZUSS
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+You don't 
+\emph on
+have to
+\emph default
+ use ZUSS: Prudence can also 
+\bar under
+unify and minify regular CSS, as well as client-side JavaScript (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-javascript-and-css-optimization"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+Read the 
+\bar under
+FAQ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "why-zuss"
+
+\end_inset
+
+)
+\bar default
+ as to why Prudence supports ZUSS but not LESS or SASS.
+\end_layout
+
+\begin_layout Itemize
+Check out the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity markup plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#markup-plugin"
+
+\end_inset
+
+.
+ It doesn't use Prudence, but you can install it into your container as
+ a utility to allow easy use of markup languages.
 \end_layout
 
 \begin_layout Subsection
-Multilingual
+Not Only JavaScript
 \end_layout
 
 \begin_layout Standard
@@ -3259,16 +3759,26 @@ server
 -side JavaScript; it has nothing to do with the code running inside web
  browsers), but Prudence also supports Python, Ruby, PHP, Lua, Groovy and
  Clojure.
- To use them, you would first need to 
+\end_layout
+
+\begin_layout Subsubsection
+PyWiki
+\end_layout
+
+\begin_layout Standard
+For this tutorial, we'll show you how to implement our entire wiki in Python.
+\end_layout
+
+\begin_layout Standard
+First, let's 
 \begin_inset CommandInset href
 LatexCommand href
-name "install them using Sincerity"
+name "install Python using Sincerity"
 target "http://threecrickets.com/sincerity/ecosystem/language-plugins/"
 
 \end_inset
 
-.
- To try this out, let's install Python like so:
+:
 \end_layout
 
 \begin_layout Standard
@@ -3287,7 +3797,17 @@ sincerity add python : install
 \end_layout
 
 \begin_layout Standard
-We could then create a Python scriptlet:
+We'll also need a Python JSON library, because our Python engine, Jython,
+ doesn't come with one.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "simplejson"
+target "http://simplejson.readthedocs.org/"
+
+\end_inset
+
+ works well with Jython, so let's install it:
 \end_layout
 
 \begin_layout Standard
@@ -3297,22 +3817,7 @@ status open
 
 \begin_layout Plain Layout
 
-<%python
-\end_layout
-
-\begin_layout Plain Layout
-
-for x in range(0, 10):
-\end_layout
-
-\begin_layout Plain Layout
-
-	print x, '<br/>'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
+sincerity easy_install simplejson
 \end_layout
 
 \end_inset
@@ -3321,8 +3826,15 @@ for x in range(0, 10):
 \end_layout
 
 \begin_layout Standard
-The low-level APIs are available for all supported languages.
- Here's a Ruby example:
+Now let's rewrite our 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ using Python instead of JavaScript for our scriptlets:
 \end_layout
 
 \begin_layout Standard
@@ -3332,12 +3844,69 @@ status open
 
 \begin_layout Plain Layout
 
-<%ruby
+<%py
 \end_layout
 
 \begin_layout Plain Layout
 
-def say_hello name
+from org.pegdown import PegDownProcessor
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.duration = 60000
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.tags.add(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.onlyGet = True
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if conversation.request.method.name == 'POST':
+\end_layout
+
+\begin_layout Plain Layout
+
+    content = conversation.form['content']
+\end_layout
+
+\begin_layout Plain Layout
+
+    application.globals[id] = content
+\end_layout
+
+\begin_layout Plain Layout
+
+    document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+page = application.globals[id] or 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -3347,41 +3916,17 @@ def say_hello name
 
 \begin_layout Plain Layout
 
-<p>
+<div style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
 \end_layout
 
 \begin_layout Plain Layout
 
-	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
+	<%= PegDownProcessor().markdownToHtml(page) %>
 \end_layout
 
 \begin_layout Plain Layout
 
-</p>
-\end_layout
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-end
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-say_hello 'Newton'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
+</div>
 \end_layout
 
 \end_inset
@@ -3390,7 +3935,368 @@ say_hello 'Newton'
 \end_layout
 
 \begin_layout Standard
-You even can mix scriptlets in several languages in the same page, 
+Note the 
+\begin_inset Quotes eld
+\end_inset
+
+<%py
+\begin_inset Quotes erd
+\end_inset
+
+ delimiter, telling us that from now on scriptlets will be in Python.
+ We can switch back to JavaScript using 
+\begin_inset Quotes eld
+\end_inset
+
+<%js
+\begin_inset Quotes erd
+\end_inset
+
+, or indeed to any other supported language.
+ You can also change the default from 
+\bar under
+JavaScript to Python if you prefer (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+For our 
+\begin_inset Quotes eld
+\end_inset
+
+api.m.js
+\begin_inset Quotes erd
+\end_inset
+
+ file, we will have to rename it to 
+\begin_inset Quotes eld
+\end_inset
+
+api.m.py
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Here's the code in Python:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+import simplejson
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def handle_init(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+    id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+    caching.duration = 60000
+\end_layout
+
+\begin_layout Plain Layout
+
+    caching.tags.add(id) 
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def handle_get(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+    id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+    content = application.globals[id] or 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+    return simplejson.dumps({'content': content})
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def handle_put(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+    id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+    payload = simplejson.loads(conversation.entity.text)
+\end_layout
+
+\begin_layout Plain Layout
+
+    application.globals[id] = payload['content']
+\end_layout
+
+\begin_layout Plain Layout
+
+    document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+    return simplejson.dumps({'content': payload['content']})
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+def handle_delete(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+    id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+    del application.globals[id]
+\end_layout
+
+\begin_layout Plain Layout
+
+    document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+    return None
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Some things to note:
+\end_layout
+
+\begin_layout Itemize
+Prudence will attempt to use the programming language's naming conventions.
+ For example, JavaScript generally prefers camel case, while Python uses
+ lowercase and underscores: 
+\begin_inset Quotes eld
+\end_inset
+
+handleInit
+\begin_inset Quotes erd
+\end_inset
+
+ vs.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+handle_init
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Clojure, for another example, uses lowercase and hyphens: 
+\begin_inset Quotes eld
+\end_inset
+
+handle-init
+\begin_inset Quotes erd
+\end_inset
+
+.
+ However, when you call 
+\emph on
+from
+\emph default
+ the language 
+\emph on
+into
+\emph default
+ the JVM, the convention depends on the language engine.
+ For our example, Jython requires camel case.
+\end_layout
+
+\begin_layout Itemize
+When we were using JavaScript we had access to specialized APIs, such as
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.getForm"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.getForm"
+
+\end_inset
+
+.
+ These APIs are, unfortunately, only for JavaScript: when using other programmin
+g languages, you will have to use the 
+\begin_inset Quotes eld
+\end_inset
+
+low-level
+\begin_inset Quotes erd
+\end_inset
+
+ APIs, such as the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.form"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
+
+\end_inset
+
+ we've used here.
+ On the other hand, JavaScript suffers from almost no standard library of
+ its own: in Python, for example, you have access to a rich standard library,
+ as well as its wider ecosystem, to make your programming easier.
+\end_layout
+
+\begin_layout Subsubsection
+CljWiki?
+\end_layout
+
+\begin_layout Standard
+Well, we won't go on rewriting our wiki in every supported programming language\SpecialChar \ldots{}
+
+ but here's some proof that they 
+\emph on
+do
+\emph default
+ work.
+\end_layout
+
+\begin_layout Standard
+Let's install Clojure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add clojure : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now let's create a Clojure manual resource, at 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/hi.m.clj
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(defn handle-init [conversation]
+\end_layout
+
+\begin_layout Plain Layout
+
+  (..
+ conversation (addMediaTypeByName "text/plain")))
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+(defn handle-get [conversation]
+\end_layout
+
+\begin_layout Plain Layout
+
+  "Hello from Clojure!")
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Browse to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:8080/wiki/hi/"
+target "http://localhost:8080/wiki/hi/"
+
+\end_inset
+
+ to see it.
+\end_layout
+
+\begin_layout Subsubsection
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+You can even mix scriptlets in several languages on the same page, 
 \begin_inset CommandInset href
 LatexCommand href
 name "like magic"
@@ -3398,6 +4304,130 @@ target "http://threecrickets.com/scripturian/manual/faq/#in-flow"
 
 \end_inset
 
+.
+\end_layout
+
+\begin_layout Subsection
+What's Next?
+\end_layout
+
+\begin_layout Standard
+We purposely didn't cover every single Prudence feature in this tutorial:
+ just enough to get you started.
+ Continue reading through the Basic Manual as necessary, refer to the 
+\begin_inset CommandInset href
+LatexCommand href
+name "online API documentation"
+target "http://threecrickets.com/api/javascript/"
+
+\end_inset
+
+, and take a peek at the Advanced Manual to see just how far you can go.
+\end_layout
+
+\begin_layout Standard
+Here are some highlights of topics we haven't covered:
+\end_layout
+
+\begin_layout Itemize
+Prudence has a sophisticated system for 
+\bar under
+handling background tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+.
+ You can spawn tasks on-demand using APIs, or schedule recurring maintenance
+ tasks using a crontab.
+ In both cases, tasks use a separate thread pool than the one used for handling
+ user requests.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+! When you need to scale horizontally, Prudence provides you with a remarkably
+ seamless solution to share resources.
+ Even the task APIs support it: you can easily farm out your workload anywhere
+ within your Prudence cluster.
+\end_layout
+
+\begin_layout Itemize
+We've already mentioned that Prudence has a very powerful system for 
+\bar under
+defining the URI-space (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-uri-space"
+
+\end_inset
+
+)
+\bar default
+.
+ You can also configure 
+\bar under
+virtual hosting and secure 
+\begin_inset Quotes eld
+\end_inset
+
+HTTPS
+\begin_inset Quotes erd
+\end_inset
+
+ servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "servers-and-hosts"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+There's generally a whole lot you 
+\bar under
+can configure (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuring-component"
+
+\end_inset
+
+)
+\bar default
+: logging, cache backends, etc.
+\end_layout
+
+\begin_layout Itemize
+We cover 
+\bar under
+deployment strategies in depth (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "deploying"
+
+\end_inset
+
+)
+\bar default
 .
 \end_layout
 
@@ -11864,6 +12894,21 @@ reference "static-resources-javascript-and-css-optimization"
 .
 \end_layout
 
+\begin_layout Quote
+See the 
+\bar under
+FAQ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "why-zuss"
+
+\end_inset
+
+)
+\bar default
+ as to why Prudence supports ZUSS but not LESS or SASS.
+\end_layout
+
 \begin_layout Subsubsection
 Other Effects
 \end_layout
@@ -17084,7 +18129,7 @@ defaultDocumentName
 : When a document name specifies to a directory, Scripturian will internally
  change the specification to a document with this name in the subdirectory
  (excluding the extension).
- Example, if the value is 
+ For example, if the value is 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17113,6 +18158,15 @@ document.require('/mylibrary/')
 \end_inset
 
 /libraries/mylibrary/default.*
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The default value for this setting is 
+\begin_inset Quotes eld
+\end_inset
+
+default
 \begin_inset Quotes erd
 \end_inset
 
@@ -17151,6 +18205,15 @@ mylibrary.py
 \end_inset
 
 , then the former file will be preferred.
+ The default value for this setting is 
+\begin_inset Quotes eld
+\end_inset
+
+js
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
@@ -17160,6 +18223,15 @@ defaultLanguageTag
 \series default
 : If a scriptlet tag does not specify a language, then this value will be
  the default.
+ The default value for this setting is 
+\begin_inset Quotes eld
+\end_inset
+
+javascript
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -19751,6 +20823,59 @@ Summary
 Choose the right tool for the job! Node.js is a great choice for streaming
  and streaming-like services, and Prudence---we hope you'll agree---is a
  great choice for web services and RESTful APIs.
+\end_layout
+
+\begin_layout Subsubsection*
+Why does Prudence support ZUSS instead of LESS or SASS?
+\begin_inset CommandInset label
+LatexCommand label
+name "why-zuss"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
+
+\end_inset
+
+ is less mature, less comprehensive, and not as popular as 
+\begin_inset CommandInset href
+LatexCommand href
+name "LESS"
+target "http://lesscss.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "SASS"
+target "http://sass-lang.com/"
+
+\end_inset
+
+.
+ We chose it because of a single advantage: it is a JVM library.
+ Try as we might, we could not get LESS to run properly in a server-side
+ JavaScript environment.
+ As for SASS, it requires Ruby, which is simply too big a dependency for
+ a single feature.
+\end_layout
+
+\begin_layout Standard
+However, nothing is stopping you from running LESS or SASS from the command
+ line, thus updating your CSS file.
+\end_layout
+
+\begin_layout Standard
+And we would, of course, welcome patches that allow for proper integration
+ of LESS and SASS!
 \end_layout
 
 \begin_layout Subsection
@@ -26342,6 +27467,13 @@ Provides access to Prudence and Restlet versions.
 
 \begin_layout Section
 Servers and Hosts
+\begin_inset CommandInset label
+LatexCommand label
+name "servers-and-hosts"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -27327,6 +28459,13 @@ Task Farming
 
 \begin_layout Section
 Deploying
+\begin_inset CommandInset label
+LatexCommand label
+name "deploying"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection

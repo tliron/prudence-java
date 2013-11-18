@@ -28,7 +28,7 @@
     (if (nil? resource)
       404
 	    (try
-	      (prudence.dispatch.resource/handle-init resource conversation)
+	      (prudence.dispatchers.resource/handle-init resource conversation)
 	      (catch AbstractMethodError _ 405)))))
 
 (defn handle-get [conversation]
@@ -37,7 +37,7 @@
     (if (nil? resource)
       404
 	    (try
-	      (prudence.dispatch.resource/handle-get resource conversation)
+	      (prudence.dispatchers.resource/handle-get resource conversation)
 	      (catch AbstractMethodError _ 405)))))
 
 (defn handle-get-info [conversation]
@@ -46,7 +46,7 @@
     (if (nil? resource)
       404
 	    (try
-	      (prudence.dispatch.resource/handle-get-info resource conversation)
+	      (prudence.dispatchers.resource/handle-get-info resource conversation)
 	      (catch AbstractMethodError _ 405)))))
 
 (defn handle-post [conversation]
@@ -55,7 +55,7 @@
     (if (nil? resource)
       404
 	    (try
-	      (prudence.dispatch.resource/handle-post resource conversation)
+	      (prudence.dispatchers.resource/handle-post resource conversation)
 	      (catch AbstractMethodError _ 405)))))
 
 (defn handle-put [conversation]
@@ -64,7 +64,7 @@
     (if (nil? resource)
       404
 	    (try
-	      (prudence.dispatch.resource/handle-put resource conversation)
+	      (prudence.dispatchers.resource/handle-put resource conversation)
 	      (catch AbstractMethodError _ 405)))))
 
 (defn handle-delete [conversation]
@@ -73,6 +73,6 @@
     (if (nil? resource)
       404
 	    (try
-	      (prudence.dispatch.resource/handle-delete resource conversation)
+	      (prudence.dispatchers.resource/handle-delete resource conversation)
 	      (catch AbstractMethodError x
 	         (.. conversation (setStatusCode 405)))))))

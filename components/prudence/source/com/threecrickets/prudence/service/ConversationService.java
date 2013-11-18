@@ -310,10 +310,11 @@ public class ConversationService
 	{
 		if( base == null )
 		{
+			Reference root = new Reference( getRequest().getRootRef() + "/" );
 			Reference reference = getReference();
 
 			// Reverse relative reference
-			base = getRequest().getRootRef().getRelativeRef( reference ).getPath();
+			base = root.getRelativeRef( reference ).getPath();
 		}
 
 		return base;
