@@ -73,7 +73,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @class
 	 * @name Prudence.Routing.Application
-	 * @property {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root=Sincerity.Container.here]
+	 * @property {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root=Sincerity.Container.here]
 	 * 
 	 * @property {Object} [settings] Application settings
 	 * 
@@ -788,8 +788,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Static
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
-	 * @param {String[]|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>[]} [roots="resources" container "/libraries/web/" subdirectories] The paths from which files are searched
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {String[]|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>[]} [roots="resources" container "/libraries/web/" subdirectories] The paths from which files are searched
 	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
 	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
 	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
@@ -903,7 +903,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Manual
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
 	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
 	 * @param {String} [preExtension='m']
 	 * @param {Boolean} [trailingSlashRequired=true]
@@ -1046,8 +1046,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Scriptlet
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
-	 * @param {String|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/includes']
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/includes']
 	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
 	 * @param {String} [preExtension='s']
 	 * @param {Boolean} [trailingSlashRequired=true]

@@ -49,7 +49,7 @@ var Prudence = {}
  * Implementation note: Prudence's application globals are identical to Restlet application attributes.
  * 
  * @name application.globals
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
  * @see application#sharedGlobals
  */
 
@@ -62,7 +62,7 @@ var Prudence = {}
  * will be no shared globals. See the note in the {@link application#component} documentation.
  * 
  * @name application.sharedGlobals
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
  * @see application#distributionGlobals
  * @see executable#globals
  */
@@ -83,7 +83,7 @@ var Prudence = {}
  * <i>Availability: only available if Prudence's distributed component is installed.</i>
  *
  * @name application.distributedGlobals
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
  */
 
 /**
@@ -100,7 +100,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name application.root
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>
  */
 
 /**
@@ -108,7 +108,7 @@ var Prudence = {}
  * you can easily access any container file. See {@link application#root} for usage examples.
  * 
  * @name application.containerRoot
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/File.html">java.io.File</a>
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>
  */
 
 /**
@@ -122,7 +122,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name application.application
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Application.html">org.restlet.Application</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Application.html">org.restlet.Application</a>
  */
 
 /**
@@ -136,7 +136,7 @@ var Prudence = {}
  * not, however, affect {@link application#distributedGlobals}.
  * 
  * @name application.component
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Component.html">org.restlet.Component</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Component.html">org.restlet.Component</a>
  */
 
 /**
@@ -152,7 +152,7 @@ var Prudence = {}
  * will by default inherit the "prudence" logger's configuration.
  * 
  * @name application.logger
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/logging/Logger.html">java.util.logging.Logger</a>
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/logging/Logger.html">java.util.logging.Logger</a>
  */
 
 /**
@@ -171,7 +171,7 @@ var Prudence = {}
  * @name application.getSubLogger
  * @function
  * @param {String} name The name to append to base logger's name
- * @returns {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/logging/Logger.html">java.util.logging.Logger</a>} The sub-logger
+ * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/logging/Logger.html">java.util.logging.Logger</a>} The sub-logger
  */
 
 /**
@@ -189,7 +189,7 @@ var Prudence = {}
  * @name application.getMediaTypeByExtension
  * @function
  * @param {String} extension The extension
- * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} The mapped media type, or null if the extension is not mapped
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} The mapped media type, or null if the extension is not mapped
  */
 
 /**
@@ -241,7 +241,7 @@ var Prudence = {}
  * @param {Boolean} fixedRepeat Whether repetitions are at fixed times, or if the repeat delay begins when the task ends;
  *                  this value us used only if the repeat delay is greater than zero; note that "true" may cause a new
  *                  instance of the task to be spawned again before the previous one completes
- * @returns {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
+ * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
  */
 
 /**
@@ -287,7 +287,7 @@ var Prudence = {}
  * @param {Number} delay Initial delay in milliseconds, or 0 to run the task as soon as possible
  * @param {Number} repeatEvery Repeat delay in milliseconds, or zero for no repetition
  * @param {Boolean} fixedRepeat Whether repetitions are at fixed times, or if the repeat delay begins when the task ends
- * @returns {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
+ * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
  */
 
 /**
@@ -321,9 +321,9 @@ var Prudence = {}
  * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
  * @param {String} entryPointName The function to call in the document, or null to run the entire document
  * @param {Object} context The context made available to the task (must be serializable), or null
- * @param {String|<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
+ * @param {String|<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
  * @param {Boolean} multi Whether the task should be executed on all members in the cluster; only used if "where" is an Iterable
- * @returns {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
+ * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
  */
 
 /**
@@ -352,9 +352,9 @@ var Prudence = {}
  * @param {String} code The code to execute
  * @param {String} entryPointName The function to call in the document, or null to run the entire document
  * @param {Object} context The context made available to the task (must be serializable), or null
- * @param {String|<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
+ * @param {String|<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
  * @param {Boolean} multi Whether the task should be executed on all members in the cluster; only used if "where" is an Iterable
- * @returns {<a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
+ * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
  */
 
 /**
@@ -378,7 +378,7 @@ var Prudence = {}
  * which let you implement your tasks using familiar Prudence code.
  * 
  * @name application.executor
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ExecutorService.html">java.util.concurrent.ExecutorService</a>
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ExecutorService.html">java.util.concurrent.ExecutorService</a>
  */
 
 /**
@@ -523,7 +523,7 @@ var Prudence = {}
  * @function
  * @param {String} uri The full URI
  * @param {String} mediaTypeName The preferred MIME type or null
- * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
@@ -537,7 +537,7 @@ var Prudence = {}
  * @function
  * @param {String} uri The relative URI
  * @param {String} mediaTypeName The preferred MIME type or null
- * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
@@ -552,7 +552,7 @@ var Prudence = {}
  * @param {String} applicationInternalName The internal name of the application (defaults to its subdirectory name)
  * @param {String} uri The relative URI
  * @param {String} mediaTypeName The preferred MIME type or null
- * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ClientResource.html">org.restlet.resource.ClientResource</a>} The client resource API
  */
 
 /**
@@ -577,7 +577,7 @@ var Prudence = {}
  *
  * @name document.passThroughDocuments
  * @function
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Set.html">java.util.Set</a>&ltString&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Set.html">java.util.Set</a>&ltString&gt;
  */
 
 /**
@@ -590,66 +590,6 @@ var Prudence = {}
  */
 
 /**
- * This is the amount of time in milliseconds that the current document will be cached.
- * If this value is zero (the default), caching is disabled.
- * 
- * <i>Availability: only available for scriptlet resources.</i>
- * 
- * @name document.cacheDuration
- * @type Number
- */
-
-/**
- * When this is true, then <i>only</i> "GET" requests will be cached.
- * Defaults to false.
- * 
- * @name document.cacheOnlyGet
- * @type Boolean
- */
-
-/**
- * The cache key pattern is used to generate the cache key for the current document
- * by injecting attributes based on the current conversation. See {@link document#cacheKey} to
- * see the actually generate cache key. Defaults to "{ri}|{dn}".
- * <p>
- * See <a href="http://threecrickets.com/prudence/manual/uri-space/#injecting-conversation-attributes">the Prudence Manual</a>
- * for a list of possible injected attributes.
- * <p>
- * You can additionally inject your own special values via {@link document#cacheKeyPatternHandlers}.
- * <p>
- * This value has no effect if {@link document#cacheDuration} is zero.
- * <p>
- * <i>Availability: only available for scriptlet resources.</i>
- * 
- * @name document.cacheKeyPattern
- * @type String
- */
-
-/**
- * This read-only value contains the actual cache key used for the current
- * document in the current conversation. You do not set the cache key directly,
- * but instead you can set the {@link document#cacheKeyPattern}.
- * <p>
- * <i>Availability: only available for scriptlet resources.</i>
- * 
- * @name document.cacheKey
- * @type String
- */
-
-/**
- * Lets you add any number of cache tags to the current document.
- * You can then invalidate all cache entry with a certain tag using
- * {@link document#cache}.invalidate().
- * <p>
- * This value has no effect if {@link document#cacheDuration} is zero.
- * <p>
- * <i>Availability: only available for scriptlet resources.</i>
- * 
- * @name document.cacheTags
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Set.html">java.util.Set</a>&lt;String&gt;
- */
-
-/**
  * Direct access to the cache backend.
  * <p>
  * Useful for calling invalidate(), reset() or prune() on the cache.
@@ -658,27 +598,6 @@ var Prudence = {}
  * 
  * @name document.cache
  * @type <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/Cache.html">com.threecrickets.prudence.cache.Cache</a>
- */
-
-/**
- * Low-level access to the cache entry for a specific cache key.
- * <p>
- * <i>Availability: only available for scriptlet resources.</i>
- * 
- * @name document.getCacheEntry
- * @function
- * @param {String} key The cache key
- * @returns {<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/CacheEntry.html">com.threecrickets.prudence.cache.CacheEntry</a>} The cache entry for the key, or null if not found
- */
-
-/**
- * Cache key pattern handlers let you inject your own attributes into
- * the {@link document#cacheKeyPattern}.
- * <p>
- * <i>Availability: only available for scriptlet resources.</i>
- * 
- * @name document.cacheKeyPatternHandlers
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, String&gt;
  */
 
 /**
@@ -702,7 +621,7 @@ var Prudence = {}
  * @name document.include
  * @function
  * @param {String} uri The document URI
- * @returns {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} The representation
+ * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} The representation
  */
 
 /**
@@ -743,7 +662,87 @@ var Prudence = {}
  */
 
 /**
- * The "conversation" represents the request received from the user as well your response to it. Because Prudence is RESTful, conversations
+ * The "caching" namespace represents the caching attributes of the current resource. For scriptlet resources,
+ * it would always be the entire document (the file). For manual resources, it would be the entire document
+ * for mapped resources, but would be the individual dispatched ID for dispatched resources.
+ * 
+ * @name caching
+ * @namespace
+ * @see <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/service/CachingServiceBase.html">The Prudence API documentation</a>
+ */
+
+/**
+ * This is the amount of time in milliseconds that the current document will be cached.
+ * If this value is zero (the default), caching is disabled.
+ * 
+ * <i>Availability: only available for scriptlet resources.</i>
+ * 
+ * @name caching.duration
+ * @type Number
+ */
+
+/**
+ * When this is true, then <i>only</i> "GET" requests will be cached.
+ * Defaults to false.
+ * 
+ * @name caching.onlyGet
+ * @type Boolean
+ */
+
+/**
+ * The cache key pattern is used to generate the cache key for the current document
+ * by injecting attributes based on the current conversation. See {@link caching#key} to
+ * see the actually generate cache key. Defaults to "{ri}|{dn}".
+ * <p>
+ * See <a href="http://threecrickets.com/prudence/manual/uri-space/#injecting-conversation-attributes">the Prudence Manual</a>
+ * for a list of possible injected attributes.
+ * <p>
+ * You can additionally inject your own special values via {@link caching#keyPatternHandlers}.
+ * <p>
+ * This value has no effect if {@link caching#duration} is zero.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
+ * 
+ * @name caching.keyPattern
+ * @type String
+ */
+
+/**
+ * This read-only value contains the actual cache key used for the current
+ * document in the current conversation. You do not set the cache key directly,
+ * but instead you can set the {@link caching#keyPattern}.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
+ * 
+ * @name caching.key
+ * @type String
+ */
+
+/**
+ * Lets you add any number of cache tags to the current document.
+ * You can then invalidate all cache entry with a certain tag using
+ * {@link document#cache}.invalidate().
+ * <p>
+ * This value has no effect if {@link caching#duration} is zero.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
+ * 
+ * @name caching.tags
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Set.html">java.util.Set</a>&lt;String&gt;
+ */
+
+/**
+ * Cache key pattern handlers let you inject your own attributes into
+ * the {@link caching#keyPattern}.
+ * <p>
+ * <i>Availability: only available for scriptlet resources.</i>
+ * 
+ * @name caching.keyPatternHandlers
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, String&gt;
+ */
+
+/**
+ * The "conversation" namespace represents the request received from the user as well your response to it. Because Prudence is RESTful, conversations
  * encapsulate exactly a <i>single</i> request and its response.
  * <p>
  * Implementing higher level "session" management, covering an arbitrary number of such conversations, is not handled directly by Prudence.
@@ -771,7 +770,7 @@ var Prudence = {}
  * Implementation note: Prudence's conversation locals are identical to Restlet request attributes.
  * 
  * @name conversation.locals
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
  */
 
 /**
@@ -790,7 +789,7 @@ var Prudence = {}
  * </ul>
  *
  * @name conversation.reference
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Reference.html">org.restlet.data.Reference</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Reference.html">org.restlet.data.Reference</a>
  */
 
 /**
@@ -835,7 +834,7 @@ var Prudence = {}
  * This is really a shortcut to calling conversation.queryAll.getValuesMap().
  * 
  * @name conversation.query
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Map.html">java.util.Map</a>&lt;String, String&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">java.util.Map</a>&lt;String, String&gt;
  */
 
 /**
@@ -853,7 +852,7 @@ var Prudence = {}
  * </ul>
  * 
  * @name conversation.queryAll
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
  */
 
 /**
@@ -870,8 +869,8 @@ var Prudence = {}
  * <ul>
  * <li>conversation.entity.size: the size of the data in bytes, or -1 if unknown</li>
  * <li>*conversation.entity.text: the data as text (only useful if the data is textual)</li>
- * <li>*conversation.entity.reader: an open JVM <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/Reader.html">Reader</a> to the data (only useful if the data is textual)</li>
- * <li>*conversation.entity.stream: an open JVM <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/io/InputStream.html">InputStream</a> to the data (useful for binary data)</li>
+ * <li>*conversation.entity.reader: an open JVM <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/Reader.html">Reader</a> to the data (only useful if the data is textual)</li>
+ * <li>*conversation.entity.stream: an open JVM <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/InputStream.html">InputStream</a> to the data (useful for binary data)</li>
  * </ul>
  * <p>
  * Implementation note: Client data is provided as a stream that can only be "consumed" once. Attributes that cause consumption are marked
@@ -881,7 +880,7 @@ var Prudence = {}
  * <i>Availability: only present in PUT and POST handling.</i>
  * 
  * @name conversation.entity
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>
   */
 
 /**
@@ -898,7 +897,7 @@ var Prudence = {}
  * <li>file: a JVM File instance for uploaded files stored on disk; uploaded files are stored in the application's "/uploads/" subdirectory by default</li>
  * <li>size: in bytes</li>
  * <li>mediaTypeName: the MIME type set by the client, such as "image/jpeg"</li>
- * <li>mediaType: the <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">MediaType</a> mapped to the mediaTypeName, if available</li>
+ * <li>mediaType: the <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">MediaType</a> mapped to the mediaTypeName, if available</li>
  * </ul>
  * <p>
  * Note that either "data" or "file" are valid, but not both. One will always be null. You can control how uploaded data is managed
@@ -909,7 +908,7 @@ var Prudence = {}
  * This is really a shortcut to calling conversation.formAll.getValuesMap().
  * 
  * @name conversation.form
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Map.html">java.util.Map</a>&lt;String, Object&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">java.util.Map</a>&lt;String, Object&gt;
  */
 
 /**
@@ -926,7 +925,7 @@ var Prudence = {}
  * </ul>
  *
  * @name conversation.formAll
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>
  */
 
 /**
@@ -937,7 +936,7 @@ var Prudence = {}
  * @param {String} mediaType Can be null
  * @param {String} language Can be null
  * @param {String} characterSet Can be null
- * @returns <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/StringRepresentation.html">org.restlet.representation.StringRepresentation</a>
+ * @returns <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/StringRepresentation.html">org.restlet.representation.StringRepresentation</a>
  * @see conversation#setResponseBinary
  */
 
@@ -947,7 +946,7 @@ var Prudence = {}
  * @name conversation.setResponseBinary
  * @param {byte[]} byteArray The binary data
  * @param {String} mediaType Can be null
- * @returns <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html">org.restlet.representation.ByteArrayRepresentation</a>
+ * @returns <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html">org.restlet.representation.ByteArrayRepresentation</a>
  * @see conversation#setResponseText
  * @see Sincerity.JVM#newArray
  */
@@ -958,7 +957,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#statusCode} instead.
  * 
  * @name conversation.status
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Status.html">org.restlet.data.Status</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Status.html">org.restlet.data.Status</a>
  */
 
 /**
@@ -987,7 +986,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#encodingName} instead.
  * 
  * @name conversation.encoding
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Encoding.html">org.restlet.data.Encoding</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Encoding.html">org.restlet.data.Encoding</a>
  */
 
 /**
@@ -1013,7 +1012,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#characterSetName} or {@link conversation#characterSetShortName} instead.
  * 
  * @name conversation.characterSet
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/CharacterSet.html">org.restlet.data.CharacterSet</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/CharacterSet.html">org.restlet.data.CharacterSet</a>
  */
 
 /**
@@ -1049,7 +1048,7 @@ var Prudence = {}
  * language is included in the "en" language.
  * 
  * @name conversation.language
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>
  */
 
 /**
@@ -1068,7 +1067,7 @@ var Prudence = {}
  * You may prefer to use {@link conversation#mediaTypeName} or {@link conversation#mediaTypeExtension} instead.
  * 
  * @name conversation.mediaType
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>
  */
 
 /**
@@ -1105,7 +1104,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name conversation.disposition
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Disposition.html">org.restlet.data.Disposition</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Disposition.html">org.restlet.data.Disposition</a>
  */
 
 /**
@@ -1125,7 +1124,7 @@ var Prudence = {}
  * </pre>
  * 
  * @name conversation.headers
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.1/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
  */
 
 /**
@@ -1151,7 +1150,7 @@ var Prudence = {}
  * negotiation.
  * 
  * @name conversation.negotiated
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/representation/Variant.html">org.restlet.representation.Variant</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/representation/Variant.html">org.restlet.representation.Variant</a>
  */
 
 /**
@@ -1186,7 +1185,7 @@ var Prudence = {}
  * browsers allow users to turn off cookie support entirely or filter out certain cookies.
  * 
  * @name conversation.cookies
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Collection.html">java.util.Collection</a>&lt;<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Collection.html">java.util.Collection</a>&lt;<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ConversationCookie.html">com.threecrickets.prudence.util.ConversationCookie</a>&gt;
  */
 
 /**
@@ -1215,28 +1214,28 @@ var Prudence = {}
  * Provides low-level access to the underlying Restlet request instance for the current conversation.
  *
  * @name conversation.request
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Request.html">org.restlet.Request</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Request.html">org.restlet.Request</a>
  */
 
 /**
  * Provides low-level access to the underlying Restlet client info instance for the current conversation.
  *
  * @name conversation.client
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/ClientInfo.html">org.restlet.data.ClientInfo</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/ClientInfo.html">org.restlet.data.ClientInfo</a>
  */
 
 /**
  * Provides low-level access to the underlying Restlet response instance for the current conversation.
  *
  * @name conversation.response
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/Response.html">org.restlet.Response</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/Response.html">org.restlet.Response</a>
  */
 
 /**
  * Provides low-level access to the underlying Restlet resource instance for the current conversation.
  *
  * @name conversation.resource
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>
  */
 
 /**
@@ -1282,7 +1281,7 @@ var Prudence = {}
  * <i>Availability: only available for manual resources.</i>
  *
  * @name conversation.expirationDate
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Date.html">java.util.Date</a>
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Date.html">java.util.Date</a>
  */
 
 /**
@@ -1348,7 +1347,7 @@ var Prudence = {}
   * <i>Availability: only available for manual resources.</i>
  *
  * @name conversation.modificationDate
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/Date.html">java.util.Date</a>
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Date.html">java.util.Date</a>
  */
 
 /**
@@ -1384,7 +1383,7 @@ var Prudence = {}
  * <i>Availability: only available for manual resources.</i>
  *
  * @name conversation.tag
- * @type <a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Tag.html">org.restlet.data.Tag</a>
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Tag.html">org.restlet.data.Tag</a>
  */
 
 /**
@@ -1519,7 +1518,7 @@ var Prudence = {}
  *
  * @name conversation.addMediaType
  * @function
- * @param {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
+ * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
  * @see conversation#addMediaTypeWithLanguage
  */
 
@@ -1528,8 +1527,8 @@ var Prudence = {}
  * 
  * @name conversation.addMediaTypeWithLanguage
  * @function
- * @param {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
- * @type {<a href="http://restlet.org/learn/javadocs/2.1/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
+ * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
+ * @type {<a href="http://restlet.org/learn/javadocs/2.2/jse/api//jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
  */
 
 /**
@@ -1633,7 +1632,7 @@ var Prudence = {}
  * Implementation note: Prudence's application globals are identical to Restlet application attributes.
  * 
  * @name executable.globals
- * @type <a href="http://docs.oracle.com/javase/1.5.0/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
  */
 
 /**
