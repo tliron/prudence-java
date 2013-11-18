@@ -26,7 +26,7 @@ import net.spy.memcached.OperationTimeoutException;
 
 /**
  * A <a href="http://memcached.org/">memcached</a>-backed cache over the <a
- * herf="http://code.google.com/p/spymemcached/">spymemcached</a> client
+ * href="http://code.google.com/p/spymemcached/">spymemcached</a> client
  * library.
  * <p>
  * By default, waits for all memcached commands to complete. However, you can
@@ -49,6 +49,7 @@ public class MemcachedCache implements Cache
 	 * using the binary protocol; waits for completion; no tag prefix.
 	 * 
 	 * @throws IOException
+	 *         In case the memcached client could not be created
 	 */
 	public MemcachedCache() throws IOException
 	{
@@ -63,6 +64,7 @@ public class MemcachedCache implements Cache
 	 *        The node list (space-separated IP addresses or hostnames with port
 	 *        specifications after colon)
 	 * @throws IOException
+	 *         In case the memcached client could not be created
 	 */
 	public MemcachedCache( String nodes ) throws IOException
 	{
@@ -82,6 +84,7 @@ public class MemcachedCache implements Cache
 	 * @param tagPrefix
 	 *        Prefix to be added to tag keys
 	 * @throws IOException
+	 *         In case the memcached client could not be created
 	 * @see AddrUtil#getAddresses(String)
 	 */
 	public MemcachedCache( String nodes, boolean waitForCompletion, boolean soleClient, String tagPrefix ) throws IOException

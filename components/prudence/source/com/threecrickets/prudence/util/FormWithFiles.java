@@ -12,7 +12,6 @@
 package com.threecrickets.prudence.util;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -24,6 +23,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Parameter;
 import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.representation.Representation;
+import org.restlet.resource.ResourceException;
 
 /**
  * A form that can parse {@link MediaType#MULTIPART_FORM_DATA} entities by
@@ -43,8 +43,10 @@ public class FormWithFiles extends Form
 	 * 
 	 * @param webForm
 	 *        The URL encoded web form
+	 * @throws ResourceException
+	 *         In case of an upload handling error
 	 */
-	public FormWithFiles( Representation webForm )
+	public FormWithFiles( Representation webForm ) throws ResourceException
 	{
 		this( webForm, new DiskFileItemFactory() );
 	}
@@ -58,8 +60,10 @@ public class FormWithFiles extends Form
 	 *        The size in bytes beyond which files will be stored to disk
 	 * @param repositoryDirectory
 	 *        The directory in which to place uploaded files
+	 * @throws ResourceException
+	 *         In case of an upload handling error
 	 */
-	public FormWithFiles( Representation webForm, int sizeThreshold, File repositoryDirectory )
+	public FormWithFiles( Representation webForm, int sizeThreshold, File repositoryDirectory ) throws ResourceException
 	{
 		this( webForm, new DiskFileItemFactory( sizeThreshold, repositoryDirectory ) );
 	}
@@ -71,9 +75,10 @@ public class FormWithFiles extends Form
 	 *        The URL encoded web form
 	 * @param fileItemFactory
 	 *        The file item factory
-	 * @throws IOException
+	 * @throws ResourceException
+	 *         In case of an upload handling error
 	 */
-	public FormWithFiles( Representation webForm, FileItemFactory fileItemFactory )
+	public FormWithFiles( Representation webForm, FileItemFactory fileItemFactory ) throws ResourceException
 	{
 		if( webForm.getMediaType().includes( MediaType.MULTIPART_FORM_DATA ) )
 		{
@@ -108,7 +113,7 @@ public class FormWithFiles extends Form
 			}
 			catch( FileUploadException x )
 			{
-				x.printStackTrace();
+				throw new ResourceException( x );
 			}
 		}
 		else

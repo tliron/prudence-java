@@ -55,6 +55,7 @@ public interface Cache
 	 * Makes sure that all tagged entries are un-fetchable.
 	 * 
 	 * @param tag
+	 *        The cache tag
 	 */
 	public void invalidate( String tag );
 

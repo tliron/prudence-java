@@ -29,6 +29,15 @@ public class GeneratedTextResourceCachingService extends CachingServiceBase<Gene
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param resource
+	 *        The resource
+	 * @param documentService
+	 *        The document service
+	 * @param conversationService
+	 *        The conversation service
+	 * @param cachingUtil
+	 *        The caching utilities
 	 */
 	public GeneratedTextResourceCachingService( GeneratedTextResource resource, DocumentService<GeneratedTextResourceAttributes> documentService, GeneratedTextResourceConversationService conversationService,
 		CachingUtil<GeneratedTextResource, GeneratedTextResourceAttributes> cachingUtil )

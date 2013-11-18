@@ -38,6 +38,17 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param resource
+	 *        The resource
+	 * @param attributes
+	 *        The attributes
+	 * @param documentService
+	 *        The document service
+	 * @param conversationService
+	 *        The conversation service
+	 * @param cachingUtil
+	 *        The caching utilities
 	 */
 	public CachingServiceBase( R resource, A attributes, DocumentService<A> documentService, C conversationService, CachingUtil<R, A> cachingUtil )
 	{

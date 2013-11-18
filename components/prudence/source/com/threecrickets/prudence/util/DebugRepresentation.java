@@ -67,6 +67,8 @@ public class DebugRepresentation extends StringRepresentation
 	 *        The request
 	 * @param response
 	 *        The response
+	 * @param sourceCodeUri
+	 *        The URI for the {@link SourceCodeResource}
 	 */
 	public DebugRepresentation( Status status, Request request, Response response, String sourceCodeUri )
 	{

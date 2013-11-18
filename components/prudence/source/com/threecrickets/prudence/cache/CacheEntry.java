@@ -69,6 +69,7 @@ public class CacheEntry implements Externalizable
 	 * @param encoding
 	 *        The new encoding to use
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CacheEntry( CacheEntry cacheEntry, Encoding encoding ) throws IOException
 	{
@@ -83,6 +84,7 @@ public class CacheEntry implements Externalizable
 	 * @param string
 	 *        The new string to use
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CacheEntry( CacheEntry cacheEntry, String string ) throws IOException
 	{
@@ -109,6 +111,7 @@ public class CacheEntry implements Externalizable
 	 * @param expirationDate
 	 *        The expiration date
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Date documentModificationDate, Date expirationDate ) throws IOException
 	{
@@ -178,6 +181,7 @@ public class CacheEntry implements Externalizable
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long documentModificationTimestamp, long expirationTimestamp )
 		throws IOException
@@ -204,7 +208,6 @@ public class CacheEntry implements Externalizable
 	 *        The document modification timestamp
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
-	 * @throws IOException
 	 */
 	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long documentModificationTimestamp, long expirationTimestamp )
 	{
@@ -223,6 +226,7 @@ public class CacheEntry implements Externalizable
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CacheEntry( Representation representation, Series<Header> headers, long documentModificationTimestamp, long expirationTimestamp ) throws IOException
 	{
@@ -235,7 +239,10 @@ public class CacheEntry implements Externalizable
 	 * 
 	 * @param bytes
 	 *        An array of bytes
+	 * @throws IOException
+	 *         In case of a reading error
 	 * @throws ClassNotFoundException
+	 *         In case an unknown class has been serialized
 	 * @see #toBytes()
 	 */
 	public CacheEntry( byte[] bytes ) throws IOException, ClassNotFoundException
@@ -376,6 +383,7 @@ public class CacheEntry implements Externalizable
 	 * 
 	 * @return An array of bytes
 	 * @throws IOException
+	 *         In case of a serialization error
 	 * @see #CacheEntry(byte[])
 	 */
 	public byte[] toBytes() throws IOException

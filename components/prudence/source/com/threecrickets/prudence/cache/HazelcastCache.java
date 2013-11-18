@@ -64,11 +64,13 @@ public class HazelcastCache implements Cache
 	 *        "com.threecrickets.prudence"
 	 * @param cacheName
 	 *        The Hazelcast map name for the cache
+	 * @param cacheTagsName
+	 *        The Hazelcast map name for the tag map
 	 */
-	public HazelcastCache( HazelcastInstance hazelcast, String cacheName, String tagMapName )
+	public HazelcastCache( HazelcastInstance hazelcast, String cacheName, String cacheTagsName )
 	{
 		this.cacheName = cacheName;
-		this.cacheTagsName = tagMapName;
+		this.cacheTagsName = cacheTagsName;
 		if( hazelcast == null )
 		{
 			hazelcast = Hazelcast.getHazelcastInstanceByName( "com.threecrickets.prudence" );

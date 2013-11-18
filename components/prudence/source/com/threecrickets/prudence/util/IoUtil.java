@@ -77,6 +77,7 @@ public abstract class IoUtil
 	 * @param out
 	 *        Output stream
 	 * @throws IOException
+	 *         In case of a reading or writing error
 	 */
 	public static void copyStream( InputStream in, OutputStream out ) throws IOException
 	{
@@ -112,6 +113,7 @@ public abstract class IoUtil
 	 *        The file
 	 * @return The properties
 	 * @throws IOException
+	 *         In case of a reading error
 	 */
 	public static Properties loadProperties( File file ) throws IOException
 	{
@@ -143,6 +145,7 @@ public abstract class IoUtil
 	 * @param file
 	 *        The file
 	 * @throws IOException
+	 *         In case of a writing error
 	 */
 	public static void saveProperties( Properties properties, File file ) throws IOException
 	{
@@ -190,6 +193,7 @@ public abstract class IoUtil
 	 *        The document name (only used with {@link Encoding#ZIP})
 	 * @return The byte array
 	 * @throws IOException
+	 *         In case of a reading or compression error
 	 */
 	public static byte[] compress( InputStream in, Encoding encoding, String documentName ) throws IOException
 	{
@@ -233,6 +237,7 @@ public abstract class IoUtil
 	 *        The document name (only used with {@link Encoding#ZIP})
 	 * @return The byte array
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public static byte[] compress( CharSequence text, Encoding encoding, String documentName ) throws IOException
 	{
@@ -247,6 +252,7 @@ public abstract class IoUtil
 	 * @param file
 	 *        The zip file
 	 * @throws IOException
+	 *         In case of a reading, writing or compression error
 	 */
 	public static final void zip( File directory, File file ) throws IOException
 	{
@@ -269,6 +275,7 @@ public abstract class IoUtil
 	 * @param directory
 	 *        The directory
 	 * @throws IOException
+	 *         In case of a reading, writing or decompression error
 	 */
 	public static void unzip( File file, File directory ) throws IOException
 	{
@@ -318,6 +325,7 @@ public abstract class IoUtil
 	 *        The object or null
 	 * @return The bytes
 	 * @throws IOException
+	 *         In case of a writing or serialization error
 	 */
 	public static byte[] serialize( Object o ) throws IOException
 	{
@@ -352,7 +360,9 @@ public abstract class IoUtil
 	 *        The bytes or null
 	 * @return The object or null
 	 * @throws IOException
+	 *         In case of a reading or deserialization error
 	 * @throws ClassNotFoundException
+	 *         In case an unknown class has been serialized
 	 */
 	public static Object deserialize( byte[] bytes ) throws IOException, ClassNotFoundException
 	{
@@ -422,6 +432,7 @@ public abstract class IoUtil
 	 *        The stream
 	 * @return The string
 	 * @throws IOException
+	 *         In case of a reading or decoding error
 	 * @see #writeUtf8(DataOutput, String)
 	 * @see #decodeUtf8(byte[])
 	 */
@@ -444,6 +455,7 @@ public abstract class IoUtil
 	 * @param string
 	 *        The string or null
 	 * @throws IOException
+	 *         In case of a writing or encoding error
 	 * @see #readUtf8(DataInput)
 	 * @see #encodeUtf8(String)
 	 */
@@ -486,6 +498,7 @@ public abstract class IoUtil
 	 * @param out
 	 *        Output stream
 	 * @throws IOException
+	 *         In case of a reading, writing or compression error
 	 */
 	private static void zip( File directory, int pathPrefixLength, ZipOutputStream out ) throws IOException
 	{

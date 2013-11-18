@@ -1294,160 +1294,6 @@ URL would be identical
 \end_layout
 
 \begin_layout Subsubsection
-Multilingual
-\end_layout
-
-\begin_layout Standard
-The application skeleton uses JavaScript (
-\emph on
-server
-\emph default
--side JavaScript; it has nothing to do with the code running inside web
- browsers), but Prudence also supports Python, Ruby, PHP, Lua, Groovy and
- Clojure.
- To use them, you would first need to 
-\begin_inset CommandInset href
-LatexCommand href
-name "install them using Sincerity"
-target "http://threecrickets.com/sincerity/ecosystem/language-plugins/"
-
-\end_inset
-
-.
- To try this out, let's install Python like so:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-sincerity add python : install
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We could then create a Python scriptlet:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%python
-\end_layout
-
-\begin_layout Plain Layout
-
-for x in range(0, 10):
-\end_layout
-
-\begin_layout Plain Layout
-
-	print x, '<br/>'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The low-level APIs are available for all supported languages.
- Here's a Ruby example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%ruby
-\end_layout
-
-\begin_layout Plain Layout
-
-def say_hello name
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\begin_layout Plain Layout
-
-<p>
-\end_layout
-
-\begin_layout Plain Layout
-
-	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
-\end_layout
-
-\begin_layout Plain Layout
-
-</p>
-\end_layout
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-end
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-say_hello 'Newton'
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You even can mix scriptlets in several languages in the same page, 
-\begin_inset CommandInset href
-LatexCommand href
-name "like magic"
-target "http://threecrickets.com/scripturian/manual/faq/#in-flow"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Subsubsection
 Further Exploration
 \end_layout
 
@@ -2025,7 +1871,137 @@ reference "the-wildcard"
 \end_layout
 
 \begin_layout Subsubsection
-Caching
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+For a real wiki you would probably want to store the wiki content in a database.
+ Check out the 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB driver for JVM languages"
+target "http://code.google.com/p/mongodb-jvm/"
+
+\end_inset
+
+, designed to work with Sincerity/Prudence: it's especially natural to use
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+ from JavaScript.
+ And of course there's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence"
+target "http://threecrickets.com/diligence/"
+
+\end_inset
+
+, a comprehensive framework based on Prudence and MongoDB.
+ Otherwise, relational (SQL) databases are easy to access using 
+\begin_inset CommandInset href
+LatexCommand href
+name "JDBC"
+target "http://www.oracle.com/technetwork/java/javase/jdbc/"
+
+\end_inset
+
+, which is included in the JVM platform: for a complete example, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "Stickstick"
+target "http://threecrickets.com/prudence/download/#stickstick"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Read more about 
+\bar under
+HTML forms (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "html-forms"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+We've barely scratched the surface of what's possible with routing.js.
+ See the 
+\bar under
+URI-space chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-uri-space"
+
+\end_inset
+
+)
+\bar default
+ for full details.
+\end_layout
+
+\begin_layout Itemize
+There's, of course, a lot more you can do with 
+\bar under
+scriptlets (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+Are you a fan of MVC? It's possible to treat scriptlet pages as 
+\begin_inset Quotes eld
+\end_inset
+
+views,
+\begin_inset Quotes erd
+\end_inset
+
+ and moreover you can integrate other templating technologies, such as 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jinja2"
+target "http://jinja.pocoo.org/docs/"
+
+\end_inset
+
+.
+ There's a 
+\bar under
+whole chapter about it (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+A Scalable Wiki
 \end_layout
 
 \begin_layout Standard
@@ -2050,9 +2026,9 @@ Actually, talking about speed is a shorthand for the real issue: even pulling
 \begin_layout Standard
 Prudence does caching 
 \emph on
-very 
+very well
 \emph default
-well.
+.
  So, though it might be considered an 
 \begin_inset Quotes eld
 \end_inset
@@ -2369,85 +2345,6 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-For a real wiki you would probably want to store the wiki content in a database.
- Check out the 
-\begin_inset CommandInset href
-LatexCommand href
-name "MongoDB driver for JVM languages"
-target "http://code.google.com/p/mongodb-jvm/"
-
-\end_inset
-
-, designed to work with Sincerity/Prudence: it's especially natural to use
- 
-\begin_inset CommandInset href
-LatexCommand href
-name "MongoDB"
-target "http://www.mongodb.org/"
-
-\end_inset
-
- from JavaScript.
- And of course there's 
-\begin_inset CommandInset href
-LatexCommand href
-name "Diligence"
-target "http://threecrickets.com/diligence/"
-
-\end_inset
-
-, a comprehensive framework based on Prudence and MongoDB.
- Otherwise, relational (SQL) databases are easy to access using 
-\begin_inset CommandInset href
-LatexCommand href
-name "JDBC"
-target "http://www.oracle.com/technetwork/java/javase/jdbc/"
-
-\end_inset
-
-, which is included in the JVM platform: for a complete example, see 
-\begin_inset CommandInset href
-LatexCommand href
-name "Stickstick"
-target "http://threecrickets.com/prudence/download/#stickstick"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-Read more about 
-\bar under
-HTML forms (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "html-forms"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Itemize
-We've barely scratched the surface of what's possible with routing.js.
- See the 
-\bar under
-URI-space chapter (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "the-uri-space"
-
-\end_inset
-
-)
-\bar default
- for full details.
-\end_layout
-
-\begin_layout Itemize
 Caching is a 
 \emph on
 big deal
@@ -2464,16 +2361,17 @@ reference "caching"
 
 )
 \bar default
-!
+.
 \end_layout
 
 \begin_layout Itemize
-There's, of course, a lot more you can do with 
+And caching is just the tip of the scalability iceberg.
+ We treat the topic in depth 
 \bar under
-scriptlets (page 
+here (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "scaling-tips"
 
 \end_inset
 
@@ -3071,7 +2969,7 @@ While testing with cURL, you can simultaneously test the wiki pages using
 \end_layout
 
 \begin_layout Subsubsection
-Caching
+Cached
 \end_layout
 
 \begin_layout Standard
@@ -3163,7 +3061,30 @@ calhost:8080/wiki/api/test/
 \end_layout
 
 \begin_layout Subsubsection
-Compression
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+Read all about 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsection
+Finishing Touches
+\end_layout
+
+\begin_layout Subsubsection
+Exploring Compression
 \end_layout
 
 \begin_layout Standard
@@ -3171,10 +3092,10 @@ Prudence will automatically compress responses (using gzip or DEFLATE) if
  their size in bytes exceeds a certain threshold.
  Our wiki pages were likely too small, which is why you likely haven't seen
  compression.
- Let's lower the threshold, just for testing purposes.
- (You'll usually want that threshold: there are little or no bandwidth savings
+ You'll usually want that threshold: there are little or no bandwidth savings
  to be gained by compressing tiny responses, so the extra CPU load required
- for compression will be wasted.)
+ for compression will be wasted.
+ For now, let's lower the threshold, just for demonstration purposes.
 \end_layout
 
 \begin_layout Standard
@@ -3319,34 +3240,165 @@ curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
 \end_layout
 
 \begin_layout Subsubsection
-Further Exploration
-\end_layout
-
-\begin_layout Itemize
-Read all about 
-\bar under
-manual resources (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "manual-resources"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-Extra Touches
-\end_layout
-
-\begin_layout Subsubsection
 Markup Languages
 \end_layout
 
 \begin_layout Subsubsection
 CSS with ZUSS
+\end_layout
+
+\begin_layout Subsection
+Multilingual
+\end_layout
+
+\begin_layout Standard
+The application skeleton uses JavaScript (
+\emph on
+server
+\emph default
+-side JavaScript; it has nothing to do with the code running inside web
+ browsers), but Prudence also supports Python, Ruby, PHP, Lua, Groovy and
+ Clojure.
+ To use them, you would first need to 
+\begin_inset CommandInset href
+LatexCommand href
+name "install them using Sincerity"
+target "http://threecrickets.com/sincerity/ecosystem/language-plugins/"
+
+\end_inset
+
+.
+ To try this out, let's install Python like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add python : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We could then create a Python scriptlet:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+for x in range(0, 10):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print x, '<br/>'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The low-level APIs are available for all supported languages.
+ Here's a Ruby example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%ruby
+\end_layout
+
+\begin_layout Plain Layout
+
+def say_hello name
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	Hello, <%= name %>, and welcome to the <%= $conversation.reference %> page.
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+say_hello 'Newton'
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You even can mix scriptlets in several languages in the same page, 
+\begin_inset CommandInset href
+LatexCommand href
+name "like magic"
+target "http://threecrickets.com/scripturian/manual/faq/#in-flow"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section

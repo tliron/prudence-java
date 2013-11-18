@@ -193,6 +193,7 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	 *        search
 	 * @return A document descriptor
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	public DocumentDescriptor<Executable> getDocument( String documentName, boolean includeExtraSources ) throws DocumentException
 	{

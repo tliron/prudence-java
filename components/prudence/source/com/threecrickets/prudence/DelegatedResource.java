@@ -79,15 +79,17 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * </ul>
  * <p>
  * A <code>conversation</code> service is sent as an argument to all entry
- * points. Additionally, <code>document</code> and <code>application</code>
- * services are available as global variables. See
+ * points. Additionally, <code>document</code>, <code>caching</code>, and
+ * <code>application</code> services are available as global variables. See
  * {@link DelegatedResourceConversationService},
- * {@link DelegatedResourceDocumentService} and {@link ApplicationService}.
+ * {@link DelegatedResourceDocumentService},
+ * {@link DelegatedResourceCachingService}, and {@link ApplicationService}.
  * <p>
  * Before using this resource, make sure to configure a valid document source in
  * the application's {@link Context} as
- * <code>com.threecrickets.prudence.DelegatedResource.documentSource</code. This
- * document source is exposed to the executable as <code>document.source</code>.
+ * <code>com.threecrickets.prudence.DelegatedResource.documentSource</code>.
+ * This document source is exposed to the executable as
+ * <code>document.source</code>.
  * <p>
  * For a simpler delegate, see {@link DelegatedHandler}.
  * <p>
@@ -100,7 +102,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * : Defaults to "application".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.cacheKeyPatternHandlers</code>
- * : {@link ConcurrentMap}<String, String></li>
+ * : {@link ConcurrentMap}&lt;String, String&gt;</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.cachingServiceName</code>
  * : Defaults to "caching".</li>
@@ -113,6 +115,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
+ * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li><code>com.threecrickets.prudence.DelegatedResource.defaultName:</code>
@@ -246,6 +249,7 @@ public class DelegatedResource extends ServerResource
 	 * 
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation get() throws ResourceException
@@ -260,6 +264,7 @@ public class DelegatedResource extends ServerResource
 	 *        The variant of the response entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation get( Variant variant ) throws ResourceException
@@ -318,6 +323,7 @@ public class DelegatedResource extends ServerResource
 	 * 
 	 * @return The optional result info
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public RepresentationInfo getInfo() throws ResourceException
@@ -333,6 +339,7 @@ public class DelegatedResource extends ServerResource
 	 *        The variant of the response entity
 	 * @return The optional result info
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public RepresentationInfo getInfo( Variant variant ) throws ResourceException
@@ -367,6 +374,7 @@ public class DelegatedResource extends ServerResource
 	 *        The posted entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation post( Representation entity ) throws ResourceException
@@ -383,6 +391,7 @@ public class DelegatedResource extends ServerResource
 	 *        The variant of the response entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation post( Representation entity, Variant variant ) throws ResourceException
@@ -402,6 +411,7 @@ public class DelegatedResource extends ServerResource
 	 *        The posted entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation put( Representation entity ) throws ResourceException
@@ -418,6 +428,7 @@ public class DelegatedResource extends ServerResource
 	 *        The variant of the response entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation put( Representation entity, Variant variant ) throws ResourceException
@@ -436,6 +447,7 @@ public class DelegatedResource extends ServerResource
 	 * 
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation delete() throws ResourceException
@@ -451,6 +463,7 @@ public class DelegatedResource extends ServerResource
 	 *        The variant of the response entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation delete( Variant variant ) throws ResourceException
@@ -469,6 +482,7 @@ public class DelegatedResource extends ServerResource
 	 * 
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation options() throws ResourceException
@@ -484,6 +498,7 @@ public class DelegatedResource extends ServerResource
 	 *        The variant of the response entity
 	 * @return The optional result entity
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	@Override
 	public Representation options( Variant variant ) throws ResourceException
@@ -582,6 +597,7 @@ public class DelegatedResource extends ServerResource
 	 *        The conversation service
 	 * @return A representation
 	 * @throws ResourceException
+	 *         In case of a compression error
 	 */
 	private Representation getRepresentation( Object object, DelegatedResourceConversationService conversationService ) throws ResourceException
 	{
@@ -767,6 +783,7 @@ public class DelegatedResource extends ServerResource
 	 *        The conversation service
 	 * @return The cached representation
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 */
 	private Representation fetchCachedRepresentation( DelegatedResourceConversationService conversationService ) throws ResourceException
 	{
@@ -791,6 +808,7 @@ public class DelegatedResource extends ServerResource
 	 *        The conversation service
 	 * @return The result of the entry
 	 * @throws ResourceException
+	 *         In case of an entering error
 	 * @see Executable#enter(Object, String, Object...)
 	 */
 	private Object enter( String entryPointName, boolean isInit, DelegatedResourceConversationService conversationService ) throws ResourceException

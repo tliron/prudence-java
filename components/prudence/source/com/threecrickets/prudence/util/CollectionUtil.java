@@ -32,6 +32,10 @@ public abstract class CollectionUtil
 	/**
 	 * Sort a map by the natural order of its keys.
 	 * 
+	 * @param <K>
+	 *        The map key class
+	 * @param <V>
+	 *        The map value class
 	 * @param map
 	 *        The map
 	 * @return The sorted map

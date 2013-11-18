@@ -50,6 +50,7 @@ public class ApplicationService
 	/**
 	 * Constructor using the current application.
 	 * 
+	 * @return A new application service
 	 * @see Application#getCurrent()
 	 */
 	public static ApplicationService create()
@@ -62,6 +63,7 @@ public class ApplicationService
 	 * 
 	 * @param application
 	 *        The application
+	 * @return A new application service
 	 */
 	public static ApplicationService create( Application application )
 	{
@@ -328,6 +330,8 @@ public class ApplicationService
 	 * Submits or schedules an {@link ApplicationTask} on the the shared
 	 * executor service.
 	 * 
+	 * @param <T>
+	 *        The task result class
 	 * @param applicationName
 	 *        The application's full name, or null to default to current
 	 *        application's name
@@ -358,6 +362,8 @@ public class ApplicationService
 	 * Submits or schedules an {@link ApplicationTask} on the the shared
 	 * executor service.
 	 * 
+	 * @param <T>
+	 *        The task result class
 	 * @param applicationName
 	 *        The application's full name, or null to default to current
 	 *        application's name

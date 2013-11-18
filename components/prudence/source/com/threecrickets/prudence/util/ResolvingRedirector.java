@@ -33,16 +33,20 @@ public class ResolvingRedirector extends Redirector
 	//
 
 	/**
-	 * Constructor.
+	 * Constructor. The context
 	 * 
 	 * @param context
-	 * @param targetPattern
+	 *        The context
+	 * @param targetTemplate
+	 *        The target URI template
 	 * @param mode
+	 *        The redirection mode
 	 * @param isCleaning
+	 *        Whether we are cleaning headers for server-side redirection
 	 */
-	public ResolvingRedirector( Context context, String targetPattern, int mode, boolean isCleaning )
+	public ResolvingRedirector( Context context, String targetTemplate, int mode, boolean isCleaning )
 	{
-		super( context, targetPattern, mode );
+		super( context, targetTemplate, mode );
 		this.isCleaning = isCleaning;
 		describe();
 	}
@@ -51,8 +55,11 @@ public class ResolvingRedirector extends Redirector
 	 * Constructor.
 	 * 
 	 * @param context
+	 *        The context
 	 * @param targetTemplate
+	 *        The target URI template
 	 * @param isCleaning
+	 *        Whether we are cleaning headers for server-side redirection
 	 */
 	public ResolvingRedirector( Context context, String targetTemplate, boolean isCleaning )
 	{

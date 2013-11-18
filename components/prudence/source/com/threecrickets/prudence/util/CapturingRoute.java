@@ -36,6 +36,7 @@ public class CapturingRoute extends TemplateRoute
 	 * Constructor.
 	 * 
 	 * @param next
+	 *        The next restlet
 	 */
 	public CapturingRoute( Restlet next )
 	{
@@ -47,8 +48,11 @@ public class CapturingRoute extends TemplateRoute
 	 * Constructor.
 	 * 
 	 * @param router
+	 *        The router
 	 * @param uriTemplate
+	 *        The URI template
 	 * @param next
+	 *        The next restlet
 	 */
 	public CapturingRoute( Router router, String uriTemplate, Restlet next )
 	{
@@ -60,8 +64,11 @@ public class CapturingRoute extends TemplateRoute
 	 * Constructor.
 	 * 
 	 * @param router
+	 *        The router
 	 * @param template
+	 *        The URI template
 	 * @param next
+	 *        The next restlet
 	 */
 	public CapturingRoute( Router router, Template template, Restlet next )
 	{

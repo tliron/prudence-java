@@ -34,7 +34,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 
 /**
  * A <a href="http://www.mongodb.org/">MongoDB</a>-backed cache.
@@ -61,10 +60,10 @@ public class MongoDbCache implements Cache
 	 * Construction for localhost connection, database "prudence", collection
 	 * "cache".
 	 * 
-	 * @throws MongoException
 	 * @throws UnknownHostException
+	 *         In case localhost could not be found
 	 */
-	public MongoDbCache() throws UnknownHostException, MongoException
+	public MongoDbCache() throws UnknownHostException
 	{
 		this( new MongoClient() );
 	}
@@ -125,6 +124,7 @@ public class MongoDbCache implements Cache
 	 * Constructor.
 	 * 
 	 * @param collection
+	 *        The collection to use for the cache
 	 */
 	public MongoDbCache( DBCollection collection )
 	{

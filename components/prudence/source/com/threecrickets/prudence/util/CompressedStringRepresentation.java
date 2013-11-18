@@ -43,6 +43,7 @@ public class CompressedStringRepresentation extends ByteArrayRepresentation
 	 * @param encoding
 	 *        The encoding
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CompressedStringRepresentation( CharSequence text, Encoding encoding ) throws IOException
 	{
@@ -59,6 +60,7 @@ public class CompressedStringRepresentation extends ByteArrayRepresentation
 	 * @param encoding
 	 *        The encoding
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CompressedStringRepresentation( CharSequence text, Language language, Encoding encoding ) throws IOException
 	{
@@ -75,6 +77,7 @@ public class CompressedStringRepresentation extends ByteArrayRepresentation
 	 * @param encoding
 	 *        The encoding
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CompressedStringRepresentation( CharSequence text, MediaType mediaType, Encoding encoding ) throws IOException
 	{
@@ -93,6 +96,7 @@ public class CompressedStringRepresentation extends ByteArrayRepresentation
 	 * @param encoding
 	 *        The encoding
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CompressedStringRepresentation( CharSequence text, MediaType mediaType, Language language, Encoding encoding ) throws IOException
 	{
@@ -111,6 +115,7 @@ public class CompressedStringRepresentation extends ByteArrayRepresentation
 	 * @param encoding
 	 *        The encoding
 	 * @throws IOException
+	 *         In case of a compression error
 	 */
 	public CompressedStringRepresentation( CharSequence text, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding ) throws IOException
 	{

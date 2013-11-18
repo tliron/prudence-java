@@ -78,7 +78,7 @@ public class CapturingRedirector extends ResolvingRedirector
 	 * @param context
 	 *        The context
 	 * @param targetTemplate
-	 *        The target template
+	 *        The target URI template
 	 * @param alwaysUseHostAsBase
 	 *        Whether to always set the base reference to the host root URI
 	 */
@@ -92,16 +92,16 @@ public class CapturingRedirector extends ResolvingRedirector
 	 * 
 	 * @param context
 	 *        The context
-	 * @param targetPattern
-	 *        The target pattern
+	 * @param targetTemplate
+	 *        The target URI template
 	 * @param mode
 	 *        The redirection mode
 	 * @param alwaysUseHostAsBase
 	 *        Whether to always set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetPattern, boolean alwaysUseHostAsBase, int mode )
+	public CapturingRedirector( Context context, String targetTemplate, boolean alwaysUseHostAsBase, int mode )
 	{
-		super( context, targetPattern, mode, false );
+		super( context, targetTemplate, mode, false );
 		describe();
 		this.alwaysUseHostAsBase = alwaysUseHostAsBase;
 	}

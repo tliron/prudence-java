@@ -204,7 +204,9 @@ public interface DocumentExecutionAttributes
 	 *        search
 	 * @return A document descriptor with a valid executable as its document
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
 		throws ParsingException, DocumentException;
@@ -218,7 +220,9 @@ public interface DocumentExecutionAttributes
 	 *        The code to execute
 	 * @return A document descriptor with a valid executable as its document
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String code ) throws ParsingException, DocumentException;
 }

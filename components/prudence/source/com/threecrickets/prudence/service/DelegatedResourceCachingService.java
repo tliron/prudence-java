@@ -29,6 +29,15 @@ public class DelegatedResourceCachingService extends CachingServiceBase<Delegate
 
 	/**
 	 * Constructor.
+	 * 
+	 * @param resource
+	 *        The resource
+	 * @param documentService
+	 *        The document service
+	 * @param conversationService
+	 *        The conversation service
+	 * @param cachingUtil
+	 *        The caching utilities
 	 */
 	public DelegatedResourceCachingService( DelegatedResource resource, DocumentService<DelegatedResourceAttributes> documentService, DelegatedResourceConversationService conversationService,
 		CachingUtil<DelegatedResource, DelegatedResourceAttributes> cachingUtil )

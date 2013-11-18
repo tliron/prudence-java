@@ -73,6 +73,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.debug:</code>
  * {@link Boolean}, defaults to false.</li>
+ * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
  * <li><code>com.threecrickets.prudence.DelegatedHandler.defaultName:</code>
@@ -165,6 +166,7 @@ public class DelegatedHandler
 	 *        Extra arguments to add to entry point
 	 * @return The result of the entry
 	 * @throws ResourceException
+	 *         In case of a handling error
 	 * @see Executable#enter(Object, String, Object...)
 	 */
 	public Object handle( String entryPointName, Object... arguments )

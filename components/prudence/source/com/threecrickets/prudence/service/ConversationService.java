@@ -118,6 +118,8 @@ public class ConversationService
 	/**
 	 * Gets a conversation cookie by name.
 	 * 
+	 * @param name
+	 *        The cookie name
 	 * @return The conversation cookie or null
 	 */
 	public ConversationCookie getCookie( String name )
@@ -258,6 +260,7 @@ public class ConversationService
 	 *        The language or null to leave unchanged
 	 * @param characterSetName
 	 *        The character set or null to leave unchanged
+	 * @return The string representation
 	 */
 	public StringRepresentation setResponseText( String text, String mediaTypeName, String languageName, String characterSetName )
 	{
@@ -274,6 +277,7 @@ public class ConversationService
 	 *        The byte array
 	 * @param mediaTypeName
 	 *        The media type or null to leave unchanged
+	 * @return The byte array representation
 	 */
 	public ByteArrayRepresentation setResponseBinary( byte[] byteArray, String mediaTypeName )
 	{
@@ -451,6 +455,7 @@ public class ConversationService
 	 * Permanent client-side redirection.
 	 * 
 	 * @param uri
+	 *        The URI
 	 */
 	public void redirectPermanent( String uri )
 	{
@@ -461,6 +466,7 @@ public class ConversationService
 	 * See-other client-side redirection.
 	 * 
 	 * @param uri
+	 *        The URI
 	 */
 	public void redirectSeeOther( String uri )
 	{
@@ -471,6 +477,7 @@ public class ConversationService
 	 * Temporary client-side redirection.
 	 * 
 	 * @param uri
+	 *        The URI
 	 */
 	public void redirectTemporary( String uri )
 	{

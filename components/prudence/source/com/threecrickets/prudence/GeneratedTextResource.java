@@ -41,6 +41,7 @@ import com.threecrickets.prudence.internal.JygmentsDocumentFormatter;
 import com.threecrickets.prudence.internal.attributes.GeneratedTextResourceAttributes;
 import com.threecrickets.prudence.service.ApplicationService;
 import com.threecrickets.prudence.service.ConversationStoppedException;
+import com.threecrickets.prudence.service.GeneratedTextResourceCachingService;
 import com.threecrickets.prudence.service.GeneratedTextResourceConversationService;
 import com.threecrickets.prudence.service.GeneratedTextResourceDocumentService;
 import com.threecrickets.prudence.util.CapturingRedirector;
@@ -62,24 +63,26 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link Executable} document for GET and POST verbs and redirects its standard
  * output to a {@link StringRepresentation}.
  * <p>
- * <code>document</code>, <code>application</code> and <code>conversation</code>
- * services are available as global variables in scriptlets. See
- * {@link GeneratedTextResourceDocumentService}, {@link ApplicationService} and
+ * <code>document</code>, <code>caching</code>, <code>application</code> and
+ * <code>conversation</code> services are available as global variables in
+ * scriptlets. See {@link GeneratedTextResourceDocumentService},
+ * {@link GeneratedTextResourceCachingService}, {@link ApplicationService} and
  * {@link GeneratedTextResourceConversationService}.
  * <p>
  * Before using this resource, make sure to configure a valid document source in
  * the application's {@link Context} as
- * <code>com.threecrickets.prudence.GeneratedTextResource.documentSource</code.
+ * <code>com.threecrickets.prudence.GeneratedTextResource.documentSource</code>.
  * This document source is exposed to scriptlets as <code>document.source</code>.
  * <p>
  * This resource supports caching into implementations of {@link Cache}. First,
  * the entire document is executed, with its output sent into a buffer. This
  * buffer is then cached, and <i>only then</i> sent to the client. Scriptlets
  * can control the duration of their individual cache by changing the value of
- * <code>document.cacheDuration</code>. Because output is not sent to the client
- * until after the executable finished its execution, it is possible for
- * scriptlets to set output characteristics at any time by changing the values
- * of <code>conversation.mediaType</code>,
+ * <code>caching.duration</code>.
+ * <p>
+ * Because output is not sent to the client until after the executable finishes
+ * its execution, it is possible for scriptlets to set output characteristics at
+ * any time by changing the values of <code>conversation.mediaType</code>,
  * <code>conversation.characterSet</code>, and
  * <code>conversation.language</code>.
  * <p>
@@ -95,7 +98,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * : Defaults to "application".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.cacheKeyPatternHandlers</code>
- * : {@link ConcurrentMap}<String, String></li>
+ * : {@link ConcurrentMap}&lt;String, String&gt;</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.cachingServiceName</code>
  * : Defaults to "caching".</li>

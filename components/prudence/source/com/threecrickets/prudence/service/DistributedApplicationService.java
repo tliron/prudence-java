@@ -174,6 +174,8 @@ public class DistributedApplicationService extends ApplicationService
 	/**
 	 * Submits a task on the Hazelcast cluster.
 	 * 
+	 * @param <T>
+	 *        The task result class
 	 * @param applicationName
 	 *        The application's full name, or null to default to current
 	 *        application's name
@@ -207,6 +209,8 @@ public class DistributedApplicationService extends ApplicationService
 	/**
 	 * Submits a task on the Hazelcast cluster.
 	 * 
+	 * @param <T>
+	 *        The task result class
 	 * @param applicationName
 	 *        The application's full name, or null to default to current
 	 *        application's name

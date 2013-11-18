@@ -140,6 +140,7 @@ public abstract class UnifyMinifyFilter extends Filter
 
 	/**
 	 * @param minimumTimeBetweenValidityChecks
+	 *        The minimum time between validity checks in milliseconds
 	 * @see #getMinimumTimeBetweenValidityChecks()
 	 */
 	public void setMinimumTimeBetweenValidityChecks( long minimumTimeBetweenValidityChecks )
@@ -161,6 +162,7 @@ public abstract class UnifyMinifyFilter extends Filter
 	 * @param minify
 	 *        Whether to minify the result
 	 * @throws IOException
+	 *         In case of a filesystem error
 	 */
 	public void unify( File targetDirectory, boolean minify ) throws IOException
 	{
@@ -303,6 +305,7 @@ public abstract class UnifyMinifyFilter extends Filter
 	 * @param out
 	 *        Output stream
 	 * @throws IOException
+	 *         In case of a reading or writing error
 	 */
 	protected abstract void minify( InputStream in, OutputStream out ) throws IOException;
 

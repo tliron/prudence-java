@@ -133,6 +133,7 @@ public class ZussFilter extends Filter implements Locator
 
 	/**
 	 * @param minimumTimeBetweenValidityChecks
+	 *        The minimum time between validity checks in milliseconds
 	 * @see #getMinimumTimeBetweenValidityChecks()
 	 */
 	public void setMinimumTimeBetweenValidityChecks( long minimumTimeBetweenValidityChecks )
@@ -155,6 +156,7 @@ public class ZussFilter extends Filter implements Locator
 	 * @param minify
 	 *        Whether to minify the CSS
 	 * @throws IOException
+	 *         In case of a reading, writing or translation error
 	 * @see CSSMin
 	 */
 	public void translate( File zussFile, File cssFile, boolean minify ) throws IOException

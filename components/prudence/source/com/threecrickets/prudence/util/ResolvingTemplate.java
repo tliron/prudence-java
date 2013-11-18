@@ -55,12 +55,19 @@ public class ResolvingTemplate extends Template
 	 * Constructor.
 	 * 
 	 * @param pattern
+	 *        The pattern to use for formatting or parsing
 	 * @param matchingMode
+	 *        The matching mode to use when parsing a formatted reference
 	 * @param defaultType
+	 *        The default type of variables with no descriptor
 	 * @param defaultDefaultValue
+	 *        The default value for null variables with no descriptor
 	 * @param defaultRequired
+	 *        The default required flag for variables with no descriptor
 	 * @param defaultFixed
+	 *        The default fixed value for variables with no descriptor
 	 * @param encodingVariables
+	 *        True if the variables must be encoded when formatting the template
 	 */
 	public ResolvingTemplate( String pattern, int matchingMode, int defaultType, String defaultDefaultValue, boolean defaultRequired, boolean defaultFixed, boolean encodingVariables )
 	{
@@ -71,11 +78,17 @@ public class ResolvingTemplate extends Template
 	 * Constructor.
 	 * 
 	 * @param pattern
+	 *        The pattern to use for formatting or parsing
 	 * @param matchingMode
+	 *        The matching mode to use when parsing a formatted reference
 	 * @param defaultType
+	 *        The default type of variables with no descriptor
 	 * @param defaultDefaultValue
+	 *        The default value for null variables with no descriptor
 	 * @param defaultRequired
+	 *        The default required flag for variables with no descriptor
 	 * @param defaultFixed
+	 *        The default fixed value for variables with no descriptor
 	 */
 	public ResolvingTemplate( String pattern, int matchingMode, int defaultType, String defaultDefaultValue, boolean defaultRequired, boolean defaultFixed )
 	{
@@ -86,7 +99,9 @@ public class ResolvingTemplate extends Template
 	 * Constructor.
 	 * 
 	 * @param pattern
+	 *        The pattern to use for formatting or parsing
 	 * @param matchingMode
+	 *        The matching mode to use when parsing a formatted reference
 	 */
 	public ResolvingTemplate( String pattern, int matchingMode )
 	{
@@ -97,6 +112,7 @@ public class ResolvingTemplate extends Template
 	 * Constructor.
 	 * 
 	 * @param pattern
+	 *        The pattern to use for formatting or parsing
 	 */
 	public ResolvingTemplate( String pattern )
 	{
@@ -108,6 +124,10 @@ public class ResolvingTemplate extends Template
 	//
 
 	/**
+	 * The constructor for the map resolver for the current application.
+	 * <p>
+	 * The constructor accepts a {@link Map} argument.
+	 * 
 	 * @return The constructor for the map resolver
 	 */
 	public static Constructor<Resolver<?>> getMapResolverConstructor()
@@ -120,7 +140,12 @@ public class ResolvingTemplate extends Template
 	}
 
 	/**
+	 * The constructor for the map resolver.
+	 * <p>
+	 * The constructor accepts a {@link Map} argument.
+	 * 
 	 * @param application
+	 *        The application
 	 * @return The constructor for the map resolver
 	 */
 	public static Constructor<Resolver<?>> getMapResolverConstructor( Application application )
@@ -131,12 +156,20 @@ public class ResolvingTemplate extends Template
 	}
 
 	/**
+	 * Configures the map resolver class.
+	 * <p>
+	 * The class must have a constructor that accepts a {@link Map} argument.
+	 * 
 	 * @param application
+	 *        The application
 	 * @param theClass
-	 * @throws SecurityException
+	 *        The map resolver class
 	 * @throws NoSuchMethodException
+	 *         In case the appropriate constructor does not exist
+	 * @throws SecurityException
+	 *         In case we do not have access rights to the constructor
 	 */
-	public static void setMapResolverClass( Application application, Class<Resolver<?>> theClass ) throws SecurityException, NoSuchMethodException
+	public static void setMapResolverClass( Application application, Class<Resolver<?>> theClass ) throws NoSuchMethodException, SecurityException
 	{
 		if( theClass == null )
 			application.getContext().getAttributes().remove( MAP_RESOLVER_CONSTRUCTOR );
@@ -145,6 +178,10 @@ public class ResolvingTemplate extends Template
 	}
 
 	/**
+	 * The constructor for the call resolver for the current application.
+	 * <p>
+	 * The constructor accepts {@link Request} and {@link Response} arguments.
+	 * 
 	 * @return The constructor for the call resolver
 	 */
 	public static Constructor<Resolver<?>> getCallResolverConstructor()
@@ -157,7 +194,12 @@ public class ResolvingTemplate extends Template
 	}
 
 	/**
+	 * The constructor for the call resolver.
+	 * <p>
+	 * The constructor accepts {@link Request} and {@link Response} arguments.
+	 * 
 	 * @param application
+	 *        The application
 	 * @return The constructor for the call resolver
 	 */
 	public static Constructor<Resolver<?>> getCallResolverConstructor( Application application )
@@ -168,12 +210,21 @@ public class ResolvingTemplate extends Template
 	}
 
 	/**
+	 * Configures the map resolver class.
+	 * <p>
+	 * The class must have a constructor that accepts {@link Request} and
+	 * {@link Response} arguments.
+	 * 
 	 * @param application
+	 *        The application
 	 * @param theClass
-	 * @throws SecurityException
+	 *        The call resolver class
 	 * @throws NoSuchMethodException
+	 *         In case the appropriate constructor does not exist
+	 * @throws SecurityException
+	 *         In case we do not have access rights to the constructor
 	 */
-	public static void setCallResolverClass( Application application, Class<Resolver<?>> theClass ) throws SecurityException, NoSuchMethodException
+	public static void setCallResolverClass( Application application, Class<Resolver<?>> theClass ) throws NoSuchMethodException, SecurityException
 	{
 		if( theClass == null )
 			application.getContext().getAttributes().remove( CALL_RESOLVER_CONSTRUCTOR );
@@ -192,11 +243,13 @@ public class ResolvingTemplate extends Template
 	 * argument.
 	 * 
 	 * @param theClass
-	 *        The class or null
-	 * @throws SecurityException
+	 *        The resolver class or null
 	 * @throws NoSuchMethodException
+	 *         In case the appropriate constructor does not exist
+	 * @throws SecurityException
+	 *         In case we do not have access rights to the constructor
 	 */
-	public void setMapResolverClass( Class<Resolver<?>> theClass ) throws SecurityException, NoSuchMethodException
+	public void setMapResolverClass( Class<Resolver<?>> theClass ) throws NoSuchMethodException, SecurityException
 	{
 		if( theClass == null )
 			mapResolverConstructor = null;
@@ -212,10 +265,12 @@ public class ResolvingTemplate extends Template
 	 * 
 	 * @param theClass
 	 *        The class or null
-	 * @throws SecurityException
 	 * @throws NoSuchMethodException
+	 *         In case the appropriate constructor does not exist
+	 * @throws SecurityException
+	 *         In case we do not have access rights to the constructor
 	 */
-	public void setCallResolverClass( Class<Resolver<?>> theClass ) throws SecurityException, NoSuchMethodException
+	public void setCallResolverClass( Class<Resolver<?>> theClass ) throws NoSuchMethodException, SecurityException
 	{
 		if( theClass == null )
 			callResolverConstructor = null;

@@ -259,6 +259,8 @@ public class ConversationCookie extends Cookie
 
 	/**
 	 * Saves changes, if any were made, as a unique cookie setting.
+	 * 
+	 * @return True if there were changes to be saved
 	 */
 	public boolean save()
 	{

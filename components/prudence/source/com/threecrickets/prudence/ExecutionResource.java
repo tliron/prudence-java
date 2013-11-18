@@ -53,6 +53,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
+ * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>

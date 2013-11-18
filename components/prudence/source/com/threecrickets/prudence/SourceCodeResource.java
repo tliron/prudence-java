@@ -39,7 +39,7 @@ import com.threecrickets.scripturian.exception.DocumentNotFoundException;
  * <p>
  * Before using this resource, make sure to configure a valid list of document
  * sources in the application's {@link Context} as
- * <code>com.threecrickets.prudence.SourceCodeResource.documentSources</code.
+ * <code>com.threecrickets.prudence.SourceCodeResource.documentSources</code>.
  * <p>
  * Summary of settings configured via the application's {@link Context}:
  * <ul>
@@ -119,6 +119,7 @@ public class SourceCodeResource extends ServerResource
 	 *        The document name
 	 * @return The document descriptor
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	private DocumentDescriptor<Executable> getDocument( String name ) throws DocumentException
 	{

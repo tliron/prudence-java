@@ -126,9 +126,13 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 * @param documentName
 	 *        The document name
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws ExecutionException
+	 *         In case of a Scripturian execution error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 * @throws IOException
+	 *         In case of a Scripturian writing error
 	 */
 	public void execute( String documentName ) throws ParsingException, ExecutionException, DocumentException, IOException
 	{
@@ -157,9 +161,13 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 * @param documentName
 	 *        The document name
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws ExecutionException
+	 *         In case of a Scripturian execution error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 * @throws IOException
+	 *         In case of a Scripturian writing error
 	 * @see #markExecuted(String, boolean)
 	 */
 	public void executeOnce( String documentName ) throws ParsingException, ExecutionException, DocumentException, IOException
@@ -174,9 +182,13 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 * @param documentNames
 	 *        The document names
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws ExecutionException
+	 *         In case of a Scripturian execution error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 * @throws IOException
+	 *         In case of a Scripturian writing error
 	 */
 	public void require( String... documentNames ) throws ParsingException, ExecutionException, DocumentException, IOException
 	{
@@ -221,7 +233,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 * @param documentName
 	 *        The document name
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 */
 	public void addDependency( String documentName ) throws ParsingException, DocumentException
 	{
@@ -239,7 +253,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 * @param path
 	 *        The document name
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	public void addFileDependency( String path ) throws ParsingException, DocumentException
 	{
@@ -252,9 +268,14 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	/**
 	 * Invalidates a document, which can affect documents that depend on it.
 	 * 
+	 * @param documentName
+	 *        The document name
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws IOException
+	 *         In case of a Scripturian writing error
 	 */
 	public void invalidate( String documentName ) throws ParsingException, DocumentException, IOException
 	{
@@ -361,6 +382,8 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 
 	/**
 	 * Remove the top document from the stack.
+	 * 
+	 * @return The top document descriptor or null
 	 */
 	protected DocumentDescriptor<Executable> popDocumentDescriptor()
 	{
@@ -374,7 +397,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 *        The document name
 	 * @return The document descriptor
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	protected DocumentDescriptor<Executable> getDocumentDescriptor( String documentName ) throws ParsingException, DocumentException
 	{
@@ -413,7 +438,9 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	 *        The document name
 	 * @return The document descriptor
 	 * @throws ParsingException
+	 *         In case of a Scripturian parsing error
 	 * @throws DocumentException
+	 *         In case of a Scripturian document retrieval error
 	 */
 	private DocumentDescriptor<Executable> getFileDocumentDescriptor( String documentName ) throws ParsingException, DocumentException
 	{
