@@ -788,12 +788,13 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Static
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
-	 * @param {String[]|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>[]} [roots="resources" container "/libraries/web/" subdirectories] The paths from which files are searched
-	 * @param {Boolean} [listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
-	 * @param {Boolean} [negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
-	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
-	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
+	 * @param [config]
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root="resources" subdirectory] The path from which files are searched
+	 * @param {String[]|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>[]} [config.roots="resources" container "/libraries/web/" subdirectories] The paths from which files are searched
+	 * @param {Boolean} [config.listingAllowed=false] If true will automatically generate HTML pages with directory contents for all mapped subdirectories
+	 * @param {Boolean} [config.negotiate=true] If true will automatically handle content negotiation; the preferred media (MIME) type will be determined by the filename extension
+	 * @param {Boolean} [config.compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {Number} [config.cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Static = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Static */
@@ -903,12 +904,13 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Manual
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root="resources" subdirectory] The path from which files are searched
-	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
-	 * @param {String} [preExtension='m']
-	 * @param {Boolean} [trailingSlashRequired=true]
-	 * @param {String} [internalUri='/_manual/']
-	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client
+	 * @param [config]
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root="resources" subdirectory] The path from which files are searched
+	 * @param {String[]} [config.passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
+	 * @param {String} [config.preExtension='m'] The pre-extension
+	 * @param {Boolean} [config.trailingSlashRequired=true] Whether trailing slashses are required
+	 * @param {String} [config.internalUri='/_manual/'] The base URI for the internal host
+	 * @param {Boolean} [config.compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Manual */
@@ -1046,17 +1048,18 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Scriptlet
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root='resources'] The path from which files are searched
-	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [includeRoot='libraries/includes']
-	 * @param {String[]} [passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
-	 * @param {String} [preExtension='s']
-	 * @param {Boolean} [trailingSlashRequired=true]
-	 * @param {String} [defaultDocumentName='index']
-	 * @param {String} [defaultExtension='html']
-	 * @param {String} [clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
-	 * @param {Number|String} [maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
-	 * @param {Boolean} [compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
-	 * @param {Object} [plugins] Scriptlet plugins
+	 * @param [config]
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root='resources'] The path from which files are searched
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.includeRoot='libraries/includes']
+	 * @param {String[]} [config.passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
+	 * @param {String} [config.preExtension='s'] The pre-extension
+	 * @param {Boolean} [config.trailingSlashRequired=true] Whether trailing slashses are required
+	 * @param {String} [config.defaultDocumentName='index'] The default document name for directories
+	 * @param {String} [config.defaultExtension='html'] The preferred filename extension
+	 * @param {String} [config.clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
+	 * @param {Number|String} [config.maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
+	 * @param {Boolean} [config.compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
+	 * @param {Object} [config.plugins] Scriptlet plugins
 	 */
 	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Scriptlet */
@@ -1297,9 +1300,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Dispatch
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String} id
-	 * @param {String} [dispatcher]
-	 * @param {Object} [locals]
+	 * @param config
+	 * @param {String} config.id The dispatch ID
+	 * @param {String} [config.dispatcher] The dispatcher; defaults to app.dispatchers['default'] or 'javascript'
+	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 */
 	Public.Dispatch = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Dispatch */
@@ -1373,10 +1377,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Capture
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String} uri
-	 * @param {String} [application]
-	 * @param {Boolean} [hidden=false]
-	 * @param {Object} [locals]
+	 * @param config
+	 * @param {String} config.uri The target URI template
+	 * @param {String} [config.application] The application to capture to, or null for the current application
+	 * @param {Boolean} [config.hidden=false] Whether to also hide the target URI template (defaults to true when the URI ends with '!')
+	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 */
 	Public.Capture = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Capture */
@@ -1448,9 +1453,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Router
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {Object} [routes]
-	 * @param {String} [routingMode='best'] Either 'best', 'first', 'last', 'random' or 'next'
-	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
+	 * @param [config]
+	 * @param {Object} [config.routes] A dict matching URI templates to route configurations
+	 * @param {String} [config.routingMode='best'] Either 'best', 'first', 'last', 'random' or 'next'
+	 * @param {Number} [config.cacheDuration=settings.code.minimumTimeBetweenValidityChecks] Time in milliseconds for cached fallback results
 	 */
 	Public.Router = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Router */
@@ -1580,8 +1586,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Chain
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {Array} [restlets]
-	 * @param {Number} [cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
+	 * @param [config]
+	 * @param {Array} [config.restlets] The route configurations to chain
+	 * @param {Number} [config.cacheDuration=settings.code.minimumTimeBetweenValidityChecks] Time in milliseconds for cached fallback results
 	 */
 	Public.Chain = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Chain */
@@ -1660,9 +1667,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @class
 	 * @name Prudence.Routing.Redirect
 	 * @augments Prudence.Routing.Restlet
-	 * 
-	 * @param {String} uri
-	 * @param {String|Number} [mode='permanent'] Either 'permanent'/301, 'found'/302, 'seeOther'/303 or 'temporary'/307
+	 *
+	 * @param config
+	 * @param {String} config.uri The target URI (must be absolute, not relative)
+	 * @param {String|Number} [config.mode='permanent'] Either 'permanent'/301, 'found'/302, 'seeOther'/303 or 'temporary'/307
 	 */
 	Public.Redirect = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Redirect */
@@ -1761,7 +1769,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Resource
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String} class
+	 * @param config
+	 * @param {String} config.class The JVM class name (must inherit from http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html">ServerResource</a>)
 	 */
 	Public.Resource = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Resource */
@@ -1807,8 +1816,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Filter
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String} library
-	 * @param {Object} next
+	 * @param config
+	 * @param {String} config.library The filter library's document URI
+	 * @param {Object} config.next The next route configuration
 	 */
 	Public.Filter = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Filter */
@@ -1833,7 +1843,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A simple {@link Prudence.Routing.Filter} that injects preset values into {@link conversation#locals}
+	 * A simple filter that injects preset values into {@link conversation#locals}
 	 * before continuing to the next route type.
 	 * <p>
 	 * This is useful for Inversion of Control (IoC): you can use these conversation.locals
@@ -1845,8 +1855,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Injector
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {Object} [locals]
-	 * @param {Object} next
+	 * @param config
+	 * @param {Object} [config.locals] The values to inject into conversation.locals
+	 * @param {Object} config.next The next route configuration
 	 */
 	Public.Injector = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.Injector */
@@ -1878,7 +1889,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A powerful {@link Prudence.Routing.Filter} that unifies and optionally minifies
+	 * A powerful filter that unifies and optionally minifies
 	 * client-side JavaScript files on demand, allowing for improved performance
 	 * and scalability.
 	 * <p>
@@ -1909,8 +1920,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.JavaScriptUnifyMinify
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String[]} roots
-	 * @param {Object} next
+	 * @param config
+	 * @param {String[]} config.roots The root directories
+	 * @param {Object} config.next The next route configuration
 	 */
 	Public.JavaScriptUnifyMinify = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.JavaScriptUnifyMinify */
@@ -1960,7 +1972,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A powerful {@link Prudence.Routing.Filter} that unifies and optionally minifies
+	 * A powerful filter that unifies and optionally minifies
 	 * CSS files on demand, allowing for improved performance
 	 * and scalability.
 	 * <p>
@@ -1990,8 +2002,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.CssUnifyMinify
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String[]} roots
-	 * @param {Object} next
+	 * @param config
+	 * @param {String[]} config.roots The root directories
+	 * @param {Object} config.next The next route configuration
 	 * @see Prudence.Routing.Zuss
 	 */
 	Public.CssUnifyMinify = Sincerity.Classes.define(function(Module) {
@@ -2042,7 +2055,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A powerful {@link Prudence.Routing.Filter} that compiles <a href="https://github.com/tomyeh/ZUSS">ZUSS</a>
+	 * A powerful filter that compiles <a href="https://github.com/tomyeh/ZUSS">ZUSS</a>
 	 * files to CSS and optionally minifies them on demand. ZUSS is a powerful CSS meta-language, similar to
 	 * <a href="http://lesscss.org/">LESS</a> and <a href="http://sass-lang.com/">Sass</a>, that can greatly
 	 * improve the clarity and reusability of your CSS.
@@ -2073,9 +2086,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.Zuss
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String[]} roots
-	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>]
-	 * @param {Object} next
+	 * @param config
+	 * @param {String[]} config.roots The root directories
+	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>} [config.resolver] The resolver
+	 * @param {Object} config.next The next route configuration
 	 * @see Prudence.Routing.CssUnifyMinify
 	 */
 	Public.Zuss = Sincerity.Classes.define(function(Module) {
@@ -2132,7 +2146,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 * A filter {@link Prudence.Routing.Filter} that adds client-side cache control headers to
+	 * A filter that adds client-side cache control headers to
 	 * responses according to their media (MIME) types. These headers ask the client to
 	 * cache or not to cache the response. When cached, the client will not send <i>any</i> request
 	 * to the server (not even a conditional request), amounting to the best possible boost
@@ -2171,9 +2185,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.CacheControl
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {String[]} [mediaTypes]
-	 * @param {Number|String} [default=-1]
-	 * @param {Object} next
+	 * @param config
+	 * @param {String} [config.mediaTypes] A dict of MIME types mapped to cache durations in millseconds
+	 * @param {Number|String} [config.default=-1] The default cache duration if the MIME type is not in mediaTypes
+	 * @param {Object} config.next The next route configuration
 	 */
 	Public.CacheControl = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.CacheControl */
@@ -2242,9 +2257,10 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @name Prudence.Routing.HttpAuthenticator
 	 * @augments Prudence.Routing.Restlet
 	 * 
-	 * @param {Object} credentials
-	 * @param {String} realm
-	 * @param {Object} next
+	 * @param config
+	 * @param {Object} config.credentials Maps usernames to passwords
+	 * @param {String} config.realm The security prompt
+	 * @param {Object} config.next The next route configuration
 	 */
 	Public.HttpAuthenticator = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Routing.HttpAuthenticator */

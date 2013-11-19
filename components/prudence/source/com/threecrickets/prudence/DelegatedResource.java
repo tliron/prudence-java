@@ -617,7 +617,7 @@ public class DelegatedResource extends ServerResource
 			representation = (Representation) object;
 			try
 			{
-				cacheEntry = new CacheEntry( representation, conversationService.getHeaders(), executable.getDocumentTimestamp(), expirationTimestamp );
+				cacheEntry = new CacheEntry( representation, conversationService.getHeaders(), conversationService.getTag(), executable.getDocumentTimestamp(), expirationTimestamp );
 			}
 			catch( IOException x )
 			{
@@ -652,7 +652,7 @@ public class DelegatedResource extends ServerResource
 			}
 			else if( object instanceof byte[] )
 			{
-				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
+				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(), conversationService.getTag(),
 					executable.getDocumentTimestamp(), expirationTimestamp );
 			}
 			else
@@ -661,7 +661,7 @@ public class DelegatedResource extends ServerResource
 				try
 				{
 					cacheEntry = new CacheEntry( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
-						executable.getDocumentTimestamp(), expirationTimestamp );
+						conversationService.getTag(), executable.getDocumentTimestamp(), expirationTimestamp );
 				}
 				catch( IOException x )
 				{

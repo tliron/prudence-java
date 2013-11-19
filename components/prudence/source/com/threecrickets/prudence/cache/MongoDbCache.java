@@ -25,6 +25,7 @@ import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
+import org.restlet.data.Tag;
 import org.restlet.engine.header.Header;
 import org.restlet.util.Series;
 
@@ -234,6 +235,10 @@ public class MongoDbCache implements Cache
 			if( characterSet != null )
 				set.put( "characterSet", characterSet.getName() );
 
+			Tag tag = entry.getTag();
+			if( tag != null )
+				set.put( "tag", tag.format() );
+
 			Series<Header> headers = entry.getHeaders();
 			if( headers != null )
 			{
@@ -297,6 +302,8 @@ public class MongoDbCache implements Cache
 						Language language = Language.valueOf( (String) document.get( "language" ) );
 						Encoding encoding = Encoding.valueOf( (String) document.get( "encoding" ) );
 						CharacterSet characterSet = CharacterSet.valueOf( (String) document.get( "characterSet" ) );
+						String tagValue = (String) document.get( "tag" );
+						Tag tag = tagValue != null ? Tag.parse( tagValue ) : null;
 
 						Series<Header> headers = null;
 						Object storedHeaders = document.get( "headers" );
@@ -317,9 +324,9 @@ public class MongoDbCache implements Cache
 						}
 
 						if( string != null )
-							cacheEntry = new CacheEntry( string, mediaType, language, characterSet, encoding, headers, documentModificationDate, expirationDate );
+							cacheEntry = new CacheEntry( string, mediaType, language, characterSet, encoding, headers, tag, documentModificationDate, expirationDate );
 						else
-							cacheEntry = new CacheEntry( bytes, mediaType, language, characterSet, encoding, headers, documentModificationDate, expirationDate );
+							cacheEntry = new CacheEntry( bytes, mediaType, language, characterSet, encoding, headers, tag, documentModificationDate, expirationDate );
 					}
 
 					logger.fine( "Fetched: " + key );

@@ -382,7 +382,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			if( writer != null )
 				writer.write( pureLiteral );
 
-			return new CacheEntry( pureLiteral, conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), encoding, conversationService.getHeaders(),
+			return new CacheEntry( pureLiteral, conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), encoding, conversationService.getHeaders(), null,
 				executable.getDocumentTimestamp(), CachingUtil.getExpirationTimestamp( executable, null ) ).represent();
 		}
 
@@ -460,7 +460,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 
 				// Get the buffer from when we executed the executable
 				CacheEntry cacheEntry = new CacheEntry( writerBuffer.substring( startPosition ), conversationService.getMediaType(), conversationService.getLanguage(), conversationService.getCharacterSet(), null,
-					conversationService.getHeaders(), executable.getDocumentTimestamp(), expirationTimestamp );
+					conversationService.getHeaders(), null, executable.getDocumentTimestamp(), expirationTimestamp );
 
 				// Disable encoding for small representations
 				if( cacheEntry.getSize() < attributes.getEncodeSizeThreshold() )

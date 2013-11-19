@@ -642,7 +642,15 @@ s
 \begin_inset Quotes erd
 \end_inset
 
- a pre-extension: here, it stands for 
+ a pre-extension: here, the 
+\begin_inset Quotes eld
+\end_inset
+
+s
+\begin_inset Quotes erd
+\end_inset
+
+ stands for 
 \begin_inset Quotes eld
 \end_inset
 
@@ -678,9 +686,6 @@ scriptlets,
 .
  This, again, may be familiar to you: it's similar to how PHP, JSP and ASP
  work.
- (We'll just quickly let you know that Prudence can automatically cache
- these scriptlet pages, with powerful, fine-grained control over fragmentation
- and cache keys, and configurable cache backends.)
 \end_layout
 
 \begin_layout Standard
@@ -1038,7 +1043,7 @@ APIs
 \end_layout
 
 \begin_layout Standard
-What is that 
+That 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1046,7 +1051,7 @@ document
 \begin_inset Quotes erd
 \end_inset
 
- namespace mentioned above? It's part of the rich, well-documented API provided
+ namespace mentioned above is part of the rich, well-documented API provided
  by Prudence.
  Other useful namespaces are 
 \begin_inset Quotes eld
@@ -3510,8 +3515,8 @@ body {
 \end_layout
 
 \begin_layout Standard
-As a final treat, Prudence can also minify the CSS file us, to save some
- bandwidth (it will 
+As a final treat, Prudence can also minify the CSS file for us, in order
+ to save some bandwidth or obfuscate it (Prudence will 
 \emph on
 also
 \emph default
