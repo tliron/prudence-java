@@ -229,7 +229,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @returns The entity
 	 */
 	Public.getEntity = function(conversation, type, params) {
-		return conversation.entity ? Public.fromRepresentation(conversation.entity, type, params) : null
+		return Sincerity.Objects.exists(conversation.entity) ? Public.fromRepresentation(conversation.entity, type, params) : null
 	}
 	
 	/**
@@ -260,14 +260,15 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * Sends a request to a resource, with support for various types of representation and payload conversions.
 	 * 
 	 * @param params
-	 * @param {String} params.uri The URI
+	 * @param {String} params.uri The URI; if it begins with '/' will act as if params.internal is true
 	 * @param {String|java.io.File} [params.file] File path or file objects; if used, will be converted to a file:// URI
 	 * @param [params.query] The query parameters to add to the URI (see {@link Prudence.Resources#buildUri})
 	 * @param {String} [params.method='get'] The HTTP method: 'get', 'post', 'put', 'delete' or 'head'
-	 * @param {Boolean|String} [params.internal=false] True to use Prudence's document.internal API; a string
-	 *		specifies the internal application name to use
+	 * @param {Boolean|String} [params.internal=false] True to use Prudence's document.internal API; a string here
+	 *		  specifies the internal application name to use
 	 * @param {String} [params.mediaType] Defaults to 'application/java' for internal=true, otherwise 'text/plain'
-	 * @param [params.payload] A dict in the form of {type: 'type', value: object}. Supported payload types:
+	 * @param [params.payload] The payload
+	 * @param {String} [params.payload.type] Supported payload types:
 	 *		<ul>
 	 *		<li>'object': as is (only for internal=true)</li>
 	 *		<li>'text': converted to string if not one already</li>
@@ -276,6 +277,8 @@ Prudence.Resources = Prudence.Resources || function() {
 	 *		<li>'web': see {@link Prudence.Resources#toWebPayload}</li>
 	 *		<li>'binary': an array of bytes</li>
 	 *		</ul>
+	 * @param {String} [params.payload.value] The payload value
+	 * @param {String} [params.payload.mediaType] The payload mediaType (overrides the default value)
 	 * @param [params.headers] A dict of custom headers to add to the request 
 	 * @param {String|Object} [params.result]
 	 *		Defaults to 'json' for JSON media types, 'xml' for XML media types, 'object' for 'application/java'
@@ -305,6 +308,9 @@ Prudence.Resources = Prudence.Resources || function() {
 		params = Sincerity.Objects.clone(params)
 		params.logLevel = params.logLevel || 'fine'
 		params.method = params.method || 'get'
+		if (!Sincerity.Objects.exists(params.internal) && Sincerity.Objects.exists(params.uri) && (params.uri[0] == '/')) {
+			params.internal = true
+		}
 		params.mediaType = params.mediaType || (params.internal ? 'application/java' : 'text/plain')
 
 		var resultType
@@ -331,7 +337,8 @@ Prudence.Resources = Prudence.Resources || function() {
 			resultHeaders = true
 		}
 
-		if (params.payload && params.payload.type) {
+		if (Sincerity.Objects.exists(params.payload) && params.payload.type) {
+			var mediaType = params.payload.mediaType
 			switch (String(params.payload.type)) {
 				case 'text':
 					// Payload is as is
@@ -339,15 +346,17 @@ Prudence.Resources = Prudence.Resources || function() {
 					
 				case 'json':
 					params.payload = Sincerity.JSON.to(params.payload.value)
+					mediaType = mediaType || 'application/json'
 					if (Sincerity.Objects.exists(params.payload)) {
-						params.payload = new org.restlet.representation.StringRepresentation(params.payload, org.restlet.data.MediaType.valueOf('application/json'))
+						params.payload = new org.restlet.representation.StringRepresentation(params.payload, org.restlet.data.MediaType.valueOf(mediaType))
 					}
 					break
 					
 				case 'xml':
 					params.payload = Sincerity.XML.to(params.payload.value)
+					mediaType = mediaType || 'application/xml'
 					if (Sincerity.Objects.exists(params.payload)) {
-						params.payload = new org.restlet.representation.StringRepresentation(params.payload, org.restlet.data.MediaType.valueOf('application/xml'))
+						params.payload = new org.restlet.representation.StringRepresentation(params.payload, org.restlet.data.MediaType.valueOf(mediaType))
 					}
 					break
 
@@ -356,11 +365,12 @@ Prudence.Resources = Prudence.Resources || function() {
 					break
 					
 				case 'object':
-					params.payload = new org.restlet.representation.ObjectRepresentation(params.payload.value)
+					mediaType = mediaType || 'application/java'
+					params.payload = new org.restlet.representation.ObjectRepresentation(params.payload.value, org.restlet.data.MediaType.valueOf(mediaType))
 					break
 				
 				case 'binary':
-					params.payload = new org.restlet.representation.ByteArrayRepresentation(params.payload.value)
+					params.payload = new org.restlet.representation.ByteArrayRepresentation(params.payload.value, Sincerity.Objects.exists(mediaType) ? org.restlet.data.MediaType.valueOf(mediaType) : null)
 					break
 					
 				default:
@@ -439,11 +449,11 @@ Prudence.Resources = Prudence.Resources || function() {
 						break
 						
 					case 'post':
-						representation = resource.post(params.payload ? params.payload : '')
+						representation = resource.post(Sincerity.Objects.exists(params.payload) ? params.payload : '')
 						break
 						
 					case 'put':
-						representation = resource.put(params.payload ? params.payload : '')
+						representation = resource.put(Sincerity.Objects.exists(params.payload) ? params.payload : '')
 						break
 						
 					default:

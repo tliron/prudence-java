@@ -228,10 +228,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 */
 	public static String getCacheKeyForEncoding( String cacheKey, Encoding encoding )
 	{
-		if( encoding != null )
-			return cacheKey + "|" + encoding.getName();
-		else
-			return cacheKey;
+		return encoding != null ? cacheKey + '|' + encoding.getName() : cacheKey + '|';
 	}
 
 	/**
@@ -709,7 +706,10 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		try
 		{
 			// Cast it
-			return template.format( resolver );
+			String key = template.format( resolver );
+			String mediaType = conversationService.getMediaTypeName();
+			key += mediaType != null ? '|' + mediaType : '|';
+			return key;
 		}
 		finally
 		{

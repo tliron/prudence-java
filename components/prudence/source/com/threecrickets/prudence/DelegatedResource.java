@@ -789,11 +789,7 @@ public class DelegatedResource extends ServerResource
 	{
 		Request request = getRequest();
 		if( CachingUtil.mayFetch( request, executable, getDispatchedSuffix() ) )
-		{
-			Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, getDispatchedSuffix(), false, request, conversationService.getEncoding(), null, conversationService );
-			if( representation != null )
-				return representation;
-		}
+			return cachingUtil.fetchRepresentation( documentDescriptor, getDispatchedSuffix(), false, request, conversationService.getEncoding(), null, conversationService );
 		return null;
 	}
 

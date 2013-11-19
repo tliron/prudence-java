@@ -1427,7 +1427,12 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	application.globals.put('page', form.content)
+	var content = form.content
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put('page', content)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1437,11 +1442,17 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
+else {
 \end_layout
 
 \begin_layout Plain Layout
 
-var page = application.globals.get('page') || 'This page is empty.'
+	var content = application.globals.get('page') || 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \begin_layout Plain Layout
@@ -1456,7 +1467,7 @@ var page = application.globals.get('page') || 'This page is empty.'
 
 \begin_layout Plain Layout
 
-	<%= page %>
+	<%= content %>
 \end_layout
 
 \begin_layout Plain Layout
@@ -1476,7 +1487,7 @@ var page = application.globals.get('page') || 'This page is empty.'
 
 \begin_layout Plain Layout
 
-	<p><textarea name="content" cols="80" rows="20"><%= page %></textarea></p>
+	<p><textarea name="content" cols="80" rows="20"><%= content %></textarea></p>
 \end_layout
 
 \begin_layout Plain Layout
@@ -1680,7 +1691,11 @@ capture
 \begin_inset Quotes erd
 \end_inset
 
- all incoming URLs that begin with 
+ all incoming URLs that 
+\emph on
+begin with
+\emph default
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1688,7 +1703,7 @@ capture
 \begin_inset Quotes erd
 \end_inset
 
- to our 
+ to exactly our 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1705,7 +1720,8 @@ capture
 \begin_inset Quotes erd
 \end_inset
 
- at the end of a URI pattern signifies a wildcard.
+ at the end of a URI pattern signifies a wildcard: anything may follow (except
+ nothing).
  Restart Prudence for our routing.js changes to take effect.
 \end_layout
 
@@ -1728,6 +1744,7 @@ target "http://localhost:8080/wiki/page/test/"
 \end_inset
 
 .
+ If you edit one page, the content of all pages would change.
 \end_layout
 
 \begin_layout Standard
@@ -1739,7 +1756,11 @@ page.s.html
 \begin_inset Quotes erd
 \end_inset
 
- to make it differ per incoming URL:
+ to make it 
+\emph on
+differ
+\emph default
+ per incoming URL:
 \end_layout
 
 \begin_layout Standard
@@ -1782,7 +1803,12 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	application.globals.put(id, form.content)
+	var content = form.content
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put(id, content)
 \end_layout
 
 \begin_layout Plain Layout
@@ -1792,11 +1818,17 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
+else {
 \end_layout
 
 \begin_layout Plain Layout
 
-var page = application.globals.get(id) || 'This page is empty.'
+	var content = application.globals.get(id) || 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \begin_layout Plain Layout
@@ -1852,7 +1884,7 @@ reference "the-wildcard"
 
 )
 \bar default
-.
+ we configured in routing.js.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2089,7 +2121,12 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	application.globals.put(id, form.content)
+	var content = form.content
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.globals.put(id, content)
 \end_layout
 
 \begin_layout Plain Layout
@@ -2104,11 +2141,17 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
+else {
 \end_layout
 
 \begin_layout Plain Layout
 
-var page = application.globals.get(id) || 'This page is empty.'
+	var content = application.globals.get(id) || 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \begin_layout Plain Layout
@@ -3151,7 +3194,7 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-	caching.tags.add(id) 
+	caching.tags.add(id)
 \end_layout
 
 \begin_layout Plain Layout
@@ -3165,7 +3208,7 @@ function handleInit(conversation) {
 \end_layout
 
 \begin_layout Standard
-Also note that the cache tag is exactly the same as we're using for scriptlet
+Note that the cache tag is exactly the same as we're using for scriptlet
  pages: this guarantees that the scriptlet pages will be updated even though
  the wiki is changed from here, and vice versa, even though what is being
  cached is quite different.
@@ -3230,8 +3273,8 @@ Finishing Touches
 \end_layout
 
 \begin_layout Standard
-Here, we'll beef up our wiki a bit more, and also introduce you to a few
- more Prudence features.
+Here, we'll beef up our wiki a bit, and along the way introduce you to a
+ few more Prudence features.
 \end_layout
 
 \begin_layout Subsubsection
@@ -3393,7 +3436,72 @@ status open
 
 \begin_layout Plain Layout
 
-x
+@sans-serif: Lucida Sans Unicode "," Lucida Grande "," Verdana "," Arial
+ "," sans-serif;
+\end_layout
+
+\begin_layout Plain Layout
+
+@color1: #EEEEEE;
+\end_layout
+
+\begin_layout Plain Layout
+
+@color2: #003300;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+body {
+\end_layout
+
+\begin_layout Plain Layout
+
+	font-family: @sans-serif;
+\end_layout
+
+\begin_layout Plain Layout
+
+	font-size: 12px;
+\end_layout
+
+\begin_layout Plain Layout
+
+	background-color: @color1;
+\end_layout
+
+\begin_layout Plain Layout
+
+	color: @color2;
+\end_layout
+
+\begin_layout Plain Layout
+
+	textarea {
+\end_layout
+
+\begin_layout Plain Layout
+
+		background-color: @color2;
+\end_layout
+
+\begin_layout Plain Layout
+
+		color: @color1;
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \end_inset
@@ -3516,7 +3624,7 @@ status open
 
 \begin_layout Plain Layout
 
-	<%= new org.pegdown.PegDownProcessor().markdownToHtml(page) %>
+	<%= new org.pegdown.PegDownProcessor().markdownToHtml(content) %>
 \end_layout
 
 \begin_layout Plain Layout
@@ -3696,6 +3804,245 @@ This nifty feature works with Markdown, Confluence, MediaWiki, Twiki, Trac
 \end_layout
 
 \begin_layout Subsubsection
+The Internal API
+\end_layout
+
+\begin_layout Standard
+You may have noticed that there's some duplication in our code: both the
+ wiki pages and the wiki API use application.globals to store the content.
+ In this case it's trivial code, but if we moved to database storage, for
+ example, the code would surely grow and be worth encapsulating as an API.
+ One way we could do this is create a reusable library, for example 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/data.js
+\begin_inset Quotes erd
+\end_inset
+
+, which we could use both in the wiki pages and the wiki API using 
+\begin_inset Quotes eld
+\end_inset
+
+document.require
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+But an interesting shortcut is suggested in the fact that 
+\emph on
+we already have
+\emph default
+ an encapsulated API: our wiki 
+\emph on
+web
+\emph default
+ API.
+ We could simply use that directly.
+ The apparent disadvantage is that it is a web API, and we would have to
+ go through HTTP to call it.
+ However, in Prudence you can call any resource internally, bypassing HTTP
+ entirely, making such requests as fast as any function call.
+\end_layout
+
+\begin_layout Standard
+Let's modify our 
+\begin_inset Quotes eld
+\end_inset
+
+page.s.html
+\begin_inset Quotes erd
+\end_inset
+
+ for this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.duration = 60000
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.tags.add(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.onlyGet = true
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (conversation.request.method.name == 'POST') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+\end_layout
+
+\begin_layout Plain Layout
+
+	var content = form.content
+\end_layout
+
+\begin_layout Plain Layout
+
+	Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+		uri: '/api/' + conversation.wildcard,
+\end_layout
+
+\begin_layout Plain Layout
+
+		method: 'put',
+\end_layout
+
+\begin_layout Plain Layout
+
+		payload: {type: 'json', value: {content: content}}
+\end_layout
+
+\begin_layout Plain Layout
+
+	})
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+else {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+		uri: '/api/' + conversation.wildcard,
+\end_layout
+
+\begin_layout Plain Layout
+
+		mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+	})
+\end_layout
+
+\begin_layout Plain Layout
+
+	var content = data ? data.content : 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We've used the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.request API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.request"
+
+\end_inset
+
+ to make the request: it will automatically make an 
+\emph on
+internal
+\emph default
+ request if the URI begins with 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+ (rather than a protocol, such as 
+\begin_inset Quotes eld
+\end_inset
+
+http:
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+There's actually yet another optimization we can make: we are currently
+ bypassing HTTP, but it's also possible to bypass JSON serialization.
+ That optimization is more advanced, and is fully explained 
+\bar under
+elsewhere (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoid-serialization-for-internal-requests"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
 Further Exploration
 \end_layout
 
@@ -3745,6 +4092,18 @@ target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#markup-plu
 .
  It doesn't use Prudence, but you can install it into your container as
  a utility to allow easy use of markup languages.
+\end_layout
+
+\begin_layout Itemize
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.request API"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.request"
+
+\end_inset
+
+ is very powerful, allowing you to easily consume RESTful web APIs.
 \end_layout
 
 \begin_layout Subsection
@@ -3902,11 +4261,12 @@ if conversation.request.method.name == 'POST':
 
 \begin_layout Plain Layout
 
+else:
 \end_layout
 
 \begin_layout Plain Layout
 
-page = application.globals[id] or 'This page is empty.'
+	content = application.globals[id] or 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -3921,7 +4281,7 @@ page = application.globals[id] or 'This page is empty.'
 
 \begin_layout Plain Layout
 
-	<%= PegDownProcessor().markdownToHtml(page) %>
+	<%= PegDownProcessor().markdownToHtml(content) %>
 \end_layout
 
 \begin_layout Plain Layout
@@ -4189,7 +4549,7 @@ low-level
 \begin_inset CommandInset href
 LatexCommand href
 name "conversation.form"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.form"
 
 \end_inset
 
@@ -4197,6 +4557,22 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
  On the other hand, JavaScript suffers from almost no standard library of
  its own: in Python, for example, you have access to a rich standard library,
  as well as its wider ecosystem, to make your programming easier.
+\end_layout
+
+\begin_layout Itemize
+We could easily have use 
+\emph on
+both
+\emph default
+ Python 
+\emph on
+and
+\emph default
+ JavaScript.
+ Why would you want to do that? For example, you might prefer to use JavaScript
+ in scriptlets, because it's more familiar to HTML coders, while having
+ the web API written in Python by a different team.
+ All supported programming languages can live together in a single container.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4271,7 +4647,7 @@ status open
 
 \begin_layout Plain Layout
 
-  "Hello from Clojure!")
+  "Hello from Lisp!")
 \end_layout
 
 \end_inset
@@ -16055,22 +16431,12 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-	if (conversation.mediaTypeName == 'application/java') {
+	return conversation.mediaTypeName == 'application/java' ?
 \end_layout
 
 \begin_layout Plain Layout
 
-		return data
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
-\end_layout
-
-\begin_layout Plain Layout
-
-	return Sincerity.JSON.to(data)
+		data : Sincerity.JSON.to(data)
 \end_layout
 
 \begin_layout Plain Layout
@@ -16161,7 +16527,12 @@ status open
 
 \begin_layout Plain Layout
 
-return new org.restlet.representation.ObjectRepresentation(data)
+return new org.restlet.representation.ObjectRepresentation(data,
+\end_layout
+
+\begin_layout Plain Layout
+
+	org.restlet.data.MediaType.APPLICATION_JAVA)
 \end_layout
 
 \end_inset
