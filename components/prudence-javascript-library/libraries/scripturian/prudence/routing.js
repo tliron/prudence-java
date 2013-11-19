@@ -2088,7 +2088,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @param config
 	 * @param {String[]} config.roots The root directories
-	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>} [config.resolver] The resolver
+	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>] The resolver
 	 * @param {Object} config.next The next route configuration
 	 * @see Prudence.Routing.CssUnifyMinify
 	 */
