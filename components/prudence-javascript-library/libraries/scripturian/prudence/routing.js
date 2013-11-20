@@ -2249,12 +2249,19 @@ Prudence.Routing = Prudence.Routing || function() {
 	}(Public))
 
 	/**
-	 *
+	 * A filter that acts as a "guard", returning HTTP stauts 401 ("unauthorized") if the client
+	 * does not have the proper credentials.
+	 * <p>
+	 * Relies on HTTP <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">basic authentication (BA)</a>,
+	 * which is unencrypted. It is thus strongly recommended that you use it only with HTTPS.
+	 * <p>
+	 * Most web browsers will cache the credentials for the duration of the session (until the browser is
+	 * closed), so that the prompt (the "realm" param) would usually only appear once to the user during that time.
 	 * <p>
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.HttpAuthenticator
+	 * @name Prudence.Routing.BasicHttpAuthenticator
 	 * @augments Prudence.Routing.Restlet
 	 * 
 	 * @param config
@@ -2262,8 +2269,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {String} config.realm The security prompt
 	 * @param {Object} config.next The next route configuration
 	 */
-	Public.HttpAuthenticator = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.HttpAuthenticator */
+	Public.BasicHttpAuthenticator = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Routing.BasicHttpAuthenticator */
 		var Public = {}
 		
 		/** @ignore */

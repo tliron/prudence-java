@@ -28,7 +28,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.prudence.util.IoUtil;
 
@@ -36,8 +36,9 @@ import com.threecrickets.prudence.util.IoUtil;
  * A Hazelcast persistence implementation over <a
  * href="http://www.mongodb.org/">MongoDB</a>.
  * <p>
- * The MongoDB connection must be stored as "mongoDb.defaultConnection" in the
- * {@link Component}'s context.
+ * The MongoDB client must be stored as
+ * "com.threecrickets.prudence.HazelcastCache.mongoDb" in the {@link Component}
+ * 's context.
  * <p>
  * The MongoDB database will be "prudence".
  * 
@@ -56,7 +57,7 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 	/**
 	 * MongoDB default connection attribute for a {@link Component}.
 	 */
-	public static final String MONGODB_DEFAULT_CONNECTION_ATTRIBUTE = "mongoDb.defaultConnection";
+	public static final String MONGODB_CLIENT_ATTRIBUTE = HazelcastCache.class.getCanonicalName() + ".mongoDb";
 
 	//
 	// Construction
@@ -89,7 +90,7 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 			Component component = InstanceUtil.getComponent();
 			if( component != null )
 			{
-				Mongo mongo = (Mongo) component.getContext().getAttributes().get( MONGODB_DEFAULT_CONNECTION_ATTRIBUTE );
+				MongoClient mongo = (MongoClient) component.getContext().getAttributes().get( MONGODB_CLIENT_ATTRIBUTE );
 				if( mongo != null )
 				{
 					DB db = mongo.getDB( "prudence" );

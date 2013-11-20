@@ -11,11 +11,8 @@
 
 package com.threecrickets.prudence.cache;
 
-import com.threecrickets.prudence.GeneratedTextResource;
-
 /**
- * An interface for cache backends to be used with {@link GeneratedTextResource}
- * .
+ * An interface for cache backends.
  * <p>
  * Ideas for places to store cache entries: in-process memory, the filesystem,
  * databases, and dedicated network services.

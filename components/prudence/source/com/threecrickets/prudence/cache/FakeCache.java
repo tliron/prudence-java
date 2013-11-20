@@ -11,11 +11,9 @@
 
 package com.threecrickets.prudence.cache;
 
-import com.threecrickets.prudence.GeneratedTextResource;
-
 /**
  * Stores nothing. Useful if you want to disable server-side caching but still
- * want client-side caching on for {@link GeneratedTextResource}.
+ * want client-side caching on.
  * 
  * @author Tal Liron
  */

@@ -6702,10 +6702,10 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Inje
 \end_layout
 
 \begin_layout Paragraph
-httpAuthenticator
+basicHttpAuthenticator
 \begin_inset CommandInset label
 LatexCommand label
-name "http-authenticator-route-type"
+name "basic-http-authenticator-route-type"
 
 \end_inset
 
@@ -6717,7 +6717,7 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-httpAuthenticator
+basicHttpAuthenticator
 \begin_inset Quotes erd
 \end_inset
 
@@ -6752,8 +6752,8 @@ ed users do not access a URI.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.HttpAuthenticator"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.HttpAuthenticator"
+name "Prudence.Routing.BasicHttpAuthenticator"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.BasicHttpAuthenticator"
 
 \end_inset
 
@@ -27559,14 +27559,14 @@ You can implement simple HTTP authentication using the
 \begin_inset Quotes eld
 \end_inset
 
-httpAuthenticator
+basicHttpAuthenticator
 \begin_inset Quotes erd
 \end_inset
 
  route type (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "http-authenticator-route-type"
+reference "basic-http-authenticator-route-type"
 
 \end_inset
 
@@ -27597,7 +27597,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		type: 'httpAuthenticator',
+		type: 'basicHttpAuthenticator',
 \end_layout
 
 \begin_layout Plain Layout

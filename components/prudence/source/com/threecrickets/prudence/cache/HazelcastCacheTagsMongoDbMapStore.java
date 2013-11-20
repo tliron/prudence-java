@@ -17,8 +17,9 @@ import org.restlet.Component;
  * A Hazelcast persistence implementation over <a
  * href="http://www.mongodb.org/">MongoDB</a>.
  * <p>
- * The MongoDB connection must be stored as "mongoDb.defaultConnection" in the
- * {@link Component}'s context.
+ * The MongoDB connection must be stored as
+ * "com.threecrickets.prudence.HazelcastCache.mongoDb" in the {@link Component}
+ * 's context.
  * <p>
  * The MongoDB database will be "prudence" and the collection will be
  * "hazelcast_cache_tags".
