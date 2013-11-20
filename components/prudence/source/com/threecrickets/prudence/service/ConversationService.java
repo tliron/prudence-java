@@ -83,10 +83,13 @@ public class ConversationService
 	 */
 	public Reference getReference()
 	{
-		Request request = getRequest();
-		Reference reference = CapturingRedirector.getCapturedReference( request );
 		if( reference == null )
-			reference = request.getResourceRef();
+		{
+			Request request = getRequest();
+			reference = CapturingRedirector.getCapturedReference( request );
+			if( reference == null )
+				reference = request.getResourceRef();
+		}
 		return reference;
 	}
 
@@ -97,7 +100,9 @@ public class ConversationService
 	 */
 	public String getWildcard()
 	{
-		return getReference().getRemainingPart( true, false );
+		if( wildcard == null )
+			wildcard = getReference().getRemainingPart( true, false );
+		return wildcard;
 	}
 
 	/**
@@ -111,7 +116,6 @@ public class ConversationService
 	{
 		if( conversationCookies == null )
 			conversationCookies = ConversationCookie.wrapCookies( getRequest().getCookies(), getResponse().getCookieSettings() );
-
 		return conversationCookies;
 	}
 
@@ -296,7 +300,6 @@ public class ConversationService
 	{
 		if( internal == null )
 			internal = getReference().getSchemeProtocol().equals( Protocol.RIAP );
-
 		return internal;
 	}
 
@@ -310,8 +313,16 @@ public class ConversationService
 	{
 		if( base == null )
 		{
-			Reference root = new Reference( getRequest().getRootRef() + "/" );
 			Reference reference = getReference();
+			Reference root = getRequest().getRootRef();
+
+			if( root.getSchemeProtocol().equals( reference.getSchemeProtocol() ) )
+				// The root needs a trailing slash
+				root = new Reference( root + "/" );
+			else
+				// We cannot use the root if it is of the wrong protocol
+				// (it might be when using InternalRedirector)
+				root = reference.getBaseRef();
 
 			// Reverse relative reference
 			base = root.getRelativeRef( reference ).getPath();
@@ -343,7 +354,6 @@ public class ConversationService
 	{
 		if( queryAll == null )
 			queryAll = getRequest().getResourceRef().getQueryAsForm();
-
 		return queryAll;
 	}
 
@@ -359,7 +369,6 @@ public class ConversationService
 	{
 		if( query == null )
 			query = getQueryAll().getValuesMap();
-
 		return query;
 	}
 
@@ -514,6 +523,16 @@ public class ConversationService
 	 * The directory in which to place uploaded files.
 	 */
 	private final File fileUploadDirectory;
+
+	/**
+	 * The resource reference.
+	 */
+	private Reference reference;
+
+	/**
+	 * The resource reference's remaining part (not including the query).
+	 */
+	private String wildcard;
 
 	/**
 	 * The URI query as a map.

@@ -65,7 +65,10 @@ public class CapturingRedirector extends ResolvingRedirector
 	 */
 	public static void setCapturedReference( Request request, Reference capturedReference )
 	{
-		request.getAttributes().put( CAPTURED_REFERENCE, capturedReference );
+		if( capturedReference != null )
+			request.getAttributes().put( CAPTURED_REFERENCE, capturedReference );
+		else
+			request.getAttributes().remove( CAPTURED_REFERENCE );
 	}
 
 	//
@@ -96,14 +99,14 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The target URI template
 	 * @param mode
 	 *        The redirection mode
-	 * @param alwaysUseHostAsBase
-	 *        Whether to always set the base reference to the host root URI
+	 * @param useHostAsBase
+	 *        Whether to set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetTemplate, boolean alwaysUseHostAsBase, int mode )
+	public CapturingRedirector( Context context, String targetTemplate, boolean useHostAsBase, int mode )
 	{
 		super( context, targetTemplate, mode, false );
 		describe();
-		this.alwaysUseHostAsBase = alwaysUseHostAsBase;
+		this.useHostAsBase = useHostAsBase;
 	}
 
 	//
@@ -117,9 +120,8 @@ public class CapturingRedirector extends ResolvingRedirector
 		{
 			Reference resourceRef = request.getResourceRef();
 
-			// Make sure the base reference is never null (it might be so in
-			// RIAP)
-			if( alwaysUseHostAsBase || ( resourceRef.getBaseRef() == null ) )
+			// TODO: are we still using this feature?
+			if( useHostAsBase )
 				resourceRef = new Reference( new Reference( resourceRef.getHostIdentifier() + "/" ), resourceRef );
 
 			setCapturedReference( request, resourceRef );
@@ -132,9 +134,9 @@ public class CapturingRedirector extends ResolvingRedirector
 	// Private
 
 	/**
-	 * Whether to always set the base reference to the host root URI.
+	 * Whether to set the base reference to the host root URI.
 	 */
-	private final boolean alwaysUseHostAsBase;
+	private final boolean useHostAsBase;
 
 	/**
 	 * Add description.

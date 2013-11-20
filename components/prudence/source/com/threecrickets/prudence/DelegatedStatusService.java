@@ -212,7 +212,7 @@ public class DelegatedStatusService extends StatusService
 				response.setStatus( Status.SUCCESS_OK );
 				response.setEntity( null );
 
-				// Clean up cached document name for generated text resource
+				// Clean up caching information
 				CachingUtil.clearExistingValidDocumentName( request );
 
 				// Delegate
@@ -224,8 +224,9 @@ public class DelegatedStatusService extends StatusService
 				Representation representation = response.getEntity();
 				if( representation != null )
 				{
-					// Avoid caching, which could require other interchanges
-					// with the client, which we can't handle from here
+					// Avoid client caching, which would require other
+					// interchanges with the client that we can't handle from
+					// here
 					representation.setExpirationDate( null );
 					representation.setModificationDate( null );
 					representation.setTag( null );
