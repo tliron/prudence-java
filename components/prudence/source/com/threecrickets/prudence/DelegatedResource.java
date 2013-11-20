@@ -171,7 +171,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.DelegatedResource.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
  * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.negotiateEncoding:</code>
+ * <code>com.threecrickets.prudence.DelegatedResource.negotiateEncoding:</code>
  * defaults to a true.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.prepare:</code>
