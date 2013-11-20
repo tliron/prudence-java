@@ -29040,10 +29040,9 @@ Utilities for Restlet
 \end_layout
 
 \begin_layout Standard
-If you are a Restlet Java programmer, Prudence may still be of use to use.
- Prudence is also available as a small standalone Java library (a jar),
- and as such has several well-documented classes useful for any Java-written
- Restlet application.
+If you are a Restlet Java programmer, Prudence may still be of use to you.
+ Prudence is also available as a small standalone Jar, and in which it has
+ several well-documented classes useful for any Java-written Restlet application.
  They're all in the 
 \begin_inset Quotes eld
 \end_inset

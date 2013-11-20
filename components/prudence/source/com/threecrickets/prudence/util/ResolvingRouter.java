@@ -19,6 +19,10 @@ import org.restlet.routing.Variable;
 
 /**
  * A {@link Router} that uses {@link ResolvingTemplate} for all routes.
+ * <p>
+ * See <a
+ * href="https://github.com/restlet/restlet-framework-java/issues/798">this
+ * issue</a>.
  * 
  * @author Tal Liron
  */

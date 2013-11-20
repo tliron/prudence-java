@@ -23,6 +23,10 @@ import org.restlet.routing.Template;
 /**
  * A {@link Redirector} that uses {@link ResolvingTemplate}, and also makes
  * header cleaning optional.
+ * <p>
+ * See <a
+ * href="https://github.com/restlet/restlet-framework-java/issues/798">this
+ * issue</a>.
  * 
  * @author Tal Liron
  */
