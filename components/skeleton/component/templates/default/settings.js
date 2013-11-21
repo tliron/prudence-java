@@ -9,18 +9,23 @@ app.settings = {
 
 	errors: {
 		debug: true,
-		homeUrl: 'http://threecrickets.com/prudence/', // Only used when debug=false
-		contactEmail: 'info@threecrickets.com' // Only used when debug=false
+		homeUrl: 'http://threecrickets.com/prudence/',
+		contactEmail: 'info@threecrickets.com'
 	},
 	
 	code: {
-		libraries: ['libraries'], // Handlers and tasks will be found here
+		debug: true,
+		libraries: ['libraries'],
 		defrost: true,
 		minimumTimeBetweenValidityChecks: '1s',
 		defaultDocumentName: 'default',
 		defaultExtension: 'js',
 		defaultLanguageTag: 'javascript',
 		sourceViewable: true
+	},
+	
+	caching: {
+		debug: true
 	},
 	
 	compression: {

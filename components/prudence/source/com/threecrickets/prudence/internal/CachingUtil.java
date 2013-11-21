@@ -733,7 +733,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 */
 	public void addCachingDebugHeaders( String event, CacheEntry cacheEntry, String cacheKey, Executable executable, String suffix )
 	{
-		if( !attributes.isDebug() )
+		if( !attributes.isDebugCaching() )
 			return;
 
 		Series<Header> headers = cacheEntry.getHeaders();

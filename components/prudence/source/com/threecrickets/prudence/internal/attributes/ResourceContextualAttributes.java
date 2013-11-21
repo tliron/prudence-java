@@ -66,7 +66,7 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	}
 
 	/**
-	 * Whether or not to negotiate encoding by default. Defaults to true.
+	 * Whether to negotiate encoding by default. Defaults to true.
 	 * <p>
 	 * This setting can be configured by setting an attribute named
 	 * <code>negotiateEncoding</code> in the application's {@link Context}.
@@ -109,6 +109,27 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 		}
 
 		return encodeSizeThreshold;
+	}
+
+	/**
+	 * Whether to enable caching debugging. Defaults to false.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>debugCaching</code> in the application's {@link Context}.
+	 * 
+	 * @return Whether to enable caching debugging
+	 */
+	public boolean isDebugCaching()
+	{
+		if( debugCaching == null )
+		{
+			debugCaching = (Boolean) getAttributes().get( prefix + ".debugCaching" );
+
+			if( debugCaching == null )
+				debugCaching = true;
+		}
+
+		return debugCaching;
 	}
 
 	/**
@@ -203,7 +224,7 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	private Set<String> passThroughDocuments;
 
 	/**
-	 * Whether or not to negotiate encoding by default.
+	 * Whether to negotiate encoding by default.
 	 */
 	private Boolean negotiateEncoding;
 
@@ -211,6 +232,11 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	 * The size in bytes beyond which responses could be encoded.
 	 */
 	private Integer encodeSizeThreshold;
+
+	/**
+	 * Whether to enable caching debugging.
+	 */
+	private Boolean debugCaching;
 
 	/**
 	 * The name of the global variable with which to access the caching service.

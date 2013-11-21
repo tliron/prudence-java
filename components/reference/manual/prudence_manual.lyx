@@ -2320,7 +2320,7 @@ debug
  mode to false (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "settings-code"
+reference "settings-caching"
 
 \end_inset
 
@@ -17990,17 +17990,17 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-		homeUrl: 'http://threecrickets.com/prudence/', // Only used when debug=false
+		homeUrl: 'http://threecrickets.com/prudence/',
 \end_layout
 
 \begin_layout Plain Layout
 
-		contactEmail: 'info@threecrickets.com' // Only used when debug=false
+		contactEmail: 'info@threecrickets.com'
 \end_layout
 
 \begin_layout Plain Layout
 
-	}, 
+	},
 \end_layout
 
 \begin_layout Plain Layout
@@ -18010,7 +18010,12 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-		libraries: ['libraries'], // Handlers and tasks will be found here
+		debug: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		libraries: ['libraries'],
 \end_layout
 
 \begin_layout Plain Layout
@@ -18045,7 +18050,22 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-	}, 
+	},
+\end_layout
+
+\begin_layout Plain Layout
+
+	caching: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		debug: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	},
 \end_layout
 
 \begin_layout Plain Layout
@@ -18065,7 +18085,7 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-	}, 
+	},
 \end_layout
 
 \begin_layout Plain Layout
@@ -18110,8 +18130,12 @@ Time durations are in milliseconds and data sizes in bytes.
 \end_layout
 
 \begin_layout Itemize
-Durations: numerically as milliseconds, or using 'ms', 's', 'm', 'h' or
- 'd' suffixes for milliseconds, seconds, minutes, hours or days.
+
+\series bold
+Durations
+\series default
+: numerically as milliseconds, or using 'ms', 's', 'm', 'h' or 'd' suffixes
+ for milliseconds, seconds, minutes, hours or days.
  Fractions can be used, and are rounded to the nearest millisecond, for
  example: 
 \begin_inset Quotes eld
@@ -18125,8 +18149,11 @@ Durations: numerically as milliseconds, or using 'ms', 's', 'm', 'h' or
 \end_layout
 
 \begin_layout Itemize
-Data sizes: numerically as bytes, or using 'b', 'kb', 'mb', 'gb' or 'tb'
- suffixes.
+
+\series bold
+Data sizes
+\series default
+: numerically as bytes, or using 'b', 'kb', 'mb', 'gb' or 'tb' suffixes.
  Magnitude uses the binary rather than decimal system: 1kb = 1024b.
  Fractions can be used, and are rounded to the nearest byte, for example:
  
@@ -18166,7 +18193,51 @@ app.settings.description
 
 \begin_layout Standard
 Information here is meant for humans.
- It appears in the Prudence Administration application.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+name
+\series default
+: if not specified, will default to the application's subdirectory name
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+description
+\series default
+: a sentence or a sentence fragment describing the application
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+author
+\series default
+: the name of company or individual who made the application
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+owner
+\series default
+: the project to which the application belongs
+\end_layout
+
+\begin_layout Standard
+This information appears in the Prudence Administration application, and
+ you may access it yourself using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.application"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.application"
+
+\end_inset
+
+.name, application.application.description, etc., APIs.
 \end_layout
 
 \begin_layout Subsection
@@ -18180,23 +18251,63 @@ name "settings-errors"
 
 \end_layout
 
-\begin_layout Standard
-Setting 
-\begin_inset Quotes eld
-\end_inset
+\begin_layout Itemize
 
+\series bold
 debug
-\begin_inset Quotes erd
+\series default
+: boolean value; when true enables various useful debugging features detailed
+ below; 
+\series bold
+should be set to false for production deployments
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+homeUrl
+\series default
+: a web URL, displayed in the default error page template
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+contactEmail
+\series default
+: an email address, displayed in the default error page template
+\end_layout
+
+\begin_layout Standard
+Note that you can route your own 
+\bar under
+error pages in routing.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-errors"
+
 \end_inset
 
- to true here enables various useful debugging features.
+)
+\bar default
+ to replace the default template.
+ If you wish to use the values you set here in your template, use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.application"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.application"
+
+\end_inset
+
+.statusService.homeRef and application.application.statusService.contactEmail
+ APIs.
 \end_layout
 
 \begin_layout Subsubsection
-Exception Handling
+Uncaught Exception Debugging
 \begin_inset CommandInset label
 LatexCommand label
-name "settings-errors-exceptions"
+name "settings-errors-uncaught-exceptions"
 
 \end_inset
 
@@ -18204,8 +18315,8 @@ name "settings-errors-exceptions"
 \end_layout
 
 \begin_layout Standard
-Uncaught exceptions in your application will automatically set the HTTP
- response status code to 500 (
+Uncaught exceptions in your code will automatically set the HTTP response
+ status code to 500 (
 \begin_inset Quotes eld
 \end_inset
 
@@ -18213,7 +18324,7 @@ internal server error
 \begin_inset Quotes erd
 \end_inset
 
-), but here you can configure the content of the response.
+), but here you can configure the content of that response.
 \end_layout
 
 \begin_layout Standard
@@ -18237,7 +18348,7 @@ reference "debug-page"
 )
 \bar default
 .
- Because this can reveal your application's internal data, 
+ Because this might reveal your application's internal data, 
 \series bold
 make sure to set 
 \begin_inset Quotes eld
@@ -18261,149 +18372,7 @@ debug
 \begin_inset Quotes erd
 \end_inset
 
- is false, a generic HTML page will be returned instead, using 
-\begin_inset Quotes eld
-\end_inset
-
-homeUrl
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-contactEmail
-\begin_inset Quotes erd
-\end_inset
-
- in its template.
- Note that you can also route your own custom error pages using 
-\bar under
-app.errors in routing.js (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "app-errors"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsubsection
-Caching
-\begin_inset CommandInset label
-LatexCommand label
-name "settings-errors-caching"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-When 
-\begin_inset Quotes eld
-\end_inset
-
-debug
-\begin_inset Quotes erd
-\end_inset
-
- is true, special HTTP response headers will be added to caching 
-\bar under
-scriptlet resources (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "scriptlet-resources"
-
-\end_inset
-
-)
-\bar default
-:
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-X-Cache
-\series default
-: the cache event, either 
-\begin_inset Quotes eld
-\end_inset
-
-hit
-\begin_inset Quotes erd
-\end_inset
-
- or 
-\begin_inset Quotes eld
-\end_inset
-
-miss
-\begin_inset Quotes erd
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-X-Cache-Expiration
-\series default
-: a timestamp in standard HTTP format
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-X-Cache-Key
-\series default
-: the cache key
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-X-Cache-Tags
-\series default
-: comma-separated list of cache tags
-\end_layout
-
-\begin_layout Subsubsection
-Scriptlet
-\begin_inset CommandInset label
-LatexCommand label
-name "settings-errors-scriptlet"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-When 
-\begin_inset Quotes eld
-\end_inset
-
-debug
-\begin_inset Quotes erd
-\end_inset
-
- is true, scriptlet resource debugging is enabled: under your container's
- 
-\begin_inset Quotes eld
-\end_inset
-
-/cache/scripturian/
-\begin_inset Quotes erd
-\end_inset
-
- directory you will see the generated source code for each resource.
+ is false, the default error template page will be displayed.
 \end_layout
 
 \begin_layout Subsection
@@ -18419,6 +18388,15 @@ name "settings-code"
 
 \begin_layout Standard
 Here you can control how Prudence deals with your code:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+debug
+\series default
+: boolean value; when true enables various useful debugging features detailed
+ below
 \end_layout
 
 \begin_layout Itemize
@@ -18454,11 +18432,8 @@ defrost
  subdirectory.
  Defrosting means pre-parsing and sometimes pre-compiling the code: this
  allows for faster startup times on first hits to these resources.
- Note that defrosting is 
-\emph on
-not
-\emph default
- pre-heating: the former only pre-compiles, the latter actually does a 
+ Note that defrosting is not pre-heating: the former only pre-compiles,
+ the latter actually does a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -18470,7 +18445,15 @@ GET
  are also warmed up.
  See 
 \bar under
-app.preheat (page 
+
+\begin_inset Quotes eld
+\end_inset
+
+app.preheat
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-preheat"
@@ -18608,6 +18591,127 @@ javascript
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Subsubsection
+Scriptlet Debugging
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-code-scriptlets"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ is true, under your container's 
+\begin_inset Quotes eld
+\end_inset
+
+/cache/scripturian/
+\begin_inset Quotes erd
+\end_inset
+
+ directory you will see the generated source code for each scriptlet resource.
+\end_layout
+
+\begin_layout Subsection
+app.settings.caching
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+debug
+\begin_inset Quotes erd
+\end_inset
+
+ is true, special HTTP response headers will be added for 
+\bar under
+caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache
+\series default
+: the caching event; either 
+\begin_inset Quotes eld
+\end_inset
+
+hit
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+miss
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache-Expiration
+\series default
+: a timestamp in standard HTTP format
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache-Key
+\series default
+: the cache key (see also the 
+\begin_inset CommandInset href
+LatexCommand href
+name "caching.key API"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.key"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+X-Cache-Tags
+\series default
+: comma-separated list of cache tags
 \end_layout
 
 \begin_layout Subsection

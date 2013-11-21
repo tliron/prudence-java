@@ -90,6 +90,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {String} [settings.errors.contactEmail] Shows this contact email on the default error page
 	 * 
 	 * @property {Object} [settings.code] Programming language settings
+	 * @property {Boolean} [settings.code.debug=false] When true, outputs the generated scriptlet code under "/cache/scripturian/"
 	 * @property {String[]} [settings.code.libraries='libraries'] A list of base paths from which {@link document#execute} (and also
 	 *                      the programming languages' internal import facilities) will look for libraries;
 	 *                      the <i>first</i> library in this list is special: it is used to look for handlers and tasks;
@@ -104,6 +105,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {Boolean} [settings.code.sourceViewable=false] When true enabled the source code viewing facility
 	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
 	 * @property {String} [settings.code.sourceViewer='/source-code/'] Only used when settings.code.sourceViewable=true
+	 *
+	 * @property {Object} [settings.caching] Caching settings
+	 * @property {Boolean} [settings.caching.debug=false] When true, adds caching debug headers to responses
 	 * 
 	 * @property {Object} [settings.compression] Compression settings
 	 * @property {Number|String} [settings.compression.sizeThreshold=1024] The size in bytes beyond which responses may be compressed
@@ -198,6 +202,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
 			this.settings.code = Sincerity.Objects.ensure(this.settings.code, {})
+			this.settings.caching = Sincerity.Objects.ensure(this.settings.caching, {})
 			this.settings.compression = Sincerity.Objects.ensure(this.settings.compression, {})
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
 			this.settings.mediaTypes = Sincerity.Objects.ensure(this.settings.mediaTypes, {})
@@ -372,7 +377,7 @@ Prudence.Routing = Prudence.Routing || function() {
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
 								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
-								debug: this.settings.errors.debug
+								debug: this.settings.code.debug
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -391,7 +396,7 @@ Prudence.Routing = Prudence.Routing || function() {
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
 								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
-								debug: this.settings.errors.debug
+								debug: this.settings.code.debug
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -673,7 +678,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.scripturian.util.DefrostTask)
 				
 			if (true == this.settings.code.defrost) {
-				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.errors.debug)
+				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.code.debug ? true : false)
 				for (var t in tasks) {
 					executorTasks.push(tasks[t])
 				}
@@ -961,7 +966,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					encodeSizeThreshold: app.settings.compression.sizeThreshold,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					debug: app.settings.errors.debug
+					debug: app.settings.code.debug,
+					debugCaching: app.settings.caching.debug
 				}
 
 				// Pass-throughs
@@ -1143,7 +1149,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
-					debug: app.settings.errors.debug
+					debug: app.settings.code.debug,
+					debugCaching: app.settings.caching.debug
 				}
 
 				// Libraries
@@ -1258,7 +1265,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					debug: app.settings.errors.debug
+					debug: app.settings.code.debug
 				}
 
 				// Merge globals
