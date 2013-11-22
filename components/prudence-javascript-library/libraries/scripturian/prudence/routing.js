@@ -377,7 +377,7 @@ Prudence.Routing = Prudence.Routing || function() {
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
 								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
-								debug: this.settings.code.debug
+								debug: this.settings.code.debug ? true : false
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -396,7 +396,7 @@ Prudence.Routing = Prudence.Routing || function() {
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
 								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
-								debug: this.settings.code.debug
+								debug: this.settings.code.debug ? true : false
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -966,8 +966,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					encodeSizeThreshold: app.settings.compression.sizeThreshold,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					debug: app.settings.code.debug,
-					debugCaching: app.settings.caching.debug
+					debug: app.settings.code.debug ? true : false,
+					debugCaching: app.settings.caching.debug ? true : false
 				}
 
 				// Pass-throughs
@@ -1149,8 +1149,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
-					debug: app.settings.code.debug,
-					debugCaching: app.settings.caching.debug
+					debug: app.settings.code.debug ? true : false,
+					debugCaching: app.settings.caching.debug ? true : false
 				}
 
 				// Libraries
@@ -1265,7 +1265,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					debug: app.settings.code.debug
+					debug: app.settings.code.debug ? true : false
 				}
 
 				// Merge globals

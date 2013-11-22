@@ -606,7 +606,7 @@ public class DelegatedResource extends ServerResource
 		long expirationTimestamp = CachingUtil.getExpirationTimestamp( executable, getDispatchedSuffix() );
 		CacheEntry cacheEntry = null;
 		Representation representation = null;
-		boolean configure = true;
+		boolean configureClientCaching = true;
 
 		if( object == null )
 		{
@@ -623,12 +623,12 @@ public class DelegatedResource extends ServerResource
 			{
 				throw new ResourceException( x );
 			}
-			configure = false;
+			configureClientCaching = false;
 		}
 		else if( object instanceof Representation )
 		{
 			representation = (Representation) object;
-			configure = false;
+			configureClientCaching = false;
 		}
 		else if( object instanceof Number )
 		{
@@ -652,16 +652,21 @@ public class DelegatedResource extends ServerResource
 			}
 			else if( object instanceof byte[] )
 			{
+				// Bytes
 				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(), conversationService.getTag(),
 					executable.getDocumentTimestamp(), expirationTimestamp );
+				representation = cacheEntry.represent();
+				representation.setDisposition( conversationService.getDisposition() );
 			}
 			else
 			{
-				// Convert to string
+				// Everything else will be converted to a string
 				try
 				{
 					cacheEntry = new CacheEntry( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
 						conversationService.getTag(), executable.getDocumentTimestamp(), expirationTimestamp );
+					representation = cacheEntry.represent();
+					representation.setDisposition( conversationService.getDisposition() );
 				}
 				catch( IOException x )
 				{
@@ -689,18 +694,14 @@ public class DelegatedResource extends ServerResource
 				throw new ResourceException( x );
 			}
 
-			configure = false;
+			configureClientCaching = false;
 		}
 
-		if( representation == null )
-			representation = cacheEntry.represent();
-
-		if( configure )
+		if( configureClientCaching )
 		{
 			representation.setTag( conversationService.getTag() );
 			representation.setExpirationDate( conversationService.getExpirationDate() );
 			representation.setModificationDate( conversationService.getModificationDate() );
-			representation.setDisposition( conversationService.getDisposition() );
 		}
 
 		return representation;

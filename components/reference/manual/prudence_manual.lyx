@@ -2396,15 +2396,7 @@ Prudence will automatically compress responses (using gzip or DEFLATE) if
 \begin_layout Standard
 Open the application's setting.js and edit the 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.settings.compression
-\begin_inset Quotes erd
-\end_inset
-
- setting (page 
+app.settings.compression setting (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "settings-compression"
@@ -4038,7 +4030,7 @@ There's actually yet another optimization we can make: we are currently
 elsewhere (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "avoid-serialization-for-internal-requests"
+reference "avoiding-serialization-for-internal-requests"
 
 \end_inset
 
@@ -5821,10 +5813,20 @@ not found
 \end_inset
 
 ) for this match.
- Note that internal requests always bypass this limitation, and so this
- functionality is useful if you want some URIs available in the internal
- URI-space but not the public one.
- This special value is not actually handled by a class, but rather is configured
+ Note that internal requests always 
+\bar under
+bypass this mechanism (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "internal-uri-space"
+
+\end_inset
+
+)
+\bar default
+, and so this functionality is useful if you want some URIs available in
+ the internal URI-space but not the public one.
+ This special value is actually not handled by a class, but rather is configured
  into the current router.
  See also 
 \bar under
@@ -8805,15 +8807,7 @@ As you can see, the resources.js file does not refer to URIs, but instead
 \begin_layout Standard
 These defaults are all configurable: see 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.dispatchers
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.dispatchers (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-dispatchers"
@@ -9503,7 +9497,7 @@ internal
 \begin_inset Quotes erd
 \end_inset
 
- host, with the base URI being the application's subdirectory name.
+ host with the base URI being the application's subdirectory name.
  However, you can override this default should you require:
 \end_layout
 
@@ -15662,10 +15656,7 @@ reference "scriptlet-resources"
 )
 \bar default
 .
-\end_layout
-
-\begin_layout Standard
-For 
+ For 
 \bar under
 static resources (page 
 \begin_inset CommandInset ref
@@ -15677,7 +15668,43 @@ reference "static-resources"
 )
 \bar default
 , the response payloads are of course the contents of the resource files.
- 
+\end_layout
+
+\begin_layout Standard
+Two important notes:
+\end_layout
+
+\begin_layout Itemize
+Prudence can automatically 
+\bar under
+cache your response payloads (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+.
+ Upon a successful cache hit, Prudence will in fact bypass execution of
+ (most of) your code.
+\end_layout
+
+\begin_layout Itemize
+If you are using your resources internally, it's possible to improve performance
+ by 
+\bar under
+avoiding serialization (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoiding-serialization-for-internal-requests"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -16113,7 +16140,7 @@ name "overriding-the-format"
 The response payload's MIME type and language have likely been selected
  for you automatically by Prudence, via HTTP content negotiation, based
  on the list of preferences you set up in handleInit.
- However, it's possible to override these value via the 
+ However, it's possible to override these values via the 
 \begin_inset CommandInset href
 LatexCommand href
 name "conversation.mediaType"
@@ -16315,180 +16342,6 @@ Note that these APIs works just as well for scriptlet resources, though
  again content negotiation should be preferred.
 \end_layout
 
-\begin_layout Subsubsection
-Avoid Serialization for Internal Requests
-\begin_inset CommandInset label
-LatexCommand label
-name "avoid-serialization-for-internal-requests"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Your textual and binary representations might be serialized versions of
- data structures.
- But if the request is 
-\bar under
-internal (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "internal-uri-space"
-
-\end_inset
-
-)
-\bar default
-, then it would be unnecessary and wasteful to go through serialization/deserial
-ization.
- A simple optimization would be to pass the data 
-\begin_inset Quotes eld
-\end_inset
-
-as is,
-\begin_inset Quotes erd
-\end_inset
-
- actually very similarly to a return value for a standard function call.
-\end_layout
-
-\begin_layout Standard
-This works using the special 
-\begin_inset Quotes eld
-\end_inset
-
-application/java
-\begin_inset Quotes erd
-\end_inset
-
- MIME type.
- If selected---whether negotiated for or 
-\bar under
-explicitly overridden (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "overriding-the-format"
-
-\end_inset
-
-)
-\bar default
----then return values are indeed sent 
-\begin_inset Quotes eld
-\end_inset
-
-as is.
-\begin_inset Quotes erd
-\end_inset
-
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-function handleInit(conversation) {
-\end_layout
-
-\begin_layout Plain Layout
-
-	conversation.addMediaTypeByName('application/json')
-\end_layout
-
-\begin_layout Plain Layout
-
-	if (conversation.internal) {
-\end_layout
-
-\begin_layout Plain Layout
-
-		conversation.addMediaTypeByName('application/java')
-\end_layout
-
-\begin_layout Plain Layout
-
-	}
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-function handleGet(conversation) {
-\end_layout
-
-\begin_layout Plain Layout
-
-	var data = ...
-\end_layout
-
-\begin_layout Plain Layout
-
-	return conversation.mediaTypeName == 'application/java' ?
-\end_layout
-
-\begin_layout Plain Layout
-
-		data : Sincerity.JSON.to(data)
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that we've added support for 
-\begin_inset Quotes eld
-\end_inset
-
-application/java
-\begin_inset Quotes erd
-\end_inset
-
- only to internal requests, verified using the 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.internal API"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.internal"
-
-\end_inset
-
-.
- The reason is that we don't want to allow 
-\begin_inset Quotes eld
-\end_inset
-
-application/java
-\begin_inset Quotes erd
-\end_inset
-
- representations over HTTP.
- (Actually, that 
-\emph on
-could
-\emph default
- work if the object is itself JVM-serializable, but that's a more advanced
- use case we won't deal with here.)
-\end_layout
-
 \begin_layout Paragraph
 Under the Hood
 \end_layout
@@ -16587,18 +16440,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \end_inset
 
 .
- Here's an example using a 
-\bar under
-scriptlet resource (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "scriptlet-resources"
-
-\end_inset
-
-)
-\bar default
-:
+ Here's an example using a manual resource:
 \end_layout
 
 \begin_layout Standard
@@ -16608,52 +16450,81 @@ status open
 
 \begin_layout Plain Layout
 
-Item,Cost,Sold,Profit
+function handleInit(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-Keyboard,$10.00,$16.00,$6.00
+	conversation.addMediaTypeByName('text/csv')
 \end_layout
 
 \begin_layout Plain Layout
 
-Monitor,$80.00,$120.00,$40.00
+}
 \end_layout
 
 \begin_layout Plain Layout
 
-Mouse,$5.00,$7.00,$2.00
 \end_layout
 
 \begin_layout Plain Layout
 
-,,Total,$48.00
+function handleGet(conversation) {
 \end_layout
 
 \begin_layout Plain Layout
 
-<%
+	var csv = 'Item,Cost,Sold,Profit
+\backslash
+n'
 \end_layout
 
 \begin_layout Plain Layout
 
-conversation.mediaTypeName = 'text/csv'
+	csv += 'Keyboard,$10.00,$16.00,$6.00
+\backslash
+n'
 \end_layout
 
 \begin_layout Plain Layout
 
-conversation.disposition.type = 'attachment'
+	csv += 'Monitor,$80.00,$120.00,$40.00
+\backslash
+n'
 \end_layout
 
 \begin_layout Plain Layout
 
-conversation.disposition.filename = bill.csv'
+	csv += 'Mouse,$5.00,$7.00,$2.00
+\backslash
+n'
 \end_layout
 
 \begin_layout Plain Layout
 
-%>
+	csv += ',,Total,$48.00
+\backslash
+n'
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.disposition.type = 'attachment'
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.disposition.filename = 'bill.csv'
+\end_layout
+
+\begin_layout Plain Layout
+
+	return csv
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \end_inset
@@ -16675,6 +16546,16 @@ bill.csv
  editor.
 \end_layout
 
+\begin_layout Quote
+Note that the disposition is 
+\emph on
+not
+\emph default
+ cached.
+ If you wish to use this feature, you need to disable caching on the particular
+ resource.
+\end_layout
+
 \begin_layout Subsection
 External Requests
 \begin_inset CommandInset label
@@ -16693,18 +16574,8 @@ Prudence uses the Restlet library to serve RESTful resources, but can also
 \end_layout
 
 \begin_layout Standard
-Note that Prudence can also handle 
-\bar under
-internal REST requests (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "internal-requests"
-
-\end_inset
-
-)
-\bar default
- without going through HTTP or object serialization.
+Note that Prudence can also handle internal REST requests without going
+ through HTTP or object serialization.
  There is an entire 
 \bar under
 internal URI-space (page 
@@ -16962,12 +16833,8 @@ document.require('/sincerity/json')
 
 \begin_layout Plain Layout
 
-var resource = document.external('http://marsweather.ingenology.com/v1/latest/')
-\end_layout
-
-\begin_layout Plain Layout
-
-resource.accept(org.restlet.data.MediaType.valueOf('application/json'))
+var resource = document.external('http://marsweather.ingenology.com/v1/latest/',
+ 'application/json')
 \end_layout
 
 \begin_layout Plain Layout
@@ -18445,15 +18312,7 @@ GET
  are also warmed up.
  See 
 \bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-app.preheat
-\begin_inset Quotes erd
-\end_inset
-
- (page 
+app.preheat (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "app-preheat"
@@ -21729,21 +21588,44 @@ name "internal-uri-space"
 
 \begin_layout Standard
 Who says that you need HTTP, or any kind of networking, for REST? The principles
- themselves are applicable and suitable to in-memory communication, and
- represent an attractive architectural paradigm for APIs.
- Attractive especially because it can work 
+ are themselves applicable and suitable to in-memory communication, and
+ represent an attractive architectural paradigm for APIs: attractive especially
+ because it can work 
 \emph on
 both
 \emph default
  locally and over the wire.
+ This useful feature gives you considerable deployment flexibility: you
+ can easily export a whole API layer to another running instance in the
+ cluster.
+ For an example of this, see the 
+\bar under
+MVC chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc-restful-models"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
 The RIAP Pseudo-Protocol
+\begin_inset CommandInset label
+LatexCommand label
+name "riap"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-In Prudence, internal REST is elegantly supported by specifying the 
+In Prudence, internal REST is straightforwardly supported by specifying
+ the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -21777,7 +21659,44 @@ riap://application/*
 current
 \emph default
  application.
- The remainder will exactly match the relative URIs you've mapped in 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+riap://component/{application}/*
+\begin_inset Quotes erd
+\end_inset
+
+: This will use the component's internal router, to which applications attach
+ by default using their subdirectory name, allowing you to send requests
+ to any application.
+ You change the default name by configuring the 
+\begin_inset Quotes eld
+\end_inset
+
+internal
+\begin_inset Quotes erd
+\end_inset
+
+ host in 
+\bar under
+app.hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-internal-host"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+In both cases the wildcard will exactly match the URI templates you've mapped
+ in 
 \bar under
 app.routes (page 
 \begin_inset CommandInset ref
@@ -21789,17 +21708,6 @@ reference "app-routes"
 )
 \bar default
 .
-\end_layout
-
-\begin_layout Itemize
-\begin_inset Quotes eld
-\end_inset
-
-riap://component/{internal host}/*
-\begin_inset Quotes erd
-\end_inset
-
-:
 \end_layout
 
 \begin_layout Subsection
@@ -21814,7 +21722,25 @@ name "internal-requests"
 \end_layout
 
 \begin_layout Standard
-See also 
+You can use RIAP URIs everywhere a full URI is used in Prudence, for example,
+ when using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Resources.request"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources&item=Prudence.Resources.request"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.external"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=document.external"
+
+\end_inset
+
+ APIs.
+ See the section on 
 \bar under
 external requests (page 
 \begin_inset CommandInset ref
@@ -21825,28 +21751,60 @@ reference "external-requests"
 
 )
 \bar default
-.
+ for examples.
 \end_layout
 
 \begin_layout Standard
-Of course, RIAP URIs cannot be used by clients, only by requests initiated
- in your code.
+However, the APIs can also implicitly create these RIAP URIs for you.
+ For example:
 \end_layout
 
 \begin_layout Standard
-If you're using JavaScript, you 
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var weather = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/weather/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Prudence.Resources.request
-\end_layout
+Prudence.Resources.request will automatically assume that URIs beginning with
+ 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Subsection
-Configuring the Internal URI-space
-\end_layout
+/
+\begin_inset Quotes erd
+\end_inset
 
-\begin_layout Standard
-The 
+ are internal, and thus set the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -21854,37 +21812,347 @@ internal
 \begin_inset Quotes erd
 \end_inset
 
- host (page 
+ param to true.
+ The URI used would in fact be an RIAP URI: 
+\begin_inset Quotes eld
+\end_inset
+
+riap://application/weather/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To access a different application:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var weather = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/weather/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	internal: 'weatherapp'
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The actual URI would be 
+\begin_inset Quotes eld
+\end_inset
+
+riap://component/weatherapp/weather/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Low Level
+\end_layout
+
+\begin_layout Standard
+For non-JavaScript you can use the lower-level 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.internal"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=document.internal"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.internalOther"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=document.internalOther"
+
+\end_inset
+
+ APIs:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+var resource = document.internal('/weather/', 'application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+result = resource.get()
+\end_layout
+
+\begin_layout Plain Layout
+
+if (null !== result) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	weather = Sincerity.JSON.from(result.text)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To access a different application:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+resource = document.internalOther('weatherapp', '/weather/', 'application/json')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Never Hidden
+\end_layout
+
+\begin_layout Standard
+Internal requests bypass the 
+\bar under
+hiding mechanism in routing.js (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "the-internal-host"
+reference "hidden-route-type"
 
 \end_inset
 
 )
+\bar default
+.
+ Thus, if you want some URIs to only be usable internally, simply hide them
+ from the public URI-space.
 \end_layout
 
 \begin_layout Subsection
-Implementing Internal Resources
-\end_layout
-
-\begin_layout Standard
-document.internal
-\end_layout
-
-\begin_layout Standard
-Optimizing using application/java MIME type
-\end_layout
-
-\begin_layout Standard
-Avoid serialization (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "avoid-serialization-for-internal-requests"
+Avoiding Serialization for Internal Requests
+\begin_inset CommandInset label
+LatexCommand label
+name "avoiding-serialization-for-internal-requests"
 
 \end_inset
 
-).
+
+\end_layout
+
+\begin_layout Standard
+The web data chapter covers the creation of 
+\bar under
+response payloads (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "response-payloads"
+
+\end_inset
+
+)
+\bar default
+.
+ There is, however, a possible optimization for internal requests.
+ If your textual and binary representations are serialized versions of data
+ structures, it would be unnecessary and wasteful to go through serialization/de
+serialization for an internal request.
+ A simple optimization would be to pass the data 
+\begin_inset Quotes eld
+\end_inset
+
+as is,
+\begin_inset Quotes erd
+\end_inset
+
+ which is actually very similar to a return value for a mundane function
+ call.
+\end_layout
+
+\begin_layout Standard
+This works using the special 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type.
+ If selected---whether negotiated for or 
+\bar under
+explicitly overridden (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "overriding-the-format"
+
+\end_inset
+
+)
+\bar default
+---then return values are indeed sent 
+\begin_inset Quotes eld
+\end_inset
+
+as is.
+\begin_inset Quotes erd
+\end_inset
+
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/json')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (conversation.internal) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		conversation.addMediaTypeByName('application/java')
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = ...
+\end_layout
+
+\begin_layout Plain Layout
+
+	return conversation.mediaTypeName == 'application/java' ?
+\end_layout
+
+\begin_layout Plain Layout
+
+		data : Sincerity.JSON.to(data)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we've added support for 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ only to internal requests, verified using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.internal API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.internal"
+
+\end_inset
+
+.
+ The reason is that we don't want to allow 
+\begin_inset Quotes eld
+\end_inset
+
+application/java
+\begin_inset Quotes erd
+\end_inset
+
+ representations over HTTP.
+ (Actually, that 
+\emph on
+could
+\emph default
+ work if the object is itself JVM-serializable, but that's a more advanced
+ use case we won't deal with here.)
 \end_layout
 
 \begin_layout Section
@@ -25083,7 +25351,7 @@ application/java
  payloads (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "avoid-serialization-for-internal-requests"
+reference "avoiding-serialization-for-internal-requests"
 
 \end_inset
 
@@ -25932,6 +26200,13 @@ status open
 
 \begin_layout Subsection
 RESTful Models
+\begin_inset CommandInset label
+LatexCommand label
+name "mvc-restful-models"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -26220,7 +26495,7 @@ Note that we've
 optimized for internal requests (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "avoid-serialization-for-internal-requests"
+reference "avoiding-serialization-for-internal-requests"
 
 \end_inset
 
@@ -33570,7 +33845,15 @@ target "http://neo4j.org/"
  Because it's JVM-based, you can access it internally from Prudence.
  It also has embedded bindings for many of Prudence's supported languages,
  and supports a network REST interface which you can easily access via Prudence'
-s document.external.
+s 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.external API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=document.external"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -33641,7 +33924,15 @@ target "http://couchdb.apache.org/"
  With CouchDB it's trivial to replicate and synchronize data with clients'
  desktops or mobile devices, and to distribute it to partners.
  It also supports a REST interface which you can easily access via Prudence's
- document.external.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.external API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=document.external"
+
+\end_inset
+
+.
  And, both MongoDB and CouchDB use JavaScript extensively, making it natural
  to use with Prudence's JavaScript flavor.
 \end_layout

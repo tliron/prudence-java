@@ -182,7 +182,9 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		pushDocumentDescriptor( documentDescriptor );
 		try
 		{
-			return generateText( documentDescriptor, allowEncoding );
+			Representation representation = generateText( documentDescriptor, allowEncoding );
+			representation.setDisposition( conversationService.getDisposition() );
+			return representation;
 		}
 		finally
 		{
