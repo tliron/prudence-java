@@ -16231,7 +16231,17 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-	return '<html><body>My page</body></html>'
+	return conversation.mediaTypeName == 'text/html' ?
+\end_layout
+
+\begin_layout Plain Layout
+
+		'<html><body>My page</body></html>' :
+\end_layout
+
+\begin_layout Plain Layout
+
+		'My page'
 \end_layout
 
 \begin_layout Plain Layout
@@ -16828,7 +16838,7 @@ status open
 
 \begin_layout Plain Layout
 
-document.require('/sincerity/json')
+document.require('/sincerity/json/')
 \end_layout
 
 \begin_layout Plain Layout
@@ -17668,7 +17678,7 @@ name "configuring-applications"
 \end_layout
 
 \begin_layout Standard
-Prudence application's live in their own subdirectory under 
+Prudence applications live in their own subdirectory under 
 \begin_inset Quotes eld
 \end_inset
 
@@ -22984,8 +22994,9 @@ Forms, Forms, Forms
 \end_layout
 
 \begin_layout Standard
-The problem is that you need an intermediary; and it could be a big problem.
- Consider that 
+The problem is that you need an intermediary: a middle layer; and it could
+ be a big problem.
+ That problem is the main reason that 
 \begin_inset Quotes eld
 \end_inset
 
@@ -22995,7 +23006,15 @@ classic
 
  MVC, based around a thick controller layer, isn't as popular as it used
  to be.
- There, the controller does 
+ In 
+\begin_inset Quotes eld
+\end_inset
+
+classic
+\begin_inset Quotes erd
+\end_inset
+
+ MVC the controller does 
 \emph on
 as much as possible, 
 \emph default
@@ -23802,11 +23821,6 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-	conversation.addMediaTypeByName('text/plain')
-\end_layout
-
-\begin_layout Plain Layout
-
 }
 \end_layout
 
@@ -24000,7 +24014,18 @@ object
 \begin_inset Quotes erd
 \end_inset
 
- type.
+ type: 
+\bar under
+see (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "avoiding-serialization-for-internal-requests"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -24382,11 +24407,6 @@ function handleInit(conversation) {
 \begin_layout Plain Layout
 
 	conversation.addMediaTypeByName('text/html')
-\end_layout
-
-\begin_layout Plain Layout
-
-	conversation.addMediaTypeByName('text/plain')
 \end_layout
 
 \begin_layout Plain Layout
@@ -25172,11 +25192,6 @@ def handle_init(conversation):
 \begin_layout Plain Layout
 
     conversation.addMediaTypeByName('text/html')
-\end_layout
-
-\begin_layout Plain Layout
-
-    conversation.addMediaTypeByName('text/plain')
 \end_layout
 
 \begin_layout Plain Layout
