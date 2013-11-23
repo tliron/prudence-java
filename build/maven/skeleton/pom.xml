@@ -65,11 +65,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.restlet.jse</groupId>
-			<artifactId>restlet-slf4j</artifactId>
-			<version>[2.2-M5,2.3)</version>
-		</dependency>
-		<dependency>
-			<groupId>org.restlet.jse</groupId>
 			<artifactId>restlet-ssl</artifactId>
 			<version>[2.2-M5,2.3)</version>
 		</dependency>

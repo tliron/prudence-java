@@ -247,7 +247,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	}
 
 	/**
-	 * Casts the cache key pattern for the current executable and encoding.
+	 * Casts the cache key template for the current executable and encoding.
 	 * 
 	 * @return The cache key or null
 	 */
@@ -419,7 +419,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		// Reset caching attributes
 		CachingUtil.setCacheDuration( executable, null, 0 );
 		CachingUtil.setCacheOnlyGet( executable, null, false );
-		CachingUtil.setCacheKeyPattern( executable, null, attributes.getDefaultCacheKeyPattern() );
+		CachingUtil.setCacheKeyTemplate( executable, null, attributes.getDefaultCacheKeyTemplate() );
 		CachingUtil.getCacheTags( executable, null, true ).clear();
 
 		try

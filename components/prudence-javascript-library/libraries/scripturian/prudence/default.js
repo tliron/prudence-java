@@ -690,27 +690,27 @@ var Prudence = {}
  */
 
 /**
- * The cache key pattern is used to generate the cache key for the current document
+ * The cache key template is used to generate the cache key for the current document
  * by injecting attributes based on the current conversation. See {@link caching#key} to
  * see the actually generate cache key. Defaults to "{ri}|{dn}".
  * <p>
  * See <a href="http://threecrickets.com/prudence/manual/uri-space/#injecting-conversation-attributes">the Prudence Manual</a>
  * for a list of possible injected attributes.
  * <p>
- * You can additionally inject your own special values via {@link caching#keyPatternHandlers}.
+ * You can additionally inject your own special values via {@link caching#keyTemplateHandlers}.
  * <p>
  * This value has no effect if {@link caching#duration} is zero.
  * <p>
  * <i>Availability: only available for scriptlet resources.</i>
  * 
- * @name caching.keyPattern
+ * @name caching.keyTemplate
  * @type String
  */
 
 /**
  * This read-only value contains the actual cache key used for the current
  * document in the current conversation. You do not set the cache key directly,
- * but instead you can set the {@link caching#keyPattern}.
+ * but instead you can set the {@link caching#keyTemplate}.
  * <p>
  * <i>Availability: only available for scriptlet resources.</i>
  * 
@@ -732,12 +732,12 @@ var Prudence = {}
  */
 
 /**
- * Cache key pattern handlers let you inject your own attributes into
- * the {@link caching#keyPattern}.
+ * Cache key template handlers let you inject your own attributes into
+ * the {@link caching#keyTemplate}.
  * <p>
  * <i>Availability: only available for scriptlet resources.</i>
  * 
- * @name caching.keyPatternHandlers
+ * @name caching.keyTemplateHandlers
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, String&gt;
  */
 
@@ -817,7 +817,7 @@ var Prudence = {}
  * The above snippet can be used in <i>any</i> textual resource, no matter its URI, and will alwaus refer to the "/contact/"
  * URI starting at the root URI of the application.
  * <p>
- * Note that it can also be useful to use the base as part of your {@link caching#keyPattern}, where it is
+ * Note that it can also be useful to use the base as part of your {@link caching#keyTemplate}, where it is
  * available as "{cb}".
  *
  * @name conversation.base

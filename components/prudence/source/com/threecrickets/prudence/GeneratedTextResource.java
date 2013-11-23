@@ -97,7 +97,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.applicationServiceName</code>
  * : Defaults to "application".</li>
  * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.cacheKeyPatternHandlers</code>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.cacheKeyTemplateHandlers</code>
  * : {@link ConcurrentMap}&lt;String, String&gt;</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.cachingServiceName</code>
@@ -112,7 +112,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.GeneratedTextResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyPattern:</code>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyTemplate:</code>
  * {@link String}, defaults to "{ri}|{dn}".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCharacterSet:</code>

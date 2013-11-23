@@ -39,7 +39,7 @@ import org.restlet.resource.ServerResource;
 import org.restlet.routing.Template;
 import org.restlet.util.Series;
 
-import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
+import com.threecrickets.prudence.DelegatedCacheKeyTemplateHandler;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.cache.Cache;
@@ -162,17 +162,17 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	/**
-	 * The cache key pattern.
+	 * The cache key template.
 	 * 
 	 * @param executable
 	 *        The executable
 	 * @param suffix
 	 *        The optional attribute suffix
-	 * @return The cache key pattern
+	 * @return The cache key template
 	 */
-	public static String getCacheKeyPattern( Executable executable, String suffix )
+	public static String getCacheKeyTemplate( Executable executable, String suffix )
 	{
-		return (String) executable.getAttributes().get( suffix == null ? CACHE_KEY_PATTERN_ATTRIBUTE : CACHE_KEY_PATTERN_ATTRIBUTE + suffix );
+		return (String) executable.getAttributes().get( suffix == null ? CACHE_KEY_TEMPLATE_ATTRIBUTE : CACHE_KEY_TEMPLATE_ATTRIBUTE + suffix );
 	}
 
 	/**
@@ -180,17 +180,17 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The executable
 	 * @param suffix
 	 *        The optional attribute suffix
-	 * @param cacheKeyPattern
-	 *        The cache key pattern
+	 * @param cacheKeyTemplate
+	 *        The cache key template
 	 * @see #setCacheDuration(Executable, long)
 	 */
-	public static void setCacheKeyPattern( Executable executable, String suffix, String cacheKeyPattern )
+	public static void setCacheKeyTemplate( Executable executable, String suffix, String cacheKeyTemplate )
 	{
-		executable.getAttributes().put( suffix == null ? CACHE_KEY_PATTERN_ATTRIBUTE : CACHE_KEY_PATTERN_ATTRIBUTE + suffix, cacheKeyPattern );
+		executable.getAttributes().put( suffix == null ? CACHE_KEY_TEMPLATE_ATTRIBUTE : CACHE_KEY_TEMPLATE_ATTRIBUTE + suffix, cacheKeyTemplate );
 	}
 
 	/**
-	 * The cache key pattern handlers.
+	 * The cache key template handlers.
 	 * 
 	 * @param executable
 	 *        The executable
@@ -200,9 +200,9 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        Whether to create a handler map if it doesn't exist
 	 * @return The handler map or null
 	 */
-	public static ConcurrentMap<String, String> getCacheKeyPatternHandlers( Executable executable, String suffix, boolean create )
+	public static ConcurrentMap<String, String> getCacheKeyTemplateHandlers( Executable executable, String suffix, boolean create )
 	{
-		String key = suffix == null ? CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE : CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE + suffix;
+		String key = suffix == null ? CACHE_KEY_TEMPLATE_HANDLERS_ATTRIBUTE : CACHE_KEY_TEMPLATE_HANDLERS_ATTRIBUTE + suffix;
 		@SuppressWarnings("unchecked")
 		ConcurrentMap<String, String> handlers = (ConcurrentMap<String, String>) executable.getAttributes().get( key );
 		if( handlers == null && create )
@@ -599,35 +599,36 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	/**
-	 * Calls all installed cache key pattern handlers for the cache key pattern.
+	 * Calls all installed cache key template handlers for the cache key
+	 * template.
 	 * 
 	 * @param template
-	 *        The cache key pattern template
+	 *        The cache key template template
 	 * @param executable
 	 *        The executable
 	 * @param suffix
 	 *        The optional attribute suffix
 	 */
-	public void callCacheKeyPatternHandlers( Template template, Executable executable, String suffix )
+	public void callCacheKeyTemplateHandlers( Template template, Executable executable, String suffix )
 	{
-		Map<String, String> resourceCacheKeyPatternHandlers = attributes.getCacheKeyPatternHandlers();
-		Map<String, String> documentCacheKeyPatternHandlers = getCacheKeyPatternHandlers( executable, suffix, false );
+		Map<String, String> resourceCacheKeyTemplateHandlers = attributes.getCacheKeyTemplateHandlers();
+		Map<String, String> documentCacheKeyTemplateHandlers = getCacheKeyTemplateHandlers( executable, suffix, false );
 
 		// Make sure we have handlers
-		if( ( ( resourceCacheKeyPatternHandlers == null ) || resourceCacheKeyPatternHandlers.isEmpty() ) && ( ( documentCacheKeyPatternHandlers == null ) || documentCacheKeyPatternHandlers.isEmpty() ) )
+		if( ( ( resourceCacheKeyTemplateHandlers == null ) || resourceCacheKeyTemplateHandlers.isEmpty() ) && ( ( documentCacheKeyTemplateHandlers == null ) || documentCacheKeyTemplateHandlers.isEmpty() ) )
 			return;
 
 		// Merge all handlers
-		Map<String, String> cacheKeyPatternHandlers = new HashMap<String, String>();
-		if( resourceCacheKeyPatternHandlers != null )
-			cacheKeyPatternHandlers.putAll( resourceCacheKeyPatternHandlers );
-		if( documentCacheKeyPatternHandlers != null )
-			cacheKeyPatternHandlers.putAll( documentCacheKeyPatternHandlers );
+		Map<String, String> cacheKeyTemplateHandlers = new HashMap<String, String>();
+		if( resourceCacheKeyTemplateHandlers != null )
+			cacheKeyTemplateHandlers.putAll( resourceCacheKeyTemplateHandlers );
+		if( documentCacheKeyTemplateHandlers != null )
+			cacheKeyTemplateHandlers.putAll( documentCacheKeyTemplateHandlers );
 
 		// Group variables together per handler
 		Map<String, Set<String>> delegatedHandlers = new HashMap<String, Set<String>>();
 		List<String> variableNames = template.getVariableNames();
-		for( Map.Entry<String, String> entry : cacheKeyPatternHandlers.entrySet() )
+		for( Map.Entry<String, String> entry : cacheKeyTemplateHandlers.entrySet() )
 		{
 			String name = entry.getKey();
 			String documentName = entry.getValue();
@@ -653,14 +654,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 				String documentName = entry.getKey();
 				String[] variableNamesArray = entry.getValue().toArray( new String[] {} );
 
-				DelegatedCacheKeyPatternHandler delegatedHandler = new DelegatedCacheKeyPatternHandler( documentName, resource.getContext() );
-				delegatedHandler.handleCacheKeyPattern( variableNamesArray );
+				DelegatedCacheKeyTemplateHandler delegatedHandler = new DelegatedCacheKeyTemplateHandler( documentName, resource.getContext() );
+				delegatedHandler.handleCacheKeyTemplate( variableNamesArray );
 			}
 		}
 	}
 
 	/**
-	 * Casts the cache key pattern for an executable.
+	 * Casts the cache key template for an executable.
 	 * 
 	 * @param documentDescriptor
 	 *        The document descriptor
@@ -675,8 +676,8 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	public String castCacheKey( DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService )
 	{
 		Executable executable = documentDescriptor.getDocument();
-		String cacheKeyPattern = getCacheKeyPattern( executable, suffix );
-		if( cacheKeyPattern == null )
+		String cacheKeyTemplate = getCacheKeyTemplate( executable, suffix );
+		if( cacheKeyTemplate == null )
 			return null;
 
 		Request request = resource.getRequest();
@@ -691,11 +692,11 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		}
 
 		// Template and its resolver
-		Template template = new Template( cacheKeyPattern );
-		CacheKeyPatternResolver<R> resolver = new CacheKeyPatternResolver<R>( documentDescriptor, resource, conversationService, request, response );
+		Template template = new Template( cacheKeyTemplate );
+		CacheKeyTemplateResolver<R> resolver = new CacheKeyTemplateResolver<R>( documentDescriptor, resource, conversationService, request, response );
 
-		// Cache key pattern handlers
-		callCacheKeyPatternHandlers( template, executable, suffix );
+		// Cache key template handlers
+		callCacheKeyTemplateHandlers( template, executable, suffix );
 
 		// Temporarily use captive reference as the resource reference
 		Reference captiveReference = CapturingRedirector.getCapturedReference( request );
@@ -854,14 +855,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	private static final String CACHE_ONLY_GET_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheOnlyGet";
 
 	/**
-	 * Cache key pattern attribute for an {@link Executable}.
+	 * Cache key template attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_KEY_PATTERN_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyPattern";
+	private static final String CACHE_KEY_TEMPLATE_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyTemplate";
 
 	/**
-	 * Cache key pattern handlers attribute for an {@link Executable}.
+	 * Cache key template handlers attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_KEY_PATTERN_HANDLERS_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyPatternHandlers";
+	private static final String CACHE_KEY_TEMPLATE_HANDLERS_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyTemplateHandlers";
 
 	/**
 	 * Cache tags attribute for an {@link Executable}.

@@ -101,13 +101,13 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.DelegatedResource.applicationServiceName</code>
  * : Defaults to "application".</li>
  * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.cacheKeyPatternHandlers</code>
+ * <code>com.threecrickets.prudence.DelegatedResource.cacheKeyTemplateHandlers</code>
  * : {@link ConcurrentMap}&lt;String, String&gt;</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.cachingServiceName</code>
  * : Defaults to "caching".</li>
  * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.defaultCacheKeyPattern:</code>
+ * <code>com.threecrickets.prudence.DelegatedResource.defaultCacheKeyTemplate:</code>
  * {@link String}, defaults to "{ri}|{dn}".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCharacterSet:</code>
@@ -865,7 +865,7 @@ public class DelegatedResource extends ServerResource
 				String suffix = getDispatchedSuffix();
 				CachingUtil.setCacheDuration( executable, suffix, 0 );
 				CachingUtil.setCacheOnlyGet( executable, suffix, true );
-				CachingUtil.setCacheKeyPattern( executable, suffix, attributes.getDefaultCacheKeyPattern() );
+				CachingUtil.setCacheKeyTemplate( executable, suffix, attributes.getDefaultCacheKeyTemplate() );
 				CachingUtil.getCacheTags( executable, suffix, true ).clear();
 			}
 

@@ -50,7 +50,7 @@ public class GeneratedTextResourceCachingService extends CachingServiceBase<Gene
 	//
 
 	/**
-	 * Casts the cache key pattern for the current executable and encoding.
+	 * Casts the cache key template for the current executable and encoding.
 	 * 
 	 * @return The cache key or null
 	 */

@@ -190,6 +190,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				org.restlet.routing.Redirector,
 				org.restlet.data.Reference,
 				org.restlet.data.MediaType,
+				java.util.concurrent.ConcurrentHashMap,
 				java.util.concurrent.CopyOnWriteArrayList,
 				java.io.File)
 					
@@ -437,6 +438,10 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.sourceViewableDocumentSources = new CopyOnWriteArrayList()
 				this.globals['com.threecrickets.prudence.SourceCodeResource.documentSources'] = this.sourceViewableDocumentSources
 			}
+			
+			// Cache key template handlers
+			this.cacheKeyTemplateHandlers = new ConcurrentHashMap()
+			// TODO: configure
 
 			this.hidden = []
 
@@ -967,7 +972,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					debug: app.settings.code.debug ? true : false,
-					debugCaching: app.settings.caching.debug ? true : false
+					debugCaching: app.settings.caching.debug ? true : false,
+					cacheKeyTemplateHandlers: app.cacheKeyTemplateHandlers
 				}
 
 				// Pass-throughs
@@ -1137,7 +1143,6 @@ Prudence.Routing = Prudence.Routing || function() {
 					libraryDocumentSources: app.libraryDocumentSources,
 					passThroughDocuments: new CopyOnWriteArraySet(),
 					trailingSlashRequired: this.trailingSlashRequired,
-					cacheKeyPatternHandlers: new ConcurrentHashMap(),
 					clientCachingMode: this.clientCachingMode,
 					maxClientCachingDuration: this.maxClientCachingDuration, 
 					defaultIncludedName: this.defaultDocumentName,
@@ -1150,7 +1155,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
 					debug: app.settings.code.debug ? true : false,
-					debugCaching: app.settings.caching.debug ? true : false
+					debugCaching: app.settings.caching.debug ? true : false,
+					cacheKeyTemplateHandlers: app.cacheKeyTemplateHandlers
 				}
 
 				// Libraries

@@ -436,6 +436,19 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
+Prudence is built on top of Sincerity's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet skeleton"
+target "http://threecrickets.com/sincerity/ecosystem/skeletons/#restlet-skeleton"
+
+\end_inset
+
+.
+ The documentation there applies to Prudence, too.
+\end_layout
+
+\begin_layout Itemize
 Sincerity has 
 \begin_inset CommandInset href
 LatexCommand href
@@ -472,19 +485,6 @@ target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-pl
 , which is fully configurable.
  You can also use it to centralize logging for your cluster, and even log
  directly to a database, such as MongoDB.
-\end_layout
-
-\begin_layout Itemize
-Prudence is built on top of Sincerity's 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet skeleton"
-target "http://threecrickets.com/sincerity/ecosystem/skeletons/#restlet-skeleton"
-
-\end_inset
-
-.
- The documentation there applies to Prudence, too.
 \end_layout
 
 \begin_layout Subsection
@@ -1725,8 +1725,8 @@ begin with
 \begin_inset Quotes erd
 \end_inset
 
- at the end of a URI pattern signifies a wildcard: anything may follow (except
- nothing).
+ at the end of a URI template signifies a wildcard: anything may follow
+ (except nothing).
  Restart Prudence for our routing.js changes to take effect.
 \end_layout
 
@@ -4722,6 +4722,22 @@ reference "background-tasks"
 \end_layout
 
 \begin_layout Itemize
+Runtime debugging of web applications is often difficult.
+ Prudence has a straightforward mechanism for 
+\bar under
+live execution (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "on-the-fly-scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+, allowing you run arbitrary code remotely.
+\end_layout
+
+\begin_layout Itemize
 
 \bar under
 Clusters (page 
@@ -4734,7 +4750,7 @@ reference "clusters"
 )
 \bar default
 ! When you need to scale horizontally, Prudence provides you with a remarkably
- seamless solution to share resources.
+ seamless solution for sharing state.
  Even the task APIs support it: you can easily farm out your workload anywhere
  within your Prudence cluster.
 \end_layout
@@ -11538,7 +11554,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl -v -d "<% println(1+2) %>" "http://localhost:8080/myapp/execute/"
+curl --verbose --data '<% println(1+2) %>' http://localhost:8080/myapp/execute/
 \end_layout
 
 \end_inset
@@ -11558,7 +11574,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl -v --data-binary @myscriptfile "http://localhost:8080/myapp/execute/"
+curl --verbose --data-binary @myscriptfile http://localhost:8080/myapp/execute/
 \end_layout
 
 \end_inset
@@ -11575,7 +11591,7 @@ myscriptfile
 \begin_inset Quotes erd
 \end_inset
 
- would like like a scriptlet resource:
+ could be something like this:
 \end_layout
 
 \begin_layout Standard
@@ -11659,8 +11675,8 @@ status open
 
 \begin_layout Plain Layout
 
-curl -v --data-binary @myscriptfile "http://localhost:8080/myapp/execute/?name=R
-ichard"
+curl --verbose --data-binary @myscriptfile 'http://localhost:8080/myapp/execute/
+?name=Richard'
 \end_layout
 
 \end_inset
@@ -11715,7 +11731,7 @@ text/plain
 , but you can modify it with the 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.mediaType API"
+name "conversation.mediaType APIs"
 target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
 
 \end_inset
@@ -14917,7 +14933,7 @@ By Routing
 \end_layout
 
 \begin_layout Standard
-If you need to constantly redirect a specific resource or a URI pattern,
+If you need to constantly redirect a specific resource or a URI template,
  you should configure it in your routing.js, using the 
 \bar under
 
@@ -17022,27 +17038,63 @@ name "caching"
 \end_layout
 
 \begin_layout Subsection
-The Best Caching
+State of the Art
 \end_layout
 
 \begin_layout Standard
-We are proud of Prudence's caching system.
+Doing caching right is non-trivial: it's much more than just storing data
+ in a key-value store.
 \end_layout
 
-\begin_layout Paragraph
-Integrated
+\begin_layout Standard
+Prudence caching features the following:
 \end_layout
 
-\begin_layout Paragraph
-Efficient Compression
+\begin_layout Itemize
+Template-based cache key generation with support for custom plugins.
+ This allows you full flexibility in caching data that varies per external
+ and internal conditions.
 \end_layout
 
-\begin_layout Paragraph
-Server and Client
+\begin_layout Itemize
+Fully integrated with client-side caching: uses conditional HTTP requests
+ to make sure clients don't download data they already have, while guaranteeing
+ that they will download newer versions of the data.
+ This enhances the user experience (faster responses) while saving you on
+ bandwidth.
 \end_layout
 
-\begin_layout Paragraph
-Fine-Grained
+\begin_layout Itemize
+Allows tagging of cache entries, so that whole swaths of the cache can be
+ invalidated at once just by specifying a tag.
+\end_layout
+
+\begin_layout Itemize
+Tiered caching strategies: allows chaining cache backends in sequence, such
+ that faster backends can be placed before slower ones.
+\end_layout
+
+\begin_layout Itemize
+Prudence caches compressed (gzip and DEFLATE) representations separately,
+ allowing you to save precious CPU cycles on the server.
+\end_layout
+
+\begin_layout Itemize
+Not just pages: Prudence caches your web APIs, too, with all the same features
+ mentioned above.
+\end_layout
+
+\begin_layout Itemize
+For page caching, Prudence caches included fragments individually, allowing
+ for fine-grained control over which parts of the page are cached.
+ With smart use of cache key templates, you can optimize page caching to
+ perfection.
+\end_layout
+
+\begin_layout Standard
+But what's really great about Prudence is how easy it is to use these features:
+ in most cases caching is pretty much automatic.
+ When you need to customize, the API is clear and easy to use.
 \end_layout
 
 \begin_layout Subsection
@@ -17073,7 +17125,7 @@ caching.tags
 \end_layout
 
 \begin_layout Subsubsection
-caching.keyPattern
+caching.keyTemplate
 \end_layout
 
 \begin_layout Subsubsection
@@ -19198,7 +19250,7 @@ reference "../routing/|static-capturing"
 \bar default
  as well as 
 \bar under
-document.cacheKeyPattern (page 
+document.cacheKeyTemplate (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "../api/|document-cache-key-pattern"
@@ -22782,7 +22834,7 @@ Response Attributes
 \begin_layout Standard
 [these are not supported in capturing or other forms of server-side redirection,
  because redirection happens before a response is actually generated.] [useful
- for cache patterns?]
+ for cache templates?]
 \end_layout
 
 \begin_layout Standard
@@ -22905,7 +22957,7 @@ id
 
 \begin_layout Standard
 But you can also do the opposite: interpolate the values that were extracted
- from the matched URI pattern.
+ from the matched URI template.
  An example of redirection that both extracts and interpolates:
 \end_layout
 
@@ -24135,7 +24187,7 @@ not
 \emph default
  the external one, which actually hits the presenter.
  If there are attributes of the external request that you want to use for
- the cache key pattern, then you must transfer them manually.
+ the cache key template, then you must transfer them manually.
 \end_layout
 
 \begin_layout Subsection

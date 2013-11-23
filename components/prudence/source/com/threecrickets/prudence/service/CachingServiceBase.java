@@ -106,34 +106,34 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	}
 
 	/**
-	 * The cache key pattern.
+	 * The cache key template.
 	 * 
-	 * @return The cache key pattern
-	 * @see #setCacheKeyPattern(String)
+	 * @return The cache key template
+	 * @see #setKeyTemplate(String)
 	 */
-	public String getKeyPattern()
+	public String getKeyTemplate()
 	{
-		return CachingUtil.getCacheKeyPattern( documentService.getDescriptor().getDocument(), getSuffix() );
+		return CachingUtil.getCacheKeyTemplate( documentService.getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**
-	 * @param cacheKeyPattern
-	 *        The cache key pattern
-	 * @see #getKeyPattern()
+	 * @param cacheKeyTemplate
+	 *        The cache key template
+	 * @see #getKeyTemplate()
 	 */
-	public void setCacheKeyPattern( String cacheKeyPattern )
+	public void setKeyTemplate( String cacheKeyTemplate )
 	{
-		CachingUtil.setCacheKeyPattern( documentService.getDescriptor().getDocument(), getSuffix(), cacheKeyPattern );
+		CachingUtil.setCacheKeyTemplate( documentService.getDescriptor().getDocument(), getSuffix(), cacheKeyTemplate );
 	}
 
 	/**
-	 * The cache key pattern handlers.
+	 * The cache key template handlers.
 	 * 
-	 * @return The cache key pattern handlers
+	 * @return The cache key template handlers
 	 */
-	public ConcurrentMap<String, String> getKeyPatternHandlers()
+	public ConcurrentMap<String, String> getKeyTemplateHandlers()
 	{
-		return CachingUtil.getCacheKeyPatternHandlers( documentService.getDescriptor().getDocument(), getSuffix(), true );
+		return CachingUtil.getCacheKeyTemplateHandlers( documentService.getDescriptor().getDocument(), getSuffix(), true );
 	}
 
 	/**
@@ -145,7 +145,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	}
 
 	/**
-	 * Casts the cache key pattern for the current executable and encoding.
+	 * Casts the cache key template for the current executable and encoding.
 	 * 
 	 * @return The cache key or null
 	 */

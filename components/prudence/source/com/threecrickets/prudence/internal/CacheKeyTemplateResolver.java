@@ -16,7 +16,7 @@ import org.restlet.Response;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Resolver;
 
-import com.threecrickets.prudence.DelegatedCacheKeyPatternHandler;
+import com.threecrickets.prudence.DelegatedCacheKeyTemplateHandler;
 import com.threecrickets.prudence.service.ResourceConversationServiceBase;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
@@ -25,25 +25,25 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
  * Resolves a few special Prudence variables.
  * 
  * @author Tal Liron
- * @see DelegatedCacheKeyPatternHandler
+ * @see DelegatedCacheKeyTemplateHandler
  */
-public class CacheKeyPatternResolver<R extends ServerResource> extends Resolver<Object>
+public class CacheKeyTemplateResolver<R extends ServerResource> extends Resolver<Object>
 {
 	//
 	// Construction
 	//
 
-	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService )
+	public CacheKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService )
 	{
 		this( documentDescriptor, resource, conversationService, resource.getRequest(), resource.getResponse() );
 	}
 
-	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Request request, Response response )
+	public CacheKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Request request, Response response )
 	{
 		this( documentDescriptor, resource, conversationService, Resolver.createResolver( request, response ) );
 	}
 
-	public CacheKeyPatternResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Resolver<?> callResolver )
+	public CacheKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Resolver<?> callResolver )
 	{
 		this.documentDescriptor = documentDescriptor;
 		this.resource = resource;
