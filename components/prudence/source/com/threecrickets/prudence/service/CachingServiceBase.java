@@ -68,9 +68,9 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 * The cache duration. Defaults to 0.
 	 * 
 	 * @return The cache duration in milliseconds
-	 * @see #setDuration(long)
+	 * @see #setDuration(Object)
 	 */
-	public long getDuration()
+	public Object getDuration()
 	{
 		return CachingUtil.getCacheDuration( documentService.getDescriptor().getDocument(), getSuffix() );
 	}
@@ -80,9 +80,9 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 *        The cache duration in milliseconds
 	 * @see #getDuration()
 	 */
-	public void setDuration( long cacheDuration )
+	public void setDuration( Object cacheDuration )
 	{
-		CachingUtil.setCacheDuration( documentService.getDescriptor().getDocument(), getSuffix(), cacheDuration );
+		CachingUtil.setCacheDuration( documentService.getDescriptor().getDocument(), getSuffix(), CachingUtil.toMilliseconds( cacheDuration ) );
 	}
 
 	/**

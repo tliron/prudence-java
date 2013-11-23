@@ -674,6 +674,10 @@ var Prudence = {}
 /**
  * This is the amount of time in milliseconds that the current document will be cached.
  * If this value is zero (the default), caching is disabled.
+ * <p>
+ * You can set this value to a either a number or a string: see {@link Sincerity.Localization#toMilliseconds}.
+ * For example, '1.5m' is 90000 milliseconds. Note, though, they when you read the value,
+ * it will always be numeric (a long data type).
  * 
  * <i>Availability: only available for scriptlet resources.</i>
  * 

@@ -17042,12 +17042,12 @@ State of the Art
 \end_layout
 
 \begin_layout Standard
-Doing caching right is non-trivial: it's much more than just storing data
- in a key-value store.
+Doing caching right is far from trivial: it's much more than just storing
+ data in a key-value store, which is what most web platforms offer you.
 \end_layout
 
 \begin_layout Standard
-Prudence caching features the following:
+Prudence's caching mechanism features the following:
 \end_layout
 
 \begin_layout Itemize
@@ -17109,19 +17109,181 @@ name "server-side-caching"
 \end_layout
 
 \begin_layout Standard
-TODO: write the manual.
-\end_layout
+Four of the caching APIs are all in the 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-The APIs:
+caching
+\begin_inset Quotes erd
+\end_inset
+
+ namespace, and one is in 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
 caching.duration
 \end_layout
 
+\begin_layout Standard
+Specifies the duration of cache entries in milliseconds.
+ Set this to a greater-than-zero value to enable caching on the current
+ resource.
+ The default is zero, meaning that caching is disabled.
+\end_layout
+
+\begin_layout Standard
+You can set this value to a 
+\bar under
+either a number or a string (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "numeric-shortcuts"
+
+\end_inset
+
+)
+\bar default
+.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+1.5m
+\begin_inset Quotes erd
+\end_inset
+
+ is 90000 milliseconds.
+ Note, though, they when you read the value, it will always be numeric (a
+ long data type).
+\end_layout
+
+\begin_layout Standard
+Once enabled, every incoming request will have a cache key generated for
+ it based on the cache key template, plus compression information.
+ Prudence will attempt to fetch the cache entry from the cache, and if it's
+ still valid, will display it to the user (this is called a 
+\begin_inset Quotes eld
+\end_inset
+
+cache hit
+\begin_inset Quotes erd
+\end_inset
+
+).
+ If there is no cache entry, or it's invalid, Prudence will run the resource
+ as usual (this is called a 
+\begin_inset Quotes eld
+\end_inset
+
+cache miss
+\begin_inset Quotes erd
+\end_inset
+
+), and then store a new cache entry via the key.
+\end_layout
+
+\begin_layout Standard
+Compression is handled specially: if the requested compressed cache entry
+ does not exist, then Prudence will attempt to fetch the uncompressed cache
+ entry.
+ If that exists, it would be a 
+\begin_inset Quotes eld
+\end_inset
+
+hit
+\begin_inset Quotes erd
+\end_inset
+
+: Prudence would then store the compressed version so that compression would
+ be avoided in the future.
+ Likewise, when storing a new compressed cache entry (during a 
+\begin_inset Quotes eld
+\end_inset
+
+miss
+\begin_inset Quotes erd
+\end_inset
+
+), Prudence actually stores both the compressed version as well as the uncompres
+sed version.
+\end_layout
+
+\begin_layout Paragraph
+A Little Bit Goes a Long Way
+\end_layout
+
+\begin_layout Standard
+Remarkably, even a very small cache duration of just a few seconds can help
+ you a lot.
+ It will ensure that if you're bombarded with a sudden upsurge of user requests
+ to the resource, your application won't collapse.
+ The cost is often very much worth it: having the 
+\begin_inset Quotes eld
+\end_inset
+
+freshness
+\begin_inset Quotes erd
+\end_inset
+
+ of your data being delayed by just a few seconds is usually not a big deal.
+\end_layout
+
+\begin_layout Paragraph
+Caching Forever
+\end_layout
+
+\begin_layout Standard
+You might think that your invalidation scheme is so perfect that there's
+ no reason to ever have your cache entries expire.
+ Well, think again: without a clear expiration time, your cache would continue
+ growing forever.
+\end_layout
+
 \begin_layout Subsubsection
 caching.tags
+\end_layout
+
+\begin_layout Standard
+Tags are simple strings that you can associate with a resource's cache entries,
+ which can then be used to invalidate all entries belonging to a particular
+ tag.
+ You may add as many tags as you wish:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+caching.tags.add('blog')
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.tags.add('news.' + newsDate)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that tags are associated with 
+\emph on
+all
+\emph default
+ cache entries based on the resource, whatever their cache key.
 \end_layout
 
 \begin_layout Subsubsection
@@ -17130,6 +17292,56 @@ caching.keyTemplate
 
 \begin_layout Subsubsection
 caching.key
+\end_layout
+
+\begin_layout Standard
+This is a read-only value, meant purely for debugging purposes.
+ By logging or otherwise displaying it, you can see the cache key that Prudence
+ would use for the current resource.
+ 
+\emph on
+Would
+\emph default
+ is the key qualifier here: of course, your code displaying the cache key
+ won't actually be run in the case of a cache hit.
+\end_layout
+
+\begin_layout Standard
+Another way to debug the cache key is to enable the 
+\bar under
+caching debug headers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-caching"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+application.cache
+\end_layout
+
+\begin_layout Standard
+You'll most likely want to use this API to invalidate a cache tag:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.cache.invalidate('blog')
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection

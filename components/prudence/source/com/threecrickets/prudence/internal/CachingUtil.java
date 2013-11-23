@@ -85,6 +85,77 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	//
 
 	/**
+	 * Converts a string to a milliseconds long, interpreting 'ms', 's', 'm',
+	 * 'h' and 'd' suffixes. Numbers are simply rounded to an integer.
+	 * <p>
+	 * Fractions can be used, and are rounded to the nearest millisecond, for
+	 * example: "1.5d".
+	 * 
+	 * @param value
+	 *        The value
+	 * @return The milliseconds
+	 */
+	public static long toMilliseconds( Object value )
+	{
+		if( value == null )
+			return 0L;
+		if( value instanceof Number )
+			return ( (Number) value ).longValue();
+		else
+		{
+			String s = value.toString();
+			if( s.endsWith( "ms" ) )
+				return (long) Float.parseFloat( s.substring( 0, s.length() - 2 ) );
+			else if( s.endsWith( "s" ) )
+				return (long) ( Float.parseFloat( s.substring( 0, s.length() - 1 ) ) * 1000f );
+			else if( s.endsWith( "m" ) )
+				return (long) ( Float.parseFloat( s.substring( 0, s.length() - 1 ) ) * 60000f );
+			else if( s.endsWith( "h" ) )
+				return (long) ( Float.parseFloat( s.substring( 0, s.length() - 1 ) ) * 3600000f );
+			else if( s.endsWith( "d" ) )
+				return (long) ( Float.parseFloat( s.substring( 0, s.length() - 1 ) ) * 86400000f );
+			else
+				return (long) Float.parseFloat( s );
+		}
+	}
+
+	/**
+	 * Converts a string to a bytes integer, interpreting 'b', 'kb', 'mb', 'gb'
+	 * and 'tb' suffixes. Numbers are simply rounded to an integer.
+	 * <p>
+	 * Fractions can be used, and are rounded to the nearest byte, for example:
+	 * "1.5mb".
+	 * 
+	 * @param value
+	 *        The value
+	 * @return The bytes
+	 */
+	public static int toBytes( Object value )
+	{
+		if( value == null )
+			return 0;
+		if( value instanceof Number )
+			return ( (Number) value ).intValue();
+		else
+		{
+			String s = value.toString();
+			if( s.endsWith( "kb" ) )
+				return (int) ( Float.parseFloat( s.substring( 0, s.length() - 2 ) ) * 1024f );
+			else if( s.endsWith( "mb" ) )
+				return (int) ( Float.parseFloat( s.substring( 0, s.length() - 2 ) ) * 1048576f );
+			else if( s.endsWith( "gb" ) )
+				return (int) ( Float.parseFloat( s.substring( 0, s.length() - 2 ) ) * 1073741824f );
+			else if( s.endsWith( "tb" ) )
+				return (int) ( Float.parseFloat( s.substring( 0, s.length() - 2 ) ) * 1099511627776f );
+			else if( s.endsWith( "b" ) )
+				return (int) Float.parseFloat( s.substring( 0, s.length() - 1 ) );
+			else
+				return (int) Float.parseFloat( s );
+		}
+
+	}
+
+	/**
 	 * The cache duration.
 	 * 
 	 * @param executable
