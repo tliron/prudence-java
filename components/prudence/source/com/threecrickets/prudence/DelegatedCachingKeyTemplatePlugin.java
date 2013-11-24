@@ -22,7 +22,7 @@ import org.restlet.Context;
  * 
  * @author Tal Liron
  */
-public class DelegatedCacheKeyTemplatePlugin extends DelegatedHandler
+public class DelegatedCachingKeyTemplatePlugin extends DelegatedHandler
 {
 	//
 	// Construction
@@ -36,7 +36,7 @@ public class DelegatedCacheKeyTemplatePlugin extends DelegatedHandler
 	 * @param context
 	 *        The context used to configure the handler
 	 */
-	public DelegatedCacheKeyTemplatePlugin( String documentName, Context context )
+	public DelegatedCachingKeyTemplatePlugin( String documentName, Context context )
 	{
 		super( documentName, context );
 	}
@@ -72,7 +72,7 @@ public class DelegatedCacheKeyTemplatePlugin extends DelegatedHandler
 	 * Calls the <code>handleInterpolation</code> entry point.
 	 * 
 	 * @param variables
-	 *        The cache key template variables to handle
+	 *        The caching key template variables to handle
 	 */
 	public void handleInterpolation( String[] variables )
 	{

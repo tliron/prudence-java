@@ -17309,6 +17309,13 @@ all
 
 \begin_layout Subsubsection
 caching.keyTemplate
+\begin_inset CommandInset label
+LatexCommand label
+name "caching-key-template"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -17326,8 +17333,18 @@ reference "string-interpolation"
 )
 \bar default
 , and are essentially the same as those used for URI templates.
- However, Prudence also lets you install plugins (see below) to support
- your own specialized template variables.
+ However, Prudence also lets you install 
+\bar under
+plugins (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template-plugins"
+
+\end_inset
+
+)
+\bar default
+ to support your own specialized template variables.
  You can debug the cache key template by using the 
 \bar under
 caching debug headers (page 
@@ -17352,6 +17369,18 @@ Prudence's default cache key template is sensible enough for most scenarios:
 \begin_inset Quotes erd
 \end_inset
 
+.
+ You can change it in your 
+\bar under
+settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-caching"
+
+\end_inset
+
+)
+\bar default
 .
  The 
 \begin_inset Quotes eld
@@ -17416,8 +17445,18 @@ Per-User Caching
 A common scenario is for a resource to be generated different accordingly
  to the logged-in user.
  You would thus want to include a user identifier in the cache key.
- To do this, you would likely need to write a plugin (see below) to interpolate
- that identifier.
+ To do this, you would likely need to write a 
+\bar under
+plugin (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template-plugins"
+
+\end_inset
+
+)
+\bar default
+ to interpolate that identifier.
  You cache key template could then look something like 
 \begin_inset Quotes eld
 \end_inset
@@ -17553,7 +17592,18 @@ uid
 
 \begin_layout Standard
 Actually, Prudence also allows you to install key template plugins by configurin
-g them in your application's settings.js.
+g them in your 
+\bar under
+application's settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-caching"
+
+\end_inset
+
+)
+\bar default
+.
  In that case, the plugin would be installed for 
 \emph on
 all 
@@ -19407,16 +19457,12 @@ name "settings-caching"
 
 \end_layout
 
-\begin_layout Standard
-When 
-\begin_inset Quotes eld
-\end_inset
+\begin_layout Itemize
 
+\series bold
 debug
-\begin_inset Quotes erd
-\end_inset
-
- is true, special HTTP response headers will be added for 
+\series default
+: When true, special HTTP response headers will be added for 
 \bar under
 caching (page 
 \begin_inset CommandInset ref
@@ -19430,6 +19476,7 @@ reference "caching"
 :
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
 
 \series bold
@@ -19484,6 +19531,56 @@ target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.
 X-Cache-Tags
 \series default
 : comma-separated list of cache tags
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+defaultKeyTemplate
+\series default
+: Allows you to set the default 
+\bar under
+caching.keyTemplate (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template"
+
+\end_inset
+
+)
+\bar default
+ for all resources.
+ If not specified, will be 
+\begin_inset Quotes eld
+\end_inset
+
+{ri}|{dn}
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+keyTemplatePlugins
+\series default
+: A dict mapping cache key template variable names to plugin library names.
+ Allows you to install key template plugins for all resources in the application.
+ See the 
+\bar under
+caching.keyTemplatePlugins API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template-plugins"
+
+\end_inset
+
+)
+\bar default
+ for more information.
 \end_layout
 
 \begin_layout Subsection

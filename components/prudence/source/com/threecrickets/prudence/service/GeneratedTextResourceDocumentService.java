@@ -253,7 +253,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 */
 	public String getCacheKey()
 	{
-		return CachingUtil.getCacheKeyForEncoding( cachingUtil.castCacheKey( getDescriptor(), null, true, conversationService ), conversationService.getEncoding() );
+		return CachingUtil.getKeyForEncoding( cachingUtil.castKey( getDescriptor(), null, true, conversationService ), conversationService.getEncoding() );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -343,7 +343,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		{
 			DocumentDescriptor<Executable> currentDocumentDescriptor = popDocumentDescriptor();
 			for( DocumentDescriptor<Executable> documentDescriptor : documentDescriptorStack )
-				CachingUtil.getCacheTags( documentDescriptor.getDocument(), null, true ).addAll( propagatedCacheTags );
+				CachingUtil.getTags( documentDescriptor.getDocument(), null, true ).addAll( propagatedCacheTags );
 			pushDocumentDescriptor( currentDocumentDescriptor );
 		}
 
@@ -417,10 +417,10 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		}
 
 		// Reset caching attributes
-		CachingUtil.setCacheDuration( executable, null, 0 );
-		CachingUtil.setCacheOnlyGet( executable, null, false );
-		CachingUtil.setCacheKeyTemplate( executable, null, attributes.getDefaultCacheKeyTemplate() );
-		CachingUtil.getCacheTags( executable, null, true ).clear();
+		CachingUtil.setDuration( executable, null, 0 );
+		CachingUtil.setOnlyGet( executable, null, false );
+		CachingUtil.setKeyTemplate( executable, null, attributes.getDefaultCachingKeyTemplate() );
+		CachingUtil.getTags( executable, null, true ).clear();
 
 		try
 		{
@@ -434,7 +434,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			executable.execute( executionContext, this, attributes.getExecutionController() );
 
 			// Propagate cache tags up the stack
-			Set<String> cacheTags = CachingUtil.getCacheTags( executable, null, false );
+			Set<String> cacheTags = CachingUtil.getTags( executable, null, false );
 			if( ( cacheTags != null ) && !cacheTags.isEmpty() )
 				cacheTags = propagateCacheTags( cacheTags );
 
@@ -473,7 +473,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 
 				// Cache successful requests
 				if( ( expirationTimestamp > 0 ) && resource.getResponse().getStatus().isSuccess() )
-					cachingUtil.storeCacheEntry( encodedCacheEntry, cacheEntry, documentDescriptor, null, true, cacheTags, conversationService );
+					cachingUtil.store( encodedCacheEntry, cacheEntry, documentDescriptor, null, true, cacheTags, conversationService );
 
 				// Make sure we're including the entire buffer for the
 				// representation

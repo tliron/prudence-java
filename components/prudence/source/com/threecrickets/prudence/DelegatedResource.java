@@ -684,8 +684,7 @@ public class DelegatedResource extends ServerResource
 
 				// Cache successful requests
 				if( ( expirationTimestamp > 0 ) && response.getStatus().isSuccess() )
-					cachingUtil
-						.storeCacheEntry( encodedCacheEntry, cacheEntry, documentDescriptor, getDispatchedSuffix(), false, CachingUtil.getCacheTags( executable, getDispatchedSuffix(), false ), conversationService );
+					cachingUtil.store( encodedCacheEntry, cacheEntry, documentDescriptor, getDispatchedSuffix(), false, CachingUtil.getTags( executable, getDispatchedSuffix(), false ), conversationService );
 
 				cacheEntry = encodedCacheEntry;
 			}
@@ -863,10 +862,10 @@ public class DelegatedResource extends ServerResource
 			{
 				// Reset caching attributes
 				String suffix = getDispatchedSuffix();
-				CachingUtil.setCacheDuration( executable, suffix, 0 );
-				CachingUtil.setCacheOnlyGet( executable, suffix, true );
-				CachingUtil.setCacheKeyTemplate( executable, suffix, attributes.getDefaultCacheKeyTemplate() );
-				CachingUtil.getCacheTags( executable, suffix, true ).clear();
+				CachingUtil.setDuration( executable, suffix, 0 );
+				CachingUtil.setOnlyGet( executable, suffix, true );
+				CachingUtil.setKeyTemplate( executable, suffix, attributes.getDefaultCachingKeyTemplate() );
+				CachingUtil.getTags( executable, suffix, true ).clear();
 			}
 
 			// Enter!

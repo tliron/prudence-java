@@ -72,7 +72,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public Object getDuration()
 	{
-		return CachingUtil.getCacheDuration( documentService.getDescriptor().getDocument(), getSuffix() );
+		return CachingUtil.getDuration( documentService.getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**
@@ -82,7 +82,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public void setDuration( Object cacheDuration )
 	{
-		CachingUtil.setCacheDuration( documentService.getDescriptor().getDocument(), getSuffix(), CachingUtil.toMilliseconds( cacheDuration ) );
+		CachingUtil.setDuration( documentService.getDescriptor().getDocument(), getSuffix(), CachingUtil.toMilliseconds( cacheDuration ) );
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public boolean getOnlyGet()
 	{
-		return CachingUtil.getCacheOnlyGet( documentService.getDescriptor().getDocument(), getSuffix() );
+		return CachingUtil.getOnlyGet( documentService.getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**
@@ -102,7 +102,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public void setOnlyGet( boolean cacheOnlyGet )
 	{
-		CachingUtil.setCacheOnlyGet( documentService.getDescriptor().getDocument(), getSuffix(), cacheOnlyGet );
+		CachingUtil.setOnlyGet( documentService.getDescriptor().getDocument(), getSuffix(), cacheOnlyGet );
 	}
 
 	/**
@@ -123,7 +123,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public void setKeyTemplate( String cacheKeyTemplate )
 	{
-		CachingUtil.setCacheKeyTemplate( documentService.getDescriptor().getDocument(), getSuffix(), cacheKeyTemplate );
+		CachingUtil.setKeyTemplate( documentService.getDescriptor().getDocument(), getSuffix(), cacheKeyTemplate );
 	}
 
 	/**
@@ -133,7 +133,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public ConcurrentMap<String, String> getKeyTemplatePlugins()
 	{
-		return CachingUtil.getCacheKeyTemplatePlugins( documentService.getDescriptor().getDocument(), getSuffix(), true );
+		return CachingUtil.getKeyTemplatePlugins( documentService.getDescriptor().getDocument(), getSuffix(), true );
 	}
 
 	/**
@@ -141,7 +141,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public Set<String> getTags()
 	{
-		return CachingUtil.getCacheTags( documentService.getDescriptor().getDocument(), getSuffix(), true );
+		return CachingUtil.getTags( documentService.getDescriptor().getDocument(), getSuffix(), true );
 	}
 
 	/**

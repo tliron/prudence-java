@@ -108,6 +108,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 *
 	 * @property {Object} [settings.caching] Caching settings
 	 * @property {Boolean} [settings.caching.debug=false] When true, adds caching debug headers to responses
+	 * @property {String} [settings.caching.defaultKeyTemplate='{ri}|{dn}'] Allows you to change the default {@link caching#keyTemplate}
+	 * @property {Object} [settings.caching.keyTemplatePlugins] Allows you to configure application-wide {@link caching#keyTemplatePlugins}
 	 * 
 	 * @property {Object} [settings.compression] Compression settings
 	 * @property {Number|String} [settings.compression.sizeThreshold=1024] The size in bytes beyond which responses may be compressed
@@ -217,6 +219,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.code.defaultExtension = Sincerity.Objects.ensure(this.settings.code.defaultExtension, 'js')
 			this.settings.code.defaultLanguageTag = Sincerity.Objects.ensure(this.settings.code.defaultLanguageTag, 'javascript')
 			this.settings.code.sourceViewer = Sincerity.Objects.ensure(this.settings.code.sourceViewer, '/source-code/')
+			this.settings.caching.defaultKeyTemplate = Sincerity.Objects.ensure(this.settings.caching.defaultKeyTemplate, '{ri}|{dn}')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
 			this.settings.distributed.hazelcast.instance = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.instance, 'com.threecrickets.prudence')
 			this.settings.distributed.hazelcast.map = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.map, 'com.threecrickets.prudence.distributedGlobals')
@@ -429,15 +432,15 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.libraryDocumentSources.add(sincerityLibraryDocumentSource)
 			}
 			
-			// Cache key template plugins
-			this.cacheKeyTemplatePlugins = new ConcurrentHashMap()
-			if (Sincerity.Objects.exists(this.settings.code.cacheKeyTemplatePlugins) && !Sincerity.Objects.isEmpty(this.settings.code.cacheKeyTemplatePlugins)) {
+			// Caching key template plugins
+			this.cachingKeyTemplatePlugins = new ConcurrentHashMap()
+			if (Sincerity.Objects.exists(this.settings.caching.keyTemplatePlugins) && !Sincerity.Objects.isEmpty(this.settings.caching.keyTemplatePlugins)) {
 				if (sincerity.verbosity >= 2) {
-					println('  Cache key template plugins:')
+					println('  Caching key template plugins:')
 				}
-				for (var variable in this.settings.code.cacheKeyTemplatePlugins) {
-					var plugin = this.settings.code.cacheKeyTemplatePlugins[variable]
-					this.cacheKeyTemplatePlugins.put(variable, plugin)
+				for (var variable in this.settings.caching.keyTemplatePlugins) {
+					var plugin = this.settings.caching.keyTemplatePlugins[variable]
+					this.cachingKeyTemplatePlugins.put(variable, plugin)
 					if (sincerity.verbosity >= 2) {
 						println('    "{0}" -> "{1}"'.cast(variable, plugin))
 					}
@@ -984,7 +987,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					debug: app.settings.code.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
-					cacheKeyTemplatePlugins: app.cacheKeyTemplatePlugins
+					defaultCachingKeyTemplate: app.settings.caching.defaultKeyTemplate,
+					cachingKeyTemplatePlugins: app.cachingKeyTemplatePlugins
 				}
 
 				// Pass-throughs
@@ -1167,7 +1171,8 @@ Prudence.Routing = Prudence.Routing || function() {
 					scriptletPlugins: new ConcurrentHashMap(),
 					debug: app.settings.code.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
-					cacheKeyTemplatePlugins: app.cacheKeyTemplatePlugins
+					defaultCachingKeyTemplate: app.settings.caching.defaultKeyTemplate,
+					cachingKeyTemplatePlugins: app.cachingKeyTemplatePlugins
 				}
 
 				// Libraries

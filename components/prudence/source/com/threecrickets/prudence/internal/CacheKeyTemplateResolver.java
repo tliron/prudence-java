@@ -16,7 +16,7 @@ import org.restlet.Response;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Resolver;
 
-import com.threecrickets.prudence.DelegatedCacheKeyTemplatePlugin;
+import com.threecrickets.prudence.DelegatedCachingKeyTemplatePlugin;
 import com.threecrickets.prudence.service.ResourceConversationServiceBase;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
@@ -25,7 +25,7 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
  * Resolves a few special Prudence variables.
  * 
  * @author Tal Liron
- * @see DelegatedCacheKeyTemplatePlugin
+ * @see DelegatedCachingKeyTemplatePlugin
  */
 public class CacheKeyTemplateResolver<R extends ServerResource> extends Resolver<Object>
 {

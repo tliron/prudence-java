@@ -155,42 +155,44 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	}
 
 	/**
-	 * The default cache key template to use if the executable doesn't specify
+	 * The default caching key template to use if the executable doesn't specify
 	 * one. Defaults to "{ri}|{dn}".
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>defaultCacheKeyTemplate</code> in the application's {@link Context}.
+	 * <code>defaultCachingKeyTemplate</code> in the application's
+	 * {@link Context}.
 	 * 
-	 * @return The default cache key
+	 * @return The default caching key template
 	 */
-	public String getDefaultCacheKeyTemplate()
+	public String getDefaultCachingKeyTemplate()
 	{
-		if( defaultCacheKeyTemplate == null )
+		if( defaultCachingKeyTemplate == null )
 		{
-			defaultCacheKeyTemplate = (String) getAttributes().get( prefix + ".defaultCacheKeyTemplate" );
+			defaultCachingKeyTemplate = (String) getAttributes().get( prefix + ".defaultCachingKeyTemplate" );
 
-			if( defaultCacheKeyTemplate == null )
-				defaultCacheKeyTemplate = "{ri}|{dn}";
+			if( defaultCachingKeyTemplate == null )
+				defaultCachingKeyTemplate = "{ri}|{dn}";
 		}
 
-		return defaultCacheKeyTemplate;
+		return defaultCachingKeyTemplate;
 	}
 
 	/**
-	 * The cache key template plugins.
+	 * The caching key template plugins.
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>cacheKeyTemplatePlugins</code> in the application's {@link Context}.
+	 * <code>cachingKeyTemplatePlugins</code> in the application's
+	 * {@link Context}.
 	 * 
 	 * @return The cache key template plugins or null
 	 */
 	@SuppressWarnings("unchecked")
-	public ConcurrentMap<String, String> getCacheKeyTemplatePlugins()
+	public ConcurrentMap<String, String> getCachingKeyTemplatePlugins()
 	{
-		if( cacheKeyTemplatePlugins == null )
-			cacheKeyTemplatePlugins = (ConcurrentMap<String, String>) getAttributes().get( prefix + ".cacheKeyTemplatePlugins" );
+		if( cachingKeyTemplatePlugins == null )
+			cachingKeyTemplatePlugins = (ConcurrentMap<String, String>) getAttributes().get( prefix + ".cachingKeyTemplatePlugins" );
 
-		return cacheKeyTemplatePlugins;
+		return cachingKeyTemplatePlugins;
 	}
 
 	//
@@ -244,15 +246,15 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	private String cachingServiceName;
 
 	/**
-	 * The default cache key template to use if the executable doesn't specify
+	 * The default caching key template to use if the executable doesn't specify
 	 * one.
 	 */
-	private String defaultCacheKeyTemplate;
+	private String defaultCachingKeyTemplate;
 
 	/**
-	 * The cache key template plugins.
+	 * The caching key template plugins.
 	 */
-	private ConcurrentMap<String, String> cacheKeyTemplatePlugins;
+	private ConcurrentMap<String, String> cachingKeyTemplatePlugins;
 
 	/**
 	 * The attributes.
