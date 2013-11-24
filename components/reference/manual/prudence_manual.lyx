@@ -1029,7 +1029,7 @@ debug
  mode to false (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "settings-code"
+reference "settings-scriptlet"
 
 \end_inset
 
@@ -18840,11 +18840,6 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-		debug: true,
-\end_layout
-
-\begin_layout Plain Layout
-
 		libraries: ['libraries'],
 \end_layout
 
@@ -18876,6 +18871,21 @@ app.settings = {
 \begin_layout Plain Layout
 
 		sourceViewable: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	},
+\end_layout
+
+\begin_layout Plain Layout
+
+	scriptlet: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		debug: true
 \end_layout
 
 \begin_layout Plain Layout
@@ -19081,12 +19091,16 @@ name "settings-errors"
 
 \end_layout
 
+\begin_layout Standard
+Configure Prudence's error handling behavior here.
+\end_layout
+
 \begin_layout Itemize
 
 \series bold
 debug
 \series default
-: boolean value; when true enables various useful debugging features detailed
+: Boolean value; when true enables various useful debugging features detailed
  below; 
 \series bold
 should be set to false for production deployments
@@ -19218,15 +19232,6 @@ name "settings-code"
 
 \begin_layout Standard
 Here you can control how Prudence deals with your code:
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-debug
-\series default
-: boolean value; when true enables various useful debugging features detailed
- below
 \end_layout
 
 \begin_layout Itemize
@@ -19415,11 +19420,11 @@ javascript
 .
 \end_layout
 
-\begin_layout Subsubsection
-Scriptlet Debugging
+\begin_layout Subsection
+app.settings.scriptlet
 \begin_inset CommandInset label
 LatexCommand label
-name "settings-code-scriptlets"
+name "settings-scriptlet"
 
 \end_inset
 
@@ -19427,15 +19432,26 @@ name "settings-code-scriptlets"
 \end_layout
 
 \begin_layout Standard
-When 
-\begin_inset Quotes eld
+Configure 
+\bar under
+scriptlets (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
 \end_inset
 
+)
+\bar default
+ here.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
 debug
-\begin_inset Quotes erd
-\end_inset
-
- is true, under your container's 
+\series default
+: Boolean value; when true, under your container's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -19444,6 +19460,14 @@ debug
 \end_inset
 
  directory you will see the generated source code for each scriptlet resource.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+plugins
+\series default
+: Configure scriptlet plugins [TODO]
 \end_layout
 
 \begin_layout Subsection
@@ -19457,12 +19481,8 @@ name "settings-caching"
 
 \end_layout
 
-\begin_layout Itemize
-
-\series bold
-debug
-\series default
-: When true, special HTTP response headers will be added for 
+\begin_layout Standard
+Configure 
 \bar under
 caching (page 
 \begin_inset CommandInset ref
@@ -19473,7 +19493,16 @@ reference "caching"
 
 )
 \bar default
-:
+ here.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+debug
+\series default
+: Boolean value; when true, special HTTP response headers will be added
+ for cached resources:
 \end_layout
 
 \begin_deeper
@@ -19645,7 +19674,7 @@ reference "accepting-uploads"
 
 )
 \bar default
- here:
+ here.
 \end_layout
 
 \begin_layout Itemize

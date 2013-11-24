@@ -14,7 +14,6 @@ app.settings = {
 	},
 	
 	code: {
-		debug: true,
 		libraries: ['libraries'],
 		defrost: true,
 		minimumTimeBetweenValidityChecks: '1s',
@@ -24,6 +23,10 @@ app.settings = {
 		sourceViewable: true
 	},
 	
+	scriptlet: {
+		debug: true
+	},
+
 	caching: {
 		debug: true
 	},

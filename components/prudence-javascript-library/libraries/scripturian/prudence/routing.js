@@ -90,7 +90,6 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {String} [settings.errors.contactEmail] Shows this contact email on the default error page
 	 * 
 	 * @property {Object} [settings.code] Programming language settings
-	 * @property {Boolean} [settings.code.debug=false] When true, outputs the generated scriptlet code under "/cache/scripturian/"
 	 * @property {String[]} [settings.code.libraries='libraries'] A list of base paths from which {@link document#execute} (and also
 	 *                      the programming languages' internal import facilities) will look for libraries;
 	 *                      the <i>first</i> library in this list is special: it is used to look for handlers and tasks;
@@ -105,7 +104,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {Boolean} [settings.code.sourceViewable=false] When true enabled the source code viewing facility
 	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
 	 * @property {String} [settings.code.sourceViewer='/source-code/'] Only used when settings.code.sourceViewable=true
-	 *
+	 * 
+	 * @property {Object} [settings.scriptlet] Scriptlet settings
+	 * @property {Boolean} [settings.scriptlet.debug=false] When true, outputs the generated scriptlet code under "/cache/scripturian/"
+	 * @property {Object} [settings.scriptlet.plugins] Scriptlet plugins
+	 * 
 	 * @property {Object} [settings.caching] Caching settings
 	 * @property {Boolean} [settings.caching.debug=false] When true, adds caching debug headers to responses
 	 * @property {String} [settings.caching.defaultKeyTemplate='{ri}|{dn}'] Allows you to change the default {@link caching#keyTemplate}
@@ -129,8 +132,6 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {String} [settings.distributed.hazelcast.executor='default'] Hazelcast executor name
 	 * 
 	 * @property {String} [settings.logger=root.name]
-	 * 
-	 * @property {Object} [settings.scriptletPlugins]
 	 * 
 	 * @property {Object} [globals] These values will be available as {@link application#globals} when the application
 	 *                    is running; not that this dict will be flattened using {@link Sincerity.Objects#flatten}
@@ -205,11 +206,11 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
 			this.settings.code = Sincerity.Objects.ensure(this.settings.code, {})
+			this.settings.scriptlet = Sincerity.Objects.ensure(this.settings.scriptlet, {})
 			this.settings.caching = Sincerity.Objects.ensure(this.settings.caching, {})
 			this.settings.compression = Sincerity.Objects.ensure(this.settings.compression, {})
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
 			this.settings.mediaTypes = Sincerity.Objects.ensure(this.settings.mediaTypes, {})
-			this.settings.scriptletPlugins = Sincerity.Objects.ensure(this.settings.scriptletPlugins, {})
 			this.settings.distributed = Sincerity.Objects.ensure(this.settings.distributed, {})
 			this.settings.distributed.hazelcast = Sincerity.Objects.ensure(this.settings.distributed.hazelcast, {})
 			
@@ -226,9 +227,10 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.distributed.hazelcast.executor = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.executor, 'default')
 
 			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
-			this.settings.scriptletPlugins['{{'] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['{{'], prudenceScriptletPlugin)
-			this.settings.scriptletPlugins['}}'] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['}}'], prudenceScriptletPlugin)
-			this.settings.scriptletPlugins['=='] = Sincerity.Objects.ensure(this.settings.scriptletPlugins['=='], prudenceScriptletPlugin)
+			this.settings.scriptlet.plugins = Sincerity.Objects.ensure(this.settings.scriptlet.plugins, {})
+			this.settings.scriptlet.plugins['{{'] = Sincerity.Objects.ensure(this.settings.scriptlet.plugins['{{'], prudenceScriptletPlugin)
+			this.settings.scriptlet.plugins['}}'] = Sincerity.Objects.ensure(this.settings.scriptlet.plugins['}}'], prudenceScriptletPlugin)
+			this.settings.scriptlet.plugins['=='] = Sincerity.Objects.ensure(this.settings.scriptlet.plugins['=='], prudenceScriptletPlugin)
 
 			this.settings.compression.sizeThreshold = Sincerity.Objects.ensure(this.settings.compression.sizeThreshold, 1024)
 
@@ -380,8 +382,7 @@ Prudence.Routing = Prudence.Routing || function() {
 								languageManager: executable.manager,
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
-								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
-								debug: this.settings.code.debug ? true : false
+								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -399,8 +400,7 @@ Prudence.Routing = Prudence.Routing || function() {
 								languageManager: executable.manager,
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
-								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold,
-								debug: this.settings.code.debug ? true : false
+								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
 							}
 						}))
 						if (sincerity.verbosity >= 2) {
@@ -697,7 +697,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				com.threecrickets.scripturian.util.DefrostTask)
 				
 			if (true == this.settings.code.defrost) {
-				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.code.debug ? true : false)
+				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.scriptlet.debug ? true : false)
 				for (var t in tasks) {
 					executorTasks.push(tasks[t])
 				}
@@ -985,7 +985,6 @@ Prudence.Routing = Prudence.Routing || function() {
 					encodeSizeThreshold: app.settings.compression.sizeThreshold,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					debug: app.settings.code.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
 					defaultCachingKeyTemplate: app.settings.caching.defaultKeyTemplate,
 					cachingKeyTemplatePlugins: app.cachingKeyTemplatePlugins
@@ -1169,7 +1168,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
-					debug: app.settings.code.debug ? true : false,
+					debug: app.settings.scriptlet.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
 					defaultCachingKeyTemplate: app.settings.caching.defaultKeyTemplate,
 					cachingKeyTemplatePlugins: app.cachingKeyTemplatePlugins
@@ -1212,11 +1211,11 @@ Prudence.Routing = Prudence.Routing || function() {
 				}
 
 				// Scriptlet plugins
-				for (var code in app.settings.scriptletPlugins) {
+				for (var code in app.settings.scriptlet.plugins) {
 					if (sincerity.verbosity >= 2) {
-						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptletPlugins[code]))
+						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptlet.plugins[code]))
 					}
-					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptletPlugins[code])
+					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptlet.plugins[code])
 				}
 				
 				// Defrost
@@ -1286,8 +1285,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
-					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
-					debug: app.settings.code.debug ? true : false
+					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold
 				}
 
 				// Merge globals
