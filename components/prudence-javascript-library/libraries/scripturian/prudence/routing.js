@@ -126,10 +126,9 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @property {Object} [settings.mediaTypes] A dict matching filename extensions to media (MIME) types
 	 * 
 	 * @property {Object} [settings.distributed] Distributed settings
-	 * @property {Object} [settings.distributed.hazelcast] Hazelcast settings
-	 * @property {String} [settings.distributed.hazelcast.instance='com.threecrickets.prudence'] Hazelcast instance name
-	 * @property {String} [settings.distributed.hazelcast.map='com.threecrickets.prudence.distributedGlobals'] Hazelcast distributed globals map name
-	 * @property {String} [settings.distributed.hazelcast.executor='default'] Hazelcast executor name
+	 * @property {String} [settings.distributed.instance='com.threecrickets.prudence'] Hazelcast instance name
+	 * @property {String} [settings.distributed.map='com.threecrickets.prudence.distributedGlobals'] Hazelcast distributed globals map name
+	 * @property {String} [settings.distributed.executor='default'] Hazelcast executor name
 	 * 
 	 * @property {String} [settings.logger=root.name]
 	 * 
@@ -212,7 +211,6 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
 			this.settings.mediaTypes = Sincerity.Objects.ensure(this.settings.mediaTypes, {})
 			this.settings.distributed = Sincerity.Objects.ensure(this.settings.distributed, {})
-			this.settings.distributed.hazelcast = Sincerity.Objects.ensure(this.settings.distributed.hazelcast, {})
 			
 			// Sensible default settings
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Objects.ensure(this.settings.code.minimumTimeBetweenValidityChecks, 1000)
@@ -222,9 +220,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.code.sourceViewer = Sincerity.Objects.ensure(this.settings.code.sourceViewer, '/source-code/')
 			this.settings.caching.defaultKeyTemplate = Sincerity.Objects.ensure(this.settings.caching.defaultKeyTemplate, '{ri}|{dn}')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
-			this.settings.distributed.hazelcast.instance = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.instance, 'com.threecrickets.prudence')
-			this.settings.distributed.hazelcast.map = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.map, 'com.threecrickets.prudence.distributedGlobals')
-			this.settings.distributed.hazelcast.executor = Sincerity.Objects.ensure(this.settings.distributed.hazelcast.executor, 'default')
+			this.settings.distributed.instance = Sincerity.Objects.ensure(this.settings.distributed.instance, 'com.threecrickets.prudence')
+			this.settings.distributed.map = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedGlobals')
+			this.settings.distributed.executor = Sincerity.Objects.ensure(this.settings.distributed.executor, 'default')
 
 			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
 			this.settings.scriptlet.plugins = Sincerity.Objects.ensure(this.settings.scriptlet.plugins, {})
@@ -245,9 +243,9 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.compression.sizeThreshold = Sincerity.Localization.toBytes(this.settings.compression.sizeThreshold)
 
 			// Hazelcast
-			this.globals['com.threecrickets.prudence.hazelcastInstanceName'] = this.settings.distributed.hazelcast.instance
-			this.globals['com.threecrickets.prudence.hazelcastMapName'] = this.settings.distributed.hazelcast.map
-			this.globals['com.threecrickets.prudence.hazelcastExecutorName'] = this.settings.distributed.hazelcast.executor
+			this.globals['com.threecrickets.prudence.hazelcastInstanceName'] = this.settings.distributed.instance
+			this.globals['com.threecrickets.prudence.hazelcastMapName'] = this.settings.distributed.map
+			this.globals['com.threecrickets.prudence.hazelcastExecutorName'] = this.settings.distributed.executor
 
 			// Create instance
 			this.context = component.context.createChildContext()
@@ -321,6 +319,7 @@ Prudence.Routing = Prudence.Routing || function() {
 				println('  Status service:')
 			}
 			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? this.settings.code.sourceViewer : null)
+			this.instance.statusService.context = this.context.createChildContext()
 			this.instance.statusService.debugging = true == this.settings.errors.debug
 			if (Sincerity.Objects.exists(this.settings.errors.homeUrl)) {
 				if (sincerity.verbosity >= 2) {
@@ -484,12 +483,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 
 			// Errors
-			var exists = false
-			for (var code in this.errors) {
-				exists = true
-				break
-			}
-			if (exists) {
+			if (Sincerity.Objects.exists(this.errors) && !Sincerity.Objects.isEmpty(this.errors)) {
 				if (sincerity.verbosity >= 2) {
 					println('  Errors:')
 				}
@@ -1353,7 +1347,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	   		}*/
 				
 			var dispatcher = app.getDispatcher(this.dispatcher)
-	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.uri + '?{rq}', false)
+	   		var capture = new CapturingRedirector(app.context, 'riap://application' + dispatcher.uri + '?{rq}')
 			var injector = new Injector(app.context, capture)
 			injector.values.put('com.threecrickets.prudence.dispatcher.id', new Template(this.id))
 
@@ -1431,8 +1425,8 @@ Prudence.Routing = Prudence.Routing || function() {
 			}
 			
 	   		var capture = Sincerity.Objects.exists(this.application) ?
-	   			new CapturingRedirector(app.context, 'riap://component/' + this.application + this.uri + '?{rq}', false) :
-	   			new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}', false)
+	   			new CapturingRedirector(app.context, 'riap://component/' + this.application + this.uri + '?{rq}') :
+	   			new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}')
 
 			if (Sincerity.Objects.exists(this.locals)) {
 				var injector = new Injector(app.context, capture)

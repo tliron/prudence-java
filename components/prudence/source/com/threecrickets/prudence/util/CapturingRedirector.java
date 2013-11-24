@@ -82,12 +82,10 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The context
 	 * @param targetTemplate
 	 *        The target URI template
-	 * @param alwaysUseHostAsBase
-	 *        Whether to always set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetTemplate, boolean alwaysUseHostAsBase )
+	public CapturingRedirector( Context context, String targetTemplate )
 	{
-		this( context, targetTemplate, alwaysUseHostAsBase, MODE_SERVER_OUTBOUND );
+		this( context, targetTemplate, MODE_SERVER_OUTBOUND );
 	}
 
 	/**
@@ -99,14 +97,11 @@ public class CapturingRedirector extends ResolvingRedirector
 	 *        The target URI template
 	 * @param mode
 	 *        The redirection mode
-	 * @param useHostAsBase
-	 *        Whether to set the base reference to the host root URI
 	 */
-	public CapturingRedirector( Context context, String targetTemplate, boolean useHostAsBase, int mode )
+	public CapturingRedirector( Context context, String targetTemplate, int mode )
 	{
 		super( context, targetTemplate, mode, false );
 		describe();
-		this.useHostAsBase = useHostAsBase;
 	}
 
 	//
@@ -117,26 +112,13 @@ public class CapturingRedirector extends ResolvingRedirector
 	public void handle( Request request, Response response )
 	{
 		if( getCapturedReference( request ) == null )
-		{
-			Reference resourceRef = request.getResourceRef();
-
-			// TODO: are we still using this feature?
-			if( useHostAsBase )
-				resourceRef = new Reference( new Reference( resourceRef.getHostIdentifier() + "/" ), resourceRef );
-
-			setCapturedReference( request, resourceRef );
-		}
+			setCapturedReference( request, request.getResourceRef() );
 
 		super.handle( request, response );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
-
-	/**
-	 * Whether to set the base reference to the host root URI.
-	 */
-	private final boolean useHostAsBase;
 
 	/**
 	 * Add description.

@@ -9355,6 +9355,27 @@ was
  as static resources, at least for production deployments.
 \end_layout
 
+\begin_layout Standard
+It is also possible to set error captures for 
+\emph on
+all 
+\emph default
+applications by 
+\bar under
+configuring them into the component (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-status"
+
+\end_inset
+
+)
+\bar default
+.
+ In such a case, if applications configure their own error captures, those
+ would override the component-wide configuration.
+\end_layout
+
 \begin_layout Subsection
 app.hosts
 \begin_inset CommandInset label
@@ -19434,7 +19455,7 @@ name "settings-scriptlet"
 \begin_layout Standard
 Configure 
 \bar under
-scriptlets (page 
+scriptlet resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "scriptlet-resources"
@@ -19917,6 +19938,116 @@ php
 
  files you put in resources are usually expected to output HTML.
  You may change if you require a different behavior.
+\end_layout
+
+\begin_layout Subsection
+app.settings.distributed
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-distributed"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Configure 
+\bar under
+clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+ here.
+ These settings are for the usage of 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+instance
+\series default
+: The name of the Hazelcast instance.
+ Defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+map
+\series default
+: The name of the Hazelcast map used for the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedGlobals API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedGlobals"
+
+\end_inset
+
+.
+ Defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence.distributedGlobals
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+executor
+\series default
+: The name of the Hazelcast executor used for the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedExecuteTask"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedExecuteTask"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedCodeTask"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedCodeTask"
+
+\end_inset
+
+ APIs.
+ Defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -29253,6 +29384,13 @@ Configure the cron scheduler (cron4j)
 
 \begin_layout Subsubsection
 /component/services/prudence/status
+\begin_inset CommandInset label
+LatexCommand label
+name "component-status"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

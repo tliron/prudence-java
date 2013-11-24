@@ -168,7 +168,7 @@ public class DelegatedFilter extends Filter
 				{
 					// Capture!
 					String reference = "riap://application" + action + "?{rq}";
-					Redirector redirector = new CapturingRedirector( delegatedHandler.getAttributes().getContext(), reference, false );
+					Redirector redirector = new CapturingRedirector( delegatedHandler.getAttributes().getContext(), reference );
 					redirector.handle( request, response );
 					return STOP;
 				}

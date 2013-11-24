@@ -62,7 +62,7 @@ public class CapturingRouter extends ResolvingRouter
 		String targetUriTemplate = "riap://application" + internalUriTemplate;
 		if( captureQuery )
 			targetUriTemplate += "?{rq}";
-		TemplateRoute route = attach( uriTemplate, new CapturingRedirector( getContext(), targetUriTemplate, false ) );
+		TemplateRoute route = attach( uriTemplate, new CapturingRedirector( getContext(), targetUriTemplate ) );
 		route.setMatchingMode( Template.MODE_EQUALS );
 		return route;
 	}
@@ -94,7 +94,7 @@ public class CapturingRouter extends ResolvingRouter
 		String targetUriTemplate = "riap://component/" + application + internalUriTemplate;
 		if( captureQuery )
 			targetUriTemplate += "?{rq}";
-		TemplateRoute route = attach( uriTemplate, new CapturingRedirector( getContext(), targetUriTemplate, false ) );
+		TemplateRoute route = attach( uriTemplate, new CapturingRedirector( getContext(), targetUriTemplate ) );
 		route.setMatchingMode( Template.MODE_EQUALS );
 		return route;
 	}

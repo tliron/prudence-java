@@ -75,15 +75,15 @@ public class DelegatedStatusService extends StatusService
 	//
 
 	/**
-	 * A map of error statuses to target restlets. If no handler is mapped for a
+	 * A map of status codes to target restlets. If no handler is mapped for a
 	 * status, the default handling will kick in. (Modifiable by concurrent
 	 * threads.)
 	 * 
 	 * @return The error handlers
 	 */
-	public ConcurrentMap<Integer, Restlet> getErrorHandlers()
+	public ConcurrentMap<Integer, Restlet> getHandlers()
 	{
-		return errorHandlers;
+		return handlers;
 	}
 
 	/**
@@ -109,12 +109,35 @@ public class DelegatedStatusService extends StatusService
 		this.isDebugging = isDebugging;
 	}
 
+	/**
+	 * Whether we are a fallback status service.
+	 * 
+	 * @return True if we are a fallback status service
+	 * @see #setFallback(boolean)
+	 */
+	public boolean isFallback()
+	{
+		return isFallback;
+	}
+
+	/**
+	 * Whether we are a fallback status service.
+	 * 
+	 * @param isFallback
+	 *        True if we are a fallback status service
+	 * @see #isFallback()
+	 */
+	public void setFallback( boolean isFallback )
+	{
+		this.isFallback = isFallback;
+	}
+
 	//
 	// Operations
 	//
 
 	/**
-	 * Sets the handler for an error status.
+	 * Sets the handler for a status code.
 	 * 
 	 * @param statusCode
 	 *        The status code
@@ -123,11 +146,11 @@ public class DelegatedStatusService extends StatusService
 	 */
 	public void setHandler( int statusCode, Restlet errorHandler )
 	{
-		errorHandlers.put( statusCode, errorHandler );
+		handlers.put( statusCode, errorHandler );
 	}
 
 	/**
-	 * Captures (internally redirects) an error status to a URI within an
+	 * Captures (internally redirects) a status code to a URI within an
 	 * application. You can use template variables in the URI.
 	 * <p>
 	 * This is handled via a {@link CapturingRedirector} with mode
@@ -147,43 +170,18 @@ public class DelegatedStatusService extends StatusService
 		if( !internalUriTemplate.startsWith( "/" ) )
 			internalUriTemplate = "/" + internalUriTemplate;
 		String targetUriTemplate = "riap://component/" + application + internalUriTemplate;
-		setHandler( statusCode, new CapturingRedirector( context.createChildContext(), targetUriTemplate, false ) );
+		setHandler( statusCode, new CapturingRedirector( context.createChildContext(), targetUriTemplate ) );
 	}
 
 	/**
-	 * Captures (internally redirects) an error status to a URI within an
-	 * application, with the resource reference's base URI being set the host
-	 * root. You can use template variables in the URI.
-	 * <p>
-	 * This is handled via a {@link CapturingRedirector} with mode
-	 * {@link Redirector#MODE_SERVER_OUTBOUND}.
-	 * 
-	 * @param statusCode
-	 *        The status code
-	 * @param application
-	 *        The internal application name
-	 * @param internalUriTemplate
-	 *        The internal URI template to which we will redirect
-	 * @param context
-	 *        The context
-	 */
-	public void captureHostRoot( int statusCode, String application, String internalUriTemplate, Context context )
-	{
-		if( !internalUriTemplate.startsWith( "/" ) )
-			internalUriTemplate = "/" + internalUriTemplate;
-		String targetUriTemplate = "riap://component/" + application + internalUriTemplate;
-		setHandler( statusCode, new CapturingRedirector( context.createChildContext(), targetUriTemplate, true ) );
-	}
-
-	/**
-	 * Removes the handler for an error status.
+	 * Removes the handler for a status code.
 	 * 
 	 * @param status
 	 *        The status code
 	 */
 	public void removeHandler( int status )
 	{
-		errorHandlers.remove( status );
+		handlers.remove( status );
 	}
 
 	//
@@ -199,14 +197,11 @@ public class DelegatedStatusService extends StatusService
 
 			Object passthrough = attributes.get( PASSTHROUGH_ATTRIBUTE );
 			if( ( passthrough != null ) && (Boolean) passthrough )
-			{
 				// Pass through
 				return response.getEntity();
-			}
 
-			Restlet errorHandler = errorHandlers.get( status.getCode() );
-
-			if( errorHandler != null )
+			Restlet handler = handlers.get( status.getCode() );
+			if( handler != null )
 			{
 				// Reset the response
 				response.setStatus( Status.SUCCESS_OK );
@@ -216,7 +211,7 @@ public class DelegatedStatusService extends StatusService
 				CachingUtil.clearExistingValidDocumentName( request );
 
 				// Delegate
-				errorHandler.handle( request, response );
+				handler.handle( request, response );
 
 				// Return the status
 				response.setStatus( status );
@@ -236,6 +231,10 @@ public class DelegatedStatusService extends StatusService
 				return representation;
 			}
 
+			if( isFallback )
+				// Fallbacks don't override the entity if there are no handlers
+				return response.getEntity();
+
 			if( isDebugging() && ( status.getThrowable() != null ) )
 			{
 				// Use the debug representation for exceptions
@@ -251,9 +250,9 @@ public class DelegatedStatusService extends StatusService
 	// Private
 
 	/**
-	 * Our map of status codes to error handlers.
+	 * Our map of status codes to handlers.
 	 */
-	private final ConcurrentMap<Integer, Restlet> errorHandlers = new ConcurrentHashMap<Integer, Restlet>();
+	private final ConcurrentMap<Integer, Restlet> handlers = new ConcurrentHashMap<Integer, Restlet>();
 
 	/**
 	 * The source code URIor null.
@@ -264,4 +263,9 @@ public class DelegatedStatusService extends StatusService
 	 * Whether we are debugging.
 	 */
 	private volatile boolean isDebugging;
+
+	/**
+	 * Whether we are a fallback status service.
+	 */
+	private volatile boolean isFallback;
 }
