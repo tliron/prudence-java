@@ -12,6 +12,7 @@
 package com.threecrickets.prudence.internal;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import org.restlet.resource.ServerResource;
 import org.restlet.routing.Template;
 import org.restlet.util.Series;
 
-import com.threecrickets.prudence.DelegatedCacheKeyTemplateHandler;
+import com.threecrickets.prudence.DelegatedCacheKeyTemplatePlugin;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.cache.Cache;
@@ -261,7 +262,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	/**
-	 * The cache key template handlers.
+	 * The cache key template plugins.
 	 * 
 	 * @param executable
 	 *        The executable
@@ -269,11 +270,11 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The optional attribute suffix
 	 * @param create
 	 *        Whether to create a handler map if it doesn't exist
-	 * @return The handler map or null
+	 * @return The plugin map or null
 	 */
-	public static ConcurrentMap<String, String> getCacheKeyTemplateHandlers( Executable executable, String suffix, boolean create )
+	public static ConcurrentMap<String, String> getCacheKeyTemplatePlugins( Executable executable, String suffix, boolean create )
 	{
-		String key = suffix == null ? CACHE_KEY_TEMPLATE_HANDLERS_ATTRIBUTE : CACHE_KEY_TEMPLATE_HANDLERS_ATTRIBUTE + suffix;
+		String key = suffix == null ? CACHE_KEY_TEMPLATE_PLUGINS_ATTRIBUTE : CACHE_KEY_TEMPLATE_PLUGINS_ATTRIBUTE + suffix;
 		@SuppressWarnings("unchecked")
 		ConcurrentMap<String, String> handlers = (ConcurrentMap<String, String>) executable.getAttributes().get( key );
 		if( handlers == null && create )
@@ -670,63 +671,63 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	}
 
 	/**
-	 * Calls all installed cache key template handlers for the cache key
+	 * Calls all installed cache key template plugins for the cache key
 	 * template.
 	 * 
 	 * @param template
-	 *        The cache key template template
+	 *        The cache key template
 	 * @param executable
 	 *        The executable
 	 * @param suffix
 	 *        The optional attribute suffix
 	 */
-	public void callCacheKeyTemplateHandlers( Template template, Executable executable, String suffix )
+	public void callCacheKeyTemplatePlugins( Template template, Executable executable, String suffix )
 	{
-		Map<String, String> resourceCacheKeyTemplateHandlers = attributes.getCacheKeyTemplateHandlers();
-		Map<String, String> documentCacheKeyTemplateHandlers = getCacheKeyTemplateHandlers( executable, suffix, false );
+		Map<String, String> resourceCacheKeyTemplatePlugins = attributes.getCacheKeyTemplatePlugins();
+		Map<String, String> documentCacheKeyTemplatePlugins = getCacheKeyTemplatePlugins( executable, suffix, false );
 
-		// Make sure we have handlers
-		if( ( ( resourceCacheKeyTemplateHandlers == null ) || resourceCacheKeyTemplateHandlers.isEmpty() ) && ( ( documentCacheKeyTemplateHandlers == null ) || documentCacheKeyTemplateHandlers.isEmpty() ) )
+		// Make sure we have plugins
+		if( ( ( resourceCacheKeyTemplatePlugins == null ) || resourceCacheKeyTemplatePlugins.isEmpty() ) && ( ( documentCacheKeyTemplatePlugins == null ) || documentCacheKeyTemplatePlugins.isEmpty() ) )
 			return;
 
-		// Merge all handlers
-		Map<String, String> cacheKeyTemplateHandlers = new HashMap<String, String>();
-		if( resourceCacheKeyTemplateHandlers != null )
-			cacheKeyTemplateHandlers.putAll( resourceCacheKeyTemplateHandlers );
-		if( documentCacheKeyTemplateHandlers != null )
-			cacheKeyTemplateHandlers.putAll( documentCacheKeyTemplateHandlers );
+		// Merge all plugins
+		Map<String, String> cacheKeyTemplatePlugins = new HashMap<String, String>();
+		if( resourceCacheKeyTemplatePlugins != null )
+			cacheKeyTemplatePlugins.putAll( resourceCacheKeyTemplatePlugins );
+		if( documentCacheKeyTemplatePlugins != null )
+			cacheKeyTemplatePlugins.putAll( documentCacheKeyTemplatePlugins );
 
-		// Group variables together per handler
-		Map<String, Set<String>> delegatedHandlers = new HashMap<String, Set<String>>();
+		// Group variables together per plugin
+		Map<String, Set<String>> plugins = new HashMap<String, Set<String>>();
 		List<String> variableNames = template.getVariableNames();
-		for( Map.Entry<String, String> entry : cacheKeyTemplateHandlers.entrySet() )
+		for( Map.Entry<String, String> entry : cacheKeyTemplatePlugins.entrySet() )
 		{
 			String name = entry.getKey();
 			String documentName = entry.getValue();
 
 			if( variableNames.contains( name ) )
 			{
-				Set<String> variables = delegatedHandlers.get( documentName );
+				Set<String> variables = plugins.get( documentName );
 				if( variables == null )
 				{
 					variables = new HashSet<String>();
-					delegatedHandlers.put( documentName, variables );
+					plugins.put( documentName, variables );
 				}
 
 				variables.add( name );
 			}
 		}
 
-		// Call handlers
-		if( !delegatedHandlers.isEmpty() )
+		// Call plugins
+		if( !plugins.isEmpty() )
 		{
-			for( Map.Entry<String, Set<String>> entry : delegatedHandlers.entrySet() )
+			for( Map.Entry<String, Set<String>> entry : plugins.entrySet() )
 			{
 				String documentName = entry.getKey();
 				String[] variableNamesArray = entry.getValue().toArray( new String[] {} );
 
-				DelegatedCacheKeyTemplateHandler delegatedHandler = new DelegatedCacheKeyTemplateHandler( documentName, resource.getContext() );
-				delegatedHandler.handleCacheKeyTemplate( variableNamesArray );
+				DelegatedCacheKeyTemplatePlugin plugin = new DelegatedCacheKeyTemplatePlugin( documentName, resource.getContext() );
+				plugin.handleInterpolation( variableNamesArray );
 			}
 		}
 	}
@@ -766,8 +767,8 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		Template template = new Template( cacheKeyTemplate );
 		CacheKeyTemplateResolver<R> resolver = new CacheKeyTemplateResolver<R>( documentDescriptor, resource, conversationService, request, response );
 
-		// Cache key template handlers
-		callCacheKeyTemplateHandlers( template, executable, suffix );
+		// Cache key template plugins
+		callCacheKeyTemplatePlugins( template, executable, suffix );
 
 		// Temporarily use captive reference as the resource reference
 		Reference captiveReference = CapturingRedirector.getCapturedReference( request );
@@ -777,11 +778,22 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 
 		try
 		{
+			StringWriter key = new StringWriter();
+
 			// Cast it
-			String key = template.format( resolver );
+			key.append( template.format( resolver ) );
+
+			// Append negotiated attributes
+			key.append( '|' );
 			String mediaType = conversationService.getMediaTypeName();
-			key += mediaType != null ? '|' + mediaType : '|';
-			return key;
+			if( mediaType != null )
+				key.append( mediaType );
+			key.append( '|' );
+			String language = conversationService.getLanguageName();
+			if( language != null )
+				key.append( language );
+
+			return key.toString();
 		}
 		finally
 		{
@@ -931,9 +943,9 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	private static final String CACHE_KEY_TEMPLATE_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyTemplate";
 
 	/**
-	 * Cache key template handlers attribute for an {@link Executable}.
+	 * Cache key template plugins attribute for an {@link Executable}.
 	 */
-	private static final String CACHE_KEY_TEMPLATE_HANDLERS_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyTemplateHandlers";
+	private static final String CACHE_KEY_TEMPLATE_PLUGINS_ATTRIBUTE = CachingUtil.class.getCanonicalName() + ".cacheKeyTemplatePlugins";
 
 	/**
 	 * Cache tags attribute for an {@link Executable}.

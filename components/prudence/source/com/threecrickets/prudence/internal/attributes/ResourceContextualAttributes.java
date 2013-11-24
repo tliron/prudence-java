@@ -177,21 +177,20 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	}
 
 	/**
-	 * The cache key template handlers.
+	 * The cache key template plugins.
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>cacheKeyTemplateHandlers</code> in the application's
-	 * {@link Context}.
+	 * <code>cacheKeyTemplatePlugins</code> in the application's {@link Context}.
 	 * 
-	 * @return The cache key template handlers or null
+	 * @return The cache key template plugins or null
 	 */
 	@SuppressWarnings("unchecked")
-	public ConcurrentMap<String, String> getCacheKeyTemplateHandlers()
+	public ConcurrentMap<String, String> getCacheKeyTemplatePlugins()
 	{
-		if( cacheKeyTemplateHandlers == null )
-			cacheKeyTemplateHandlers = (ConcurrentMap<String, String>) getAttributes().get( prefix + ".cacheKeyTemplateHandlers" );
+		if( cacheKeyTemplatePlugins == null )
+			cacheKeyTemplatePlugins = (ConcurrentMap<String, String>) getAttributes().get( prefix + ".cacheKeyTemplatePlugins" );
 
-		return cacheKeyTemplateHandlers;
+		return cacheKeyTemplatePlugins;
 	}
 
 	//
@@ -251,9 +250,9 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	private String defaultCacheKeyTemplate;
 
 	/**
-	 * The cache key template handlers.
+	 * The cache key template plugins.
 	 */
-	private ConcurrentMap<String, String> cacheKeyTemplateHandlers;
+	private ConcurrentMap<String, String> cacheKeyTemplatePlugins;
 
 	/**
 	 * The attributes.

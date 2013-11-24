@@ -7954,6 +7954,13 @@ app.routes = {
 
 \begin_layout Subsubsection
 Dynamic Capturing
+\begin_inset CommandInset label
+LatexCommand label
+name "dynamic-capturing"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -17109,7 +17116,7 @@ name "server-side-caching"
 \end_layout
 
 \begin_layout Standard
-Four of the caching APIs are all in the 
+Five of the caching APIs are all in the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17162,7 +17169,7 @@ reference "numeric-shortcuts"
 
  is 90000 milliseconds.
  Note, though, they when you read the value, it will always be numeric (a
- long data type).
+ long integer data type).
 \end_layout
 
 \begin_layout Standard
@@ -17217,12 +17224,12 @@ sed version.
 \end_layout
 
 \begin_layout Paragraph
-A Little Bit Goes a Long Way
+A Little Bit of Caching Goes a Long Way
 \end_layout
 
 \begin_layout Standard
-Remarkably, even a very small cache duration of just a few seconds can help
- you a lot.
+Remarkably, even a very small cache duration of just a second or two can
+ be immensely beneficial.
  It will ensure that if you're bombarded with a sudden upsurge of user requests
  to the resource, your application won't collapse.
  The cost is often very much worth it: having the 
@@ -17237,7 +17244,20 @@ freshness
 \end_layout
 
 \begin_layout Paragraph
-Caching Forever
+It's Not Always Worth It
+\end_layout
+
+\begin_layout Standard
+It's important to remember that caching is not always faster than fully
+ generating the page.
+ Caching backends are generally very fast, but they still introduce overhead.
+ So, just like in any scenario, avoid premature optimization and benchmark
+ your resources to be sure that caching would indeed improve your performance
+ and scalability.
+\end_layout
+
+\begin_layout Paragraph
+Caching Forever?
 \end_layout
 
 \begin_layout Standard
@@ -17245,6 +17265,7 @@ You might think that your invalidation scheme is so perfect that there's
  no reason to ever have your cache entries expire.
  Well, think again: without a clear expiration time, your cache would continue
  growing forever.
+ Finite durations thus allow for a way for the cache to recycle.
 \end_layout
 
 \begin_layout Subsubsection
@@ -17283,11 +17304,601 @@ Note that tags are associated with
 \emph on
 all
 \emph default
- cache entries based on the resource, whatever their cache key.
+ cache entries based on the resource, whatever their final cache key.
 \end_layout
 
 \begin_layout Subsubsection
 caching.keyTemplate
+\end_layout
+
+\begin_layout Standard
+The cache key template is a string with variables delimited in curly brackets
+ that is cast into a cache key per request.
+ The variables are elaborated in the chapter on 
+\bar under
+string interpolation (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "string-interpolation"
+
+\end_inset
+
+)
+\bar default
+, and are essentially the same as those used for URI templates.
+ However, Prudence also lets you install plugins (see below) to support
+ your own specialized template variables.
+ You can debug the cache key template by using the 
+\bar under
+caching debug headers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-caching"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Prudence's default cache key template is sensible enough for most scenarios:
+ 
+\begin_inset Quotes eld
+\end_inset
+
+{ri}|{dn}
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+ri
+\begin_inset Quotes erd
+\end_inset
+
+ variable is cast to the entire client URI, while 
+\begin_inset Quotes eld
+\end_inset
+
+dn
+\begin_inset Quotes erd
+\end_inset
+
+ is the document (file) name.
+ (It's a convention in Prudence, but not a requirement, to use 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ as a separator of cache key elements.) The addition of 
+\begin_inset Quotes eld
+\end_inset
+
+dn
+\begin_inset Quotes erd
+\end_inset
+
+ makes sure that 
+\bar under
+dynamic captures (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "dynamic-capturing"
+
+\end_inset
+
+)
+\bar default
+ and other server-side redirections would still be cached uniquely: the
+ same URI might reach a different document depending on various request
+ attributes other than just the URI (media type, cookies, etc.).
+\end_layout
+
+\begin_layout Standard
+However, for any non-trivial application will want to modify the cache key
+ template.
+ Here are some common reasons:
+\end_layout
+
+\begin_layout Paragraph
+Per-User Caching
+\end_layout
+
+\begin_layout Standard
+A common scenario is for a resource to be generated different accordingly
+ to the logged-in user.
+ You would thus want to include a user identifier in the cache key.
+ To do this, you would likely need to write a plugin (see below) to interpolate
+ that identifier.
+ You cache key template could then look something like 
+\begin_inset Quotes eld
+\end_inset
+
+{ri}|{uid}
+\begin_inset Quotes erd
+\end_inset
+
+, where 
+\begin_inset Quotes eld
+\end_inset
+
+uid
+\begin_inset Quotes erd
+\end_inset
+
+ is handled by your plugin.
+\end_layout
+
+\begin_layout Paragraph
+Caching Fragments
+\end_layout
+
+\begin_layout Standard
+You might be including the same fragment in many pages, but the fragment
+ in fact will be mostly identical.
+ In this case, you can optimize by using a broader cache key, such that
+ the fragment would be cached only once for all inclusions.
+ You would thus 
+\emph on
+not
+\emph default
+ want to use 
+\begin_inset Quotes eld
+\end_inset
+
+ri
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A simple example would be 
+\begin_inset Quotes eld
+\end_inset
+
+{dn}
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This can also be used in conjunction with per-user caching: for example,
+ if you want to cache the same fragment per-user, it would be 
+\begin_inset Quotes eld
+\end_inset
+
+{dn}|{uid}
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Generally, creating the best key template involves a delicate balance between
+ on the one hand making sure that differing data is indeed cached separately,
+ while on the other hand making sure that you're not caching the same data
+ more than once.
+\end_layout
+
+\begin_layout Subsubsection
+caching.keyTemplatePlugins
+\begin_inset CommandInset label
+LatexCommand label
+name "caching-key-template-plugins"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This powerful feature allows you to interpolate your own custom values into
+ cache keys.
+ While this does mean that 
+\emph on
+some
+\emph default
+ code will be run for every request, even for cache hits, it gives you the
+ opportunity to write efficient, fast code that is used only for hadling
+ caching.
+\end_layout
+
+\begin_layout Standard
+A common scenario requiring a key template plugin is to interpolate a user
+ ID.
+ We'd install it like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+caching.keyTemplatePlugins.put('uid', '/plugins/session/')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above means that existence of a 
+\begin_inset Quotes eld
+\end_inset
+
+uid
+\begin_inset Quotes erd
+\end_inset
+
+ variable in a key template would trigger the invocation of the 
+\begin_inset Quotes eld
+\end_inset
+
+/plugins/session/
+\begin_inset Quotes erd
+\end_inset
+
+ library to handle it.
+\end_layout
+
+\begin_layout Standard
+Actually, Prudence also allows you to install key template plugins by configurin
+g them in your application's settings.js.
+ In that case, the plugin would be installed for 
+\emph on
+all 
+\emph default
+resources:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	code: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		cacheKeyTemplatePlugins: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			uid: '/plugins/session/'
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The implementation of the plugin, however, would be the same however we
+ install it.
+ Our plugin would be in 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/plugins/session.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/objects/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleInterpolation(conversation, variables) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (var v in variables) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var variable = variables[v]
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (variable == 'uid') {
+\end_layout
+
+\begin_layout Plain Layout
+
+			var sessionCookie = conversation.getCookie('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+			if (Sincerity.Objects.exists(sessionCookie)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+				var session = getSession(sessionCookie.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+				if (Sincerity.Objects.exists(session)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+					conversation.locals.put('uid', session.getUserId())
+\end_layout
+
+\begin_layout Plain Layout
+
+				}
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function getSession(sessionId) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	return session
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Implementation notes:
+\end_layout
+
+\begin_layout Itemize
+The entry point is 
+\begin_inset Quotes eld
+\end_inset
+
+handleInterpolation
+\begin_inset Quotes erd
+\end_inset
+
+, and accepts as arguments the current conversation as well as an array
+ of the variables to interpolate.
+ Prudence makes sure to optimize these call by gathering into the array
+ only those variables actually used in the key template.
+ Of course, it would not call your plugin at all if the variables are not
+ present.
+ Also, no cache key casting would be done at all if caching.duration is zero.
+ (This makes it very safe to install the plugin for all resources in setting.js,
+ knowing that it would never be called unless necessary.)
+\end_layout
+
+\begin_layout Itemize
+In this implementation, we're assuming that a cookie named 
+\begin_inset Quotes eld
+\end_inset
+
+session
+\begin_inset Quotes erd
+\end_inset
+
+ is sent with the session ID.
+ We would then have some functionality in getSession to retrieve a session
+ object.
+\end_layout
+
+\begin_layout Itemize
+The interpolation 
+\begin_inset Quotes eld
+\end_inset
+
+trick
+\begin_inset Quotes erd
+\end_inset
+
+ is to set up our variable as a conversation.local.
+ Because conversation.locals are 
+\bar under
+interpolated as is (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "interpolation-conversation-locals"
+
+\end_inset
+
+)
+\bar default
+, we've effectively allowed the cache key template to be correctly cast.
+\end_layout
+
+\begin_layout Paragraph
+An Optimization
+\end_layout
+
+\begin_layout Standard
+In the above example, we are retrieving the session in order to discover
+ the user ID, an operation that could potentially be costly.
+ Consider that if we have a cache miss, then the session might be retrieved
+ 
+\emph on
+again
+\emph default
+ in the implementation of the resource.
+\end_layout
+
+\begin_layout Standard
+It's easy to optimize for this situation by storing the session as a conversatio
+n.local, such that it would be available in the resource implementation.
+ We'd modify our above plugin code like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if (Sincerity.Objects.exists(session)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.locals.put('session', session)
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.locals.put('uid', session.getUserId())
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then, in our resource implementation, would could check to see if this value
+ is present:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var session = conversation.locals.get('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+if (!Sincerity.Objects.exists(session)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var sessionCookie = conversation.cookies.get('session')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (Sincerity.Objects.exists(sessionCookie)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		session = getSession(sessionCookie.value)
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -17297,7 +17908,11 @@ caching.key
 \begin_layout Standard
 This is a read-only value, meant purely for debugging purposes.
  By logging or otherwise displaying it, you can see the cache key that Prudence
- would use for the current resource.
+ 
+\emph on
+would
+\emph default
+ use for the current resource.
  
 \emph on
 Would
@@ -17307,7 +17922,7 @@ Would
 \end_layout
 
 \begin_layout Standard
-Another way to debug the cache key is to enable the 
+Another way to see the cache key is to enable the 
 \bar under
 caching debug headers (page 
 \begin_inset CommandInset ref
@@ -17342,6 +17957,18 @@ application.cache.invalidate('blog')
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/Cache.html"
+
+\end_inset
+
+ for more details.
 \end_layout
 
 \begin_layout Subsection
@@ -17482,6 +18109,18 @@ not
  This allows you to save bandwidth and improves client performance, but
  at the expense of not being able to update the client upon changes.
  Use with care.
+\end_layout
+
+\begin_layout Subsection
+Caching Backends
+\end_layout
+
+\begin_layout Subsubsection
+Tiered Caching
+\end_layout
+
+\begin_layout Subsubsection
+Custom Backends
 \end_layout
 
 \begin_layout Subsection
@@ -23105,6 +23744,13 @@ Additionally, all the entity attributes can be used in uppercase to correspond
 
 \begin_layout Subsection
 conversation.locals
+\begin_inset CommandInset label
+LatexCommand label
+name "interpolation-conversation-locals"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

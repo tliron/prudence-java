@@ -695,13 +695,13 @@ var Prudence = {}
 
 /**
  * The cache key template is used to generate the cache key for the current document
- * by injecting attributes based on the current conversation. See {@link caching#key} to
+ * by interpolating attributes based on the current conversation. See {@link caching#key} to
  * see the actually generate cache key. Defaults to "{ri}|{dn}".
  * <p>
- * See <a href="http://threecrickets.com/prudence/manual/uri-space/#injecting-conversation-attributes">the Prudence Manual</a>
- * for a list of possible injected attributes.
+ * See <a href="http://threecrickets.com/prudence/manual/interpolation/">the Prudence Manual</a>
+ * for a complete list of possible interpolated attributes.
  * <p>
- * You can additionally inject your own special values via {@link caching#keyTemplateHandlers}.
+ * You can additionally inject your own special values via {@link caching#keyTemplatePlugins}.
  * <p>
  * This value has no effect if {@link caching#duration} is zero.
  * <p>
@@ -736,12 +736,12 @@ var Prudence = {}
  */
 
 /**
- * Cache key template handlers let you inject your own attributes into
+ * Cache key template plugins let you interpolate your own variables into
  * the {@link caching#keyTemplate}.
  * <p>
  * <i>Availability: only available for scriptlet resources.</i>
  * 
- * @name caching.keyTemplateHandlers
+ * @name caching.keyTemplatePlugins
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, String&gt;
  */
 

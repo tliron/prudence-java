@@ -127,13 +127,13 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	}
 
 	/**
-	 * The cache key template handlers.
+	 * The cache key template plugins.
 	 * 
-	 * @return The cache key template handlers
+	 * @return The cache key template plugins
 	 */
-	public ConcurrentMap<String, String> getKeyTemplateHandlers()
+	public ConcurrentMap<String, String> getKeyTemplatePlugins()
 	{
-		return CachingUtil.getCacheKeyTemplateHandlers( documentService.getDescriptor().getDocument(), getSuffix(), true );
+		return CachingUtil.getCacheKeyTemplatePlugins( documentService.getDescriptor().getDocument(), getSuffix(), true );
 	}
 
 	/**

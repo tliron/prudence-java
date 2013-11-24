@@ -429,6 +429,21 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.libraryDocumentSources.add(sincerityLibraryDocumentSource)
 			}
 			
+			// Cache key template plugins
+			this.cacheKeyTemplatePlugins = new ConcurrentHashMap()
+			if (Sincerity.Objects.exists(this.settings.code.cacheKeyTemplatePlugins) && !Sincerity.Objects.isEmpty(this.settings.code.cacheKeyTemplatePlugins)) {
+				if (sincerity.verbosity >= 2) {
+					println('  Cache key template plugins:')
+				}
+				for (var variable in this.settings.code.cacheKeyTemplatePlugins) {
+					var plugin = this.settings.code.cacheKeyTemplatePlugins[variable]
+					this.cacheKeyTemplatePlugins.put(variable, plugin)
+					if (sincerity.verbosity >= 2) {
+						println('    "{0}" -> "{1}"'.cast(variable, plugin))
+					}
+				}
+			}
+
 			if (sincerity.verbosity >= 2) {
 				println('  Routes:')
 			}
@@ -439,10 +454,6 @@ Prudence.Routing = Prudence.Routing || function() {
 				this.globals['com.threecrickets.prudence.SourceCodeResource.documentSources'] = this.sourceViewableDocumentSources
 			}
 			
-			// Cache key template handlers
-			this.cacheKeyTemplateHandlers = new ConcurrentHashMap()
-			// TODO: configure
-
 			this.hidden = []
 
 			// Inbound root (a router)
@@ -973,7 +984,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					debug: app.settings.code.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
-					cacheKeyTemplateHandlers: app.cacheKeyTemplateHandlers
+					cacheKeyTemplatePlugins: app.cacheKeyTemplatePlugins
 				}
 
 				// Pass-throughs
@@ -1156,7 +1167,7 @@ Prudence.Routing = Prudence.Routing || function() {
 					scriptletPlugins: new ConcurrentHashMap(),
 					debug: app.settings.code.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
-					cacheKeyTemplateHandlers: app.cacheKeyTemplateHandlers
+					cacheKeyTemplatePlugins: app.cacheKeyTemplatePlugins
 				}
 
 				// Libraries
