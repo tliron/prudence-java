@@ -14,7 +14,8 @@
 document.require(
 	'/prudence/logging/',
 	'/sincerity/objects/',
-	'/sincerity/json/')
+	'/sincerity/json/',
+	'/sincerity/localization/')
 
 var Prudence = Prudence || {}
 
@@ -65,7 +66,7 @@ Prudence.Tasks = Prudence.Tasks || function() {
 	 *         you really need to optimize performance for in-process tasks
 	 * @param {Boolean} [params.pure=false] True to keep params.context pure, without special additions from this
 	 *         library; implies params.json=false
-	 * @param {Number} [params.block=0] If greater than zero, will block for a maximum of duration in milliseconds
+	 * @param {Number|String} [params.block=0] If greater than zero, will block for a maximum of duration in milliseconds
 	 *         waiting for task to finish execution
 	 * @param {Number} [params.delay=0] The delay in milliseconds before starting the task (ignored for distributed tasks)
 	 * @param {Number} [params.repeatEvery=0] How often in milliseconds to repeat the task (see params.fixedRepeat),
@@ -77,7 +78,7 @@ Prudence.Tasks = Prudence.Tasks || function() {
 	 * @param {String} [params.application] Application's full name (defaults to name of current application)
 	 * @param [params.where] Where to distribute the task (leave empty to let Hazelcast decide)
 	 * @param {Boolean} [params.multi=false] True to distribute task to all members of the cluster
-	 * @returns {java.util.concurrent.Future}
+	 * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>}
 	 */
 	Public.task = function(params) {
 		if (Sincerity.Objects.isString(params)) {
@@ -141,8 +142,9 @@ Prudence.Tasks = Prudence.Tasks || function() {
 				future = application.executeTask(params.application, params.uri, params.entryPoint, params.context, params.delay, params.repeatEvery, params.fixedRepeat)
 			}
 		}
-		if (params.block) {
-			future.get(params.block, java.util.concurrent.TimeUnit.MILLISECONDS)
+		if (Sincerity.Objects.exists(params.block)) {
+			var block = Sincerity.Localization.toMilliseconds(params.block)
+			future.get(block, java.util.concurrent.TimeUnit.MILLISECONDS)
 		}
 		
 		return future

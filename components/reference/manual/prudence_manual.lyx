@@ -10414,6 +10414,33 @@ reference "startup"
  to use.
 \end_layout
 
+\begin_layout Standard
+Both defrosting and preheating are handled in a thread pool, so that they
+ can finish as quickly as possible.
+ The duration of the complete process will be announced when you start Prudence.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Executing 3488 startup tasks...
+\end_layout
+
+\begin_layout Plain Layout
+
+Finished all startup tasks in 1.432 seconds.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Implementing Resources
 \begin_inset CommandInset label
@@ -28099,7 +28126,1120 @@ name "background-tasks"
 \end_layout
 
 \begin_layout Standard
-TODO
+The primary workload of a web platform is in handling user requests, and
+ in Prudence these are handled in a configurable thread pool managed by
+ the web server (usually Jetty).
+ However, 
+\begin_inset Quotes eld
+\end_inset
+
+primary
+\begin_inset Quotes erd
+\end_inset
+
+ does not mean 
+\begin_inset Quotes eld
+\end_inset
+
+only
+\begin_inset Quotes erd
+\end_inset
+
+ or even 
+\begin_inset Quotes eld
+\end_inset
+
+most
+\begin_inset Quotes erd
+\end_inset
+
+: your application may be doing 
+\emph on
+lots
+\emph default
+ of other work both to serve users and to keep itself running properly.
+ In Prudence, we call these 
+\begin_inset Quotes eld
+\end_inset
+
+background tasks.
+\begin_inset Quotes erd
+\end_inset
+
+ They are run in a separate thread pool, and can even be 
+\begin_inset Quotes eld
+\end_inset
+
+farmed out
+\begin_inset Quotes erd
+\end_inset
+
+ in the cluster.
+\end_layout
+
+\begin_layout Standard
+The common use cases are:
+\end_layout
+
+\begin_layout Itemize
+Doing work in connection to user requests that 
+\emph on
+can
+\emph default
+ happen outside of requests: sending email notifications, updating a statistics
+ database, etc.
+ Even if this happens a bit later than the user request, the user experience
+ would not suffer.
+ By performing this work in the background, you can ensure that the request
+ thread is freed as quickly as possible, which can go a long way towards
+ improving your scalability.
+\end_layout
+
+\begin_layout Itemize
+Doing work for users that 
+\emph on
+cannot
+\emph default
+ or 
+\emph on
+should not
+\emph default
+ be done within a request thread: encoding videos, interacting with 3rd-party
+ services, performing long searches, etc.
+ All of these could hang the request thread for far too long, which could
+ severely limit your scalability.
+ In these cases you would need to find some way to let the user know that
+ the work they needed is done.
+ Often, results are stored in a database.
+\end_layout
+
+\begin_layout Itemize
+Maintenance tasks unrelated to user requests: cleaning up idle sessions,
+ pruning caches and unused results, sending out digest emails, etc.
+ These tasks are often scheduled to be run on a regular basis: daily, every
+ 5 minutes, etc.
+\end_layout
+
+\begin_layout Standard
+In order to support these diverse use cases, Prudence allows for several
+ ways to schedule and spawn background tasks.
+\end_layout
+
+\begin_layout Subsection
+Task Implementations
+\end_layout
+
+\begin_layout Standard
+Prudence supports two ways to implement tasks.
+ Note that in both cases, you may implement the task in any supported programmin
+g language: it doesn't matter which language calls the API and which language
+ implements the task.
+\end_layout
+
+\begin_layout Paragraph
+As Programs
+\end_layout
+
+\begin_layout Standard
+These tasks are executed from beginning to end.
+ They can, of course, include libraries, define functions and classes, etc.
+ You may optionally send the task an arbitrary 
+\begin_inset Quotes eld
+\end_inset
+
+context
+\begin_inset Quotes erd
+\end_inset
+
+, which will be accessible via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.context API"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.context"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A simple example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var count = document.context
+\end_layout
+
+\begin_layout Plain Layout
+
+for (var i = 0; i < count; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.logger.info('#' + i)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Implement your task as a program if it is supposed to run only once in a
+ while.
+\end_layout
+
+\begin_layout Paragraph
+As Entry Points in Programs
+\end_layout
+
+\begin_layout Standard
+These tasks are loaded into memory once: Prudence will call a specified
+ entry point every time the task is spawned.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+context
+\begin_inset Quotes erd
+\end_inset
+
+ will be provided as an entry point argument.
+ Additionally, entry points allow you to return a value to the caller.
+\end_layout
+
+\begin_layout Standard
+A simple example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function myEntryPoint(context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var count = document.context
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (var i = 0; i < count; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		application.logger.info('#' + i)
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'finished'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Implement your task as an entry point if it is frequently used.
+\end_layout
+
+\begin_layout Quote
+Actually, the 
+\begin_inset Quotes eld
+\end_inset
+
+context
+\begin_inset Quotes erd
+\end_inset
+
+ is not entirely arbitrary.
+ For distributed tasks, you need the context to be serializable in order
+ for it to be transferred over the network.
+ For example, you can serialize the context into JSON when spawning the
+ task, and then deserialize it in the task implementation.
+\end_layout
+
+\begin_layout Subsection
+Task APIs
+\begin_inset CommandInset label
+LatexCommand label
+name "task-apis"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We'll discuss the 
+\bar under
+higher-level API below (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "task-api-high-level"
+
+\end_inset
+
+)
+\bar default
+.
+ However, it's useful to start with the lower-level API, so you can better
+ understand the many options.
+\end_layout
+
+\begin_layout Subsubsection
+Libraries
+\end_layout
+
+\begin_layout Standard
+To spawn and/or schedule code in your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory, use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.executeTask API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.executeTask"
+
+\end_inset
+
+.
+ As a first example, let's spawn a program task:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.executeTask(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'wiki', '/tasks/hello/', null,
+\end_layout
+
+\begin_layout Plain Layout
+
+	{name: 'Michael'},
+\end_layout
+
+\begin_layout Plain Layout
+
+	0, 0, false)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Our program would be in 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/tasks/hello.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.logger.info('Hello, ' + document.context.name)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first argument to executeTask is the application's name on the 
+\bar under
+internal host (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-internal-host"
+
+\end_inset
+
+)
+\bar default
+.
+ If you leave it as null, it would default to the current application.
+ The second is the library URI.
+ The third is the entry point name (not used in this example), and the fourth
+ is the optional context.
+\end_layout
+
+\begin_layout Standard
+The final three arguments are for scheduling:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+delay
+\series default
+: Milliseconds before starting the task; zero means ASAP
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+repeatEvery
+\series default
+: Milliseconds after which the task will be repeated; zero means no repetitions
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+fixedRepeat
+\series default
+: Boolean; not used when 
+\begin_inset Quotes eld
+\end_inset
+
+repeatEvery
+\begin_inset Quotes erd
+\end_inset
+
+ is zero; if true, 
+\begin_inset Quotes eld
+\end_inset
+
+repeatEvery
+\begin_inset Quotes erd
+\end_inset
+
+ will be fixed according to the clock; if false, 
+\begin_inset Quotes eld
+\end_inset
+
+repeatEvery
+\begin_inset Quotes erd
+\end_inset
+
+ will be counted from when each task finishes executing
+\end_layout
+
+\begin_layout Standard
+For our second example, let's use an entry point:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.executeTask(
+\end_layout
+
+\begin_layout Plain Layout
+
+	null, '/tasks/hello/', 'sayHello',
+\end_layout
+
+\begin_layout Plain Layout
+
+	{name: 'Michael'},
+\end_layout
+
+\begin_layout Plain Layout
+
+	0, 0, false)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Our program with its entry point:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function sayHello(context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.logger.info('Hello, ' + context.name)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Literal Scriptlet Code
+\end_layout
+
+\begin_layout Standard
+To spawn and/or schedule literal scriptlet source code as a task, use the
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.codeTask API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.codeTask"
+
+\end_inset
+
+.
+ Note that the source code must provided as scriptlets, similar to the format
+ of 
+\bar under
+scriptlet resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-resources"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.codeTask(
+\end_layout
+
+\begin_layout Plain Layout
+
+	null, "<% application.logger.info('Hello, ' + document.context.name) %>",
+\end_layout
+
+\begin_layout Plain Layout
+
+	{name: 'Michael'},
+\end_layout
+
+\begin_layout Plain Layout
+
+	0, 0, false)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The arguments are similar to executeTask, except that literal source code
+ is provided instead of a library name, and there is no entry point name.
+\end_layout
+
+\begin_layout Standard
+This API is useful for generating the task's source code on demand.
+\end_layout
+
+\begin_layout Standard
+The scriptlet format makes it possible to run tasks in any supported programming
+ language:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.codeTask(
+\end_layout
+
+\begin_layout Plain Layout
+
+	null, "<%python application.logger.info('Hello from Python, ' + document.context)
+ %>",
+\end_layout
+
+\begin_layout Plain Layout
+
+	'Michael',
+\end_layout
+
+\begin_layout Plain Layout
+
+	0, 0, false)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Canceling Tasks
+\end_layout
+
+\begin_layout Standard
+All the APIs return a JVM 
+\begin_inset CommandInset href
+LatexCommand href
+name "Future"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html"
+
+\end_inset
+
+ instance, with which you may cancel the task:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var future = application.codeTask(...)
+\end_layout
+
+\begin_layout Plain Layout
+
+future.cancel(true)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Return Values
+\end_layout
+
+\begin_layout Standard
+As mentioned above, entry points can return values to the caller.
+ This is handled, again, via the Future return value:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var future = application.codeTask(...)
+\end_layout
+
+\begin_layout Plain Layout
+
+var r = future.get(500, java.util.concurrent.TimeUnit.MILLISECONDS)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+Generally, it's not a very good idea to use the return value feature.
+ Background tasks' advantage is in allowing you to release the current thread,
+ but if you block waiting for a task to complete, then you will hold the
+ current thread, which is especially bad for request threads.
+ A better way to return values is to store them in a database and attempt
+ to fetch them later.
+ However, if you keep the block times very short, the feature has its uses:
+ for example, an easy way to call code in one programming language from
+ another.
+\end_layout
+
+\begin_layout Subsubsection
+Distributed Task APIs
+\end_layout
+
+\begin_layout Standard
+When working with a Prudence 
+\bar under
+clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+, you can spawn tasks on other nodes in the cluster.
+\end_layout
+
+\begin_layout Standard
+The above two APIs have distributed versions: 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedExecuteTask"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedExecuteTask"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedCodeTask"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedCodeTask"
+
+\end_inset
+
+.
+ The difference is that the distributed versions don't have the three scheduling
+ arguments: you can't delay or repeat distributed tasks.
+ On the other hand, you have two extra arguments for optionally hinting
+ where in the cluster you would want them executed:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+where
+\series default
+: When 
+\begin_inset Quotes eld
+\end_inset
+
+multi
+\begin_inset Quotes erd
+\end_inset
+
+ is false, a null here means the task will spawn 
+\emph on
+anywhere in the cluster
+\emph default
+, but when 
+\begin_inset Quotes eld
+\end_inset
+
+multi
+\begin_inset Quotes erd
+\end_inset
+
+ is true, a null here means it will spawn 
+\emph on
+everywhere
+\emph default
+: on 
+\emph on
+all
+\emph default
+ members in the cluster; otherwise, this argument can be a cluster member
+ key, a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast Member"
+target "http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html"
+
+\end_inset
+
+ instance, or a collection of Member instances
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+multi
+\series default
+: Boolean; when false, will spawn on only 
+\emph on
+one
+\emph default
+ member in the cluster; when true, will spawn on 
+\emph on
+all 
+\emph default
+members specified; note that when 
+\begin_inset Quotes eld
+\end_inset
+
+multi
+\begin_inset Quotes erd
+\end_inset
+
+ is true, the return value is a map of member instances to their appropriate
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Future"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html"
+
+\end_inset
+
+ instances
+\end_layout
+
+\begin_layout Standard
+In this example, we don't care when in the cluster the task will be executed
+ once:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.distributedCodeTask(
+\end_layout
+
+\begin_layout Plain Layout
+
+	null, "<% application.logger.info('Hello, ' + document.context.name) %>",
+\end_layout
+
+\begin_layout Plain Layout
+
+	{name: 'Michael'},
+\end_layout
+
+\begin_layout Plain Layout
+
+	null, false)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this example, we'll use a library to spawn a task on all nodes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.distributedExecuteTask(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'maintenance', '/tasks/cleanup/', null,
+\end_layout
+
+\begin_layout Plain Layout
+
+	'now',
+\end_layout
+
+\begin_layout Plain Layout
+
+	null, true)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that, of course, the application 
+\begin_inset Quotes eld
+\end_inset
+
+maintenance
+\begin_inset Quotes erd
+\end_inset
+
+ as well as the library 
+\begin_inset Quotes eld
+\end_inset
+
+/tasks/cleanup/
+\begin_inset Quotes erd
+\end_inset
+
+ have to be present on all nodes in the cluster.
+\end_layout
+
+\begin_layout Subsubsection
+High-Level API
+\begin_inset CommandInset label
+LatexCommand label
+name "task-api-high-level"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you're using JavaScript, you can use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Tasks.task"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Tasks&item=Prudence.Tasks.task"
+
+\end_inset
+
+ as a shortcut to all the APIs mentioned above.
+ An example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/tasks/')
+\end_layout
+
+\begin_layout Plain Layout
+
+Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/tasks/cleanup',
+\end_layout
+
+\begin_layout Plain Layout
+
+	application: 'maintenance'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It comes with some JavaScript sugar.
+ For example, you can spawn functions:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function cleanup(context) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	application.logger.info('Cleaning up: ' + context.time)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	fn: cleanup,
+\end_layout
+
+\begin_layout Plain Layout
+
+	context: {time: 'now'},
+\end_layout
+
+\begin_layout Plain Layout
+
+	json: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	distributed: true
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above actually serializes the function source code, and calls 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedCodeTask"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedCodeTask"
+
+\end_inset
+
+ (so don't expect JavaScript closures to work).
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+json: true
+\begin_inset Quotes erd
+\end_inset
+
+ param adds some useful magic: it will serialize the context, and then wrap
+ code to deserialize the context around the function source code.
+\end_layout
+
+\begin_layout Standard
+(While convenient, it's more efficient to invoke an entry point in a library
+ than to serialize the function code like so.)
+\end_layout
+
+\begin_layout Standard
+Let's block until we get a result:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var future = Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/tasks/math/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	entryPoint: 'multiply',
+\end_layout
+
+\begin_layout Plain Layout
+
+	context: [5, 6, 8],
+\end_layout
+
+\begin_layout Plain Layout
+
+	pure: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	block: '1s'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\begin_layout Plain Layout
+
+print(future.get())
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note also the 
+\begin_inset Quotes eld
+\end_inset
+
+pure: true
+\begin_inset Quotes erd
+\end_inset
+
+ param that forces the API to send the context as-is: otherwise it will
+ send it as a string to avoid serialization errors.
 \end_layout
 
 \begin_layout Subsection
@@ -28113,26 +29253,11 @@ name "crontab"
 
 \end_layout
 
-\begin_layout Standard
-TODO
-\end_layout
-
 \begin_layout Subsection
 startup
 \begin_inset CommandInset label
 LatexCommand label
 name "startup"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Task API
-\begin_inset CommandInset label
-LatexCommand label
-name "task-api"
 
 \end_inset
 

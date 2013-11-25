@@ -186,9 +186,9 @@ public class DistributedApplicationService extends ApplicationService
 	 * @param context
 	 *        The context made available to the task (must be serializable)
 	 * @param where
-	 *        When multi is false: A {@link Member}, a collection of
-	 *        {@link Member}, any other object (the member key), or null to let
-	 *        Hazelcast decide; When multi is true:
+	 *        A {@link Member}, a collection of {@link Member}, any other object
+	 *        (the member key), or null to let Hazelcast decide (all members for
+	 *        multi=true)
 	 * @param multi
 	 *        Whether the task should be executed on multiple members
 	 * @return A future or map of futures for the task
@@ -220,9 +220,8 @@ public class DistributedApplicationService extends ApplicationService
 	 *        The context made available to the task (must be serializable)
 	 * @param where
 	 *        A {@link Member}, a collection of {@link Member}, any other object
-	 *        (the member key), or null to let Hazelcast decide A collection of
-	 *        {@link Member}, an iterable of {@link Member}, or null for all
-	 *        members
+	 *        (the member key), or null to let Hazelcast decide (all members for
+	 *        multi=true)
 	 * @param multi
 	 *        Whether the task should be executed on multiple members
 	 * @return A future (multi=false) or map of members to futures (multi=true)
