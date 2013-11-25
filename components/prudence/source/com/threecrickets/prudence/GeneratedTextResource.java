@@ -113,7 +113,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyTemplate:</code>
- * {@link String}, defaults to "{ri}|{dn}".</li>
+ * {@link String}, defaults to "{ri}|{dn}|{nmt}|{nl}|{ne}".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCharacterSet:</code>
  * {@link CharacterSet}, defaults to {@link CharacterSet#UTF_8}.</li>

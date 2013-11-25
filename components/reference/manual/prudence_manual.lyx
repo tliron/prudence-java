@@ -17222,16 +17222,17 @@ cache miss
 Compression is handled specially: if the requested compressed cache entry
  does not exist, then Prudence will attempt to fetch the uncompressed cache
  entry.
- If that exists, it would be a 
+ If that exists, Prudence would simply compress it and store the compressed
+ version so that compression could be avoided in the future.
+ In the debug headers, this would appear as a 
 \begin_inset Quotes eld
 \end_inset
 
-hit
+hit;encode
 \begin_inset Quotes erd
 \end_inset
 
-: Prudence would then store the compressed version so that compression would
- be avoided in the future.
+ event.
  Likewise, when storing a new compressed cache entry (during a 
 \begin_inset Quotes eld
 \end_inset
@@ -17386,7 +17387,7 @@ Prudence's default cache key template is sensible enough for most scenarios:
 \begin_inset Quotes eld
 \end_inset
 
-{ri}|{dn}
+{ri}|{dn}|{nmt}|{nl}|{ne}
 \begin_inset Quotes erd
 \end_inset
 
@@ -17403,7 +17404,11 @@ reference "settings-caching"
 )
 \bar default
 .
- The 
+ Let's break it down:
+\end_layout
+
+\begin_layout Itemize
+The 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17420,7 +17425,10 @@ dn
 \end_inset
 
  is the document (file) name.
- (It's a convention in Prudence, but not a requirement, to use 
+\end_layout
+
+\begin_layout Itemize
+It's a convention in Prudence, but not a requirement, to use 
 \begin_inset Quotes eld
 \end_inset
 
@@ -17428,7 +17436,11 @@ dn
 \begin_inset Quotes erd
 \end_inset
 
- as a separator of cache key elements.) The addition of 
+ as a separator of cache key elements, because it's a character that won't
+ be used by most template variables.
+\end_layout
+
+\begin_layout Itemize
 \begin_inset Quotes eld
 \end_inset
 
@@ -17448,13 +17460,58 @@ reference "dynamic-capturing"
 )
 \bar default
  and other server-side redirections would still be cached uniquely: the
- same URI might reach a different document depending on various request
- attributes other than just the URI (media type, cookies, etc.).
+ same URI might reach a different document depending on an external factor.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+nmt
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+nl
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+ne
+\begin_inset Quotes erd
+\end_inset
+
+ both make sure that we have a different key per negotiated formats.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Pay special attention to 
+\begin_inset Quotes eld
+\end_inset
+
+ne
+\begin_inset Quotes erd
+\end_inset
+
+
+\emph default
+: if you are supporting compression, you will want it in your cache key
+ templates.
+ Because Prudence usually handles compression automatically for you, it's
+ easy to forget that you need it included,
 \end_layout
 
 \begin_layout Standard
-However, for any non-trivial application will want to modify the cache key
- template.
+The above is a good cache key template, but for any non-trivial application
+ will want to modify it.
  Here are some common reasons:
 \end_layout
 
@@ -17482,7 +17539,7 @@ reference "caching-key-template-plugins"
 \begin_inset Quotes eld
 \end_inset
 
-{ri}|{uid}
+{ri}|{uid}|{MT}|{L}
 \begin_inset Quotes erd
 \end_inset
 
@@ -17523,7 +17580,7 @@ ri
 \begin_inset Quotes eld
 \end_inset
 
-{dn}
+{dn}|{MT}|{L}
 \begin_inset Quotes erd
 \end_inset
 
@@ -17533,7 +17590,7 @@ ri
 \begin_inset Quotes eld
 \end_inset
 
-{dn}|{uid}
+{dn}|{uid}|{MT}|{L}
 \begin_inset Quotes erd
 \end_inset
 
@@ -19537,6 +19594,14 @@ X-Cache
 \end_inset
 
 hit
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+hit;encode
 \begin_inset Quotes erd
 \end_inset
 
@@ -23386,10 +23451,10 @@ reference "redirect-route-type"
 \begin_layout Itemize
 
 \bar under
-Cache keys (page 
+Cache key templates (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "caching"
+reference "caching-key-template"
 
 \end_inset
 
@@ -23407,6 +23472,22 @@ target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/uti
 
 \end_inset
 
+.
+\end_layout
+
+\begin_layout Standard
+Note that for cache key templates, it's possible to create your own interpolatio
+n variables using 
+\bar under
+plugins (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template-plugins"
+
+\end_inset
+
+)
+\bar default
 .
 \end_layout
 
@@ -23523,7 +23604,8 @@ ath (everything after the authority)
 \bar under
 r
 \bar default
-emaining part of the path after the base URI (see below)
+emaining part of the path after the base URI, not including the query (see
+ below)
 \end_layout
 
 \begin_layout Itemize
@@ -23630,6 +23712,31 @@ To refer to the base URI directly, use the special
 
  infix, to which you would still need to add one of the above suffixes.
  For example, “{rbi}” refers to the complete base URI of the actual URI.
+\end_layout
+
+\begin_layout Subsubsection
+Relative URIs
+\end_layout
+
+\begin_layout Standard
+For cache key templates only, you can also use the 
+\begin_inset Quotes eld
+\end_inset
+
+{cb}
+\begin_inset Quotes erd
+\end_inset
+
+ variable.
+ It is equivalent to calling the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.base API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.base"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -23936,17 +24043,94 @@ ate
 \end_layout
 
 \begin_layout Subsection
+Negotiated Attributes
+\end_layout
+
+\begin_layout Standard
+These are the result of content negotiation, and are used specifically for
+ cache key templates.
+\end_layout
+
+\begin_layout Itemize
+{nmt}: 
+\bar under
+n
+\bar default
+egotiated 
+\bar under
+m
+\bar default
+edia (MIME) 
+\bar under
+t
+\bar default
+ype
+\end_layout
+
+\begin_layout Itemize
+{nl}: 
+\bar under
+n
+\bar default
+egotiated 
+\bar under
+l
+\bar default
+anguage
+\end_layout
+
+\begin_layout Itemize
+{ne}: 
+\bar under
+n
+\bar default
+egotiated 
+\bar under
+e
+\bar default
+ncoding
+\end_layout
+
+\begin_layout Subsection
+Implementation Attributes
+\end_layout
+
+\begin_layout Standard
+These are used specifically for cache key templates.
+\end_layout
+
+\begin_layout Itemize
+{dn}: 
+\bar under
+d
+\bar default
+ocument 
+\bar under
+n
+\bar default
+ame
+\end_layout
+
+\begin_layout Itemize
+{an}: 
+\bar under
+a
+\bar default
+pplication 
+\bar under
+n
+\bar default
+ame
+\end_layout
+
+\begin_layout Subsection
 Response Attributes
 \end_layout
 
 \begin_layout Standard
-[these are not supported in capturing or other forms of server-side redirection,
- because redirection happens before a response is actually generated.] [useful
- for cache templates?]
-\end_layout
-
-\begin_layout Standard
-These are all in uppercase to differentiate them from the request variables:
+These attributes are not normally used in Prudence---they are not used in
+ routing nor in cache key templates---but are mentioned here for completion.
+ They are all in uppercase to differentiate them from the request variables:
 \end_layout
 
 \begin_layout Itemize

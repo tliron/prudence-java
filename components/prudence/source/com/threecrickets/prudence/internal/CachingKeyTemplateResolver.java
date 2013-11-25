@@ -13,6 +13,7 @@ package com.threecrickets.prudence.internal;
 
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.Encoding;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Resolver;
 
@@ -27,35 +28,35 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
  * @author Tal Liron
  * @see DelegatedCachingKeyTemplatePlugin
  */
-public class CacheKeyTemplateResolver<R extends ServerResource> extends Resolver<Object>
+public class CachingKeyTemplateResolver<R extends ServerResource> extends Resolver<Object>
 {
 	//
 	// Construction
 	//
 
-	public CacheKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService )
+	public CachingKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Encoding encoding )
 	{
-		this( documentDescriptor, resource, conversationService, resource.getRequest(), resource.getResponse() );
+		this( documentDescriptor, resource, conversationService, encoding, resource.getRequest(), resource.getResponse() );
 	}
 
-	public CacheKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Request request, Response response )
+	public CachingKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Encoding encoding, Request request, Response response )
 	{
-		this( documentDescriptor, resource, conversationService, Resolver.createResolver( request, response ) );
+		this( documentDescriptor, resource, conversationService, encoding, Resolver.createResolver( request, response ) );
 	}
 
-	public CacheKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Resolver<?> callResolver )
+	public CachingKeyTemplateResolver( DocumentDescriptor<Executable> documentDescriptor, R resource, ResourceConversationServiceBase<R> conversationService, Encoding encoding, Resolver<?> callResolver )
 	{
 		this.documentDescriptor = documentDescriptor;
 		this.resource = resource;
 		this.conversationService = conversationService;
 		this.callResolver = callResolver;
+		this.encoding = encoding;
 	}
 
 	//
 	// Resolver
 	//
 
-	@Override
 	public Object resolve( String name )
 	{
 		if( name.equals( DOCUMENT_NAME_VARIABLE ) )
@@ -64,6 +65,12 @@ public class CacheKeyTemplateResolver<R extends ServerResource> extends Resolver
 			return resource.getApplication().getName();
 		else if( name.equals( CONVERSATION_BASE_VARIABLE ) )
 			return conversationService.getBase();
+		else if( name.equals( NEGOTIATED_MEDIA_TYPE ) )
+			return conversationService.getMediaTypeName();
+		else if( name.equals( NEGOTIATED_LANGUAGE ) )
+			return conversationService.getLanguageName();
+		else if( name.equals( NEGOTIATED_ENCODING ) )
+			return encoding != null ? encoding.getName() : "";
 
 		return callResolver.resolve( name );
 	}
@@ -77,11 +84,19 @@ public class CacheKeyTemplateResolver<R extends ServerResource> extends Resolver
 
 	private static final String CONVERSATION_BASE_VARIABLE = "cb";
 
+	private static final String NEGOTIATED_MEDIA_TYPE = "nmt";
+
+	private static final String NEGOTIATED_LANGUAGE = "nl";
+
+	private static final String NEGOTIATED_ENCODING = "ne";
+
 	private final DocumentDescriptor<Executable> documentDescriptor;
 
 	private final R resource;
 
 	private final ResourceConversationServiceBase<R> conversationService;
+
+	private final Encoding encoding;
 
 	private final Resolver<?> callResolver;
 }

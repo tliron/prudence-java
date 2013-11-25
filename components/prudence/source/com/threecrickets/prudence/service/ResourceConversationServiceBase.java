@@ -82,6 +82,8 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 				{
 					if( preferredEncodings.contains( encoding ) )
 					{
+						if( Encoding.IDENTITY.equals( encoding ) )
+							encoding = null;
 						this.encoding = encoding;
 						break;
 					}
@@ -120,6 +122,8 @@ public class ResourceConversationServiceBase<R extends ServerResource> extends C
 	 */
 	public void setEncoding( Encoding encoding )
 	{
+		if( Encoding.IDENTITY.equals( encoding ) )
+			encoding = null;
 		this.encoding = encoding;
 	}
 

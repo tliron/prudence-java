@@ -113,7 +113,7 @@ public abstract class CachingServiceBase<R extends ServerResource, A extends Res
 	 */
 	public String getKeyTemplate()
 	{
-		return CachingUtil.getCacheKeyTemplate( documentService.getDescriptor().getDocument(), getSuffix() );
+		return CachingUtil.getKeyTemplate( documentService.getDescriptor().getDocument(), getSuffix() );
 	}
 
 	/**

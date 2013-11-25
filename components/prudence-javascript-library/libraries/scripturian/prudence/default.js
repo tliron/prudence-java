@@ -696,7 +696,7 @@ var Prudence = {}
 /**
  * The cache key template is used to generate the cache key for the current document
  * by interpolating attributes based on the current conversation. See {@link caching#key} to
- * see the actually generate cache key. Defaults to "{ri}|{dn}".
+ * see the actually generate cache key. Defaults to "{ri}|{dn}|{nmt}|{nl}|{ne}".
  * <p>
  * See <a href="http://threecrickets.com/prudence/manual/interpolation/">the Prudence Manual</a>
  * for a complete list of possible interpolated attributes.

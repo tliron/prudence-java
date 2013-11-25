@@ -246,16 +246,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		return null;
 	}
 
-	/**
-	 * Casts the cache key template for the current executable and encoding.
-	 * 
-	 * @return The cache key or null
-	 */
-	public String getCacheKey()
-	{
-		return CachingUtil.getKeyForEncoding( cachingUtil.castKey( getDescriptor(), null, true, conversationService ), conversationService.getEncoding() );
-	}
-
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 

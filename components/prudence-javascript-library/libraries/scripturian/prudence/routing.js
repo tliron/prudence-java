@@ -111,7 +111,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * 
 	 * @property {Object} [settings.caching] Caching settings
 	 * @property {Boolean} [settings.caching.debug=false] When true, adds caching debug headers to responses
-	 * @property {String} [settings.caching.defaultKeyTemplate='{ri}|{dn}'] Allows you to change the default {@link caching#keyTemplate}
+	 * @property {String} [settings.caching.defaultKeyTemplate='{ri}|{dn}|{nmt}|{nl}|{ne}'] Allows you to change the default {@link caching#keyTemplate}
 	 * @property {Object} [settings.caching.keyTemplatePlugins] Allows you to configure application-wide {@link caching#keyTemplatePlugins}
 	 * 
 	 * @property {Object} [settings.compression] Compression settings
@@ -218,7 +218,7 @@ Prudence.Routing = Prudence.Routing || function() {
 			this.settings.code.defaultExtension = Sincerity.Objects.ensure(this.settings.code.defaultExtension, 'js')
 			this.settings.code.defaultLanguageTag = Sincerity.Objects.ensure(this.settings.code.defaultLanguageTag, 'javascript')
 			this.settings.code.sourceViewer = Sincerity.Objects.ensure(this.settings.code.sourceViewer, '/source-code/')
-			this.settings.caching.defaultKeyTemplate = Sincerity.Objects.ensure(this.settings.caching.defaultKeyTemplate, '{ri}|{dn}')
+			this.settings.caching.defaultKeyTemplate = Sincerity.Objects.ensure(this.settings.caching.defaultKeyTemplate, '{ri}|{dn}|{nmt}|{nl}|{ne}')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
 			this.settings.distributed.instance = Sincerity.Objects.ensure(this.settings.distributed.instance, 'com.threecrickets.prudence')
 			this.settings.distributed.map = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedGlobals')

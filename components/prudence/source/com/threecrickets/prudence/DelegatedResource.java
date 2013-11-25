@@ -108,7 +108,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * : Defaults to "caching".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCacheKeyTemplate:</code>
- * {@link String}, defaults to "{ri}|{dn}".</li>
+ * {@link String}, defaults to "{ri}|{dn}|{nmt}|{nl}|{ne}".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCharacterSet:</code>
  * {@link CharacterSet}, defaults to {@link CharacterSet#UTF_8}.</li>

@@ -156,7 +156,7 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 
 	/**
 	 * The default caching key template to use if the executable doesn't specify
-	 * one. Defaults to "{ri}|{dn}".
+	 * one. Defaults to "{ri}|{dn}|{nmt}|{nl}|{ne}".
 	 * <p>
 	 * This setting can be configured by setting an attribute named
 	 * <code>defaultCachingKeyTemplate</code> in the application's
@@ -171,7 +171,7 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 			defaultCachingKeyTemplate = (String) getAttributes().get( prefix + ".defaultCachingKeyTemplate" );
 
 			if( defaultCachingKeyTemplate == null )
-				defaultCachingKeyTemplate = "{ri}|{dn}";
+				defaultCachingKeyTemplate = "{ri}|{dn}|{nmt}|{nl}|{ne}";
 		}
 
 		return defaultCachingKeyTemplate;

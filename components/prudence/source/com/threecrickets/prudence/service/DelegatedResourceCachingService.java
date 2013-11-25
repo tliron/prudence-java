@@ -51,7 +51,10 @@ public class DelegatedResourceCachingService extends CachingServiceBase<Delegate
 
 	public String getKey()
 	{
-		return CachingUtil.getKeyForEncoding( cachingUtil.castKey( documentService.getDescriptor(), getSuffix(), false, conversationService ), conversationService.getEncoding() );
+		String key = CachingUtil.getExistingKey( resource.getRequest(), false );
+		if( key == null )
+			key = cachingUtil.castKey( documentService.getDescriptor(), getSuffix(), false, conversationService, conversationService.getEncoding() );
+		return key;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

@@ -73,6 +73,7 @@ public class CacheEntry implements Externalizable
 	public CacheEntry( CacheEntry cacheEntry, Encoding encoding ) throws IOException
 	{
 		this( cacheEntry.string, cacheEntry.mediaType, cacheEntry.language, cacheEntry.characterSet, encoding, cacheEntry.headers, cacheEntry.tag, cacheEntry.modificationDate, cacheEntry.expirationDate );
+		setTags( cacheEntry.getTags() );
 	}
 
 	/**
@@ -88,6 +89,7 @@ public class CacheEntry implements Externalizable
 	public CacheEntry( CacheEntry cacheEntry, String string ) throws IOException
 	{
 		this( string, cacheEntry.mediaType, cacheEntry.language, cacheEntry.characterSet, cacheEntry.encoding, cacheEntry.headers, cacheEntry.tag, cacheEntry.modificationDate, cacheEntry.expirationDate );
+		setTags( cacheEntry.getTags() );
 	}
 
 	/**

@@ -56,6 +56,9 @@ public class GeneratedTextResourceCachingService extends CachingServiceBase<Gene
 	 */
 	public String getKey()
 	{
-		return CachingUtil.getKeyForEncoding( cachingUtil.castKey( documentService.getDescriptor(), null, true, conversationService ), conversationService.getEncoding() );
+		String key = CachingUtil.getExistingKey( resource.getRequest(), false );
+		if( key == null )
+			key = cachingUtil.castKey( documentService.getDescriptor(), null, true, conversationService, conversationService.getEncoding() );
+		return key;
 	}
 }
