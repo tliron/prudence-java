@@ -5414,7 +5414,7 @@ type
  key is the name of the route type configuration, and the rest of the keys
  configure the type.
  During the application's bootstrap process, these dicts are turned in instances
- of classes in the Prudence.Routing API namespace (the class names have the
+ of classes in the Prudence.Setup API namespace (the class names have the
  first character of the type capitalized).
  The values set in the route type configuration dict are sent to the class
  constructor.
@@ -5600,8 +5600,8 @@ dispatcher
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Dispatch"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Dispatch"
+name "Prudence.Setup.Dispatch"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Dispatch"
 
 \end_inset
 
@@ -5912,8 +5912,8 @@ target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/res
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Resource"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Resource"
+name "Prudence.Setup.Resource"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Resource"
 
 \end_inset
 
@@ -5950,8 +5950,8 @@ n text-with-scriptlets documents.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Execute"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Execute"
+name "Prudence.Setup.Execute"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Execute"
 
 \end_inset
 
@@ -6076,8 +6076,8 @@ static
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Static"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Static"
+name "Prudence.Setup.Static"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Static"
 
 \end_inset
 
@@ -6144,8 +6144,8 @@ All
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Manual"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Manual"
+name "Prudence.Setup.Manual"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Manual"
 
 \end_inset
 
@@ -6212,8 +6212,8 @@ All
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Scriptlet"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Scriptlet"
+name "Prudence.Setup.Scriptlet"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Scriptlet"
 
 \end_inset
 
@@ -6309,8 +6309,8 @@ also
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Capture"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Capture"
+name "Prudence.Setup.Capture"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Capture"
 
 \end_inset
 
@@ -6381,8 +6381,8 @@ uri
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Redirect"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Redirect"
+name "Prudence.Setup.Redirect"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Redirect"
 
 \end_inset
 
@@ -6427,8 +6427,8 @@ addSlash
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.AddSlash"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.AddSlash"
+name "Prudence.Setup.AddSlash"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.AddSlash"
 
 \end_inset
 
@@ -6505,8 +6505,8 @@ not found
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Chain"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Chain"
+name "Prudence.Setup.Chain"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Chain"
 
 \end_inset
 
@@ -6541,8 +6541,8 @@ routes
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Router"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Router"
+name "Prudence.Setup.Router"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Router"
 
 \end_inset
 
@@ -6649,8 +6649,8 @@ next
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Filter"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Filter"
+name "Prudence.Setup.Filter"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Filter"
 
 \end_inset
 
@@ -6711,8 +6711,8 @@ cals to alter the behavior of nested route types directly in your routing.js.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Injector"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Injector"
+name "Prudence.Setup.Injector"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Injector"
 
 \end_inset
 
@@ -6770,8 +6770,8 @@ ed users do not access a URI.
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.BasicHttpAuthenticator"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.BasicHttpAuthenticator"
+name "Prudence.Setup.BasicHttpAuthenticator"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.BasicHttpAuthenticator"
 
 \end_inset
 
@@ -6831,8 +6831,8 @@ next
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.CacheControl"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.CacheControl"
+name "Prudence.Setup.CacheControl"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.CacheControl"
 
 \end_inset
 
@@ -6917,8 +6917,8 @@ next
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.JavaScriptUnifyMinify"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.JavaScriptUnifyMinify"
+name "Prudence.Setup.JavaScriptUnifyMinify"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.JavaScriptUnifyMinify"
 
 \end_inset
 
@@ -7003,8 +7003,8 @@ next
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.CssUnifyMinify"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.CssUnifyMinify"
+name "Prudence.Setup.CssUnifyMinify"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.CssUnifyMinify"
 
 \end_inset
 
@@ -7097,8 +7097,8 @@ next
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Zuss"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Zuss"
+name "Prudence.Setup.Zuss"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Zuss"
 
 \end_inset
 
@@ -7151,8 +7151,8 @@ app
  argument is the instance of 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Application"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Application"
+name "Prudence.Setup.Application"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Application"
 
 \end_inset
 
@@ -7184,7 +7184,7 @@ Accepts a single argument, a dict, to the constructor.
 
 \end_deeper
 \begin_layout Enumerate
-Add the class to Prudence.Routing.
+Add the class to Prudence.Setup.
  Remember that the class name begins with an uppercase letter, but will
  begin with a lowercase letter when referenced in app.routes.
 \end_layout
@@ -7201,8 +7201,8 @@ target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Classes"
  to create your class (you don't have to), and also inherit from 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Routing.Restlet"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Routing.Restlet"
+name "Prudence.Setup.Restlet"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Restlet"
 
 \end_inset
 
@@ -7245,7 +7245,7 @@ status open
 
 \begin_layout Plain Layout
 
-Prudence.Routing.See = Sincerity.Classes.define(function() {
+Prudence.Setup.See = Sincerity.Classes.define(function() {
 \end_layout
 
 \begin_layout Plain Layout
@@ -7259,7 +7259,7 @@ Prudence.Routing.See = Sincerity.Classes.define(function() {
 
 \begin_layout Plain Layout
 
-	Public._inherit = Prudence.Routing.Restlet
+	Public._inherit = Prudence.Setup.Restlet
 \end_layout
 
 \begin_layout Plain Layout
@@ -21713,7 +21713,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Containter"
 \end_layout
 
 \begin_layout Itemize
-/prudence/routing/: 
+/prudence/setup/: 
 \begin_inset CommandInset href
 LatexCommand href
 name "Sincerity.Routing"
@@ -28226,7 +28226,7 @@ In order to support these diverse use cases, Prudence allows for several
 \end_layout
 
 \begin_layout Subsection
-Task Implementations
+Implementing Tasks
 \end_layout
 
 \begin_layout Standard
@@ -28390,7 +28390,7 @@ context
 \end_layout
 
 \begin_layout Subsection
-Task APIs
+APIs for Spawning and Scheduling
 \begin_inset CommandInset label
 LatexCommand label
 name "task-apis"
@@ -28635,6 +28635,13 @@ function sayHello(context) {
 
 \begin_layout Subsubsection
 Literal Scriptlet Code
+\begin_inset CommandInset label
+LatexCommand label
+name "tasks-code-task"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -28751,7 +28758,7 @@ target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent
 
 \end_inset
 
- instance, with which you may cancel the task:
+ instance, which you can use to cancel the task:
 \end_layout
 
 \begin_layout Standard
@@ -28780,7 +28787,7 @@ Return Values
 
 \begin_layout Standard
 As mentioned above, entry points can return values to the caller.
- This is handled, again, via the Future return value:
+ This is also handled via the Future:
 \end_layout
 
 \begin_layout Standard
@@ -29085,8 +29092,8 @@ Prudence.Tasks.task({
 \end_layout
 
 \begin_layout Standard
-It comes with some JavaScript sugar.
- For example, you can spawn functions:
+It comes with some sweet JavaScript sugar.
+ For example, you can directly spawn functions:
 \end_layout
 
 \begin_layout Standard
@@ -29149,7 +29156,8 @@ Prudence.Tasks.task({
 \end_layout
 
 \begin_layout Standard
-The above actually serializes the function source code, and calls 
+Behind the scenes, the above actually serializes the function source code,
+ and calls 
 \begin_inset CommandInset href
 LatexCommand href
 name "application.distributedCodeTask"
@@ -29157,7 +29165,7 @@ target "http://threecrickets.com/api/javascript/?namespace=application&item=appl
 
 \end_inset
 
- (so don't expect JavaScript closures to work).
+ (so JavaScript stack closure won't work).
  The 
 \begin_inset Quotes eld
 \end_inset
@@ -29167,16 +29175,17 @@ json: true
 \end_inset
 
  param adds some useful magic: it will serialize the context, and then wrap
- code to deserialize the context around the function source code.
+ code to deserialize the context around task code.
+ So, the above will work just fine as a distributed task.
 \end_layout
 
 \begin_layout Standard
-(While convenient, it's more efficient to invoke an entry point in a library
- than to serialize the function code like so.)
+(While convenient, it's generally more efficient to invoke an entry point
+ in a library than to serialize function code like so.)
 \end_layout
 
 \begin_layout Standard
-Let's block until we get a result:
+Here's an example of blocking until we get a result:
 \end_layout
 
 \begin_layout Standard
@@ -29230,7 +29239,7 @@ print(future.get())
 \end_layout
 
 \begin_layout Standard
-Note also the 
+Note the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -29238,8 +29247,58 @@ pure: true
 \begin_inset Quotes erd
 \end_inset
 
- param that forces the API to send the context as-is: otherwise it will
- send it as a string to avoid serialization errors.
+ param that forces the API to send the context as is: otherwise it will
+ send it as a string to ensure support for serialization.
+ (JavaScript data structures are not, unfortunately, serializable.)
+\end_layout
+
+\begin_layout Standard
+In case you're curious, he's the task for that example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function multiply(elements) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var r = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (var e in elements) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		r *= elements[e]
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return r
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -29253,8 +29312,434 @@ name "crontab"
 
 \end_layout
 
+\begin_layout Standard
+Prudence supports crontab files that mimic the format used by that 
+\begin_inset CommandInset href
+LatexCommand href
+name "ubiquitous scheduling program"
+target "http://en.wikipedia.org/wiki/Cron"
+
+\end_inset
+
+.
+ (Behind the scenes, we use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "cron4j"
+target "http://www.sauronsoftware.it/projects/cron4j/"
+
+\end_inset
+
+ library.)
+\end_layout
+
+\begin_layout Standard
+This facility lets you schedule tasks to run at specific (Gregorian) calendrical
+ times.
+ It works similarly to calling 
+\bar under
+application.codeTask (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tasks-code-task"
+
+\end_inset
+
+)
+\bar default
+ with the repetition params, but allows for more succinct, calendrical repetitio
+n patterns.
+ Also, the facility is always on, as long as your Prudence container is
+ running: you do not have to call an API to enable it.
+\end_layout
+
+\begin_layout Standard
+To use this facility, place a file with the name “crontab” in your application's
+ base subdirectory.
+ Each line of the file starts with scheduling pattern and ends with the
+ task name.
+ Empty lines and comments beginning with 
+\begin_inset Quotes eld
+\end_inset
+
+#
+\begin_inset Quotes erd
+\end_inset
+
+ are ignored.
+ Example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+* * * * * /tasks/every-minute/
+\end_layout
+
+\begin_layout Plain Layout
+
+59 23 * * tue,fri <% application.getSubLogger('scheduled').info('It is Tue
+ or Fri, 11:59PM') %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Notes:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Quotes eld
+\end_inset
+
+crontab” will be checked for changes and parsed once per minute.
+ This means that you can edit this file and have your task scheduling change
+ on the fly without restarting Prudence.
+\end_layout
+
+\begin_layout Enumerate
+The scheduler does not check to see if a task finished running before spawning
+ a new instance of it, so that even if a task is not done yet, but it's
+ time for it to be spawned again, you'll have multiple instances of the
+ task running at the same time.
+ If this is problematic, consider using 
+\bar under
+application.task
+\bar default
+ 
+\bar under
+(page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|application-task"
+
+\end_inset
+
+)
+\bar default
+ in your configuration scripts instead, with “false” as the last argument.
+\end_layout
+
+\begin_layout Subsubsection
+Sending a Context
+\end_layout
+
+\begin_layout Standard
+Optionally, you may add more text after the task name and whitespace: anything
+ there is grabbed as a single string and sent as the context to the task,
+ which can be accessed there as 
+\bar under
+document.context (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "../api/|document-context"
+
+\end_inset
+
+)
+\bar default
+.
+ Because crontab is a text file, only textual contexts may be sent, but
+ you can use JSON, XML or other encodings to create complex contexts.
+\end_layout
+
+\begin_layout Subsubsection
+Scheduling Patterns
+\end_layout
+
+\begin_layout Standard
+The scheduling pattern is a series of five settings separated by whitespace:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Minutes
+\series default
+ of the hour, 0-59
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Hour
+\series default
+ of the day, 0-23
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Day of the month
+\series default
+, 1-31; the special setting “L” signifies the last day of the month, which
+ varies per month and year
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Month
+\series default
+ of the year, 1-12; three-letter English month names may be used instead
+ of numbers: “jan”, “feb”, “mar”, etc.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Day of the week
+\series default
+, 0-6; three-letter English day names may be used instead of numbers: “sun”,
+ “mon”, “tue”, etc.
+\end_layout
+
+\begin_layout Standard
+The following rules apply:
+\end_layout
+
+\begin_layout Itemize
+Any of these settings can be “*”, signifying that any value would match
+\end_layout
+
+\begin_layout Itemize
+Use a slash to match only numbers that divide equally by the number after
+ the slash (can also be used on “*”)
+\end_layout
+
+\begin_layout Itemize
+Ranges (inclusive) are possible, separated by hyphens
+\end_layout
+
+\begin_layout Itemize
+Multiple values per setting are possible, separated by commas
+\end_layout
+
+\begin_layout Itemize
+Multiple whole patterns are possible, separated by pipes (a logical 
+\begin_inset Quotes eld
+\end_inset
+
+or
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Paragraph
+Example Patterns
+\end_layout
+
+\begin_layout Standard
+Every minute:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+* * * * *
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+11:59pm every Tuesday and Friday:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+59 23 * * tue,fri
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Every 5 minutes in the morning, between 5 to 8am, otherwise every 30 minutes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+*/5 5-7 * * *|*/30 0-4,8-23 * * *
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The same as above, but with one added to all minutes of the hour:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+1,6,11,16,21,26,31,36,41,46,51,56 5-7 * * *|1,31 0-4,8-23 * * *
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can schedule the same task on multiple lines, which is 
+\emph on
+not
+\emph default
+ equivalent to using the pipe: multiple lines means that multiple task instances
+ might be spawned simultaneously if matched on more than one line.
+ Contrarily, using the pipe counts as a 
+\emph on
+single
+\emph default
+ match.
+\end_layout
+
+\begin_layout Subsubsection
+crontab API
+\end_layout
+
+\begin_layout Standard
+TODO
+\end_layout
+
+\begin_layout Standard
+Editing the crontab will reset
+\end_layout
+
+\begin_layout Subsubsection
+System crontab
+\end_layout
+
+\begin_layout Standard
+You can also set up a special crontab to run arbitrary Java static methods
+ and non-JVM system processes, just like with the system cron, by creating
+ a 
+\begin_inset Quotes eld
+\end_inset
+
+/component/crontab
+\begin_inset Quotes erd
+\end_inset
+
+ file.
+\end_layout
+
+\begin_layout Standard
+Here's an example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+0 5 * * * sol.exe
+\end_layout
+
+\begin_layout Plain Layout
+
+0,30 * * * * OUT:C:
+\backslash
+ping.txt ping 10.9.43.55
+\end_layout
+
+\begin_layout Plain Layout
+
+0,30 4 * * * "OUT:C:
+\backslash
+Documents and Settings
+\backslash
+Carlo
+\backslash
+ping.txt" ping 10.9.43.55
+\end_layout
+
+\begin_layout Plain Layout
+
+0 3 * * * ENV:JAVA_HOME=C:
+\backslash
+jdks
+\backslash
+1.4.2_15 DIR:C:
+\backslash
+myproject OUT:C:
+\backslash
+myproject
+\backslash
+build.log C:
+\backslash
+myproject
+\backslash
+build.bat "Nightly Build"
+\end_layout
+
+\begin_layout Plain Layout
+
+0 4 * * * java:mypackage.MyClass#startApplication myOption1 myOption2
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "cron4j documentation"
+target "http://www.sauronsoftware.it/projects/cron4j/manual.php#p14"
+
+\end_inset
+
+ for the format.
+ 
+\end_layout
+
+\begin_layout Standard
+The system crontab, like the application crontabs, will be enabled as long
+ as the Prudence container is running.
+\end_layout
+
 \begin_layout Subsection
-startup
+/startup/
 \begin_inset CommandInset label
 LatexCommand label
 name "startup"
@@ -29266,6 +29751,40 @@ name "startup"
 
 \begin_layout Standard
 TODO
+\end_layout
+
+\begin_layout Subsection
+Tweaking
+\end_layout
+
+\begin_layout Standard
+Learn how to configure the size of the thread pool for task APIs 
+\bar under
+here (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-executor"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+The crontab uses its own configuration, see 
+\bar under
+here (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-scheduler"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Section
@@ -30657,10 +31176,21 @@ Load the Hazelcast configuration
 
 \begin_layout Subsubsection
 /component/services/prudence/executor
+\begin_inset CommandInset label
+LatexCommand label
+name "component-executor"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Configures thread pools for task execution.
+\end_layout
+
+\begin_layout Standard
+Must be a ScheduledExecutorService to support scheduling.
 \end_layout
 
 \begin_layout Subsubsection
@@ -30685,6 +31215,13 @@ Prudence assumes a single Restlet Component instance.
 
 \begin_layout Subsubsection
 /component/services/prudence/scheduler
+\begin_inset CommandInset label
+LatexCommand label
+name "component-scheduler"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

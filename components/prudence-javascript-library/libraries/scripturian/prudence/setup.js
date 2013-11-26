@@ -35,8 +35,8 @@ importClass(com.threecrickets.sincerity.exception.SincerityException)
  * @author Tal Liron
  * @version 1.0
  */
-Prudence.Routing = Prudence.Routing || function() {
-	/** @exports Public as Prudence.Routing */
+Prudence.Setup = Prudence.Setup || function() {
+	/** @exports Public as Prudence.Setup */
 	var Public = {}
 	
 	Public.cleanUri = function(uri) {
@@ -68,11 +68,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Allows creation of a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceApplication.html">PrudenceApplication</a>
 	 * instance according to rich configuration properties.
 	 * <p>
-	 * Before calling {@link Prudence.Routing.Application#create}, you should set the various properties that will be used
+	 * Before calling {@link Prudence.Setup.Application#create}, you should set the various properties that will be used
 	 * to create and configure the application.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.Application
+	 * @name Prudence.Setup.Application
 	 * @property {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [root=Sincerity.Container.here]
 	 * 
 	 * @property {Object} [settings] Application settings
@@ -140,8 +140,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 *                    the RIAP protocol); the default value for "hosts" is {internal: root.name}
 	 * 
 	 * @property {Object} [routes] Dict matching URI templates to target configurations;
-	 *                    the targets are created only when {@link Prudence.Routing.Application#create} is called,
-	 *                    and are usually instances of {@link Prudence.Routing.Restlet} sub-classes;
+	 *                    the targets are created only when {@link Prudence.Setup.Application#create} is called,
+	 *                    and are usually instances of {@link Prudence.Setup.Restlet} sub-classes;
 	 *                    see the Prudence Manual for more details
 	 * 
 	 * @property {Object} [errors] A dict matching HTTP error codes to URIs
@@ -153,7 +153,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 *                      as the application starts
 	 */
 	Public.Application = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Application */
+		/** @exports Public as Prudence.Setup.Application */
 		var Public = {}
 		
 		/** @ignore */
@@ -750,10 +750,10 @@ Prudence.Routing = Prudence.Routing || function() {
    	 * Base class for Prudence-based restlets.
    	 * 
 	 * @class
-	 * @name Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Restlet
 	 */
 	Public.Restlet = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Restlet */
+		/** @exports Public as Prudence.Setup.Restlet */
 		var Public = {}
 		
 		Public.create = function(app, uri) {
@@ -784,7 +784,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * all URIs to files or directories.
 	 * <p>
 	 * The class behaves a bit differently according to the size of the "roots" array param. If more than
-	 * one element is in the array, then in fact a {@link Prudence.Routing.Chain} is automatically created
+	 * one element is in the array, then in fact a {@link Prudence.Setup.Chain} is automatically created
 	 * around multiple instances. If only one element is in the array, then the chain is avoided. Use
 	 * the "root" param as an alternative for specifying a single element. 
 	 * <p>
@@ -803,8 +803,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * filter before the Directory.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.Static
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Static
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param [config]
 	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root="resources" subdirectory] The path from which files are searched
@@ -815,7 +815,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Number} [config.cacheDuration=settings.code.minimumTimeBetweenValidityChecks]
 	 */
 	Public.Static = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Static */
+		/** @exports Public as Prudence.Setup.Static */
 		var Public = {}
 		
 		/** @ignore */
@@ -919,8 +919,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.Manual
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Manual
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param [config]
 	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root="resources" subdirectory] The path from which files are searched
@@ -931,7 +931,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Boolean} [config.compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Manual */
+		/** @exports Public as Prudence.Setup.Manual */
 		var Public = {}
 		
 		/** @ignore */
@@ -1065,8 +1065,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.Scriptlet
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Scriptlet
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param [config]
 	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root='resources'] The path from which files are searched
@@ -1082,7 +1082,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Object} [config.plugins] Scriptlet plugins
 	 */
 	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Scriptlet */
+		/** @exports Public as Prudence.Setup.Scriptlet */
 		var Public = {}
 		
 		/** @ignore */
@@ -1253,11 +1253,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.Execute
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Execute
+	 * @augments Prudence.Setup.Restlet
 	 */
 	Public.Execute = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Execute */
+		/** @exports Public as Prudence.Setup.Execute */
 		var Public = {}
 		
 		/** @ignore */
@@ -1298,7 +1298,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Routes to a resource implementation via a dispatcher, which is a manual resource in
 	 * charge of forwarding entry point calls to the appropriate handlers.
 	 * <p>
-	 * This means that your application <i>must</i> have a {@link Prudence.Routing.Manual} configured for
+	 * This means that your application <i>must</i> have a {@link Prudence.Setup.Manual} configured for
 	 * dispatching to work.
 	 * <p>
 	 * Prudence supports a special short-form notation for configuring this class: '@dispatcher:id'
@@ -1318,8 +1318,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * before it.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Dispatch
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Dispatch
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String} config.id The dispatch ID
@@ -1327,7 +1327,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 */
 	Public.Dispatch = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Dispatch */
+		/** @exports Public as Prudence.Setup.Dispatch */
 		var Public = {}
 		
 		/** @ignore */
@@ -1373,7 +1373,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * <p>
 	 * If the target URI template ends with a "!", it is specially interpreted to mean that the "hidden"
 	 * param is true (and the "!" is not actually include in the target). Hiding is actually
-	 * not handled by this class, but rather the {@link Prudence.Routing.Router}, but is available
+	 * not handled by this class, but rather the {@link Prudence.Setup.Router}, but is available
 	 * here as convenient shortcut for the commonly used capture-and-hide paradigm. 
 	 * Note that you should not use the capture-and-hide trick with targets that include URI template
 	 * variables, because Prudence can only hide exact URI matches. Use explicit hiding instead
@@ -1395,8 +1395,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * filter before the CapturingRedirector.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Capture
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Capture
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String} config.uri The target URI template
@@ -1405,7 +1405,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 */
 	Public.Capture = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Capture */
+		/** @exports Public as Prudence.Setup.Capture */
 		var Public = {}
 		
 		/** @ignore */
@@ -1471,8 +1471,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/PrudenceRouter.html">PrudenceRouter</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Router
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Router
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param [config]
 	 * @param {Object} [config.routes] A dict matching URI templates to route configurations
@@ -1480,7 +1480,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Number} [config.cacheDuration=settings.code.minimumTimeBetweenValidityChecks] Time in milliseconds for cached fallback results
 	 */
 	Public.Router = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Router */
+		/** @exports Public as Prudence.Setup.Router */
 		var Public = {}
 		
 		/** @ignore */
@@ -1604,15 +1604,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Fallback.html">Fallback</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Chain
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Chain
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param [config]
 	 * @param {Array} [config.restlets] The route configurations to chain
 	 * @param {Number} [config.cacheDuration=settings.code.minimumTimeBetweenValidityChecks] Time in milliseconds for cached fallback results
 	 */
 	Public.Chain = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Chain */
+		/** @exports Public as Prudence.Setup.Chain */
 		var Public = {}
 		
 		/** @ignore */
@@ -1686,15 +1686,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ResolvingRedirector.html">ResolvingRedirector</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Redirect
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Redirect
+	 * @augments Prudence.Setup.Restlet
 	 *
 	 * @param config
 	 * @param {String} config.uri The target URI (must be absolute, not relative)
 	 * @param {String|Number} [config.mode='permanent'] Either 'permanent'/301, 'found'/302, 'seeOther'/303 or 'temporary'/307
 	 */
 	Public.Redirect = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Redirect */
+		/** @exports Public as Prudence.Setup.Redirect */
 		var Public = {}
 		
 		/** @ignore */
@@ -1753,11 +1753,11 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * singleton instance shared by all usages in the application.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.AddSlash
-	 * @augments Prudence.Routing.Restlet 
+	 * @name Prudence.Setup.AddSlash
+	 * @augments Prudence.Setup.Restlet 
 	 */
 	Public.AddSlash = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.AddSlash */
+		/** @exports Public as Prudence.Setup.AddSlash */
 		var Public = {}
 		
 		/** @ignore */
@@ -1787,14 +1787,14 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Resource
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Resource
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String} config.class The JVM class name (must inherit from http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html">ServerResource</a>)
 	 */
 	Public.Resource = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Resource */
+		/** @exports Public as Prudence.Setup.Resource */
 		var Public = {}
 		
 		/** @ignore */
@@ -1834,15 +1834,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedFilter.html">DelegatedFilter</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Filter
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Filter
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String} config.library The filter library's document URI
 	 * @param {Object} config.next The next route configuration
 	 */
 	Public.Filter = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Filter */
+		/** @exports Public as Prudence.Setup.Filter */
 		var Public = {}
 		
 		/** @ignore */
@@ -1873,15 +1873,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by an <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/Injector.html">Injector</a> instance.
 	 *
 	 * @class
-	 * @name Prudence.Routing.Injector
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Injector
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 * @param {Object} config.next The next route configuration
 	 */
 	Public.Injector = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Injector */
+		/** @exports Public as Prudence.Setup.Injector */
 		var Public = {}
 		
 		/** @ignore */
@@ -1928,7 +1928,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * to the route type specified by the "next" param.
 	 * <p>
 	 * For the resulting file to actually be served to the client, you will likely want a
-	 * {@link Prudence.Routing.Static} nested in "next". 
+	 * {@link Prudence.Setup.Static} nested in "next". 
 	 * <p>
 	 * Once a ".js.min" is created by this filter, it will not be recreated unless the source file(s)
 	 * have changed. Change is tracked according to the timestamp of files.
@@ -1938,15 +1938,15 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Douglas Crockford's <a href="http://www.crockford.com/javascript/jsmin.html">JSMin</a>.
 	 *
 	 * @class
-	 * @name Prudence.Routing.JavaScriptUnifyMinify
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.JavaScriptUnifyMinify
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String[]} config.roots The root directories
 	 * @param {Object} config.next The next route configuration
 	 */
 	Public.JavaScriptUnifyMinify = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.JavaScriptUnifyMinify */
+		/** @exports Public as Prudence.Setup.JavaScriptUnifyMinify */
 		var Public = {}
 		
 		/** @ignore */
@@ -2011,7 +2011,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * to the route type specified by the "next" param.
 	 * <p>
 	 * For the resulting file to actually be served to the client, you will likely want a
-	 * {@link Prudence.Routing.Static} nested in "next". 
+	 * {@link Prudence.Setup.Static} nested in "next". 
 	 * <p>
 	 * Once a ".css.min" is created by this filter, it will not be recreated unless the source file(s)
 	 * have changed. Change is tracked according to the timestamp of files.
@@ -2020,16 +2020,16 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Compression is done via <a href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.CssUnifyMinify
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.CssUnifyMinify
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String[]} config.roots The root directories
 	 * @param {Object} config.next The next route configuration
-	 * @see Prudence.Routing.Zuss
+	 * @see Prudence.Setup.Zuss
 	 */
 	Public.CssUnifyMinify = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.CssUnifyMinify */
+		/** @exports Public as Prudence.Setup.CssUnifyMinify */
 		var Public = {}
 		
 		/** @ignore */
@@ -2095,7 +2095,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * to the route type specified by the "next" param.
 	 * <p>
 	 * For the resulting file to actually be served to the client, you will likely want a
-	 * {@link Prudence.Routing.Static} nested in "next". 
+	 * {@link Prudence.Setup.Static} nested in "next". 
 	 * <p>
 	 * Once a ".css" or ".css.min" is created by this filter, it will not be recreated unless the source file
 	 * has changed. Change is tracked according to the timestamp of files.
@@ -2104,17 +2104,17 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Compression is done via <a href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.Zuss
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.Zuss
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String[]} config.roots The root directories
 	 * @param {<a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/Resolver.html">org.zkoss.zuss.Resolver</a>} [resolver=new <a href="http://www.zkoss.org/javadoc/latest/zuss/index.html?org/zkoss/zuss/impl/out/BuiltinResolver.html">BuiltinResolver</a>] The resolver
 	 * @param {Object} config.next The next route configuration
-	 * @see Prudence.Routing.CssUnifyMinify
+	 * @see Prudence.Setup.CssUnifyMinify
 	 */
 	Public.Zuss = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.Zuss */
+		/** @exports Public as Prudence.Setup.Zuss */
 		var Public = {}
 		
 		/** @ignore */
@@ -2203,8 +2203,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CacheControlFilter.html">CacheControlFilter</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.CacheControl
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.CacheControl
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {String} [config.mediaTypes] A dict of MIME types mapped to cache durations in millseconds
@@ -2212,7 +2212,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Object} config.next The next route configuration
 	 */
 	Public.CacheControl = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.CacheControl */
+		/** @exports Public as Prudence.Setup.CacheControl */
 		var Public = {}
 		
 		/** @ignore */
@@ -2282,8 +2282,8 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Routing.BasicHttpAuthenticator
-	 * @augments Prudence.Routing.Restlet
+	 * @name Prudence.Setup.BasicHttpAuthenticator
+	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
 	 * @param {Object} config.credentials Maps usernames to passwords
@@ -2291,7 +2291,7 @@ Prudence.Routing = Prudence.Routing || function() {
 	 * @param {Object} config.next The next route configuration
 	 */
 	Public.BasicHttpAuthenticator = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Routing.BasicHttpAuthenticator */
+		/** @exports Public as Prudence.Setup.BasicHttpAuthenticator */
 		var Public = {}
 		
 		/** @ignore */

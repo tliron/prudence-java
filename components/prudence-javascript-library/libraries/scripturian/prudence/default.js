@@ -1448,7 +1448,7 @@ var Prudence = {}
  * information.
  * <p>
  * Prudence also supports statically configured routing via routing.js.
- * See {@link Prudence.Routing.Redirect}. 
+ * See {@link Prudence.Setup.Redirect}. 
  * 
  * @name conversation.redirectPermament
  * @function
@@ -1476,7 +1476,7 @@ var Prudence = {}
  * most web browsers will honor this status, but some clients may not. 
  * <p>
  * Prudence also supports statically configured routing via routing.js.
- * See {@link Prudence.Routing.Redirect}. 
+ * See {@link Prudence.Setup.Redirect}. 
  * 
  * @name conversation.redirectSeeOther
  * @function
@@ -1504,7 +1504,7 @@ var Prudence = {}
  * most web browsers will honor this status, but some clients may not. 
  * <p>
  * Prudence also supports statically configured routing via routing.js.
- * See {@link Prudence.Routing.Redirect}. 
+ * See {@link Prudence.Setup.Redirect}. 
  * 
  * @name conversation.redirectTemporary
  * @function
