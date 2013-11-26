@@ -1,7 +1,7 @@
 
 document.require(
 	'/sincerity/container/',
-	'/prudence/routing/')
+	'/prudence/setup/')
 
 var app = new Prudence.Setup.Application()
 

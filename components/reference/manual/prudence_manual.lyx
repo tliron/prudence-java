@@ -29302,7 +29302,7 @@ function multiply(elements) {
 \end_layout
 
 \begin_layout Subsection
-crontab
+Application crontab
 \begin_inset CommandInset label
 LatexCommand label
 name "crontab"
@@ -29322,15 +29322,6 @@ target "http://en.wikipedia.org/wiki/Cron"
 \end_inset
 
 .
- (Behind the scenes, we use the 
-\begin_inset CommandInset href
-LatexCommand href
-name "cron4j"
-target "http://www.sauronsoftware.it/projects/cron4j/"
-
-\end_inset
-
- library.)
 \end_layout
 
 \begin_layout Standard
@@ -29396,10 +29387,7 @@ Notes:
 \end_layout
 
 \begin_layout Enumerate
-\begin_inset Quotes eld
-\end_inset
-
-crontab” will be checked for changes and parsed once per minute.
+The crontab files will be checked for changes and parsed once per minute.
  This means that you can edit this file and have your task scheduling change
  on the fly without restarting Prudence.
 \end_layout
@@ -29411,20 +29399,24 @@ The scheduler does not check to see if a task finished running before spawning
  task running at the same time.
  If this is problematic, consider using 
 \bar under
-application.task
-\bar default
- 
-\bar under
-(page 
+the task APIs (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-task"
+reference "task-apis"
 
 \end_inset
 
 )
 \bar default
- in your configuration scripts instead, with “false” as the last argument.
+ instead, with the 
+\begin_inset Quotes eld
+\end_inset
+
+fixedRepeat
+\begin_inset Quotes erd
+\end_inset
+
+ param set to false.
 \end_layout
 
 \begin_layout Subsubsection
@@ -29506,7 +29498,11 @@ The following rules apply:
 \end_layout
 
 \begin_layout Itemize
-Any of these settings can be “*”, signifying that any value would match
+Any of these settings can be “*”, signifying that 
+\emph on
+every
+\emph default
+ value would match: every minute, every hour, every day, etc.
 \end_layout
 
 \begin_layout Itemize
@@ -29523,7 +29519,15 @@ Multiple values per setting are possible, separated by commas
 \end_layout
 
 \begin_layout Itemize
-Multiple whole patterns are possible, separated by pipes (a logical 
+Multiple whole patterns are possible, separated by pipes (
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+: a logical 
 \begin_inset Quotes eld
 \end_inset
 
@@ -29532,6 +29536,20 @@ or
 \end_inset
 
 )
+\end_layout
+
+\begin_layout Standard
+Note that you can schedule the same task on multiple lines, which is 
+\emph on
+not
+\emph default
+ equivalent to using the pipe: multiple lines means that multiple task instances
+ might be spawned simultaneously if matched on more than one line.
+ Contrarily, using the pipe counts as a 
+\emph on
+single
+\emph default
+ match.
 \end_layout
 
 \begin_layout Paragraph
@@ -29614,20 +29632,6 @@ status open
 
 \end_layout
 
-\begin_layout Standard
-You can schedule the same task on multiple lines, which is 
-\emph on
-not
-\emph default
- equivalent to using the pipe: multiple lines means that multiple task instances
- might be spawned simultaneously if matched on more than one line.
- Contrarily, using the pipe counts as a 
-\emph on
-single
-\emph default
- match.
-\end_layout
-
 \begin_layout Subsubsection
 crontab API
 \end_layout
@@ -29640,7 +29644,7 @@ TODO
 Editing the crontab will reset
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 System crontab
 \end_layout
 
@@ -29721,7 +29725,7 @@ build.bat "Nightly Build"
 \end_layout
 
 \begin_layout Standard
-See the 
+The format is different from the application crontabs: see the 
 \begin_inset CommandInset href
 LatexCommand href
 name "cron4j documentation"
@@ -29729,13 +29733,12 @@ target "http://www.sauronsoftware.it/projects/cron4j/manual.php#p14"
 
 \end_inset
 
- for the format.
- 
+ for complete details.
 \end_layout
 
 \begin_layout Standard
-The system crontab, like the application crontabs, will be enabled as long
- as the Prudence container is running.
+Like the application crontabs, it will be enabled as long as the Prudence
+ container is running.
 \end_layout
 
 \begin_layout Subsection
