@@ -382,6 +382,20 @@ var Prudence = {}
  */
 
 /**
+ * Provides low-level access to the application's task collector, user for handling the application's crontab.
+ * 
+ * @name application.taskCollector
+ * @type <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ApplicationTaskCollector.html">com.threecrickets.prudence.ApplicationTaskCollector</a>
+ */
+
+/**
+ * Provides low-level access to the component's scheduler, user for handling the crontabs.
+ * 
+ * @name application.scheduler
+ * @type <a href="http://www.sauronsoftware.it/projects/cron4j/api/index.html?it/sauronsoftware/cron4j/Scheduler.html">it.sauronsoftware.cron4j.Scheduler</a>
+ */
+
+/**
  * The "document" namespace has two distinct uses. First, it represents the file you are in: this document. This is where you can
  * access the document's attributes and possibly change them. Many of these attributes have to do with caching. The second use of
  * this namespace is for accessing <i>any</i> document, e.g. {@link document#executeOnce}, {@link document#markExecuted}.

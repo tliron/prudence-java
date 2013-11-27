@@ -50,6 +50,11 @@ public abstract class InstanceUtil
 	public static final String EXECUTOR_ATTRIBUTE = "com.threecrickets.prudence.executor";
 
 	/**
+	 * Scheduler attribute for a {@link Component}.
+	 */
+	public static final String SCHEDULER_ATTRIBUTE = "com.threecrickets.prudence.scheduler";
+
+	/**
 	 * Cache attribute for a {@link Component} or an {@link Application}.
 	 */
 	public static final String CACHE_ATTRIBUTE = "com.threecrickets.prudence.cache";

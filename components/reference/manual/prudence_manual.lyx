@@ -18745,8 +18745,12 @@ Prudence applications live in their own subdirectory under
 \end_inset
 
 .
- The subdirectory name itself can be considered a setting, as it is used
- as a default identifier for the application in various use cases.
+ The subdirectory 
+\emph on
+name
+\emph default
+ itself can be considered a setting, as it is used as a default identifier
+ for the application in various use cases.
 \end_layout
 
 \begin_layout Standard
@@ -28211,6 +28215,15 @@ should not
  In these cases you would need to find some way to let the user know that
  the work they needed is done.
  Often, results are stored in a database.
+ (Diligence's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Progress Service"
+target "http://threecrickets.com/diligence/manual/service/progress/"
+
+\end_inset
+
+ is a generic tool for handling these scenarios.)
 \end_layout
 
 \begin_layout Itemize
@@ -28247,11 +28260,11 @@ These tasks are executed from beginning to end.
 \begin_inset Quotes eld
 \end_inset
 
-context
+context,
 \begin_inset Quotes erd
 \end_inset
 
-, which will be accessible via the 
+ which will be accessible via the 
 \begin_inset CommandInset href
 LatexCommand href
 name "document.context API"
@@ -28260,6 +28273,8 @@ target "http://threecrickets.com/api/javascript/?namespace=document&item=documen
 \end_inset
 
 .
+ Implement your task as a program if it is supposed to run only once in
+ a while.
 \end_layout
 
 \begin_layout Standard
@@ -28296,11 +28311,6 @@ for (var i = 0; i < count; i++) {
 
 \end_layout
 
-\begin_layout Standard
-Implement your task as a program if it is supposed to run only once in a
- while.
-\end_layout
-
 \begin_layout Paragraph
 As Entry Points in Programs
 \end_layout
@@ -28318,6 +28328,7 @@ context
 
  will be provided as an entry point argument.
  Additionally, entry points allow you to return a value to the caller.
+ Implement your task as an entry point if it is frequently used.
 \end_layout
 
 \begin_layout Standard
@@ -28367,26 +28378,6 @@ function myEntryPoint(context) {
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Implement your task as an entry point if it is frequently used.
-\end_layout
-
-\begin_layout Quote
-Actually, the 
-\begin_inset Quotes eld
-\end_inset
-
-context
-\begin_inset Quotes erd
-\end_inset
-
- is not entirely arbitrary.
- For distributed tasks, you need the context to be serializable in order
- for it to be transferred over the network.
- For example, you can serialize the context into JSON when spawning the
- task, and then deserialize it in the task implementation.
 \end_layout
 
 \begin_layout Subsection
@@ -28811,15 +28802,23 @@ var r = future.get(500, java.util.concurrent.TimeUnit.MILLISECONDS)
 \end_layout
 
 \begin_layout Quote
-Generally, it's not a very good idea to use the return value feature.
- Background tasks' advantage is in allowing you to release the current thread,
- but if you block waiting for a task to complete, then you will hold the
- current thread, which is especially bad for request threads.
- A better way to return values is to store them in a database and attempt
- to fetch them later.
- However, if you keep the block times very short, the feature has its uses:
- for example, an easy way to call code in one programming language from
- another.
+Generally, it's not a very good idea to use the returned Future.
+ The advantage of background tasks is in allowing you to release the current
+ thread, but if you block waiting for a task to complete, then you will
+ be doing the opposite.
+ A better way to return values from background tasks store them in a database
+ and attempt to fetch them later, as in the Diligence's 
+\begin_inset CommandInset href
+LatexCommand href
+name "Progress Service"
+target "http://threecrickets.com/diligence/manual/service/progress/"
+
+\end_inset
+
+.
+ However, if you keep the block times very short, the Future has its uses:
+ for example, it provides an easy way to call code in one programming language
+ from another.
 \end_layout
 
 \begin_layout Subsubsection
@@ -29030,6 +29029,20 @@ maintenance
 \end_inset
 
  have to be present on all nodes in the cluster.
+\end_layout
+
+\begin_layout Paragraph
+Serialization
+\end_layout
+
+\begin_layout Standard
+For distributed tasks, your sent contexts as well as your returned values
+ must be serializable in order for them to be transferred over the network.
+ If you're using JavaScript, this likely means sticking to primitive types:
+ strings and numbers.
+ However, you can serialize the data yourself: say, into JSON when spawning
+ the task, and then from JSON in the task implementation.
+ (The high-level API does this for you.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -29386,13 +29399,13 @@ status open
 Notes:
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Itemize
 The crontab files will be checked for changes and parsed once per minute.
  This means that you can edit this file and have your task scheduling change
  on the fly without restarting Prudence.
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Itemize
 The scheduler does not check to see if a task finished running before spawning
  a new instance of it, so that even if a task is not done yet, but it's
  time for it to be spawned again, you'll have multiple instances of the
@@ -29426,20 +29439,36 @@ Sending a Context
 \begin_layout Standard
 Optionally, you may add more text after the task name and whitespace: anything
  there is grabbed as a single string and sent as the context to the task,
- which can be accessed there as 
-\bar under
-document.context (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|document-context"
+ which can be accessed there using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.context API"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.context"
 
 \end_inset
 
-)
-\bar default
 .
  Because crontab is a text file, only textual contexts may be sent, but
  you can use JSON, XML or other encodings to create complex contexts.
+\end_layout
+
+\begin_layout Standard
+For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+* * * * * /tasks/every-minute/ {"message": "This is a JSON context"}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -29632,18 +29661,6 @@ status open
 
 \end_layout
 
-\begin_layout Subsubsection
-crontab API
-\end_layout
-
-\begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Standard
-Editing the crontab will reset
-\end_layout
-
 \begin_layout Subsection
 System crontab
 \end_layout
@@ -29738,7 +29755,54 @@ target "http://www.sauronsoftware.it/projects/cron4j/manual.php#p14"
 
 \begin_layout Standard
 Like the application crontabs, it will be enabled as long as the Prudence
- container is running.
+ container is running, and can be edited at runtime.
+ 
+\end_layout
+
+\begin_layout Subsection
+crontab APIs
+\end_layout
+
+\begin_layout Standard
+For direct access to the crontab, use 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.taskCollector"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.taskCollector"
+
+\end_inset
+
+ for the current application's 
+\begin_inset CommandInset href
+LatexCommand href
+name "ApplicationTaskCollector"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ApplicationTaskCollector.html"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.scheduler"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.scheduler"
+
+\end_inset
+
+ for the component-wide 
+\begin_inset CommandInset href
+LatexCommand href
+name "cron4j Scheduler"
+target "http://www.sauronsoftware.it/projects/cron4j/api/index.html?it/sauronsoftware/cron4j/Scheduler.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+These APIs let you modify the crontab in memory.
+ However, note that if you edit your crontab, the task table will be reset
+ and reloaded, losing the changes you made via the API.
 \end_layout
 
 \begin_layout Subsection
@@ -29753,7 +29817,70 @@ name "startup"
 \end_layout
 
 \begin_layout Standard
-TODO
+It's often useful to schedule a task to be run as soon as the application
+ starts: to initialize resources, turn on subsystems, do initial testing,
+ etc.
+\end_layout
+
+\begin_layout Standard
+Upon startup, Prudence will automatically spawn 
+\begin_inset Quotes eld
+\end_inset
+
+/startup/
+\begin_inset Quotes erd
+\end_inset
+
+ as a background task.
+ So, you can create a file called 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/startup.js
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/startup.py
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/startup/default.js
+\begin_inset Quotes erd
+\end_inset
+
+, etc.
+ For example, here's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/startup.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.logger.info('Our application started!')
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -29776,7 +29903,7 @@ reference "component-executor"
 \end_layout
 
 \begin_layout Standard
-The crontab uses its own configuration, see 
+For crontab configuration, see 
 \bar under
 here (page 
 \begin_inset CommandInset ref
@@ -31088,7 +31215,34 @@ name "configuring-component"
 \end_layout
 
 \begin_layout Standard
-TODO
+Your Prudence container's 
+\begin_inset Quotes eld
+\end_inset
+
+/component/
+\begin_inset Quotes erd
+\end_inset
+
+ directory has various subdirectories in which you can configure it.
+\end_layout
+
+\begin_layout Standard
+Prudence uses 
+\begin_inset Quotes eld
+\end_inset
+
+configuration-by-script
+\begin_inset Quotes erd
+\end_inset
+
+ almost everywhere: configuration files are true JavaScript source code,
+ meaning that you can do pretty much anything you need during the bootstrap
+ process, allowing for dynamic configurations that adjust to their working
+ environments.
+\end_layout
+
+\begin_layout Subsubsection
+Overview
 \end_layout
 
 \begin_layout Standard
@@ -31101,9 +31255,9 @@ Order: applications, services, starts component, then runs initialization
 \end_layout
 
 \begin_layout Standard
-See 
+We'll deal with this section at length in 
 \bar under
-configuring servers (page 
+a separate chapter  (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "servers"

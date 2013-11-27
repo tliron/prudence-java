@@ -550,12 +550,19 @@ Prudence.Setup = Prudence.Setup || function() {
 			// crontab
 			var crontab = Sincerity.Files.build(this.root, 'crontab')
 			if (crontab.exists() && !crontab.directory) {
-				if (sincerity.verbosity >= 2) {
-					println('  Crontab:')
-					println('    "{0}"'.cast(sincerity.container.getRelativePath(crontab)))
-				}
 				var scheduler = component.context.attributes.get('com.threecrickets.prudence.scheduler')
-				scheduler.addTaskCollector(new ApplicationTaskCollector(crontab, this.instance))
+				if (Sincerity.Objects.exists(scheduler)) {
+					if (sincerity.verbosity >= 2) {
+						println('  Crontab:')
+						println('    "{0}"'.cast(sincerity.container.getRelativePath(crontab)))
+					}
+					var taskCollector = new ApplicationTaskCollector(crontab, this.instance)
+					scheduler.addTaskCollector(taskCollector)
+					this.globals['com.threecrickets.prudence.taskCollector'] = taskCollector
+				}
+				else {
+					throw new SincerityException('Could not set up crontab because there is no scheduler: ' + crontab) 
+				}
 			}
 
 			// Use common cache, if exists

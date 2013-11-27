@@ -11,6 +11,8 @@
 
 package com.threecrickets.prudence.service;
 
+import it.sauronsoftware.cron4j.Scheduler;
+
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
@@ -28,6 +30,7 @@ import org.restlet.Context;
 import org.restlet.data.MediaType;
 
 import com.threecrickets.prudence.ApplicationTask;
+import com.threecrickets.prudence.ApplicationTaskCollector;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.util.InstanceUtil;
@@ -322,6 +325,48 @@ public class ApplicationService
 		return executor;
 	}
 
+	/**
+	 * Gets the task collector, if there is one.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>com.threecrickets.prudence.taskCollector</code> in the
+	 * application's {@link Context}.
+	 * 
+	 * @return The task collector
+	 */
+	public ApplicationTaskCollector getTaskCollector()
+	{
+		if( taskCollector == null )
+		{
+			ConcurrentMap<String, Object> attributes = getGlobals();
+			if( attributes != null )
+				taskCollector = (ApplicationTaskCollector) attributes.get( TASK_COLLECTOR_ATTRIBUTE );
+		}
+		return taskCollector;
+	}
+
+	/**
+	 * Gets the shared scheduler.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>com.threecrickets.prudence.scheduler</code> in the component's
+	 * {@link Context}.
+	 * 
+	 * @return The executor service
+	 */
+	public Scheduler getScheduler()
+	{
+		if( scheduler == null )
+		{
+			ConcurrentMap<String, Object> attributes = getSharedGlobals();
+
+			if( attributes != null )
+				scheduler = (Scheduler) attributes.get( InstanceUtil.SCHEDULER_ATTRIBUTE );
+		}
+
+		return scheduler;
+	}
+
 	//
 	// Operations
 	//
@@ -406,6 +451,11 @@ public class ApplicationService
 	// Private
 
 	/**
+	 * The task collector attribute in the application's context.
+	 */
+	private static final String TASK_COLLECTOR_ATTRIBUTE = "com.threecrickets.prudence.taskCollector";
+
+	/**
 	 * The application.
 	 */
 	private final Application application;
@@ -429,6 +479,16 @@ public class ApplicationService
 	 * The executor service.
 	 */
 	private ExecutorService executor;
+
+	/**
+	 * The task collector.
+	 */
+	private ApplicationTaskCollector taskCollector;
+
+	/**
+	 * The scheduler.
+	 */
+	private Scheduler scheduler;
 
 	/**
 	 * The logger.
