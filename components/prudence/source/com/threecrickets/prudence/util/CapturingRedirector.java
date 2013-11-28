@@ -17,6 +17,8 @@ import org.restlet.Response;
 import org.restlet.data.Reference;
 import org.restlet.routing.Redirector;
 
+import com.threecrickets.prudence.internal.CachingUtil;
+
 /**
  * A {@link Redirector} that keeps track of the captured reference.
  * 
@@ -111,6 +113,9 @@ public class CapturingRedirector extends ResolvingRedirector
 	@Override
 	public void handle( Request request, Response response )
 	{
+		// Clean up saved information
+		CachingUtil.clearExistingValidDocumentName( request );
+
 		if( getCapturedReference( request ) == null )
 			setCapturedReference( request, request.getResourceRef() );
 

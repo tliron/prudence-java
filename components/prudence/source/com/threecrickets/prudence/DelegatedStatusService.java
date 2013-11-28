@@ -207,7 +207,7 @@ public class DelegatedStatusService extends StatusService
 				response.setStatus( Status.SUCCESS_OK );
 				response.setEntity( null );
 
-				// Clean up caching information
+				// Clean up saved information
 				CachingUtil.clearExistingValidDocumentName( request );
 
 				// Delegate
