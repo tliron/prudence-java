@@ -95,8 +95,8 @@ This work is licensed under a
 
 \begin_inset CommandInset href
 LatexCommand href
-name "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License"
-target "http://creativecommons.org/licenses/by-nc-sa/3.0/"
+name "Attribution-NonCommercial-ShareAlike 4.0 International License"
+target "http://creativecommons.org/licenses/by-nc-sa/4.0/"
 
 \end_inset
 
@@ -1292,7 +1292,18 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-The 
+Learn how to create your own 
+\bar under
+application templates (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-templates"
+
+\end_inset
+
+)
+\bar default
+ for the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1300,33 +1311,7 @@ prudence create
 \begin_inset Quotes erd
 \end_inset
 
- command copies and modifies the application template under 
-\begin_inset Quotes eld
-\end_inset
-
-/component/templates/default/
-\begin_inset Quotes erd
-\end_inset
-
-.
- You can create your own templates in that directory, and use their name
- as a second argument to the 
-\begin_inset Quotes eld
-\end_inset
-
-prudence create
-\begin_inset Quotes erd
-\end_inset
-
- command, e.g.: 
-\begin_inset Quotes eld
-\end_inset
-
-sincerity prudence create wiki mytemplate
-\begin_inset Quotes erd
-\end_inset
-
-.
+ command.
 \end_layout
 
 \begin_layout Itemize
@@ -4770,7 +4755,18 @@ reference "the-uri-space"
 .
  You can also configure 
 \bar under
-virtual hosting and secure 
+virtual hosting (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+secure 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4781,7 +4777,7 @@ HTTPS
  servers (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "servers-and-hosts"
+reference "servers"
 
 \end_inset
 
@@ -4796,7 +4792,7 @@ There's generally a whole lot you
 can configure (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "configuring-component"
+reference "configuration"
 
 \end_inset
 
@@ -9432,7 +9428,7 @@ reference "application-globals"
 \begin_layout Standard
 To configure your hosts, and for a more complete discussion, see the 
 \bar under
-servers and hosts guide (page 
+component configuration guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "hosts"
@@ -10439,6 +10435,204 @@ Finished all startup tasks in 1.432 seconds.
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Understanding Routing
+\begin_inset CommandInset label
+LatexCommand label
+name "routing-in-depth"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this final section, we'll describe in detail how routing works in Prudence.
+ It can be considered optional, advanced reading.
+\end_layout
+
+\begin_layout Standard
+In Prudence, “routing” refers to the decision-making process by which an
+ incoming client request reaches its server-side handler.
+ Usually, information in the request itself is used to make the decision,
+ such as the URI, cookies, the client type, capabilities and geolocation.
+ But routing can also take server-side and other circumstances into account.
+ For example, a round-robin load-balancing router might send each incoming
+ request to a different handler in sequence.
+\end_layout
+
+\begin_layout Standard
+A request normally goes through many route types before reaching its handler.
+ Filters along the way can change information in the request, which could
+ also affect routing, and indeed filters can be used as routing tools.
+\end_layout
+
+\begin_layout Standard
+This abstract, flexible routing mechanism is one of Prudence's most powerful
+ features, but it's important to understand these basic principles.
+ A common misconception is that routing is based on the hierarchical structure
+ of URIs, such that a child URI's routing is somehow affected by its parent
+ URI.
+ While it's possible to explicitly design your routes hierarchically, routing
+ is primarily to be understood in terms of the order of routers and filters
+ along the way.
+ A parent and child URI could thus use entirely different handlers.
+\end_layout
+
+\begin_layout Standard
+To give you a better understanding of how Prudence routing works, let's
+ follow the journey of a request, starting with routing at the server level.
+\end_layout
+
+\begin_layout Paragraph
+Step 1: Servers
+\end_layout
+
+\begin_layout Standard
+Requests come in from 
+\bar under
+servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "servers"
+
+\end_inset
+
+)
+\bar default
+.
+ Each server listens at a particular HTTP or HTTPS port, and multiple servers
+ may in turn be restricted to particular network interfaces on your machine.
+ By default, Prudence has a single server that listens to HTTP requests
+ on port 8080 coming in from all network interfaces.
+\end_layout
+
+\begin_layout Paragraph
+Step 2: The Component
+\end_layout
+
+\begin_layout Standard
+There is only one component per Prudence instance, and 
+\emph on
+all 
+\emph default
+servers route to it.
+ This allows Prudence a unified mechanism to deal with all incoming requests.
+\end_layout
+
+\begin_layout Paragraph
+Step 3: Virtual Hosts
+\end_layout
+
+\begin_layout Standard
+The component's router decides which 
+\bar under
+virtual host (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "hosts"
+
+\end_inset
+
+)
+\bar default
+ should receive the request.
+ The decision is often made according to the domain name in the URL, but
+ can also take into account which server it came from.
+ Virtual hosting is a tool to let you host multiple sites on the same Prudence
+ instance, but it can be used for more subtle kinds of routing, too.
+\end_layout
+
+\begin_layout Standard
+At the minimum you must have one virtual host.
+ By default, Prudence has one that accepts all incoming requests from all
+ servers.
+ If you have multiple servers and want to treat them differently, you can
+ create a virtual host for each.
+\end_layout
+
+\begin_layout Paragraph
+Step 4: Applications
+\end_layout
+
+\begin_layout Standard
+Using 
+\bar under
+app.hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-hosts"
+
+\end_inset
+
+)
+\bar default
+, you can configure which virtual hosts your application will be attached
+ to, as well as the base URI for the application on each virtual host.
+ An application can be configured to accept requests from several virtual
+ hosts.
+\end_layout
+
+\begin_layout Standard
+To put it another way, there's a many-to-many relationship between virtual
+ hosts and applications: one host can have many applications, and the same
+ application can be attached to many hosts.
+\end_layout
+
+\begin_layout Standard
+Note that you can create a “nested” URI scheme for your applications.
+ For example, one application might be attached at the root URI at a certain
+ virtual host, “/”, while other applications might be at different URIs
+ beneath the root, “/wiki/” and “/wiki/support/forum/”.
+ The root application will not “steal” requests from the other applications,
+ because the request is routed to the right application by the virtual host.
+ The fact that the latter URI is the hierarchical descendant of the former
+ makes no difference to the virtual host router.
+\end_layout
+
+\begin_layout Paragraph
+A Complete Route
+\end_layout
+
+\begin_layout Standard
+Let's assume a client from the Internet send a request to URI “http://www.wacky.or
+g/wiki/support/forum/thread/12/.”
+\end_layout
+
+\begin_layout Standard
+Our machine has two network interfaces, one facing the Internet and one
+ facing the intranet, and we have two servers, one for each network adapter.
+ This particular request has come in through the external server.
+ The request then reaches the component's router.
+\end_layout
+
+\begin_layout Standard
+We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
+ main site, and another to handle “support.wacky.org”, a secure site where
+ registered users can open support tickets.
+\end_layout
+
+\begin_layout Standard
+Our forum application (in the 
+\begin_inset Quotes eld
+\end_inset
+
+/applications/forum/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory) is attached to both virtual hosts, but at different URIs.
+ It's at “www.wacky.org/wiki/support/forum/” and at “support.wacky.org/forum/”.
+ In this case, our request is routed to the first virtual host.
+ Though there are a few applications installed at this virtual host, our
+ request follows the route to the forum application.
+\end_layout
+
+\begin_layout Standard
+The remaining part of the URI, “/thread/12/” will be further routed inside
+ the forum application, according to route types installed in its routing.js.
 \end_layout
 
 \begin_layout Section
@@ -18270,12 +18464,20 @@ not
 Caching Backends
 \end_layout
 
-\begin_layout Subsubsection
-Tiered Caching
-\end_layout
+\begin_layout Standard
+See the 
+\bar under
+configuration chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-caching"
 
-\begin_layout Subsubsection
-Custom Backends
+\end_inset
+
+)
+\bar default
+ for a full guide to configuring your tiered caching backends.
+ Prudence comes with many powerful options.
 \end_layout
 
 \begin_layout Subsection
@@ -18764,7 +18966,7 @@ configuration-by-script
 
  almost everywhere: configuration files are true JavaScript source code,
  meaning that you can do pretty much anything you need during the bootstrap
- process, allowing for dynamic configurations that adjust to their working
+ process, allowing for dynamic configurations that adjust to their deployed
  environments.
 \end_layout
 
@@ -20143,6 +20345,21 @@ default
 \begin_inset Quotes erd
 \end_inset
 
+.
+\end_layout
+
+\begin_layout Standard
+To configure general Hazelcast settings, see the 
+\bar under
+configuration guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "component-distributed"
+
+\end_inset
+
+)
+\bar default
 .
 \end_layout
 
@@ -21994,10 +22211,7 @@ both
 that
 \emph default
  particular respect.
-\end_layout
-
-\begin_layout Quote
-Actually, because Prudence uses 
+ (Prudence uses 
 \begin_inset CommandInset href
 LatexCommand href
 name "Jetty"
@@ -22005,25 +22219,8 @@ target "http://www.eclipse.org/jetty/"
 
 \end_inset
 
- as its driver, you have the option to change it to a 
-\emph on
-blocking
-\emph default
- server, which may behave better in some controlled workloads.
- See 
-\bar under
-configuring servers (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "servers"
-
-\end_inset
-
-)
-\bar default
-.
- Generally, Jetty is designed from the ground-up for web services, and behaves
- 
+ as its driver: it is designed from the ground-up for web services, and
+ behaves 
 \begin_inset CommandInset href
 LatexCommand href
 name "smartly"
@@ -22031,7 +22228,7 @@ target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
 
 \end_inset
 
- and exceptionally well under high volumes.
+ and exceptionally well under high volumes.)
 \end_layout
 
 \begin_layout Standard
@@ -22209,6 +22406,8 @@ You can add some parallelism (and make use of more CPU cores) by running
  its own connection thread pool, which can't be shared with the other Node.js
  processes.
  In Prudence, by contrast, the same pool is trivially shared by all requests.
+ (Prudence's threads can also share an in-process memory-based cache backend
+ for the best possible caching performance at the 1st tier.)
 \end_layout
 
 \begin_layout Standard
@@ -29314,6 +29513,23 @@ function multiply(elements) {
 
 \end_layout
 
+\begin_layout Subsubsection
+An Even Lower-Level API
+\end_layout
+
+\begin_layout Standard
+If you have some knowledge of Java programming, you may access the task
+ executor directly via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.executor API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.executor"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 Application crontab
 \begin_inset CommandInset label
@@ -29663,6 +29879,13 @@ status open
 
 \begin_layout Subsection
 System crontab
+\begin_inset CommandInset label
+LatexCommand label
+name "system-crontab"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -31204,10 +31427,10 @@ reference "secure-servers"
 \end_layout
 
 \begin_layout Section
-Configuring the Component
+Configuration
 \begin_inset CommandInset label
 LatexCommand label
-name "configuring-component"
+name "configuration"
 
 \end_inset
 
@@ -31237,202 +31460,499 @@ configuration-by-script
 
  almost everywhere: configuration files are true JavaScript source code,
  meaning that you can do pretty much anything you need during the bootstrap
- process, allowing for dynamic configurations that adjust to their working
+ process, allowing for dynamic configurations that adjust to their deployed
  environments.
 \end_layout
 
+\begin_layout Quote
+Prudence, as of version 2.0, does not support live re-configuration.
+ You must restart Prudence in order for changed settings to take hold.
+ The one exception is the 
+\bar under
+system crontab (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "system-crontab"
+
+\end_inset
+
+)
+\bar default
+: changes there are picked up on-the-fly once per minute.
+\end_layout
+
 \begin_layout Subsubsection
-Overview
+Initializers
 \end_layout
 
 \begin_layout Standard
-Order: applications, services, starts component, then runs initialization
- tasks
-\end_layout
-
-\begin_layout Subsection
-/component/servers/
-\end_layout
-
-\begin_layout Standard
-We'll deal with this section at length in 
-\bar under
-a separate chapter  (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "servers"
-
+In all configuration files mentioned here, you have access to a global 
+\begin_inset Quotes eld
 \end_inset
 
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-/component/clients/
-\begin_inset CommandInset label
-LatexCommand label
-name "component-clients"
-
+initializers
+\begin_inset Quotes erd
 \end_inset
 
-
-\end_layout
-
-\begin_layout Subsection
-/component/hosts/
-\end_layout
-
-\begin_layout Standard
-See 
-\bar under
-configuring hosts (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "hosts"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsection
-/component/services/
-\end_layout
-
-\begin_layout Standard
-Run 
+ JavaScript array.
+ Any function you add to this array will be executed 
 \emph on
 after
 \emph default
- the component is configured but 
+ the component is started.
+ Here's a trivial usage example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+initializers.push(function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	println('This is my trivial initializer!')
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+/hosts/
+\begin_inset CommandInset label
+LatexCommand label
+name "hosts"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Restlet has excellent virtual host support.
+ There is a many-to-many relationship routing between servers, hosts and
+ applications, allowing you considerable flexibility in binding your URI-spaces.
+ For example, you can easily have a single Prudence container (running in
+ a single JVM instance) managing several sites at once, with several application
+s, on several domains, on several servers.
+\end_layout
+
+\begin_layout Standard
+Define your virtual hosts as 
+\begin_inset Quotes eld
+\end_inset
+
+.js
+\begin_inset Quotes erd
+\end_inset
+
+ files under 
+\begin_inset Quotes eld
+\end_inset
+
+/component/hosts/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A minimal host definition would like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = new VirtualHost(component.context)
+\end_layout
+
+\begin_layout Plain Layout
+
+host.name = 'privatehost'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.hosts.add(host)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+host.name
+\begin_inset Quotes erd
+\end_inset
+
+ param exactly matches the string used in 
+\bar under
+app.hosts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-hosts"
+
+\end_inset
+
+)
+\bar default
+ per each application.
+\end_layout
+
+\begin_layout Standard
+A virtual host can route according to domain name, and incoming server IP
+ address and port assignment:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+host.resourceScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourcePort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverAddress = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.serverPort = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostScheme = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostDomain = [string]
+\end_layout
+
+\begin_layout Plain Layout
+
+host.hostPort = [string]
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+“*” wildcards are supported for all of these properties.
+ If you do not explicitly set a property value, it will default to 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Some notes:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+resourceScheme
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+resourceDomain
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+resourcePort
+\begin_inset Quotes erd
+\end_inset
+
+ refer to the actual incoming URI.
+ Thus 
+\begin_inset Quotes eld
+\end_inset
+
+resourcePort
+\begin_inset Quotes erd
+\end_inset
+
+ would be meaningful 
 \emph on
-before
+only if
 \emph default
- it is started.
+ URIs explicitly include a port number, a rather rare situation.
+ To match a host to a specific 
+\emph on
+server
+\emph default
+ you would likely want to use 
+\begin_inset Quotes eld
+\end_inset
+
+serverPort
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+hostScheme
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+hostDomain
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+hostPort
+\begin_inset Quotes erd
+\end_inset
+
+ are for matching the 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ HTTP header used by some proxies.
 \end_layout
 
 \begin_layout Subsubsection
-/component/services/prudence/caching
+The Hungry Host
 \end_layout
 
 \begin_layout Standard
-Configure the caching backend
+The 
+\begin_inset Quotes eld
+\end_inset
+
+default
+\begin_inset Quotes erd
+\end_inset
+
+ host that comes with the Prudence skeleton doesn't configure any routing
+ limitations, meaning that 
+\emph on
+all
+\emph default
+ incoming requests are routed (equivalent to setting all properties at 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+).
+ We call such a host 
+\begin_inset Quotes eld
+\end_inset
+
+hungry,
+\begin_inset Quotes erd
+\end_inset
+
+ because it will 
+\begin_inset Quotes eld
+\end_inset
+
+eat
+\begin_inset Quotes erd
+\end_inset
+
+ any request coming its way, denying any other virtual hosts the opportunity
+ to route them.
+ Thus, if you want to use more than one host, you 
+\emph on
+have to make sure that the hungry host is the last
+\emph default
+ 
+\emph on
+one
+\emph default
+, so that it acts as a fallback when other hosts don't match incoming requests.
+ Because host files are executed in alphabetical order, a good way to ensure
+ that the hungry host is last is to number your host filenames.
+ For example:
 \end_layout
 
-\begin_layout Subsubsection
-/component/services/prudence/distributed
-\end_layout
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-Load the Hazelcast configuration
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/executor
-\begin_inset CommandInset label
-LatexCommand label
-name "component-executor"
-
+1-public.js
+\begin_inset Quotes erd
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-Configures thread pools for task execution.
-\end_layout
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-Must be a ScheduledExecutorService to support scheduling.
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/log
-\end_layout
-
-\begin_layout Standard
-Configures the component's log service, which is used for logging client
- requests.
- (By default web.log)
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/singleton
-\end_layout
-
-\begin_layout Standard
-Prudence assumes a single Restlet Component instance.
- If for some reason you have a more complex setup, you can configure Prudence's
- initialization here.
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/scheduler
-\begin_inset CommandInset label
-LatexCommand label
-name "component-scheduler"
-
+2-private.js
+\begin_inset Quotes erd
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
-Configure the cron scheduler (cron4j)
-\end_layout
-
-\begin_layout Subsubsection
-/component/services/prudence/status
-\begin_inset CommandInset label
-LatexCommand label
-name "component-status"
-
+\begin_layout Itemize
+\begin_inset Quotes eld
 \end_inset
 
+3-default.js
+\begin_inset Quotes erd
+\end_inset
 
-\end_layout
-
-\begin_layout Standard
-Configures Restlet's status service to use Prudence's implementation.
+ (this is the hungry host)
 \end_layout
 
 \begin_layout Subsubsection
-/component/services/prudence/version
+Deploying Multiple Sites
 \end_layout
 
 \begin_layout Standard
-Provides access to Prudence and Restlet versions.
+Using the virtual hosts and application model, Prudence can let you manage
+ several sites using a single Prudence installation (a 
+\begin_inset Quotes eld
+\end_inset
+
+container
+\begin_inset Quotes erd
+\end_inset
+
+).
+ But is this always a good idea?
+\end_layout
+
+\begin_layout Paragraph
+Advantages of Using a Single Container
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: you are using a single base directory for the
+ entire project, which might be easier for you.
+ Because all configuration is done by JavaScript inside the container, it
+ is very flexible.
+\end_layout
+
+\begin_layout Enumerate
+Less memory use than running multiple JVMs.
+\end_layout
+
+\begin_layout Enumerate
+Shared memory: you can use application.sharedGlobals to share state between
+ applications.
+\end_layout
+
+\begin_layout Paragraph
+Advantages of Using Multiple Containers
+\end_layout
+
+\begin_layout Enumerate
+Possibly simpler deployment: several base directories can mean separate
+ code/distribution repositories, which might be easier for you.
+ Configuration will be at your web frontend (reverse proxy).
+\end_layout
+
+\begin_layout Enumerate
+Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
+ With this in mind, it may even be worth having each 
+\emph on
+single application
+\emph default
+ running in its own JVM/container.
+\end_layout
+
+\begin_layout Enumerate
+Run-time flexibility: you can restart the JVM for one container without
+ affecting others that are running.
+\end_layout
+
+\begin_layout Standard
+There is no performance advantage in either scenario.
+ Everything in Prudence is designed around high-concurrency and threading,
+ and generally threads are managed by the OS globally.
+\end_layout
+
+\begin_layout Quote
+Well, there are caveats to that statement: Linux can group threads per running
+ process for purposes of prioritization, but this is mostly used for desktop
+ applications.
+ The feature could possibly be useful when running several Prudence containers,
+ if you want to guarantee high thread priority to one of the containers
+ over the others.
+ This kind of tweaking would only effect 
+\emph on
+very
+\emph default
+ high concurrency and highly CPU-bound deployments.
 \end_layout
 
 \begin_layout Subsection
-/component/templates/
-\end_layout
-
-\begin_layout Section
-Servers and Hosts
-\begin_inset CommandInset label
-LatexCommand label
-name "servers-and-hosts"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Restlet has excellent virtual host support, and there is a many-to-many
- relationship routing between almost servers, hosts and application.
- So, you can easily have a single Prudence container (running in a single
- JVM instance) managing several sites at once with several applications
- on several domains on several servers.
-\end_layout
-
-\begin_layout Subsection
-Configuring Servers
+/servers/
 \begin_inset CommandInset label
 LatexCommand label
 name "servers"
@@ -31443,7 +31963,15 @@ name "servers"
 \end_layout
 
 \begin_layout Standard
-Define your servers under 
+Define your servers as 
+\begin_inset Quotes eld
+\end_inset
+
+.js
+\begin_inset Quotes erd
+\end_inset
+
+ files under 
 \begin_inset Quotes eld
 \end_inset
 
@@ -31452,8 +31980,16 @@ Define your servers under
 \end_inset
 
 .
- At the simplest, you just add a new file and assign a port for it.
- A minimal server definition for HTTP:
+ At the minimum, you must specify a protocol and a port.
+ Here's an example definition for an HTTP server, 
+\begin_inset Quotes eld
+\end_inset
+
+http.js
+\begin_inset Quotes erd
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -31482,8 +32018,12 @@ component.servers.add(server)
 \end_layout
 
 \begin_layout Standard
-You can also bind a server to a specific IP address, in case your machine
- has more than one IP address:
+The server name is optional, and used for debugging.
+\end_layout
+
+\begin_layout Standard
+An important configuration is to bind a server to a specific IP address,
+ in case your machine has more than one IP address:
 \end_layout
 
 \begin_layout Standard
@@ -31502,8 +32042,8 @@ server.address = [string]
 \end_layout
 
 \begin_layout Standard
-There are also many configuration parameters for Jetty, the HTTP engine,
- which you can set in the server's context.
+There are many configuration parameters for Jetty, the HTTP engine, which
+ you can set as parameters in the server's context.
  Here we'll increase the size of the thread pool and lower the idle timeout:
 \end_layout
 
@@ -31533,11 +32073,6 @@ server.context.parameters.set('connector.idleTimeout', '10000')
 \end_layout
 
 \begin_layout Standard
-Note that parameters are always set as strings, even if they are interpreted
- as other types.
-\end_layout
-
-\begin_layout Standard
 For a complete list of available configuration parameters, see 
 \begin_inset CommandInset href
 LatexCommand href
@@ -31552,7 +32087,12 @@ target "http://threecrickets.com/api/java/restlet-jetty9/index.html?org/restlet/
 Make sure to check the documentation for all the parent classes
 \emph default
 , because they are inherited.
- (That link was for Jetty 9; use 
+ Note that parameters are always set as strings, even if they are interpreted
+ as other types.
+\end_layout
+
+\begin_layout Standard
+(That link was for Jetty 9; use 
 \begin_inset CommandInset href
 LatexCommand href
 name "this link"
@@ -31560,7 +32100,7 @@ target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext
 
 \end_inset
 
- if you are using Jetty 8.)
+ if you are using Jetty 8 on JVM 6.)
 \end_layout
 
 \begin_layout Subsubsection
@@ -31577,7 +32117,7 @@ name "secure-servers"
 \begin_layout Standard
 If you are using a 
 \bar under
-load balancer or another kind of proxy (page 
+load balancer or another kind of frontend proxy (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "proxying"
@@ -31690,7 +32230,7 @@ target "http://docs.oracle.com/javase/1.5.0/docs/tooldocs/index.html#security"
 
 \end_inset
 
- that is bundled with most JVMs.
+ that is bundled with most JDKs.
  For example:
 \end_layout
 
@@ -31853,28 +32393,34 @@ if (conversation.reference.schemeProtocol.name == 'HTTPS') {
 
 \end_layout
 
-\begin_layout Subsection
-Configuring Hosts
-\begin_inset CommandInset label
-LatexCommand label
-name "hosts"
-
-\end_inset
-
-
+\begin_layout Subsubsection
+Other Server Engines
 \end_layout
 
 \begin_layout Standard
-Define you virtual hosts under 
-\begin_inset Quotes eld
+Prudence, by default, uses 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jetty"
+target "http://www.eclipse.org/jetty/"
+
 \end_inset
 
-/component/hosts/
-\begin_inset Quotes erd
-\end_inset
+ 9 as its server engine.
+ Jetty is mature, performant and eminently scalable, and we highly recommend
+ it for production environments.
+\end_layout
 
-.
- A minimal host definition:
+\begin_layout Standard
+However, it's possible to replace Jetty with a different engine should you
+ require.
+ To do this, you must remove the Jetty Restlet 9 connector from your container,
+ and install a different connector instead, as well as its dependencies.
+\end_layout
+
+\begin_layout Standard
+To make sure Jetty 9 is excluded from the next installation, you can use
+ the following Sincerity command:
 \end_layout
 
 \begin_layout Standard
@@ -31884,17 +32430,17 @@ status open
 
 \begin_layout Plain Layout
 
-var host = new VirtualHost(component.context)
+sincerity exclude org.restlet.jse restlet-jetty9 :
 \end_layout
 
 \begin_layout Plain Layout
 
-host.name = 'privatehost'
+	exclude org.eclipse.jetty jetty-security :
 \end_layout
 
 \begin_layout Plain Layout
 
-component.hosts.add(host)
+	exclude org.eclipse.jetty jetty-client
 \end_layout
 
 \end_inset
@@ -31903,31 +32449,206 @@ component.hosts.add(host)
 \end_layout
 
 \begin_layout Standard
-The 
-\begin_inset Quotes eld
+As of Restlet 2.2, three alternatives are available:
+\end_layout
+
+\begin_layout Paragraph
+Jetty 8
+\end_layout
+
+\begin_layout Standard
+This is the recommended alternative to Jetty 9 if you cannot use JVM 7 or
+ above, and are limited to JVM 6.
+ To install it:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add org.restlet.jse restlet-jetty : install
+\end_layout
+
 \end_inset
 
-host.name
-\begin_inset Quotes erd
+The configuration parameters are documented 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/jetty/HttpServerHelper.html"
+
 \end_inset
 
- param exactly matches the string used in 
+.
+\end_layout
+
+\begin_layout Paragraph
+Simple
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Simple Framework"
+target "http://simpleweb.sourceforge.net/"
+
+\end_inset
+
+, which also works on JVM 6, is a lighter alternative to Jetty.
+ Its documentation makes some controversial claims about its improved scalabilit
+y in comparison to Jetty, but we encourage you to verify them for yourself.
+ To install it:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add org.restlet.jse restlet-simple : install
+\end_layout
+
+\end_inset
+
+The configuration parameters are documented 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/simple/SimpleServerHelper.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Restlet's Internal Server Engine
+\end_layout
+
+\begin_layout Standard
+Will be used if no other connector is installed.
+ While the internal engine may be adequate for testing, we found that it
+ suffers from stability problems, and do not recommend it for production
+ environments.
+\end_layout
+
+\begin_layout Subsection
+/clients/
+\begin_inset CommandInset label
+LatexCommand label
+name "component-clients"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Client connectors have two main use cases:
+\end_layout
+
+\begin_layout Itemize
+
 \bar under
-app.hosts (page 
+External requests (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "app-hosts"
+reference "external-requests"
 
 \end_inset
 
 )
 \bar default
- per each application.
+.
+ Most often you will use 
+\begin_inset Quotes eld
+\end_inset
+
+http:
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+https:
+\begin_inset Quotes erd
+\end_inset
+
+ connectors, but you might also need 
+\begin_inset Quotes eld
+\end_inset
+
+file:
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+ftp:
+\begin_inset Quotes erd
+\end_inset
+
+, WebDAV extensions and/or others.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+ internally 
+\emph on
+require
+\emph default
+ a 
+\begin_inset Quotes eld
+\end_inset
+
+file:
+\begin_inset Quotes erd
+\end_inset
+
+ client connector.
+ 
 \end_layout
 
 \begin_layout Standard
-A virtual host can route according to domain name, and incoming server IP
- address and port assignment:
+To add a client, add a 
+\begin_inset Quotes eld
+\end_inset
+
+.js
+\begin_inset Quotes erd
+\end_inset
+
+ file to 
+\begin_inset Quotes eld
+\end_inset
+
+/component/clients/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example, here's a minimal configuration for an HTTP client, 
+\begin_inset Quotes eld
+\end_inset
+
+http.js
+\begin_inset Quotes erd
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -31937,42 +32658,12 @@ status open
 
 \begin_layout Plain Layout
 
-host.resourceScheme = [string]
+importClass(org.restlet.data.Protocol)
 \end_layout
 
 \begin_layout Plain Layout
 
-host.resourceDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.resourcePort = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.serverAddress = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.serverPort = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostScheme = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostDomain = [string]
-\end_layout
-
-\begin_layout Plain Layout
-
-host.hostPort = [string]
+var client = component.clients.add(Protocol.HTTP)
 \end_layout
 
 \end_inset
@@ -31981,64 +32672,455 @@ host.hostPort = [string]
 \end_layout
 
 \begin_layout Standard
-“*” wildcards are supported for all of these properties.
- Some notes:
+Clients are configured by setting parameters in their context:
 \end_layout
 
-\begin_layout Itemize
-\begin_inset Quotes eld
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+client.context.parameters.set('socketTimeout', '10000')
+\end_layout
+
 \end_inset
 
-resourceScheme
-\begin_inset Quotes erd
+
+\end_layout
+
+\begin_layout Standard
+For a complete list of available configuration parameters, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "HttpClientHelper"
+target "http://threecrickets.com/api/java/restlet-jetty9/index.html?org/restlet/ext/jetty9/HttpClientHelper.html"
+
 \end_inset
 
-, 
-\begin_inset Quotes eld
-\end_inset
-
-resourceDomain
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-resourcePort
-\begin_inset Quotes erd
-\end_inset
-
- refer to the actual incoming URI.
- Thus 
-\begin_inset Quotes eld
-\end_inset
-
-resourcePort
-\begin_inset Quotes erd
-\end_inset
-
- would be meaningful 
+.
+ 
 \emph on
-only if
+Make sure to check the documentation for all the parent classes
 \emph default
- URIs explicitly include a port number.
- To match a host to a specific server you would likely want to use 
+, because they are inherited.
+ Note that parameters are always set as strings, even if they are interpreted
+ as other types.
+\end_layout
+
+\begin_layout Standard
+(That link was for Jetty 9; use 
+\begin_inset CommandInset href
+LatexCommand href
+name "this link"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/httpclient/HttpClientHelper.html"
+
+\end_inset
+
+ if you are using Apache HttpClient on JVM 6.)
+\end_layout
+
+\begin_layout Subsubsection
+Other Client Engines
+\end_layout
+
+\begin_layout Standard
+Prudence, by default, uses 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jetty"
+target "http://www.eclipse.org/jetty/"
+
+\end_inset
+
+ 9 as its client engine.
+ Jetty is mature, performant and eminently scalable, and we highly recommend
+ it for production environments.
+\end_layout
+
+\begin_layout Standard
+However, it's possible to replace Jetty with a different engine should you
+ require.
+ To do this, you must remove the Jetty Restlet 9 connector from your container,
+ and install a different connector instead, as well as its dependencies.
+\end_layout
+
+\begin_layout Standard
+To make sure Jetty 9 is excluded from the next installation, you can use
+ the following Sincerity command:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity exclude org.restlet.jse restlet-jetty9 :
+\end_layout
+
+\begin_layout Plain Layout
+
+	exclude org.eclipse.jetty jetty-security :
+\end_layout
+
+\begin_layout Plain Layout
+
+	exclude org.eclipse.jetty jetty-client
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As of Restlet 2.2, three alternatives are available:
+\end_layout
+
+\begin_layout Paragraph
+Apache HttpClient
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Apache HttpClient"
+target "http://hc.apache.org/httpcomponents-client-ga/"
+
+\end_inset
+
+ is the recommended alternative to Jetty 9 if you cannot use JVM 7 or above,
+ and are limited to JVM 6.
+ To install it:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add org.restlet.jse restlet-httpclient : install
+\end_layout
+
+\end_inset
+
+The configuration parameters are documented 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/httpclient/HttpClientHelper.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+URLConnection
+\end_layout
+
+\begin_layout Standard
+This engine uses the 
+\begin_inset CommandInset href
+LatexCommand href
+name "java.net.URLConnection"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/net/URLConnection.html"
+
+\end_inset
+
+ class included in the JVM.
+ It does not scale well, however it does support FTP connections.
+ To install it:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add org.restlet.jse restlet-net : install
+\end_layout
+
+\end_inset
+
+The configuration parameters are documented 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/net/HttpClientHelper.html"
+
+\end_inset
+
+ for HTTP, and 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext/net/FtpClientHelper.html"
+
+\end_inset
+
+ for FTP.
+\end_layout
+
+\begin_layout Paragraph
+Restlet's Internal Client Engine
+\end_layout
+
+\begin_layout Standard
+Will be used if no other connector is installed.
+ While the internal engine may be adequate for testing, we found that it
+ suffers from stability problems, and do not recommend it for production
+ environments.
+\end_layout
+
+\begin_layout Subsection
+/services/
+\end_layout
+
+\begin_layout Standard
+Services are run 
+\emph on
+after
+\emph default
+ the component is configured but 
+\emph on
+before
+\emph default
+ it is started.
+ Several services are required to support various Prudence features, but
+ you may freely add your own subdirectories here, to support your own features
+ and subsystems.
+\end_layout
+
+\begin_layout Subsubsection
+/services/log
+\end_layout
+
+\begin_layout Standard
+Prudence supports 
+\begin_inset CommandInset href
+LatexCommand href
+name "NCSA"
+target "http://en.wikipedia.org/wiki/Common_Log_Format"
+
+\end_inset
+
+-style logging of all incoming client requests, to all servers.
+ By default, we just configure the logger name here (the default is 
 \begin_inset Quotes eld
 \end_inset
 
-serverPort
+web
+\begin_inset Quotes erd
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+component.logService.loggerName = 'web'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You may also further configure the log format as well as other parameters.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Restlet documentation"
+target "http://restlet.org/learn/javadocs/snapshot/jse/api/index.html?org/restlet/service/LogService.html"
+
+\end_inset
+
+ for more information.
+\end_layout
+
+\begin_layout Standard
+To learn how configure this logger connect it to an appender, refer to the
+ documentation for Sincerity's 
+\begin_inset CommandInset href
+LatexCommand href
+name "logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+.
+ By default, Prudence will use a rolling file appender to 
+\begin_inset Quotes eld
+\end_inset
+
+/logs/web.log
 \begin_inset Quotes erd
 \end_inset
 
 .
 \end_layout
 
-\begin_layout Itemize
+\begin_layout Subsubsection
+/services/prudence/status
+\begin_inset CommandInset label
+LatexCommand label
+name "component-status"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here you may configure system-wide custom error pages.
+ Though applications may define their own custom error pages using 
+\bar under
+app.errors (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-errors"
+
+\end_inset
+
+)
+\bar default
+, you can set them up here, too.
+ Note that app.errors takes precedence over definitions here: you may thus
+ treat this feature as a fallback option for when applications do not handle
+ errors themselves.
+\end_layout
+
+\begin_layout Standard
+An example definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+statusService.capture(404, 'myapp', '/404/', component.context)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "capture API"
+target "http://threecrickets.com/api/java/prudence/com/threecrickets/prudence/DelegatedStatusService.html#capture(int,%20java.lang.String,%20java.lang.String,%20org.restlet.Context)"
+
+\end_inset
+
+ uses an application's 
+\bar under
+internal name (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-internal-host"
+
+\end_inset
+
+)
+\bar default
+, allowing you to implement the error page in any installed application.
+ Note that this API does not let you capture-and-hide the target URI, e.g.
+ 
 \begin_inset Quotes eld
 \end_inset
 
-hostScheme
+/404/!
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If you wish to hide it, you must do so in the application's app.routes.
+\end_layout
+
+\begin_layout Subsubsection
+/services/prudence/caching
+\begin_inset CommandInset label
+LatexCommand label
+name "component-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Configure the 
+\bar under
+caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+ backend here.
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset Quotes eld
+\end_inset
+
+/services/prudence/caching/default.js
+\begin_inset Quotes erd
+\end_inset
+
+, a 
+\begin_inset CommandInset href
+LatexCommand href
+name "ChainCache"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/ChainCache.html"
+
+\end_inset
+
+ instance is set up as the main cache implementation.
+ This allows you to create a tiered cache.
+ Each tier should be added in order: the first tier added to the chain is
+ the first one from which Prudence will fetch, so it usually should be the
+ fastest backend.
+ When storing entries in the cache, 
+\emph on
+all
+\emph default
+ tiers will be invoked.
+\end_layout
+
+\begin_layout Standard
+Configure your tiered backends under 
+\begin_inset Quotes eld
+\end_inset
+
+/services/prudence/caching/backends/
+\begin_inset Quotes erd
+\end_inset
+
+, making sure that their filenames are in alphabetical order.
+ By default, Prudence calls these 
+\begin_inset Quotes eld
+\end_inset
+
+backend.1.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -32046,31 +33128,930 @@ hostScheme
 \begin_inset Quotes eld
 \end_inset
 
-hostDomain
+backend.2.js
 \begin_inset Quotes erd
 \end_inset
 
- and 
+, etc., though you may your use your own alphabetic scheme.
+\end_layout
+
+\begin_layout Paragraph
+In-Process Memory Cache
+\end_layout
+
+\begin_layout Standard
+By default, Prudence sets up an 
+\begin_inset CommandInset href
+LatexCommand href
+name "InProcessMemoryCache"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/InProcessMemoryCache.html"
+
+\end_inset
+
+ as the first tier.
+ Its default max size is 1MB, however it's recommended to increase this
+ size according to your machine's available RAM.
+ Note that if you're limiting the JVM's RAM usage in some way (for example,
+ if you're using the Sincerity 
+\begin_inset CommandInset href
+LatexCommand href
+name "service plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+), then you want to make sure that the JVM has enough room for your cache
+ as well as its normal operational requirements.
+\end_layout
+
+\begin_layout Standard
+Though the in-process memory cache offers the best possible performance,
+ it's of course limited in size.
+ For 
+\emph on
+very
+\emph default
+ large web sites, it might be too small to be effective: if cache entries
+ keep being discarded to make room for others, it will not be helping you
+ much as a 1st tier backend.
+ Make sure to monitor your usage carefully to see how often cache entries
+ are discarded.
+ Otherwise, good alternatives for the 1st tier would be Hazelcast or memcached.
+\end_layout
+
+\begin_layout Paragraph
+Other Cache Backends
+\end_layout
+
+\begin_layout Standard
+The following cache backends are all supported in Prudence:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+: If you're already running in a 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+, enabling a Hazelcast-based cache backend is a great idea, because you've
+ already deployed it.
+ This cache backend is in essence similar to the in-process memory cache,
+ except that you will be pooling together the RAM from all running JVMs
+ in the cluster.
+ Note that it's possible to add 
+\begin_inset CommandInset href
+LatexCommand href
+name "lazy persistence plugins"
+target "http://www.hazelcast.com/docs/3.1/manual/multi_html/ch02.html#MapPersistence"
+
+\end_inset
+
+ to Hazelcast, to make sure your data is stored on disk.
+ Note that it doesn't make much sense to use the in-process memory cache
+ together with Hazelcast: choose one or the other.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/HazelcastCache.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "memcached"
+target "http://memcached.org/"
+
+\end_inset
+
+: For 
+\emph on
+very
+\emph default
+ large web sites, even your pooled RAM in the cluster may not be enough.
+ In that case, you may consider creating a separate memcached-based cluster,
+ entirely devoted to caching.
+ An advantage of memached is that it's very standard and widely supported,
+ so you may also be able to use your cache cluster for other systems.
+ Note that though memcached is not persistent by design, there exist compatible
+ alternatives, such as 
+\begin_inset CommandInset href
+LatexCommand href
+name "Tarantool"
+target "http://tarantool.org/"
+
+\end_inset
+
+, that allow lazy persistence of your cached data to disk.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/MemcachedCache.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+: If you're using MongoDB to store your data, it makes perfect sense to
+ also use it as a cache, as it performs very well and provides you with
+ instant persistence, as well as support for truly enormous caches.
+ You can also use a 
+\begin_inset CommandInset href
+LatexCommand href
+name "capped collection"
+target "http://docs.mongodb.org/manual/core/capped-collections/"
+
+\end_inset
+
+ for even better performance, at the expense of limiting your cache size.
+ Also, Prudence can store its cache entries as structured MongoDB documents,
+ making it very easy to debug or otherwise collect statistics directly from
+ the cache collection.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/MongoDbCache.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+SQL: This is a great choice if you're using a relational (SQL) database
+ to store your data.
+ Advocates of 
 \begin_inset Quotes eld
 \end_inset
 
-hostPort
+NoSQL
 \begin_inset Quotes erd
 \end_inset
 
- are for matching the 
+ like to claim that relational databases are 
 \begin_inset Quotes eld
 \end_inset
 
-Host
+slow,
 \begin_inset Quotes erd
 \end_inset
 
- HTTP header used by some proxies.
+ but that's nonsense: Prudence doesn't use transactions for its implementation,
+ and with careful tuning performance as a cache backend should be excellent,
+ no worse than 
+\begin_inset Quotes eld
+\end_inset
+
+NoSQL.
+\begin_inset Quotes erd
+\end_inset
+
+ It's definitely perfectly adequate as a 2nd-tier cache.
+ Practically any database can be supported via 
+\begin_inset CommandInset href
+LatexCommand href
+name "JDBC"
+target "http://www.oracle.com/technetwork/java/javase/jdbc/"
+
+\end_inset
+
+, though we also have a special implementation for the 
+\begin_inset CommandInset href
+LatexCommand href
+name "H2 database"
+target "http://www.h2database.com/"
+
+\end_inset
+
+, making it easy to test locally, because H2 can run inside Prudence's JVM.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/SqlCache.html"
+
+\end_inset
+
+ (also for 
+\begin_inset CommandInset href
+LatexCommand href
+name "H2"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/H2Cache.html"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Paragraph
+Easy Installation
+\end_layout
+
+\begin_layout Standard
+We've made it easy to install the dependencies for all the supported cache
+ backends via Sincerity packages and shortcuts.
+ The packages will also install an example configuration, as a 2nd-level
+ tier (after the default in-process memory cache), in the file 
+\begin_inset Quotes eld
+\end_inset
+
+/services/prudence/caching/backends/backend.2.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Here's a table of the shortcuts, as well as the full package identifiers:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="3">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Backend
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Shortcut
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Identifier
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Hazelcast
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+prudence.cache.hazelcast
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+com.threecrickets.prudence prudence-cache-hazelcast
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+memached
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+prudence.cache.memached
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+com.threecrickets.prudence prudence-cache-memcached
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+MongoDB
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+prudence.cache.mongodb
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+com.threecrickets.prudence prudence-cache-mongodb
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+H2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+prudence.cache.h2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+com.threecrickets.prudence prudence-cache-h2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For example, to install the H2 cache backend in the second tier:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add prudence.cache.h2 : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The default configuration will put the H2 files under 
+\begin_inset Quotes eld
+\end_inset
+
+/cache/prudence/cache/
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
-The Hungry Host
+/services/prudence/startup
+\end_layout
+
+\begin_layout Standard
+This service provides you with access to a global 
+\begin_inset Quotes eld
+\end_inset
+
+startupTasks
+\begin_inset Quotes erd
+\end_inset
+
+ JavaScript array.
+ Any object implementing 
+\begin_inset CommandInset href
+LatexCommand href
+name "Callable"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Callable.html"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "Runnable"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Runnable.html"
+
+\end_inset
+
+ that you add to this array will be executed 
+\emph on
+after
+\emph default
+ the component configured but 
+\emph on
+before
+\emph default
+ is started in a multi-threaded task pool.
+ You can configure the thread pool here.
+\end_layout
+
+\begin_layout Standard
+This feature is used by the 
+\bar under
+defrost/preheat feature (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-preheat"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+/services/prudence/executor
+\begin_inset CommandInset label
+LatexCommand label
+name "component-executor"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This service configures the thread pool used for 
+\bar under
+background task execution (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+.
+ You may change the size of the thread pool here, or otherwise install specializ
+ed implementations.
+ By default Prudence uses (number of CPU cores * 2 + 1) for the pool size,
+ a formula which offers good performance under high loads for common network-bou
+nd scenarios, though you may want to decrease this size for heavy CPU-bound
+ workloads.
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Executors API"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Executors.html"
+
+\end_inset
+
+ for a few other built-in options.
+ Note, however, that your implementation must support the ScheduledExecutorServi
+ce interface if you wish to support task scheduling.
+\end_layout
+
+\begin_layout Standard
+The executor can be accessed via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.executor API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.executor"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+/services/prudence/scheduler
+\begin_inset CommandInset label
+LatexCommand label
+name "component-scheduler"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The scheduler is used to handle the 
+\bar under
+crontab feature (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "crontab"
+
+\end_inset
+
+)
+\bar default
+.
+ By default, Prudence here sets up a scheduler for the component, accessible
+ via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.scheduler API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.scheduler"
+
+\end_inset
+
+, and also installs the 
+\bar under
+system-wide crontab (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "system-crontab"
+
+\end_inset
+
+)
+\bar default
+.
+ You may edit this file to add other specialized crontabs, or otherwise
+ set up scheduled tasks.
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "cron4j Scheduler"
+target "http://www.sauronsoftware.it/projects/cron4j/api/index.html?it/sauronsoftware/cron4j/Scheduler.html"
+
+\end_inset
+
+ documentation for more options.
+\end_layout
+
+\begin_layout Subsubsection
+/services/prudence/distributed
+\begin_inset CommandInset label
+LatexCommand label
+name "component-distributed"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This service is only available if you've installed the distributed Prudence
+ module: see the 
+\bar under
+clusters chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Its job is load the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+ configuration.
+ You have two options to configure Hazelcast:
+\end_layout
+
+\begin_layout Itemize
+By script, at 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is the default method, and is recommended.
+\end_layout
+
+\begin_layout Itemize
+By standard XML file, at 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast.conf
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This method is provided for compatibility, and it's generally preferable
+ to use the by-script configuration.
+ An example file is provided for you at 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast.alt.conf
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If you rename this file to 
+\begin_inset Quotes eld
+\end_inset
+
+hazelcast.conf
+\begin_inset Quotes erd
+\end_inset
+
+, then it will be used 
+\emph on
+instead
+\emph default
+ of the by-script configuration.
+\end_layout
+
+\begin_layout Standard
+The by-script configuration allows for multiple Hazelcast instances: each
+ instance is a file under the 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ By default, Prudence needs just one instance, configured at 
+\begin_inset Quotes eld
+\end_inset
+
+/hazelcast/prudence/default.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Here are the default settings for it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+config.instanceName = 'com.threecrickets.prudence'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var map = new MapConfig()
+\end_layout
+
+\begin_layout Plain Layout
+
+map.name = 'com.threecrickets.prudence.cache'
+\end_layout
+
+\begin_layout Plain Layout
+
+map.backupCount = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+map.evictionPolicy = MapConfig.EvictionPolicy.LFU
+\end_layout
+
+\begin_layout Plain Layout
+
+map.evictionPercentage = 25
+\end_layout
+
+\begin_layout Plain Layout
+
+config.addMapConfig(map)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+map = new MapConfig()
+\end_layout
+
+\begin_layout Plain Layout
+
+map.name = 'com.threecrickets.prudence.cacheTagMap'
+\end_layout
+
+\begin_layout Plain Layout
+
+map.backupCount = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+config.addMapConfig(map)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+map = new MapConfig()
+\end_layout
+
+\begin_layout Plain Layout
+
+map.name = 'com.threecrickets.prudence.distributedGlobals'
+\end_layout
+
+\begin_layout Plain Layout
+
+map.backupCount = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+map.evictionPolicy = MapConfig.EvictionPolicy.LFU
+\end_layout
+
+\begin_layout Plain Layout
+
+map.evictionPercentage = 25
+\end_layout
+
+\begin_layout Plain Layout
+
+config.addMapConfig(map)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However, you have control per application as to which Hazelcast instance
+ it uses, as well as the map names therein.
+ You may configure these in 
+\bar under
+the application's settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-distributed"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+For your convenience, the entire 
+\begin_inset CommandInset href
+LatexCommand href
+name "com.hazelcast.config package"
+target "http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/config/package-summary.html"
+
+\end_inset
+
+ is already imported for configuration-by-script.
+\end_layout
+
+\begin_layout Standard
+Also see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast configuration guide"
+target "http://www.hazelcast.com/docs/3.1/manual/multi_html/ch14.html"
+
+\end_inset
+
+ for a general overview.
+\end_layout
+
+\begin_layout Subsubsection
+/services/prudence/singleton
+\end_layout
+
+\begin_layout Standard
+Prudence assumes a single Restlet Component instance.
+ If for some reason you have a more complex setup, you can configure Prudence's
+ initialization here.
+\end_layout
+
+\begin_layout Subsubsection
+/services/prudence/version
+\end_layout
+
+\begin_layout Standard
+Provides access to Prudence, Restlet and Jetty versions, and prints out
+ the welcoming message.
+ There's not much to configure here, but feel free to examine the code!
+\end_layout
+
+\begin_layout Subsection
+/templates/
+\begin_inset CommandInset label
+LatexCommand label
+name "component-templates"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -32078,303 +34059,59 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-default
+prudence create
 \begin_inset Quotes erd
 \end_inset
 
- host that comes with the Prudence skeleton doesn't configure any routing
- limitations, meaning that 
-\emph on
-all
-\emph default
- incoming requests are routed.
- We call such a host 
+ Sincerity command copies and adapts the application template under 
 \begin_inset Quotes eld
 \end_inset
 
-hungry.
+/component/templates/default/
 \begin_inset Quotes erd
 \end_inset
 
- Thus, if you want to use more than one host, you have to make sure that
- the hungry host is the 
-\emph on
-last
-\emph default
- one, so that it acts as a fallback for when other hosts don't match incoming
- requests.
- Otherwise, it would 
+.
+ You can create your own templates in that directory, and use their name
+ as a second argument to the 
 \begin_inset Quotes eld
 \end_inset
 
-eat
+prudence create
 \begin_inset Quotes erd
 \end_inset
 
- requests from other hosts.
- Because host files are executed in alphabetical order, a good way to ensure
- that the hungry host is last is to number your host filenames.
- For example:
-\end_layout
-
-\begin_layout Itemize
-1-public.js
-\end_layout
-
-\begin_layout Itemize
-2-private.js
-\end_layout
-
-\begin_layout Itemize
-3-default.js (this is the hungry host)
-\end_layout
-
-\begin_layout Subsubsection
-Deploying Multiple Sites
-\end_layout
-
-\begin_layout Standard
-Using the virtual hosts and application model, Prudence can let you manage
- several sites using a single Prudence installation (a 
+ command, e.g.: 
 \begin_inset Quotes eld
 \end_inset
 
-container
+sincerity prudence create wiki mytemplate
 \begin_inset Quotes erd
 \end_inset
 
-).
- But is this always a good idea?
-\end_layout
-
-\begin_layout Paragraph
-Advantages of Using a Single Container
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: you are using a single base directory for the
- entire project, which might be easier for you.
- Because all configuration is done by JavaScript inside the container, it
- is very flexible.
-\end_layout
-
-\begin_layout Enumerate
-Less memory use than running multiple JVMs.
-\end_layout
-
-\begin_layout Enumerate
-Shared memory: you can use application.sharedGlobals to share state between
- applications.
-\end_layout
-
-\begin_layout Paragraph
-Advantages of Using Multiple Containers
-\end_layout
-
-\begin_layout Enumerate
-Possibly simpler deployment: several base directories can mean separate
- code/distribution repositories, which might be easier for you.
- Configuration will be at your web frontend (reverse proxy).
-\end_layout
-
-\begin_layout Enumerate
-Robustness: crashes/deadlocks/memory leaks in one VM won't affect others.
- With this in mind, it may even be worth having each 
-\emph on
-single application
-\emph default
- running in its own JVM/container.
-\end_layout
-
-\begin_layout Enumerate
-Run-time flexibility: you can restart the JVM for one container without
- affecting others that are running.
+.
+ Likely, you'd want to copy the default template and modify it.
 \end_layout
 
 \begin_layout Standard
-There is no performance advantage in either scenario.
- Everything in Prudence is designed around high-concurrency and threading,
- and generally threads are managed by the OS globally.
-\end_layout
-
-\begin_layout Quote
-Well, there are caveats to that statement: Linux can group threads per running
- process for purposes of prioritization, but this is only really done for
- desktop applications.
- The feature could be possibly useful when running several containers, if
- you want to guarantee high thread priority to one of the containers over
- the others.
- Any of this would only effect 
-\emph on
-very
-\emph default
- high concurrency and highly CPU-bound deployments.
-\end_layout
-
-\begin_layout Subsection
-Routing In-Depth
-\begin_inset CommandInset label
-LatexCommand label
-name "routing-in-depth"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In this final section, we'll describe in detail how routing works in Prudence.
- It can be considered optional, advanced reading.
-\end_layout
-
-\begin_layout Standard
-In Prudence, “routing” refers to the decision-making process by which an
- incoming client request reaches its server-side handler .
- Usually, information in the request itself is used to make the decision,
- such as the URI, cookies, the client type, capabilities and geolocation.
- But routing can also take server-side and other circumstances into account.
- For example, a round-robin load-balancing router might send each incoming
- request to a different handler in sequence.
-\end_layout
-
-\begin_layout Standard
-A request normally goes through many route types before reaching its handler.
- Filters along the way can change information in the request, which could
- also affect routing, and indeed filters can be used as routing tools.
-\end_layout
-
-\begin_layout Standard
-This abstract, flexible routing mechanism is one of Prudence's most powerful
- features, but it's important to understand these basic principles.
- A common misconception is that routing is based on the hierarchical structure
- of URIs, such that a child URI's routing is somehow affected by its parent
- URI.
- While it's possible to explicitly design your routes hierarchically, routing
- is primarily to be understood in terms of the order of routers and filters
- along the way.
- A parent and child URI could thus use entirely different handlers.
-\end_layout
-
-\begin_layout Standard
-To give you a better understanding of how Prudence routing works, let's
- follow the journey of a request, starting with routing at the server level.
-\end_layout
-
-\begin_layout Paragraph
-Step 1: Servers
-\end_layout
-
-\begin_layout Standard
-Requests come in from servers.
- Prudence instances have at the minimum one server, but can have more than
- one.
- Each server listens at a particular HTTP port, and multiple servers may
- in turn be restricted to particular network interfaces on your machine.
- By default, Prudence has a single server that listens to HTTP requests
- on port 8080 coming in from all network interfaces.
-\end_layout
-
-\begin_layout Paragraph
-Step 2: The Component
-\end_layout
-
-\begin_layout Standard
-There is only one component per Prudence instance, and 
-\emph on
-all 
-\emph default
-servers route to it.
- This allows Prudence a unified mechanism to deal with all incoming requests.
-\end_layout
-
-\begin_layout Paragraph
-Step 3: Virtual Hosts
-\end_layout
-
-\begin_layout Standard
-The component's router decides which virtual host should receive the request.
- The decision is often made according to the domain name in the URL, but
- can also take into account which server it came from.
- Virtual hosting is a tool to let you host multiple sites on the same Prudence
- instance, but it can be used for more subtle kinds of routing, too.
-\end_layout
-
-\begin_layout Standard
-At the minimum you must have one virtual host.
- By default, Prudence has one that accepts all incoming requests from all
- servers.
- If you have multiple servers and want to treat them differently, you can
- create a virtual host for each.
-\end_layout
-
-\begin_layout Paragraph
-Step 4: Applications
-\end_layout
-
-\begin_layout Standard
-Using app.hosts, you can configure which virtual hosts your application will
- be attached to, and the base URI for the application on each virtual host.
- An application can accept requests from several virtual hosts at once.
-\end_layout
-
-\begin_layout Standard
-To put it another way, there's a many-to-many relationship between virtual
- hosts and applications: one host can have many applications, and the same
- application can be attached to many hosts.
-\end_layout
-
-\begin_layout Standard
-Note that you can create a “nested” URI scheme for your applications.
- For example, one application might be attached at the root URI at a certain
- virtual host, “/”, while other applications might be at different URIs
- beneath the root, “/wackywiki” and “/wackywiki/support/forum”.
- The root application will not “steal” requests from the other applications,
- because the request is routed to the right application by the virtual host.
- The fact that the latter URI is the hierarchical descendant of the former
- makes no difference to the virtual host router.
-\end_layout
-
-\begin_layout Paragraph
-A Complete Route
-\end_layout
-
-\begin_layout Standard
-Let's assume a client from the Internet send a request to URI “http://www.wacky.or
-g/wackywicki/support/forum/thread/12/.”
-\end_layout
-
-\begin_layout Standard
-Our machine has two network interfaces, one facing the Internet and one
- facing the intranet, and we have two servers to listen on each.
- This particular request has come in through the external server.
- The request reachers the component's router.
-\end_layout
-
-\begin_layout Standard
-We have a few virtual hosts: one to handle “www.wacky.org”, our organization's
- main site, and another to handle “support.wacky.org”, a secure site where
- paying customers can open support tickets.
-\end_layout
-
-\begin_layout Standard
-Our forum application (in the 
+The mechanism interpolates the 
 \begin_inset Quotes eld
 \end_inset
 
-/applications/forum/
+${APPLICATION}
 \begin_inset Quotes erd
 \end_inset
 
- subdirectory) is attached to both virtual hosts, but at different URIs.
- It's at “www.wacky.org/wackywiki/support/forum” and at “support.wacky.org/forum”.
- In this case, our request is routed to the first virtual host.
- Though there are a few applications installed at this virtual host, our
- request follows the route to the forum application.
-\end_layout
+ string in any of these files to be the application name argument you supplied
+ as the first argument to 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-The remaining part of the URI, “/thread/12/” will be further routed inside
- the forum application, according to route types installed in its routing.js.
+prudence create
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section
@@ -33299,7 +35036,7 @@ Redo your routing.js, using
 the new manual (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "configuring-component"
+reference "configuration"
 
 \end_inset
 

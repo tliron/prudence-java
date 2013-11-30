@@ -589,7 +589,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			var internal = String(this.hosts.internal).replace(/\//g, '')
 			for (var p in this.preheat) {
 				var uri = this.preheat[p]
-				executorTasks.push(new PreheatTask(internal, uri, this.instance, this.settings.logger))
+				startupTasks.push(new PreheatTask(internal, uri, this.instance, this.settings.logger))
 			}
 
 			// Add to application list
@@ -700,7 +700,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			if (true == this.settings.code.defrost) {
 				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.scriptlet.debug ? true : false)
 				for (var t in tasks) {
-					executorTasks.push(tasks[t])
+					startupTasks.push(tasks[t])
 				}
 			}
 		}
