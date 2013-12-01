@@ -240,7 +240,7 @@ public class SqlCache implements Cache
 					statement.setString( 8, entry.getHeaders() == null ? "" : serializeHeaders( entry.getHeaders() ) );
 					statement.setTimestamp( 9, entry.getExpirationDate() != null ? new Timestamp( entry.getExpirationDate().getTime() ) : null );
 					statement.setTimestamp( 10, entry.getDocumentModificationDate() != null ? new Timestamp( entry.getDocumentModificationDate().getTime() ) : null );
-					statement.setString( 10, key );
+					statement.setString( 11, key );
 					if( !statement.execute() && statement.getUpdateCount() > 0 )
 					{
 						logger.fine( "Updated " + key );
