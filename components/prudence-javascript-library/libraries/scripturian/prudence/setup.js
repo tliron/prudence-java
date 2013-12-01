@@ -935,6 +935,8 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @param {String} [config.preExtension='m'] The pre-extension
 	 * @param {Boolean} [config.trailingSlashRequired=true] Whether trailing slashses are required
 	 * @param {String} [config.internalUri='/_manual/'] The base URI for the internal host
+	 * @param {String} [config.clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
+	 * @param {Number|String} [config.maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
 	 * @param {Boolean} [config.compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client
 	 */
 	Public.Manual = Sincerity.Classes.define(function(Module) {
@@ -945,11 +947,12 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri', 'compress']
+		Public._configure = ['root', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri', 'clientCachingMode', 'maxClientCachingDuration', 'compress']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.delegatedResource)) {
 				importClass(
+					com.threecrickets.prudence.internal.CachingUtil,
 					org.restlet.resource.Finder,
 					java.util.concurrent.CopyOnWriteArraySet,
 					java.io.File)
@@ -959,6 +962,25 @@ Prudence.Setup = Prudence.Setup || function() {
 					this.root = Sincerity.Files.build(app.root, this.root)
 				}
 
+				if (Sincerity.Objects.isString(this.clientCachingMode)) {
+					if (this.clientCachingMode == 'disabled') {
+						this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_DISABLED
+					}
+					else if (this.clientCachingMode == 'conditional') {
+						this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_CONDITIONAL
+					}
+					else if (this.clientCachingMode == 'offline') {
+						this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_OFFLINE
+					}
+					else {
+						throw new SincerityException('Unsupported clientCachingMode: ' + this.clientCachingMode)
+					}
+				}
+				else if (!Sincerity.Objects.exists(this.clientCachingMode)) {
+					this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_CONDITIONAL
+				}
+
+				this.maxClientCachingDuration = Sincerity.Objects.ensure(this.maxClientCachingDuration, -1)
 				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 'm')
 				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
 
@@ -980,6 +1002,8 @@ Prudence.Setup = Prudence.Setup || function() {
 					defaultName: app.settings.code.defaultDocumentName,
 					defaultLanguageTag: app.settings.code.defaultLanguageTag,
 					trailingSlashRequired: this.trailingSlashRequired,
+					clientCachingMode: this.clientCachingMode,
+					maxClientCachingDuration: this.maxClientCachingDuration, 
 					languageManager: executable.manager,
 					sourceViewable: app.settings.code.sourceViewable,
 					negotiateEncoding: this.compress,
@@ -1096,13 +1120,14 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'plugins', 'maxClientCachingDuration', 'compress']
+		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'maxClientCachingDuration', 'compress', 'plugins']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
 				importClass(
 					com.threecrickets.prudence.GeneratedTextResource,
 					com.threecrickets.prudence.util.PhpExecutionController,
+					com.threecrickets.prudence.internal.CachingUtil,
 					org.restlet.resource.Finder,
 					java.util.concurrent.CopyOnWriteArrayList,
 					java.util.concurrent.CopyOnWriteArraySet,
@@ -1121,20 +1146,20 @@ Prudence.Setup = Prudence.Setup || function() {
 
 				if (Sincerity.Objects.isString(this.clientCachingMode)) {
 					if (this.clientCachingMode == 'disabled') {
-						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_DISABLED
+						this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_DISABLED
 					}
 					else if (this.clientCachingMode == 'conditional') {
-						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_CONDITIONAL
+						this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_CONDITIONAL
 					}
 					else if (this.clientCachingMode == 'offline') {
-						this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_OFFLINE
+						this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_OFFLINE
 					}
 					else {
 						throw new SincerityException('Unsupported clientCachingMode: ' + this.clientCachingMode)
 					}
 				}
 				else if (!Sincerity.Objects.exists(this.clientCachingMode)) {
-					this.clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_CONDITIONAL
+					this.clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_CONDITIONAL
 				}
 
 				this.maxClientCachingDuration = Sincerity.Objects.ensure(this.maxClientCachingDuration, -1)

@@ -107,6 +107,10 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <code>com.threecrickets.prudence.DelegatedResource.cachingServiceName</code>
  * : Defaults to "caching".</li>
  * <li>
+ * <code>com.threecrickets.prudence.DelegatedResource.clientCachingMode:</code>
+ * {@link Integer}, defaults to
+ * {@link CachingUtil#CLIENT_CACHING_MODE_CONDITIONAL}.</li>
+ * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultCacheKeyTemplate:</code>
  * {@link String}, defaults to "{ri}|{dn}|{nmt}|{nl}|{ne}".</li>
  * <li>
@@ -160,16 +164,19 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link ExecutionController}.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.fileUploadDirectory:</code>
- * {@link File}. Defaults to "uploads" under the application root.</li>
+ * {@link File}, defaults to "uploads" under the application root.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>
  * <li>
+ * <code>com.threecrickets.prudence.DelegatedResource.languageManager:</code>
+ * {@link LanguageManager}, defaults to a new instance.</li>
+ * <li>
  * <code>com.threecrickets.prudence.DelegatesResource.libraryDocumentSources:</code>
  * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
  * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.languageManager:</code>
- * {@link LanguageManager}, defaults to a new instance.</li>
+ * <code>com.threecrickets.prudence.DelegatedResource.maxClientCachingDuration:</code>
+ * {@link Integer}, defaults to -1.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.negotiateEncoding:</code>
  * defaults to a true.</li>
@@ -617,7 +624,8 @@ public class DelegatedResource extends ServerResource
 			representation = (Representation) object;
 			try
 			{
-				cacheEntry = new CacheEntry( representation, conversationService.getHeaders(), conversationService.getTag(), executable.getDocumentTimestamp(), expirationTimestamp );
+				cacheEntry = new CacheEntry( representation, conversationService.getHeaders(), conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp,
+					executable.getDocumentTimestamp() );
 			}
 			catch( IOException x )
 			{
@@ -653,8 +661,8 @@ public class DelegatedResource extends ServerResource
 			else if( object instanceof byte[] )
 			{
 				// Bytes
-				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(), conversationService.getTag(),
-					executable.getDocumentTimestamp(), expirationTimestamp );
+				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
+					conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp, executable.getDocumentTimestamp() );
 				representation = cacheEntry.represent();
 				representation.setDisposition( conversationService.getDisposition() );
 			}
@@ -664,7 +672,7 @@ public class DelegatedResource extends ServerResource
 				try
 				{
 					cacheEntry = new CacheEntry( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
-						conversationService.getTag(), executable.getDocumentTimestamp(), expirationTimestamp );
+						conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp, executable.getDocumentTimestamp() );
 					representation = cacheEntry.represent();
 					representation.setDisposition( conversationService.getDisposition() );
 				}
@@ -693,6 +701,7 @@ public class DelegatedResource extends ServerResource
 				throw new ResourceException( x );
 			}
 
+			cachingUtil.setClientCachingHeaders( representation, getResponse() );
 			configureClientCaching = false;
 		}
 

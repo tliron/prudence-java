@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.CacheDirective;
 import org.restlet.data.Encoding;
 import org.restlet.data.Method;
 import org.restlet.data.Reference;
@@ -68,6 +70,21 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	//
 	// Constants
 	//
+
+	/**
+	 * Constant.
+	 */
+	public static final int CLIENT_CACHING_MODE_DISABLED = 0;
+
+	/**
+	 * Constant.
+	 */
+	public static final int CLIENT_CACHING_MODE_CONDITIONAL = 1;
+
+	/**
+	 * Constant.
+	 */
+	public static final int CLIENT_CACHING_MODE_OFFLINE = 2;
 
 	/**
 	 * Global list of supported encodings.
@@ -857,6 +874,64 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			// Return to original reference
 			if( captiveReference != null )
 				request.setResourceRef( resourceReference );
+		}
+	}
+
+	/**
+	 * Sets the client-side caching headers according to the configured caching
+	 * mode.
+	 * 
+	 * @param representation
+	 *        The representation
+	 * @param response
+	 *        The response
+	 */
+	public void setClientCachingHeaders( Representation representation, Response response )
+	{
+		List<CacheDirective> cacheDirectives = response.getCacheDirectives();
+		switch( attributes.getClientCachingMode() )
+		{
+			case CLIENT_CACHING_MODE_DISABLED:
+			{
+				// Remove all conditional and offline caching headers,
+				// explicitly setting "no-cache"
+				representation.setModificationDate( null );
+				representation.setExpirationDate( null );
+				representation.setTag( null );
+				cacheDirectives.clear();
+				cacheDirectives.add( CacheDirective.noCache() );
+				break;
+			}
+
+			case CLIENT_CACHING_MODE_CONDITIONAL:
+				// Leave conditional headers intact, but remove offline
+				// caching headers, explicitly setting "no-cache"
+				representation.setExpirationDate( null );
+				cacheDirectives.clear();
+				cacheDirectives.add( CacheDirective.noCache() );
+				break;
+
+			case CLIENT_CACHING_MODE_OFFLINE:
+			{
+				// Add offline caching headers based on conditional
+				// headers
+				Date expirationDate = representation.getExpirationDate();
+				if( expirationDate != null )
+				{
+					long maxAge = ( expirationDate.getTime() - System.currentTimeMillis() );
+					if( maxAge > 0 )
+					{
+						long maxClientCachingDuration = attributes.getMaxClientCachingDuration();
+						if( maxClientCachingDuration != -1L )
+							// Limit the cache duration
+							maxAge = Math.min( maxAge, maxClientCachingDuration );
+
+						cacheDirectives.clear();
+						cacheDirectives.add( CacheDirective.maxAge( (int) ( maxAge / 1000L ) ) );
+					}
+				}
+				break;
+			}
 		}
 	}
 

@@ -88,7 +88,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link ConcurrentMap}, defaults to a new {@link ConcurrentHashMap}.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.fileUploadDirectory:</code>
- * {@link File}. Defaults to "uploads" under the application root.</li>
+ * {@link File}, defaults to "uploads" under the application root.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>

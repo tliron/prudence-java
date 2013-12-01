@@ -79,7 +79,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link ExecutionController}.</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.fileUploadDirectory:</code>
- * {@link File}. Defaults to "uploads" under the application root.</li>
+ * {@link File}, defaults to "uploads" under the application root.</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>

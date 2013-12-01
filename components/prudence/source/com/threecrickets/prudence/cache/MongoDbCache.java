@@ -183,7 +183,8 @@ public class MongoDbCache implements Cache
 		document.put( "$set", set );
 
 		// Note: In binary mode, the expirationDate is also inside the binary
-		// dump, however we need it here, too, to allow for fast pruning.
+		// dump, however we need it outside the opaque binary, too, to allow for
+		// fast pruning
 		set.put( "expirationDate", entry.getExpirationDate() );
 
 		String[] tags = entry.getTags();
@@ -204,10 +205,6 @@ public class MongoDbCache implements Cache
 		}
 		else
 		{
-			Date documentModificationDate = entry.getDocumentModificationDate();
-			if( documentModificationDate != null )
-				set.put( "documentModificationDate", documentModificationDate );
-
 			String string = entry.getString();
 			if( string != null )
 				set.put( "string", string );
@@ -235,9 +232,17 @@ public class MongoDbCache implements Cache
 			if( characterSet != null )
 				set.put( "characterSet", characterSet.getName() );
 
+			Date modificationDate = entry.getModificationDate();
+			if( modificationDate != null )
+				set.put( "modificationDate", modificationDate );
+
 			Tag tag = entry.getTag();
 			if( tag != null )
 				set.put( "tag", tag.format() );
+
+			Date documentModificationDate = entry.getDocumentModificationDate();
+			if( documentModificationDate != null )
+				set.put( "documentModificationDate", documentModificationDate );
 
 			Series<Header> headers = entry.getHeaders();
 			if( headers != null )
@@ -295,15 +300,16 @@ public class MongoDbCache implements Cache
 					}
 					else
 					{
-						Date documentModificationDate = (Date) document.get( "documentModificationDate" );
 						String string = (String) document.get( "string" );
 						bytes = (byte[]) document.get( "bytes" );
 						MediaType mediaType = MediaType.valueOf( (String) document.get( "mediaType" ) );
 						Language language = Language.valueOf( (String) document.get( "language" ) );
 						Encoding encoding = Encoding.valueOf( (String) document.get( "encoding" ) );
 						CharacterSet characterSet = CharacterSet.valueOf( (String) document.get( "characterSet" ) );
+						Date modificationDate = (Date) document.get( "modificationDate" );
 						String tagValue = (String) document.get( "tag" );
 						Tag tag = tagValue != null ? Tag.parse( tagValue ) : null;
+						Date documentModificationDate = (Date) document.get( "documentModificationDate" );
 
 						Series<Header> headers = null;
 						Object storedHeaders = document.get( "headers" );
@@ -324,9 +330,9 @@ public class MongoDbCache implements Cache
 						}
 
 						if( string != null )
-							cacheEntry = new CacheEntry( string, mediaType, language, characterSet, encoding, headers, tag, documentModificationDate, expirationDate );
+							cacheEntry = new CacheEntry( string, mediaType, language, characterSet, encoding, headers, modificationDate, tag, expirationDate, documentModificationDate );
 						else
-							cacheEntry = new CacheEntry( bytes, mediaType, language, characterSet, encoding, headers, tag, documentModificationDate, expirationDate );
+							cacheEntry = new CacheEntry( bytes, mediaType, language, characterSet, encoding, headers, modificationDate, tag, expirationDate, documentModificationDate );
 					}
 
 					logger.fine( "Fetched: " + key );

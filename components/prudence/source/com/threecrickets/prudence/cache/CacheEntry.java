@@ -72,7 +72,8 @@ public class CacheEntry implements Externalizable
 	 */
 	public CacheEntry( CacheEntry cacheEntry, Encoding encoding ) throws IOException
 	{
-		this( cacheEntry.string, cacheEntry.mediaType, cacheEntry.language, cacheEntry.characterSet, encoding, cacheEntry.headers, cacheEntry.tag, cacheEntry.modificationDate, cacheEntry.expirationDate );
+		this( cacheEntry.string, cacheEntry.mediaType, cacheEntry.language, cacheEntry.characterSet, encoding, cacheEntry.headers, cacheEntry.modificationDate, cacheEntry.tag, cacheEntry.expirationDate,
+			cacheEntry.modificationDate );
 		setTags( cacheEntry.getTags() );
 	}
 
@@ -88,7 +89,8 @@ public class CacheEntry implements Externalizable
 	 */
 	public CacheEntry( CacheEntry cacheEntry, String string ) throws IOException
 	{
-		this( string, cacheEntry.mediaType, cacheEntry.language, cacheEntry.characterSet, cacheEntry.encoding, cacheEntry.headers, cacheEntry.tag, cacheEntry.modificationDate, cacheEntry.expirationDate );
+		this( string, cacheEntry.mediaType, cacheEntry.language, cacheEntry.characterSet, cacheEntry.encoding, cacheEntry.headers, cacheEntry.modificationDate, cacheEntry.tag, cacheEntry.expirationDate,
+			cacheEntry.modificationDate );
 		setTags( cacheEntry.getTags() );
 	}
 
@@ -107,25 +109,29 @@ public class CacheEntry implements Externalizable
 	 *        The encoding
 	 * @param headers
 	 *        The headers
+	 * @param modificationDate
+	 *        The modification date or null
 	 * @param tag
 	 *        The tag
-	 * @param documentModificationDate
-	 *        The document modification date
 	 * @param expirationDate
 	 *        The expiration date
+	 * @param documentModificationDate
+	 *        The document modification date
 	 * @throws IOException
 	 *         In case of a compression error
 	 */
-	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Tag tag, Date documentModificationDate, Date expirationDate )
-		throws IOException
+	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Date modificationDate, Tag tag, Date expirationDate,
+		Date documentModificationDate ) throws IOException
 	{
 		this.mediaType = mediaType;
 		this.language = language;
 		this.characterSet = characterSet;
 		this.encoding = Encoding.IDENTITY.equals( encoding ) ? null : encoding;
 		this.headers = headers;
-		this.documentModificationDate = documentModificationDate;
+		this.modificationDate = modificationDate != null ? modificationDate : new Date();
+		this.tag = tag;
 		this.expirationDate = expirationDate;
+		this.documentModificationDate = documentModificationDate;
 
 		if( IoUtil.SUPPORTED_COMPRESSION_ENCODINGS.contains( encoding ) )
 			bytes = IoUtil.compress( string, encoding, "text" );
@@ -148,14 +154,17 @@ public class CacheEntry implements Externalizable
 	 *        The encoding
 	 * @param headers
 	 *        The headers
+	 * @param modificationDate
+	 *        The modification date or null
 	 * @param tag
 	 *        The tag
-	 * @param documentModificationDate
-	 *        The document modification date
 	 * @param expirationDate
 	 *        The expiration date
+	 * @param documentModificationDate
+	 *        The document modification date
 	 */
-	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Tag tag, Date documentModificationDate, Date expirationDate )
+	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Date modificationDate, Tag tag, Date expirationDate,
+		Date documentModificationDate )
 	{
 		this.bytes = bytes;
 		this.mediaType = mediaType;
@@ -163,9 +172,10 @@ public class CacheEntry implements Externalizable
 		this.characterSet = characterSet;
 		this.encoding = Encoding.IDENTITY.equals( encoding ) ? null : encoding;
 		this.headers = headers;
+		this.modificationDate = modificationDate != null ? modificationDate : new Date();
 		this.tag = tag;
-		this.documentModificationDate = documentModificationDate;
 		this.expirationDate = expirationDate;
+		this.documentModificationDate = documentModificationDate;
 	}
 
 	/**
@@ -183,19 +193,22 @@ public class CacheEntry implements Externalizable
 	 *        The encoding
 	 * @param headers
 	 *        The headers
+	 * @param modificationTimestamp
+	 *        The modification timestamp or 0
 	 * @param tag
 	 *        The tag
-	 * @param documentModificationTimestamp
-	 *        The document modification timestamp
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
+	 * @param documentModificationTimestamp
+	 *        The document modification timestamp
 	 * @throws IOException
 	 *         In case of a compression error
 	 */
-	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Tag tag, long documentModificationTimestamp, long expirationTimestamp )
-		throws IOException
+	public CacheEntry( String string, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long modificationTimestamp, Tag tag, long expirationTimestamp,
+		long documentModificationTimestamp ) throws IOException
 	{
-		this( string, mediaType, language, characterSet, encoding, headers, tag, new Date( documentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
+		this( string, mediaType, language, characterSet, encoding, headers, modificationTimestamp > 0 ? new Date( modificationTimestamp ) : null, tag, expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null,
+			new Date( documentModificationTimestamp ) );
 	}
 
 	/**
@@ -213,16 +226,20 @@ public class CacheEntry implements Externalizable
 	 *        The encoding
 	 * @param headers
 	 *        The headers
+	 * @param modificationTimestamp
+	 *        The modification timestamp or 0
 	 * @param tag
 	 *        The tag
-	 * @param documentModificationTimestamp
-	 *        The document modification timestamp
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
+	 * @param documentModificationTimestamp
+	 *        The document modification timestamp
 	 */
-	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, Tag tag, long documentModificationTimestamp, long expirationTimestamp )
+	public CacheEntry( byte[] bytes, MediaType mediaType, Language language, CharacterSet characterSet, Encoding encoding, Series<Header> headers, long modificationTimestamp, Tag tag, long expirationTimestamp,
+		long documentModificationTimestamp )
 	{
-		this( bytes, mediaType, language, characterSet, encoding, headers, tag, new Date( documentModificationTimestamp ), expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null );
+		this( bytes, mediaType, language, characterSet, encoding, headers, modificationTimestamp > 0 ? new Date( modificationTimestamp ) : null, tag, expirationTimestamp > 0 ? new Date( expirationTimestamp ) : null,
+			new Date( documentModificationTimestamp ) );
 	}
 
 	/**
@@ -232,19 +249,21 @@ public class CacheEntry implements Externalizable
 	 *        The representation
 	 * @param headers
 	 *        The headers
+	 * @param modificationTimestamp
+	 *        The modification timestamp or 0
 	 * @param tag
 	 *        The tag
-	 * @param documentModificationTimestamp
-	 *        The document modification timestamp
 	 * @param expirationTimestamp
 	 *        The expiration timestamp or 0 for no expiration
+	 * @param documentModificationTimestamp
+	 *        The document modification timestamp
 	 * @throws IOException
 	 *         In case of a compression error
 	 */
-	public CacheEntry( Representation representation, Series<Header> headers, Tag tag, long documentModificationTimestamp, long expirationTimestamp ) throws IOException
+	public CacheEntry( Representation representation, Series<Header> headers, long modificationTimestamp, Tag tag, long expirationTimestamp, long documentModificationTimestamp ) throws IOException
 	{
-		this( representation.getText(), representation.getMediaType(), representation.getLanguages().get( 0 ), representation.getCharacterSet(), representation.getEncodings().get( 0 ), headers, tag,
-			documentModificationTimestamp, expirationTimestamp );
+		this( representation.getText(), representation.getMediaType(), representation.getLanguages().get( 0 ), representation.getCharacterSet(), representation.getEncodings().get( 0 ), headers, modificationTimestamp,
+			tag, expirationTimestamp, documentModificationTimestamp );
 	}
 
 	/**
@@ -508,9 +527,9 @@ public class CacheEntry implements Externalizable
 
 		String tagValue = in.readUTF();
 		tag = tagValue != null ? Tag.parse( tagValue ) : null;
-		documentModificationDate = new Date( in.readLong() );
 		modificationDate = new Date( in.readLong() );
 		expirationDate = new Date( in.readLong() );
+		documentModificationDate = new Date( in.readLong() );
 	}
 
 	public void writeExternal( ObjectOutput out ) throws IOException
@@ -554,9 +573,9 @@ public class CacheEntry implements Externalizable
 		}
 
 		IoUtil.writeUtf8( out, tag != null ? tag.format() : "" );
-		out.writeLong( documentModificationDate.getTime() );
 		out.writeLong( modificationDate.getTime() );
 		out.writeLong( expirationDate.getTime() );
+		out.writeLong( documentModificationDate.getTime() );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -617,7 +636,7 @@ public class CacheEntry implements Externalizable
 	/**
 	 * The entry modification date.
 	 */
-	private Date modificationDate = new Date();
+	private Date modificationDate;
 
 	/**
 	 * The expiration date.

@@ -18,6 +18,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.restlet.Context;
 import org.restlet.resource.ServerResource;
 
+import com.threecrickets.prudence.GeneratedTextResource;
+import com.threecrickets.prudence.internal.CachingUtil;
+
 /**
  * @author Tal Liron
  */
@@ -195,6 +198,55 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 		return cachingKeyTemplatePlugins;
 	}
 
+	/**
+	 * Whether or not to send information to the client about cache expiration.
+	 * Defaults to {@link CachingUtil#CLIENT_CACHING_MODE_CONDITIONAL} .
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>clientCachingMode</code> in the application's {@link Context}.
+	 * 
+	 * @return The client caching mode
+	 */
+	public int getClientCachingMode()
+	{
+		if( clientCachingMode == null )
+		{
+			Number number = (Number) getAttributes().get( prefix + ".clientCachingMode" );
+
+			if( number != null )
+				clientCachingMode = number.intValue();
+
+			if( clientCachingMode == null )
+				clientCachingMode = CachingUtil.CLIENT_CACHING_MODE_CONDITIONAL;
+		}
+
+		return clientCachingMode;
+	}
+
+	/**
+	 * The maximum client caching duration in milliseconds. Defaults to -1,
+	 * which means no maximum.
+	 * <p>
+	 * Only has an effect when {@link #getClientCachingMode()} is
+	 * {@link GeneratedTextResource#CLIENT_CACHING_MODE_OFFLINE}.
+	 * 
+	 * @return The maximum client caching duration.
+	 */
+	public long getMaxClientCachingDuration()
+	{
+		if( maxClientCachingDuration == null )
+		{
+			Number number = (Number) getAttributes().get( prefix + ".maxClientCachingDuration" );
+
+			if( number != null )
+				maxClientCachingDuration = number.longValue();
+			else
+				maxClientCachingDuration = -1L;
+		}
+
+		return maxClientCachingDuration;
+	}
+
 	//
 	// ContextualAttributes
 	//
@@ -255,6 +307,16 @@ public class ResourceContextualAttributes extends NonVolatileContextualAttribute
 	 * The caching key template plugins.
 	 */
 	private ConcurrentMap<String, String> cachingKeyTemplatePlugins;
+
+	/**
+	 * Whether or not to send information to the client about cache expiration.
+	 */
+	private Integer clientCachingMode;
+
+	/**
+	 * The maximum client caching expiration in milliseconds.
+	 */
+	private Long maxClientCachingDuration;
 
 	/**
 	 * The attributes.

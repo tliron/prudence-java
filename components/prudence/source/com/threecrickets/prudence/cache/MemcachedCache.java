@@ -163,7 +163,7 @@ public class MemcachedCache implements Cache
 						Long tagTimestamp = (Long) memcached.get( tagPrefix + tag );
 						if( tagTimestamp != null )
 						{
-							if( tagTimestamp > cacheEntry.getModificationDate().getTime() )
+							if( tagTimestamp > cacheEntry.getDocumentModificationDate().getTime() )
 							{
 								// Tag is newer, so this entry should be
 								// considered invalid

@@ -1314,7 +1314,7 @@ var Prudence = {}
  * but is the next best feature.
  * <p>
  * You can also use {@link conversation#maxAge} instead of this property, which also adds a few extra features.
- * If you set both, most clients will consider conversation.maxAge to supercede this property.
+ * If you set both, most clients will consider conversation.maxAge to supersede this property.
  * It's often a good idea to set both in order to support all kinds of clients.
  * <p>
  * The value is a long integer representing the number of milliseconds since January 1, 1970, 00:00:00 GMT ("Unix time").

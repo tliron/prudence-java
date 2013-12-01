@@ -17466,6 +17466,18 @@ miss
 sed version.
 \end_layout
 
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.duration"
+
+\end_inset
+
+ for more details.
+\end_layout
+
 \begin_layout Paragraph
 A Little Bit of Caching Goes a Long Way
 \end_layout
@@ -17550,6 +17562,18 @@ all
  cache entries based on the resource, whatever their final cache key.
 \end_layout
 
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.tags"
+
+\end_inset
+
+ for more details.
+\end_layout
+
 \begin_layout Subsubsection
 caching.keyTemplate
 \begin_inset CommandInset label
@@ -17600,6 +17624,18 @@ reference "settings-caching"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.keyTemplate"
+
+\end_inset
+
+ for more details.
 \end_layout
 
 \begin_layout Standard
@@ -17844,7 +17880,7 @@ This powerful feature allows you to interpolate your own custom values into
 some
 \emph default
  code will be run for every request, even for cache hits, it gives you the
- opportunity to write efficient, fast code that is used only for hadling
+ opportunity to write efficient, fast code that is used only for handling
  caching.
 \end_layout
 
@@ -18149,6 +18185,18 @@ reference "interpolation-conversation-locals"
 , we've effectively allowed the cache key template to be correctly cast.
 \end_layout
 
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.keyTemplatePlugins"
+
+\end_inset
+
+ for more details.
+\end_layout
+
 \begin_layout Paragraph
 An Optimization
 \end_layout
@@ -18285,6 +18333,18 @@ reference "settings-caching"
 .
 \end_layout
 
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "API documentation"
+target "http://threecrickets.com/api/javascript/?namespace=caching&item=caching.key"
+
+\end_inset
+
+ for more details.
+\end_layout
+
 \begin_layout Subsubsection
 application.cache
 \end_layout
@@ -18313,155 +18373,15 @@ See the
 \begin_inset CommandInset href
 LatexCommand href
 name "API documentation"
-target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/cache/Cache.html"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.cache"
 
 \end_inset
 
  for more details.
 \end_layout
 
-\begin_layout Subsection
-Client-Side Caching
-\begin_inset CommandInset label
-LatexCommand label
-name "client-side-caching"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-See 
-\bar under
-static resources (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "static-resources-client-side-caching"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
 \begin_layout Subsubsection
-Conditional Requests
-\end_layout
-
-\begin_layout Standard
-HTTP clients, such as web browsers, store downloaded content in their local
- cache, marking it with a modification date and tag according to HTTP headers
- in the response.
- Subsequent requests to the same URL will be “conditional,” meaning that
- the client will tell the server what the latest modification date it has.
- If the server does not have new data, then it returns an empty response
- with the 304 “not modified” HTTP status, letting the client know that it
- is safe to use its cached version.
- This saves both bandwidth and processing resources on the server.
-\end_layout
-
-\begin_layout Standard
-To support conditional requests, you have to explicitly set at least one
- of 
-\bar under
-conversation.modificationDate (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-modification-date"
-
-\end_inset
-
-)
-\bar default
- and 
-\bar under
-conversation.tag (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-tag"
-
-\end_inset
-
-)
-\bar default
-.
- If you implement 
-\bar under
-handleGetInfo (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "handle-get-info"
-
-\end_inset
-
-)
-\bar default
-, you should be returning one of these values instead.
-\end_layout
-
-\begin_layout Standard
-Note that these attributes are ignored in case you are constructing and
- returning your own 
-\begin_inset CommandInset href
-LatexCommand href
-name "Representation instance"
-target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/Representation.html"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph
-Client Caching
-\end_layout
-
-\begin_layout Standard
-Though clients rely on a local cache for conditional requests, you can provide
- them with additional caching directives.
- In Prudence, you can control the expiration of the client's cached entry
- with 
-\bar under
-conversation.maxAge (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-max-age"
-
-\end_inset
-
-)
-\bar default
- or 
-\bar under
-conversation.expirationDate (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-expiration-date"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-Explicitly setting cache directives has an important side effect: most clients
- will 
-\emph on
-not
-\emph default
- send conditional HTTP requests for the cached data until the cache entry
- expires.
- This allows you to save bandwidth and improves client performance, but
- at the expense of not being able to update the client upon changes.
- Use with care.
-\end_layout
-
-\begin_layout Subsection
-Caching Backends
+Backends
 \end_layout
 
 \begin_layout Standard
@@ -18478,6 +18398,706 @@ reference "component-caching"
 \bar default
  for a full guide to configuring your tiered caching backends.
  Prudence comes with many powerful options.
+\end_layout
+
+\begin_layout Subsection
+Client-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "client-side-caching"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Many HTTP clients, an in particular web clients, can cache results locally.
+ Actually, HTTP specifies two different caching modes:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Conditional mode
+\series default
+: Here, the client caches the downloaded data, but checks with the server
+ to make sure new data is not available.
+ If new data is not available, then the cached data is used, otherwise it
+ is downloaded.
+ Remarkably, this is done in a single step: the HTTP headers returned from
+ the server provide the necessary information about the freshness of the
+ data, and if there is no need to download, then the client will stop there.
+ The request will end with a 304 
+\begin_inset Quotes eld
+\end_inset
+
+not modified
+\begin_inset Quotes erd
+\end_inset
+
+ HTTP status code.
+ Prudence provides you with various tools to optimize conditional HTTP,
+ so that you can be sure to do only the minimal amount of work necessary
+ for the check.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Offline mode
+\series default
+: Here, the client is told 
+\emph on
+explicitly 
+\emph default
+not to check with the server for a certain amount of time.
+ Obviously, this provides the best possible performance and user experience:
+ no network chatter is necessary.
+ But, also obviously, this means that during that period there is no way
+ for your application to push new data to the client.
+ Prudence provides you with tools for using offline mode, but you should
+ use it with care.
+\end_layout
+
+\begin_layout Subsubsection
+Automatic Caching
+\end_layout
+
+\begin_layout Standard
+Here's the good news: if you're using server-side caching, then client-side
+ caching in conditional mode is enabled for you automatically, by default,
+ for the cached resources.
+ Moreover, Prudence will compute the expiration times accordingly and specifical
+ly per request.
+ For example, if you are caching a particular resource for 5 minutes, and
+ a client tries to access that resource for the first time after 1 minute
+ has passed since the cache entry was stored, then the client will be told
+ to cache the resource for 4 minutes.
+ After those 4 minutes have passed, the client won't need to do a conditional
+ HTTP request: it knows that it would need new data.
+\end_layout
+
+\begin_layout Standard
+Automatic client-side caching applies to both scriptlet and manual resources.
+\end_layout
+
+\begin_layout Paragraph
+Changing the Automatic Caching Mode
+\end_layout
+
+\begin_layout Standard
+If you wish, you may change the default mode from conditional to offline
+ in your routing.js:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	{
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'scriptlet',
+\end_layout
+
+\begin_layout Plain Layout
+
+		clientCachingMode: 'offline',
+\end_layout
+
+\begin_layout Plain Layout
+
+		maxClientCachingDuration: '30m'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Quotes eld
+\end_inset
+
+maxClientCachingDuration
+\begin_inset Quotes erd
+\end_inset
+
+ only has an effect in offline mode: it provides a certain safety cap against
+ too-long cache durations.
+ The default is -1, which means this cap is disabled.
+\end_layout
+
+\begin_layout Standard
+Just make sure you understand the implications of offline mode: you will
+ not be able to push changes to the client for the cached duration.
+ You can also turn off client-side caching by setting 
+\begin_inset Quotes eld
+\end_inset
+
+clientCachingMode
+\begin_inset Quotes erd
+\end_inset
+
+ to 
+\begin_inset Quotes eld
+\end_inset
+
+disabled
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Manual Caching
+\end_layout
+
+\begin_layout Standard
+If you're not using Prudence's automatic server-side caching, you can still
+ affect client-side caching by using the APIs.
+\end_layout
+
+\begin_layout Standard
+For conditional mode, you have the option of using either modification timestamp
+s or tags:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.modificationTimestamp"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.modificationTimestamp"
+
+\end_inset
+
+: The client will compare the modification timestamp it stored with its
+ cached entry to this.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.tagHttp"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.tagHttp"
+
+\end_inset
+
+: The client will compare the tag it stored with its cached entry to this.
+\end_layout
+
+\begin_layout Standard
+For offline mode:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.maxAge"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.maxAge"
+
+\end_inset
+
+: The client will not contact your server regarding the resource until this
+ number of seconds has passed.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.expirationTimestamp"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.expirationTimestamp"
+
+\end_inset
+
+: Similar to maxAge, but using an explicit expiration time.
+ Note that if both are set, most clients will treat maxAge as superseding
+ expirationTimestamp.
+\end_layout
+
+\begin_layout Standard
+Note, though, that though the APIs are very simple, leveraging them is not
+ trivial, and may require you to design your data structures with thought
+ towards client-side caching.
+ For example, storing a modification timestamp within a single database
+ entry is simple enough, but what if your data is actually the result of
+ a complex query pulling data from several entries? You could potentially
+ use the latest modification date of all of them: but, as you can see, this
+ can quickly get complicated and inefficient.
+ Sometimes it make make sense to actually 
+\begin_inset Quotes eld
+\end_inset
+
+bubble
+\begin_inset Quotes erd
+\end_inset
+
+ modification dates upwards to all affected database entries as soon as
+ you modify them: it would make your save operations heavier, but it could
+ very well be worth it for a much improved user experience.
+\end_layout
+
+\begin_layout Standard
+In some cases, calculating a tag might be less costly than keeping track
+ of modification timestamps.
+ For some data structures, tags may even be provided for you as a byproduct
+ of how they work: key hashes, serial IDs, checksums, etc., are all great
+ candidates for tags.
+\end_layout
+
+\begin_layout Subsubsection
+Bypassing the Client Cache
+\end_layout
+
+\begin_layout Standard
+A devilishly useful aspect of client-side caching is that the cache key
+ is the entire URL, 
+\emph on
+including
+\emph default
+ the query.
+ This means that by simply adding a query parameter (which you otherwise
+ ignore in your server-side handling), you can force the client to fetch
+ new data, 
+\emph on
+even when using offline mode caching for that resource
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Of course, you can't use this trick unless you can control the URLs which
+ the client uses.
+ Luckily, this is exactly what you can do in HTTP: see the 
+\bar under
+static resources guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources-bypassing-the-client-cache"
+
+\end_inset
+
+)
+\bar default
+ for a comprehensive discussion.
+\end_layout
+
+\begin_layout Subsubsection
+Optimizing the Server for Client-Side Caching
+\end_layout
+
+\begin_layout Standard
+Conditional mode can improve the client experience, but it can improve the
+ server experience, too.
+\end_layout
+
+\begin_layout Standard
+Prudence (using a great feature of the Restlet library) lets you create
+ the conditional HTTP headers and return them to the client 
+\emph on
+without generating the response
+\emph default
+.
+ Thus, 
+\emph on
+only 
+\emph default
+if the conditional request continues would your response generation code
+ be called.
+ This feature is automatically applied when using Prudence's automatic caching,
+ but you can use it yourself in manual resources, using the 
+\begin_inset Quotes eld
+\end_inset
+
+handleGetInfo
+\begin_inset Quotes erd
+\end_inset
+
+ entry point.
+\end_layout
+
+\begin_layout Standard
+Here's an example---not the most efficient one, but it will demonstrate
+ the flow:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGetInfo(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = conversation.locals.get('id')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = fetchDataFromDatabase(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.locals.put('data', data)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return data.getModificationTimestamp()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = getData(conversation)
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.modificationTimestamp = data.getModificationTimestamp()
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.JSON.to(data)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function getData(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = conversation.locals.get('data')
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (!Sincerity.Objects.exists(data)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var id = conversation.locals.get('id')
+\end_layout
+
+\begin_layout Plain Layout
+
+		data = fetchDataFromDatabase(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return data
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function fetchDataFromDatabase(id) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As you can see, we're storing the fetched data in a conversation.local, so
+ that if handleGet is called after handleGetInfo, we would not have to access
+ the database twice.
+\end_layout
+
+\begin_layout Standard
+What have we accomplished in this example? Not that much: all we've done
+ is avoided JSON serialization for those conditional requests that stop
+ at handleGetInfo.
+ A worthwhile little optimization, to be sure, but not one with very dramatic
+ effects.
+ It might be more useful if we had other heavy processing in handleGet that
+ could be avoided.
+\end_layout
+
+\begin_layout Standard
+Still, the handleGetInfo trick really shines when you have 
+\emph on
+a shortcut to accessing the modification date or the tag
+\emph default
+.
+ Consider as a common example the a way a filesystem works: you can fetch
+ the file modification date with one system API, without actually opening
+ the file for reading its contents, which would be a much costlier operation.
+ Using handleGetInfo with that API would be able to affect a crucial (even
+ necessary!) optimization.
+ Indeed, that's how 
+\bar under
+static resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+ work internally.
+\end_layout
+
+\begin_layout Standard
+But how would you implement this with a database server? Most databases
+ don't allow for such effective shortcuts: sure, you 
+\emph on
+could
+\emph default
+ only fetch the modification date column from a row for handleGetInfo, but
+ it would be inefficient if soon after you would also need to fetch the
+ rest of the columns.
+ It would be more efficient to just fetch the entire row at once, and so
+ we're back to our non-dramatic optimization from before.
+\end_layout
+
+\begin_layout Standard
+What you could do, however, is cache only the modification dates separately
+ in a specialized cache backend that is much lighter and faster than the
+ database server, for example 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "memcached"
+target "http://memcached.org/"
+
+\end_inset
+
+.
+ Here's how it might look:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGetInfo(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var id = conversation.locals.get('id')
+\end_layout
+
+\begin_layout Plain Layout
+
+	var modificationTimestamp = fetchTimestampFromCache(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.Objects.exists(modificationTimestamp) ? modificationTimestamp
+ : null
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = fetchDataFromDatabase(conversation)
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.modificationTimestamp = data.getModificationTimestamp()
+\end_layout
+
+\begin_layout Plain Layout
+
+	storeTimestampInCache(id, data.getModificationTimestamp())
+\end_layout
+
+\begin_layout Plain Layout
+
+	return Sincerity.JSON.to(data)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function fetchDataFromDatabase(id) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function fetchTimestampFromCache(id) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+function storeTimestampInCache(id, timestamp) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As you can see, the optimization won't be effective unless the cache is
+ warm.
+ Thus, to make it truly effective, you would need a special subsystem to
+ warm up the cache in the background\SpecialChar \ldots{}
+
+\end_layout
+
+\begin_layout Standard
+Welcome to the world of high-volume web! The solutions for massive scalability
+ are rarely trivial.
+ While Prudence can't provide you with automation for every scenario, at
+ least it provides you with the tools on which you can build massively scalable
+ sites.
+ With careful planning, you can go very far indeed.
 \end_layout
 
 \begin_layout Subsection
@@ -18573,7 +19193,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			clientCachingMode: 'conditional' // this is actually the default
+			clientCachingMode: 'conditional' // this is the default
 \end_layout
 
 \begin_layout Plain Layout
@@ -18603,17 +19223,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				'image/png': '1h',
-\end_layout
-
-\begin_layout Plain Layout
-
-				'image/gif': '1h',
-\end_layout
-
-\begin_layout Plain Layout
-
-				'image/jpeg': '1h',
+				'image/*': '1h',
 \end_layout
 
 \begin_layout Plain Layout
@@ -18696,7 +19306,7 @@ app.globals = {
 
 \begin_layout Plain Layout
 
-	cacheDuration = '1m'.toMilliseconds()
+	cacheDuration: '1m'
 \end_layout
 
 \begin_layout Plain Layout
@@ -18754,7 +19364,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			maxClientCachingDuration: '5m'.toMilliseconds()
+			maxClientCachingDuration: '5m'
 \end_layout
 
 \begin_layout Plain Layout
@@ -18784,17 +19394,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				'image/png': 'farFuture',
-\end_layout
-
-\begin_layout Plain Layout
-
-				'image/gif': 'farFuture',
-\end_layout
-
-\begin_layout Plain Layout
-
-				'image/jpeg': 'farFuture',
+				'image/*': 'farFuture',
 \end_layout
 
 \begin_layout Plain Layout
@@ -22206,34 +22806,13 @@ both
 \emph on
 both
 \emph default
- asynchronous in 
-\emph on
-that
-\emph default
- particular respect.
- (Prudence uses 
-\begin_inset CommandInset href
-LatexCommand href
-name "Jetty"
-target "http://www.eclipse.org/jetty/"
-
-\end_inset
-
- as its driver: it is designed from the ground-up for web services, and
- behaves 
-\begin_inset CommandInset href
-LatexCommand href
-name "smartly"
-target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
-
-\end_inset
-
- and exceptionally well under high volumes.)
+ asynchronous in that particular respect.
+ 
 \end_layout
 
 \begin_layout Standard
-On top of the server Prudence uses a multi-threaded RESTful application
- environment with 
+On top of the mutli-threaded server Prudence builds RESTful application
+ environment, using 
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet"
@@ -22241,7 +22820,7 @@ target "http://restlet.org/"
 
 \end_inset
 
- handling the many intricacies of HTTP.
+ to handle the many intricacies of HTTP.
  Why multi-threaded? Because generating HTML is logically a 
 \emph on
 single-event
@@ -22262,9 +22841,9 @@ single
 \emph on
 driven
 \emph default
-: requests are 
+: requests are never
 \emph on
-never 
+ 
 \emph default
 handed simultaneously, and only a single CPU core would ever be used by
  the HTTP server itself.
@@ -22304,14 +22883,15 @@ chunk
 \emph on
 can and do
 \emph default
- use threads: this is useful for CPU-bound workloads like CPU-intensive
- video encoding.
+ use threads: this is useful for CPU-bound workloads such as video encoding.
 \end_layout
 
 \begin_layout Standard
 Node.js is great for its intended use case.
  It's vastly easier to write event handlers in JavaScript than in C/C++,
  and JavaScript also makes it easy to bootstrap the server.
+ If you're writing a streaming asynchronous server, we highly recommend
+ Node.js.
 \end_layout
 
 \begin_layout Quote
@@ -22348,7 +22928,8 @@ You're Doing It Wrong
 \end_layout
 
 \begin_layout Standard
-It's very odd that Node.js has become a popular platform for the 
+That said, it's very odd that Node.js has become a popular platform for the
+ 
 \emph on
 non
 \emph default
@@ -22364,25 +22945,29 @@ target "http://expressjs.com/"
  But event-driven servers are not designed for REST, and are in fact quite
  a bad fit: consider that in a single-threaded runtime, if a single event
  handler hangs, the whole server will hang.
- Node.js deals with the problem by in effect offloading it to external libraries
- written in C++: its database drivers, for example, handle queries in their
- own connection thread pools, and push events to Node.js when data is available.
- But in your JavaScript event handlers, you have to take extra care not
- to do any time-consuming work: a delay you cause would affect 
+ Node.js deals with the problem by in effect offloading the thread pools
+ to external libraries, written in C++.
+ For example, Node's database drivers handle queries in their own connection
+ thread pools, and push events to Node.js when data is available.
+ Still, in your Node.js JavaScript event handlers, you have to take extra
+ care not to do any time-consuming work: a delay you cause would affect
+ 
 \emph on
 all
 \emph default
  operations waiting their turn on the single-threaded event loop.
- Thus, a scalable Node.js application must have event handlers with no risky
- 
+ Thus, to create a properly scalable Node.js application, you must have event
+ handlers with no risky 
 \begin_inset Quotes eld
 \end_inset
 
-side effects,
+side effects
 \begin_inset Quotes erd
 \end_inset
 
- while external services must be called upon in C++.
+: that heavy lifting is left to the C++ libraries.
+ The bottom line is that you have an illusion of single-threadedness: you've
+ merely shifted the workload to the drivers.
 \end_layout
 
 \begin_layout Standard
@@ -22396,15 +22981,15 @@ any way
  return results before you can complete those requests.
  There's nothing in an event-driven model that changes these essential facts.
  (It's worth repeating: both Prudence and Node.js use non-blocking I/O servers:
- Node.js being event-driven has nothing to do with that.)
+ Node.js having an event-driven programming model has nothing to do with
+ that.)
 \end_layout
 
 \begin_layout Standard
-You can add some parallelism (and make use of more CPU cores) by running
- multiple Node.js processes behind a load balancer, but the problems quickly
- multiply: each process loads its own version of the database driver, with
- its own connection thread pool, which can't be shared with the other Node.js
- processes.
+You can add some parallelism by running multiple Node.js processes behind
+ a load balancer, but the problems quickly multiply: each process loads
+ its own version of the drivers, with its own connection thread pool, which
+ can't be shared with the other Node.js processes.
  In Prudence, by contrast, the same pool is trivially shared by all requests.
  (Prudence's threads can also share an in-process memory-based cache backend
  for the best possible caching performance at the 1st tier.)
@@ -22448,8 +23033,8 @@ asynchronous
 \begin_layout Standard
 We believe that Prudence is a much more sensible choice for the RESTful
  web.
- Beyond the basic architecture, also consider Prudence's features aimed
- specifically at scalability, such as 
+ Beyond the basic multi-threaded model, also consider Prudence's many features
+ aimed specifically at RESTful scalability, such as 
 \bar under
 integrated caching (page 
 \begin_inset CommandInset ref
@@ -22569,11 +23154,12 @@ browser wars,
 \begin_inset Quotes erd
 \end_inset
 
- which have resulted in very performative JavaScript interpreters and JITs.
- However, it's worth remembering that these engines are really optimized
- for web browser environments, not servers, and have very limited support
+ which have resulted in very performative JavaScript interpreters and JIT
+ compilers.
+ However, it's worth remembering that these engines have been optimized
+ for web browser environments, not servers, and thus have very limited support
  for threading.
- Prudence can run JavaScript on your choice of either 
+ By contrast, Prudence can run JavaScript on your choice of either 
 \begin_inset CommandInset href
 LatexCommand href
 name "Nashorn"
@@ -22598,7 +23184,11 @@ target "https://developer.mozilla.org/en-US/docs/Rhino"
 
 \begin_layout Standard
 But a comparative benchmark would make little sense.
- Node.js' single-threaded model really 
+ Node.js' single-threaded model 
+\emph on
+really
+\emph default
+ 
 \emph on
 needs
 \emph default
@@ -22617,10 +23207,40 @@ more important for scalability than language engine performance.
 \begin_layout Standard
 Note, too, that all the performance-critical parts of Prudence are written
  in Java, just as they are written in C++ for Node.js.
+ There should be no noticeable performance differences in the basic request
+ handling performance.
+\end_layout
+
+\begin_layout Standard
+And it's important to remember---and repeat to yourself as mantra---that
+ 
+\emph on
+performance does not equal scalability
+\emph default
+.
+ Prudence's default HTTP engine is 
+\begin_inset CommandInset href
+LatexCommand href
+name "Jetty"
+target "http://www.eclipse.org/jetty/"
+
+\end_inset
+
+, which is designed from the ground-up for scalable web services, and it
+ behaves 
+\begin_inset CommandInset href
+LatexCommand href
+name "smartly"
+target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
+
+\end_inset
+
+ under high volumes, even if it might not seem so under trivial and misleading
+ localized benchmarks.
 \end_layout
 
 \begin_layout Paragraph
-Summary
+Conslusion
 \end_layout
 
 \begin_layout Standard
@@ -22665,8 +23285,11 @@ target "http://sass-lang.com/"
 \end_inset
 
 .
- We chose it because of a single advantage: it is a JVM library.
- Try as we might, we could not get LESS to run properly in a server-side
+ We chose it because of a single advantage: it is a pure JVM library.
+\end_layout
+
+\begin_layout Standard
+Try as we might, we could not get LESS to run properly in a server-side
  JavaScript environment.
  As for SASS, it requires Ruby, which is simply too big a dependency for
  a single feature.
@@ -22674,7 +23297,7 @@ target "http://sass-lang.com/"
 
 \begin_layout Standard
 However, nothing is stopping you from running LESS or SASS from the command
- line, thus updating your CSS file.
+ line to create your CSS.
 \end_layout
 
 \begin_layout Standard

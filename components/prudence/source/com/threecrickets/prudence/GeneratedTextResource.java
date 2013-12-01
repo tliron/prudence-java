@@ -13,14 +13,11 @@ package com.threecrickets.prudence;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Application;
 import org.restlet.Context;
 import org.restlet.Request;
-import org.restlet.data.CacheDirective;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
 import org.restlet.data.Form;
@@ -104,7 +101,8 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * : Defaults to "caching".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.clientCachingMode:</code>
- * {@link Integer}, defaults to {@link #CLIENT_CACHING_MODE_CONDITIONAL}.</li>
+ * {@link Integer}, defaults to
+ * {@link CachingUtil#CLIENT_CACHING_MODE_CONDITIONAL}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
@@ -143,7 +141,7 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * {@link ExecutionController}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.fileUploadDirectory:</code>
- * {@link File}. Defaults to "uploads" under the application root.</li>
+ * {@link File}, defaults to "uploads" under the application root.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.fileUploadSizeThreshold:</code>
  * {@link Integer}, defaults to zero.</li>
@@ -156,6 +154,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.libraryDocumentSources:</code>
  * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
+ * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.maxClientCachingDuration:</code>
+ * {@link Integer}, defaults to -1.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.negotiateEncoding:</code>
  * defaults to a true.</li>
@@ -177,25 +178,6 @@ import com.threecrickets.scripturian.exception.ParsingException;
  */
 public class GeneratedTextResource extends ServerResource
 {
-	//
-	// Constants
-	//
-
-	/**
-	 * Constant.
-	 */
-	public static final int CLIENT_CACHING_MODE_DISABLED = 0;
-
-	/**
-	 * Constant.
-	 */
-	public static final int CLIENT_CACHING_MODE_CONDITIONAL = 1;
-
-	/**
-	 * Constant.
-	 */
-	public static final int CLIENT_CACHING_MODE_OFFLINE = 2;
-
 	//
 	// Attributes
 	//
@@ -451,51 +433,7 @@ public class GeneratedTextResource extends ServerResource
 				// Execute and represent output
 				representation = documentService.include( documentName, isPassThrough || isCaptured );
 
-				List<CacheDirective> cacheDirectives = getResponse().getCacheDirectives();
-				switch( attributes.getClientCachingMode() )
-				{
-					case CLIENT_CACHING_MODE_DISABLED:
-					{
-						// Remove all conditional and caching headers,
-						// explicitly setting "no-cache"
-						representation.setModificationDate( null );
-						representation.setExpirationDate( null );
-						representation.setTag( null );
-						cacheDirectives.clear();
-						cacheDirectives.add( CacheDirective.noCache() );
-						break;
-					}
-
-					case CLIENT_CACHING_MODE_CONDITIONAL:
-						// Leave conditional headers intact, but remove cache
-						// headers, explicitly setting "no-cache"
-						representation.setExpirationDate( null );
-						cacheDirectives.clear();
-						cacheDirectives.add( CacheDirective.noCache() );
-						break;
-
-					case CLIENT_CACHING_MODE_OFFLINE:
-					{
-						// Add offline caching headers based on conditional
-						// headers
-						Date expirationDate = representation.getExpirationDate();
-						if( expirationDate != null )
-						{
-							long maxAge = ( expirationDate.getTime() - System.currentTimeMillis() );
-							if( maxAge > 0 )
-							{
-								long maxClientCachingDuration = attributes.getMaxClientCachingDuration();
-								if( maxClientCachingDuration != -1L )
-									// Limit the cache duration
-									maxAge = Math.min( maxAge, maxClientCachingDuration );
-
-								cacheDirectives.clear();
-								cacheDirectives.add( CacheDirective.maxAge( (int) ( maxAge / 1000L ) ) );
-							}
-						}
-						break;
-					}
-				}
+				cachingUtil.setClientCachingHeaders( representation, getResponse() );
 
 				if( asynchronousSupport )
 				{

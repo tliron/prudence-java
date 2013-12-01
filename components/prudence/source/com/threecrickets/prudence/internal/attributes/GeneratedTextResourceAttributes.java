@@ -103,56 +103,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	/**
-	 * Whether or not to send information to the client about cache expiration.
-	 * Defaults to {@link GeneratedTextResource#CLIENT_CACHING_MODE_CONDITIONAL}
-	 * .
-	 * <p>
-	 * This setting can be configured by setting an attribute named
-	 * <code>clientCachingMode</code> in the application's {@link Context}.
-	 * 
-	 * @return The client caching mode
-	 */
-	public int getClientCachingMode()
-	{
-		if( clientCachingMode == null )
-		{
-			Number number = (Number) getAttributes().get( prefix + ".clientCachingMode" );
-
-			if( number != null )
-				clientCachingMode = number.intValue();
-
-			if( clientCachingMode == null )
-				clientCachingMode = GeneratedTextResource.CLIENT_CACHING_MODE_CONDITIONAL;
-		}
-
-		return clientCachingMode;
-	}
-
-	/**
-	 * The maximum client caching duration in milliseconds. Defaults to -1,
-	 * which means no maximum.
-	 * <p>
-	 * Only has an effect when {@link #getClientCachingMode()} is
-	 * {@link GeneratedTextResource#CLIENT_CACHING_MODE_OFFLINE}.
-	 * 
-	 * @return The maximum client caching duration.
-	 */
-	public long getMaxClientCachingDuration()
-	{
-		if( maxClientCachingDuration == null )
-		{
-			Number number = (Number) getAttributes().get( prefix + ".maxClientCachingDuration" );
-
-			if( number != null )
-				maxClientCachingDuration = number.longValue();
-			else
-				maxClientCachingDuration = -1L;
-		}
-
-		return maxClientCachingDuration;
-	}
-
-	/**
 	 * The scriptlet plugins to use during parsing.
 	 * 
 	 * @return The scriptlet plugins or null
@@ -329,16 +279,6 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	 * service.
 	 */
 	private String conversationServiceName;
-
-	/**
-	 * Whether or not to send information to the client about cache expiration.
-	 */
-	private Integer clientCachingMode;
-
-	/**
-	 * The maximum client caching expiration in milliseconds.
-	 */
-	private Long maxClientCachingDuration;
 
 	/**
 	 * The scriptlet plugins used during parsing.
