@@ -433,22 +433,60 @@ public class ConversationService
 	}
 
 	/**
+	 * The request headers
+	 * 
+	 * @return The request headers
+	 */
+	@SuppressWarnings("unchecked")
+	public Series<Header> getRequestHeaders()
+	{
+		if( requestHeaders == null )
+		{
+			ConcurrentMap<String, Object> attributes = getRequest().getAttributes();
+			requestHeaders = (Series<Header>) attributes.get( HeaderConstants.ATTRIBUTE_HEADERS );
+			if( requestHeaders == null )
+			{
+				requestHeaders = new Series<Header>( Header.class );
+				attributes.put( HeaderConstants.ATTRIBUTE_HEADERS, requestHeaders );
+			}
+		}
+		return requestHeaders;
+	}
+
+	/**
 	 * The extra response headers
 	 * 
-	 * @return The headers
+	 * @return The extra response headers
 	 */
-	public Series<Header> getHeaders()
+	@SuppressWarnings("unchecked")
+	public Series<Header> getResponseHeaders()
 	{
-		ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
-		@SuppressWarnings("unchecked")
-		Series<Header> headers = (Series<Header>) attributes.get( HeaderConstants.ATTRIBUTE_HEADERS );
-		if( headers == null )
+		if( responseHeaders == null )
 		{
-			headers = new Series<Header>( Header.class );
-			attributes.put( HeaderConstants.ATTRIBUTE_HEADERS, headers );
+			ConcurrentMap<String, Object> attributes = getResponse().getAttributes();
+			responseHeaders = (Series<Header>) attributes.get( HeaderConstants.ATTRIBUTE_HEADERS );
+			if( responseHeaders == null )
+			{
+				responseHeaders = new Series<Header>( Header.class );
+				attributes.put( HeaderConstants.ATTRIBUTE_HEADERS, responseHeaders );
+			}
 		}
+		return responseHeaders;
+	}
 
-		return headers;
+	/**
+	 * Whether the client asked for do-not-track.
+	 * 
+	 * @return Whether the client asked for do-not-track
+	 */
+	public boolean getDoNotTrack()
+	{
+		if( doNotTrack == null )
+		{
+			Header dnt = getRequestHeaders().getFirst( "DNT" );
+			doNotTrack = ( dnt != null ) && dnt.getValue().equals( "1" );
+		}
+		return doNotTrack;
 	}
 
 	/**
@@ -553,6 +591,21 @@ public class ConversationService
 	 * The form, sent via POST or PUT, as a list.
 	 */
 	private Map<String, Object> form;
+
+	/**
+	 * The request headers.
+	 */
+	private Series<Header> requestHeaders;
+
+	/**
+	 * The extra response headers.
+	 */
+	private Series<Header> responseHeaders;
+
+	/**
+	 * Whether the client asked for do-not-track.
+	 */
+	private Boolean doNotTrack;
 
 	/**
 	 * The conversation cookies.

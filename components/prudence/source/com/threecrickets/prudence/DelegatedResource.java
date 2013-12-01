@@ -624,7 +624,7 @@ public class DelegatedResource extends ServerResource
 			representation = (Representation) object;
 			try
 			{
-				cacheEntry = new CacheEntry( representation, conversationService.getHeaders(), conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp,
+				cacheEntry = new CacheEntry( representation, conversationService.getResponseHeaders(), conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp,
 					executable.getDocumentTimestamp() );
 			}
 			catch( IOException x )
@@ -661,7 +661,7 @@ public class DelegatedResource extends ServerResource
 			else if( object instanceof byte[] )
 			{
 				// Bytes
-				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
+				cacheEntry = new CacheEntry( (byte[]) object, mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getResponseHeaders(),
 					conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp, executable.getDocumentTimestamp() );
 				representation = cacheEntry.represent();
 				representation.setDisposition( conversationService.getDisposition() );
@@ -671,7 +671,7 @@ public class DelegatedResource extends ServerResource
 				// Everything else will be converted to a string
 				try
 				{
-					cacheEntry = new CacheEntry( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getHeaders(),
+					cacheEntry = new CacheEntry( object.toString(), mediaType, conversationService.getLanguage(), conversationService.getCharacterSet(), null, conversationService.getResponseHeaders(),
 						conversationService.getModificationTimestamp(), conversationService.getTag(), expirationTimestamp, executable.getDocumentTimestamp() );
 					representation = cacheEntry.represent();
 					representation.setDisposition( conversationService.getDisposition() );

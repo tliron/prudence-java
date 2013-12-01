@@ -39,6 +39,17 @@ public class StatusRestlet extends Restlet
 		this.status = status;
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param statusCode
+	 *        The status code to set
+	 */
+	public StatusRestlet( int statusCode )
+	{
+		this( Status.valueOf( statusCode ) );
+	}
+
 	//
 	// Restlet
 	//

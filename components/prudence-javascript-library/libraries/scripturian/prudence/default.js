@@ -1126,6 +1126,16 @@ var Prudence = {}
  */
 
 /**
+ * Provides low-level access to the request headers.
+ * <p>
+ * You usually won't need to use this: most of the common request headers are already parsed
+ * by Prudence and available in other APIs. 
+ * 
+ * @name conversation.requestHeaders
+ * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
+ */
+
+/**
  * Allows you to set extra response headers.
  * <p>
  * Note that these are <i>extra</i> headers you can set <i>in addition</i> to those managed by Prudence
@@ -1138,10 +1148,10 @@ var Prudence = {}
  * <p>
  * Example:
  * <pre>
- * conversation.headers.add(new org.restlet.engine.header.Header('X-Pingback', 'http://mysite.org/pingback/'))
+ * conversation.responseHeaders.add(new org.restlet.engine.header.Header('X-Pingback', 'http://mysite.org/pingback/'))
  * </pre>
  * 
- * @name conversation.headers
+ * @name conversation.responseHeaders
  * @type <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;
  */
 
@@ -1277,6 +1287,14 @@ var Prudence = {}
  * 
  * @name conversation.statusPassthrough
  * @type Boolean
+ */
+
+/**
+ * Will be true if the client asked for do-not-track ("DNT" header = 1).
+ * 
+ * @name conversation.doNotTrack
+ * @type Boolean
+ * @see conversation#requestHeaders
  */
 
 /**

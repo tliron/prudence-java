@@ -622,6 +622,9 @@ Prudence.Setup = Prudence.Setup || function() {
 				if ((restlet == 'hidden') || (restlet == '!')) {
 					return restlet
 				}
+				else if (restlet[0] == '!') {
+					return new Module.Status({code: parseInt(restlet.substring(1))}).create(this, uri)
+				}
 				else if (restlet[0] == '/') {
 					return new Module.Capture({uri: restlet}).create(this, uri)
 				}
@@ -2351,6 +2354,34 @@ Prudence.Setup = Prudence.Setup || function() {
 			authenticator.next = this.next
 			
 			return authenticator
+		}
+		
+		return Public
+	}(Public))
+
+	/**
+	 * Simply sets a hard-coded HTTP status code, doing nothing else. 
+	 * 
+	 * @class
+	 * @name Prudence.Setup.Status
+	 * @augments Prudence.Setup.Restlet
+	 * @param config
+	 * @param {Number} [config.code=200] The HTTP status code
+	 */
+	Public.Status = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Setup.Status */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['code']
+
+		Public.create = function(app, uri) {
+			importClass(com.threecrickets.prudence.util.StatusRestlet)
+			this.code = Sincerity.Objects.ensure(this.code, 200)
+			return new StatusRestlet(this.code)
 		}
 		
 		return Public
