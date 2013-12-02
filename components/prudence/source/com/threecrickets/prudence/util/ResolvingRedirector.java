@@ -153,7 +153,6 @@ public class ResolvingRedirector extends Redirector
 			request.setProtocol( null );
 
 			// Update the request to cleanly go to the target URI
-			System.out.println("Capturing to: " + targetRef);
 			request.setResourceRef( targetRef );
 			if( isCleaning )
 				request.getAttributes().remove( HeaderConstants.ATTRIBUTE_HEADERS );

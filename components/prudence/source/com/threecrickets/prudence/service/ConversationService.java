@@ -313,16 +313,22 @@ public class ConversationService
 	{
 		if( base == null )
 		{
-			Reference reference = getReference();
-			Reference root = getRequest().getRootRef();
+			Request request = getRequest();
 
-			if( root.getSchemeProtocol().equals( reference.getSchemeProtocol() ) )
-				// The root needs a trailing slash
-				root = new Reference( root + "/" );
-			else
-				// We cannot use the root if it is of the wrong protocol
-				// (it might be when using InternalRedirector)
-				root = reference.getBaseRef();
+			Reference reference = getReference();
+			Reference root = CapturingRedirector.getCapturedRootReference( request );
+			if( root == null )
+				root = request.getRootRef();
+
+			root = new Reference( root + "/" );
+
+			/*
+			 * if( root.getSchemeProtocol().equals(
+			 * reference.getSchemeProtocol() ) ) // The root needs a trailing
+			 * slash root = new Reference( root + "/" ); else // We cannot use
+			 * the root if it is of the wrong protocol // (it might be when
+			 * using InternalRedirector) root = reference.getBaseRef();
+			 */
 
 			// Reverse relative reference
 			base = root.getRelativeRef( reference ).getPath();

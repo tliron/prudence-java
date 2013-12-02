@@ -32,12 +32,22 @@ public class CapturingRedirector extends ResolvingRedirector
 	//
 
 	/**
-	 * Request attribute of the captive {@link Reference} for a {@link Request}.
+	 * Request attribute of the captured {@link Reference} for a {@link Request}
+	 * .
 	 * 
 	 * @see #getCapturedReference(Request)
 	 * @see #setCapturedReference(Request, Reference)
 	 */
 	public static final String CAPTURED_REFERENCE = CapturingRedirector.class.getCanonicalName() + ".capturedReference";
+
+	/**
+	 * Request attribute of the captured root {@link Reference} for a
+	 * {@link Request}.
+	 * 
+	 * @see #getCapturedRootReference(Request)
+	 * @see #setCapturedRootReference(Request, Reference)
+	 */
+	public static final String CAPTURED_ROOT_REFERENCE = CapturingRedirector.class.getCanonicalName() + ".capturedRootReference";
 
 	//
 	// Static attributes
@@ -62,7 +72,7 @@ public class CapturingRedirector extends ResolvingRedirector
 	 * @param request
 	 *        The request
 	 * @param capturedReference
-	 *        The captive reference
+	 *        The captured reference
 	 * @see #getCapturedReference(Request)
 	 */
 	public static void setCapturedReference( Request request, Reference capturedReference )
@@ -71,6 +81,36 @@ public class CapturingRedirector extends ResolvingRedirector
 			request.getAttributes().put( CAPTURED_REFERENCE, capturedReference );
 		else
 			request.getAttributes().remove( CAPTURED_REFERENCE );
+	}
+
+	/**
+	 * The captured root reference.
+	 * 
+	 * @param request
+	 *        The request
+	 * @return The captured root reference
+	 * @see #setCapturedRootReference(Request, Reference)
+	 */
+	public static Reference getCapturedRootReference( Request request )
+	{
+		return (Reference) request.getAttributes().get( CAPTURED_ROOT_REFERENCE );
+	}
+
+	/**
+	 * The captured root reference.
+	 * 
+	 * @param request
+	 *        The request
+	 * @param capturedRootReference
+	 *        The captured root reference
+	 * @see #getCapturedRootReference(Request)
+	 */
+	public static void setCapturedRootReference( Request request, Reference capturedRootReference )
+	{
+		if( capturedRootReference != null )
+			request.getAttributes().put( CAPTURED_ROOT_REFERENCE, capturedRootReference );
+		else
+			request.getAttributes().remove( CAPTURED_ROOT_REFERENCE );
 	}
 
 	//
@@ -118,6 +158,8 @@ public class CapturingRedirector extends ResolvingRedirector
 
 		if( getCapturedReference( request ) == null )
 			setCapturedReference( request, request.getResourceRef() );
+		if( getCapturedRootReference( request ) == null )
+			setCapturedRootReference( request, request.getRootRef() );
 
 		super.handle( request, response );
 	}

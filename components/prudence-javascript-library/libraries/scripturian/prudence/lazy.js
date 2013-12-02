@@ -169,7 +169,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 	 * 
 	 * @param config
 	 * @param {String} name The name of the constructor to instantiate (via keyword "new")
-	 * @param {String[]|String} [config.dependencies] One or more documents to executeOnce before instantiation
+	 * @param {String[]|String} [config.dependencies] One or more documents to require before instantiation
 	 * @param [config.config] Optional config to be sent to the constructor
 	 * @returns {String} The JavaScript source code (can be evaled)
 	 */
@@ -218,7 +218,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 
 	/**
 	 * Identical to {@link Sincerity.Objects#flatten}, but also builds lazy entries if their
-	 * key is equal to double the 'separator'.
+	 * key is equal to double or triple the 'separator'.
 	 * 
 	 * @param value The value
 	 * @param {String} [separator='.'] The path separator
@@ -237,6 +237,9 @@ Prudence.Lazy = Prudence.Lazy || function() {
 					nonFlat[baseKey] = v
 				}
 				else if (key == (separator + separator)) {
+					nonFlat[baseKey] = Public.buildOne(v)
+				}
+				else if (key == (separator + separator + separator)) {
 					nonFlat[baseKey] = Public.build(v)
 				}
 				else {
@@ -553,7 +556,7 @@ Prudence.Lazy = Prudence.Lazy || function() {
 		}
 		
 	    /**
-	     * Puts a value in the mae, internally wrapping it with an entry instance.
+	     * Puts a value in the map, internally wrapping it with an entry instance.
 	     * 
 	     * @param {Number} name The map key
 	     * @param value The value

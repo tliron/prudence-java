@@ -1297,7 +1297,7 @@ Learn how to create your own
 application templates (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-templates"
+reference "configuration-templates"
 
 \end_inset
 
@@ -4736,8 +4736,8 @@ reference "clusters"
 \bar default
 ! When you need to scale horizontally, Prudence provides you with a remarkably
  seamless solution for sharing state.
- Even the task APIs support it: you can easily farm out your workload anywhere
- within your Prudence cluster.
+ Even the background task APIs support it: you can easily farm out your
+ workload anywhere within your Prudence cluster.
 \end_layout
 
 \begin_layout Itemize
@@ -4758,7 +4758,7 @@ reference "the-uri-space"
 virtual hosting (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "hosts"
+reference "configuration-hosts"
 
 \end_inset
 
@@ -4777,7 +4777,7 @@ HTTPS
  servers (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "servers"
+reference "configuration-servers"
 
 \end_inset
 
@@ -7316,6 +7316,15 @@ status open
 
 \begin_layout Plain Layout
 
+document.require('/sincerity/classes/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
 Prudence.Setup.See = Sincerity.Classes.define(function() {
 \end_layout
 
@@ -9436,7 +9445,7 @@ applications by
 configuring them into the component (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-status"
+reference "configuration-status"
 
 \end_inset
 
@@ -9506,7 +9515,7 @@ To configure your hosts, and for a more complete discussion, see the
 component configuration guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "hosts"
+reference "configuration-hosts"
 
 \end_inset
 
@@ -10458,10 +10467,7 @@ fill in
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Standard
-Also note that because preheats are 
+ Also note that because preheats are 
 \emph on
 internal
 \emph default
@@ -10469,7 +10475,8 @@ internal
 \end_layout
 
 \begin_layout Standard
-If you wish to do more specialized preheating, you may use the 
+Smart use of app.preheat can very effective, and it's very easy to use.
+ Note that you may also use the 
 \bar under
 startup task (page 
 \begin_inset CommandInset ref
@@ -10480,14 +10487,24 @@ reference "startup"
 
 )
 \bar default
-.
- However, smart use of app.preheat can very effective, and it's very easy
- to use.
+ for your own custom preheating.
 \end_layout
 
 \begin_layout Standard
 Both defrosting and preheating are handled in a thread pool, so that they
  can finish as quickly as possible.
+ Learn how to configure it 
+\bar under
+here (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-startup"
+
+\end_inset
+
+)
+\bar default
+.
  The duration of the complete process will be announced when you start Prudence.
  For example:
 \end_layout
@@ -10571,7 +10588,7 @@ Requests come in from
 servers (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "servers"
+reference "configuration-servers"
 
 \end_inset
 
@@ -10607,7 +10624,7 @@ The component's router decides which
 virtual host (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "hosts"
+reference "configuration-hosts"
 
 \end_inset
 
@@ -11759,6 +11776,13 @@ Client-Side Caching
 
 \begin_layout Subsubsection
 Scriptlet Plugins
+\begin_inset CommandInset label
+LatexCommand label
+name "scriptlet-plugins"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -17251,7 +17275,7 @@ Surprisingly, you cannot set the timeout per request, but instead you need
 HTTP client (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-clients"
+reference "configuration-clients"
 
 \end_inset
 
@@ -18498,7 +18522,7 @@ See the
 configuration chapter (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-caching"
+reference "configuration-caching"
 
 \end_inset
 
@@ -20520,7 +20544,18 @@ debug
 \series bold
 plugins
 \series default
-: Configure scriptlet plugins [TODO]
+: Configure 
+\bar under
+scriptlet plugins (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-plugins"
+
+\end_inset
+
+)
+\bar default
+ here
 \end_layout
 
 \begin_layout Subsection
@@ -21096,7 +21131,7 @@ To configure general Hazelcast settings, see the
 configuration guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-distributed"
+reference "configuration-distributed"
 
 \end_inset
 
@@ -21281,14 +21316,577 @@ var driver = application.globals.get('database.driver')
 
 \begin_layout Subsubsection
 Lazy Initialization
+\begin_inset CommandInset label
+LatexCommand label
+name "lazy-initialization"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-This is an advanced topic.
+Lazy initialization allows you to defer the initialization of an application.glob
+al to its actual use within your application.
+ This feature can be used to solve three different problems:
+\end_layout
+
+\begin_layout Itemize
+You wish to set up an application.global with resources that would only be
+ available during runtime, not during the bootstrap process.
+\end_layout
+
+\begin_layout Itemize
+You wish to set up a heavy resource, but instead of slowing down the bootstrap
+ process by initializing it up front, you'd rather initialize it on-demand
+ when actually used for the first time by the running application.
+\end_layout
+
+\begin_layout Itemize
+You wish to simplify the configuration of complex objects: the mechanism
+ allows you to use a simple DSL (Domain-Specific Language), which behind
+ the scenes calls an arbitrary constructor.
+\end_layout
+
+\begin_layout Quote
+The mechanism relies on evaluation of JavaScript code, and thus is only
+ available for other JavaScript code in your applications.
+ However, similar principles can be used for other languages that support
+ eval.
+ Study the library's code to see how it's done!
+\end_layout
+
+\begin_layout Paragraph
+Double Dot
 \end_layout
 
 \begin_layout Standard
-TODO
+Lazy globals can be defined using a double-dot key.
+ Here's an example for settings.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	services: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		email: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			'..': {
+\end_layout
+
+\begin_layout Plain Layout
+
+				dependencies: '/services/email/',
+\end_layout
+
+\begin_layout Plain Layout
+
+				name: 'EmailService',
+\end_layout
+
+\begin_layout Plain Layout
+
+				config: {
+\end_layout
+
+\begin_layout Plain Layout
+
+					smtp: 'localhost',
+\end_layout
+
+\begin_layout Plain Layout
+
+					origin: 'service@myapp.org'
+\end_layout
+
+\begin_layout Plain Layout
+
+				}
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The lazy configuration has three settings, which are used when the object
+ is initialized:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+dependencies
+\series default
+: These are called with 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.require"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.require"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+name
+\series default
+: This is the constructor to call
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+config
+\series default
+: This is an optional argument sent to the constructor; note that it 
+\emph on
+must
+\emph default
+ be JSON-serializable
+\end_layout
+
+\begin_layout Standard
+For this example, here's how our 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/services/email.js
+\begin_inset Quotes erd
+\end_inset
+
+ file could look:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function EmailService(config) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.smtp = config.smtp
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.origin = config.origin
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	this.send = function(destination, message) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		application.logger.info('Sending an email from ' + config.origin + ' to '
+ + destination)
+\end_layout
+
+\begin_layout Plain Layout
+
+		...
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To actually access the object in the application, while 
+\emph on
+possibly 
+\emph default
+triggering lazy initialization (if it was not initialized already), we need
+ the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Lazy"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Lazy"
+
+\end_inset
+
+ library:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/lazy/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var emailService = Prudence.Lazy.getGlobalEntry(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'services.email',
+\end_layout
+
+\begin_layout Plain Layout
+
+	null,
+\end_layout
+
+\begin_layout Plain Layout
+
+	function(c) { return eval(c)() })
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+emailService.send('test@myapp.org', 'Hello, this is a test message!')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+That third argument requires some explanation: it is a closure (anonymous
+ function) that accepts the constructor source code and evaluates it locally.
+ It will be called 
+\emph on
+only if
+\emph default
+ the global has 
+\emph on
+not yet
+\emph default
+ been initialized.
+ Thus, in all calls except the first, this would be a very fast application.globa
+l lookup.
+\end_layout
+
+\begin_layout Paragraph
+Triple Dot
+\end_layout
+
+\begin_layout Standard
+The lazy initialization mechanism can optimize for dicts and arrays of lazy
+ entries using the triple-dot key:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	emailServices: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		'...': {
+\end_layout
+
+\begin_layout Plain Layout
+
+			moderator: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				dependencies: '/services/email/', name: 'EmailService',
+\end_layout
+
+\begin_layout Plain Layout
+
+				config: {smtp: 'localhost', origin: 'moderator@myapp.org'}
+\end_layout
+
+\begin_layout Plain Layout
+
+			},
+\end_layout
+
+\begin_layout Plain Layout
+
+			admin: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				dependencies: '/services/email/', name: 'EmailService',
+\end_layout
+
+\begin_layout Plain Layout
+
+				config: {smtp: 'localhost', origin: 'moderator@myapp.org'}
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To use it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/lazy/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var emailServices = Prudence.Lazy.getGlobalMap(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'emailServices',
+\end_layout
+
+\begin_layout Plain Layout
+
+	null,
+\end_layout
+
+\begin_layout Plain Layout
+
+	function(c) { return eval(c)() })
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+emailServices.moderator.send('test@myapp.org', 'Hello, this is a test message!')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that for this optimization the entire dict or array will be created
+ at once and stored in a single application.global.
+\end_layout
+
+\begin_layout Paragraph
+Forcing Re-Initialization
+\end_layout
+
+\begin_layout Standard
+If you edit the source file for the lazy-initialized object---say, our 
+\begin_inset Quotes eld
+\end_inset
+
+email.js
+\begin_inset Quotes erd
+\end_inset
+
+---you would not see your changes.
+ The reason is that the object has already been initialized and stored in
+ memory: the recompiled functions would not be hooked to the already-existing
+ object (really just a dict in JavaScript).
+\end_layout
+
+\begin_layout Standard
+You can, however, 
+\emph on
+force 
+\emph default
+re-initialization using the API:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Prudence.Lazy.getGlobalEntry('services.email').reset()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This works on dicts and arrays, too:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Prudence.Lazy.getGlobalMap('emailServices').reset()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To do this live, you can use the 
+\bar under
+live execution mechanism (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "live-execution"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Paragraph
+Concurrency Note
+\end_layout
+
+\begin_layout Standard
+The lazy mechanism is thread-safe: if you call getGlobalEntry concurrently,
+ it will make sure to store only the 
+\emph on
+first 
+\emph default
+initialized object.
+ You can thus be sure that you will always get the same instance of the
+ lazy-initialized object in your application.
+\end_layout
+
+\begin_layout Standard
+However, take note: it is possible that under high-concurrency situations
+ the object would be created more than once, even if subsequent objects
+ after the first are discarded.
+ This might be a problem if your object creation is 
+\emph on
+very
+\emph default
+ heavy.
+ Unfortunately, there is no easy way around this: allowing for multiple
+ object creation is key to making the lazy mechanism perform well (it does
+ no locking).
+ If this is a problem for you, you will have to find your own way to avoid
+ simultaneous initialization: possibly locking internally within your object
+ constructor, and checking to make sure that the constructor is not being
+ simultaneously called by another thread.
 \end_layout
 
 \begin_layout Section
@@ -25604,7 +26202,7 @@ Learn how to configure the size of the thread pool for task APIs
 here (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-executor"
+reference "configuration-executor"
 
 \end_inset
 
@@ -25619,7 +26217,7 @@ For crontab configuration, see
 here (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "component-scheduler"
+reference "configuration-scheduler"
 
 \end_inset
 
@@ -28198,7 +28796,7 @@ resource = document.internalOther('weatherapp', '/weather/', 'application/json')
 \end_layout
 
 \begin_layout Subsection
-Never Hidden
+Private URI-space
 \end_layout
 
 \begin_layout Standard
@@ -28449,12 +29047,131 @@ reference "system-crontab"
 : changes there are picked up on-the-fly once per minute.
 \end_layout
 
+\begin_layout Subsection
+/configuration/logging/
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-logging"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Used by the Sincerity 
+\begin_inset CommandInset href
+LatexCommand href
+name "logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+.
+ Configure system-wide logging here, using 
+\begin_inset CommandInset href
+LatexCommand href
+name "Apache log4j"
+target "http://logging.apache.org/log4j/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+/configuration/sincerity/
+\end_layout
+
+\begin_layout Standard
+Used by Sincerity to 
+\begin_inset CommandInset href
+LatexCommand href
+name "manage installation"
+target "http://threecrickets.com/sincerity/manual/tutorial/#components_container"
+
+\end_inset
+
+ of packages in your Prudence container.
+ You usually won't be editing this files directly, instead using 
+\begin_inset CommandInset href
+LatexCommand href
+name "“sincerity” commands"
+target "http://threecrickets.com/sincerity/ecosystem/core-plugins/"
+
+\end_inset
+
+ to manipulate it.
+ However, 
+\begin_inset CommandInset href
+LatexCommand href
+name "take special note of artifacts.conf"
+target "http://threecrickets.com/sincerity/manual/tutorial/#working-with-a-vcs_strategy-2-commit-only-your-work"
+
+\end_inset
+
+ if you are committing your container to a VCS.
+\end_layout
+
+\begin_layout Subsection
+/configuration/hazelcast/
+\end_layout
+
+\begin_layout Standard
+Configure 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+ here, if you have it installed.
+ See the 
+\bar under
+distributed service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-distributed"
+
+\end_inset
+
+)
+\bar default
+ for details.
+\end_layout
+
+\begin_layout Subsection
+/component/
+\end_layout
+
+\begin_layout Standard
+The Prudence component is bootstrapped here.
+ If you wish to understand exactly how it works, take a look at 
+\begin_inset Quotes eld
+\end_inset
+
+/component/default.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsubsection
 Initializers
 \end_layout
 
 \begin_layout Standard
-In all configuration files mentioned here, you have access to a global 
+In all the 
+\begin_inset Quotes eld
+\end_inset
+
+/component/
+\begin_inset Quotes erd
+\end_inset
+
+ configuration files, you have access to a global 
 \begin_inset Quotes eld
 \end_inset
 
@@ -28497,10 +29214,10 @@ initializers.push(function() {
 \end_layout
 
 \begin_layout Subsection
-/hosts/
+/component/hosts/
 \begin_inset CommandInset label
 LatexCommand label
-name "hosts"
+name "configuration-hosts"
 
 \end_inset
 
@@ -28920,10 +29637,10 @@ very
 \end_layout
 
 \begin_layout Subsection
-/servers/
+/component/servers/
 \begin_inset CommandInset label
 LatexCommand label
-name "servers"
+name "configuration-servers"
 
 \end_inset
 
@@ -29306,7 +30023,7 @@ It's sometimes necessary to support HTTPS specially in your implementation.
 virtual hosts (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "hosts"
+reference "configuration-hosts"
 
 \end_inset
 
@@ -29500,10 +30217,10 @@ Will be used if no other connector is installed.
 \end_layout
 
 \begin_layout Subsection
-/clients/
+/component/clients/
 \begin_inset CommandInset label
 LatexCommand label
-name "component-clients"
+name "configuration-clients"
 
 \end_inset
 
@@ -29843,7 +30560,7 @@ Will be used if no other connector is installed.
 \end_layout
 
 \begin_layout Subsection
-/services/
+/component/services/
 \end_layout
 
 \begin_layout Standard
@@ -29862,7 +30579,14 @@ before
 \end_layout
 
 \begin_layout Subsubsection
-/services/log
+/component/services/log
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-log"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -29937,10 +30661,10 @@ target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-pl
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/status
+/component/services/prudence/status
 \begin_inset CommandInset label
 LatexCommand label
-name "component-status"
+name "configuration-status"
 
 \end_inset
 
@@ -30020,10 +30744,10 @@ reference "the-internal-host"
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/caching
+/component/services/prudence/caching
 \begin_inset CommandInset label
 LatexCommand label
-name "component-caching"
+name "configuration-caching"
 
 \end_inset
 
@@ -30556,7 +31280,14 @@ The default configuration will put the H2 files under
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/startup
+/component/services/prudence/startup
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-startup"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -30613,10 +31344,10 @@ reference "app-preheat"
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/executor
+/component/services/prudence/executor
 \begin_inset CommandInset label
 LatexCommand label
-name "component-executor"
+name "configuration-executor"
 
 \end_inset
 
@@ -30671,10 +31402,10 @@ target "http://threecrickets.com/api/javascript/?namespace=application&item=appl
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/scheduler
+/component/services/prudence/scheduler
 \begin_inset CommandInset label
 LatexCommand label
-name "component-scheduler"
+name "configuration-scheduler"
 
 \end_inset
 
@@ -30732,10 +31463,10 @@ target "http://www.sauronsoftware.it/projects/cron4j/api/index.html?it/sauronsof
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/distributed
+/component/services/prudence/distributed
 \begin_inset CommandInset label
 LatexCommand label
-name "component-distributed"
+name "configuration-distributed"
 
 \end_inset
 
@@ -30992,7 +31723,7 @@ target "http://www.hazelcast.com/docs/3.1/manual/multi_html/ch14.html"
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/singleton
+/component/services/prudence/singleton
 \end_layout
 
 \begin_layout Standard
@@ -31002,7 +31733,7 @@ Prudence assumes a single Restlet Component instance.
 \end_layout
 
 \begin_layout Subsubsection
-/services/prudence/version
+/component/services/prudence/version
 \end_layout
 
 \begin_layout Standard
@@ -31012,10 +31743,10 @@ Provides access to Prudence, Restlet and Jetty versions, and prints out
 \end_layout
 
 \begin_layout Subsection
-/templates/
+/component/templates/
 \begin_inset CommandInset label
 LatexCommand label
-name "component-templates"
+name "configuration-templates"
 
 \end_inset
 
