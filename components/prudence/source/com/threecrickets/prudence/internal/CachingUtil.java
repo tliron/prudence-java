@@ -519,12 +519,14 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The optional attribute suffix
 	 * @param isTextWithScriptlets
 	 *        Whether the document is text with scriptlets
+	 * @param includeExtraSources
+	 *        Whether to include the extra document sources
 	 * @param conversationService
 	 *        The conversation service
 	 * @return The cache entry
 	 * @throws ResourceException
 	 */
-	public CacheEntry fetchCacheEntry( String suffix, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
+	public CacheEntry fetchCacheEntry( String suffix, boolean isTextWithScriptlets, boolean includeExtraSources, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Cache cache = attributes.getCache();
 		if( cache == null )
@@ -532,10 +534,12 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 
 		Request request = resource.getRequest();
 		String documentName = getValidDocumentName( request );
+		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
+		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
 
 		try
 		{
-			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, isTextWithScriptlets, true, false, false );
+			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, isTextWithScriptlets, true, true, isPassThrough || isCaptured );
 
 			ConcurrentMap<String, Object> attributes = request.getAttributes();
 			attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );

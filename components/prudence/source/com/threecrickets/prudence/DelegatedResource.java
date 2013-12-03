@@ -49,6 +49,7 @@ import com.threecrickets.prudence.service.ConversationStoppedException;
 import com.threecrickets.prudence.service.DelegatedResourceCachingService;
 import com.threecrickets.prudence.service.DelegatedResourceConversationService;
 import com.threecrickets.prudence.service.DelegatedResourceDocumentService;
+import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
@@ -355,7 +356,7 @@ public class DelegatedResource extends ServerResource
 
 		if( CachingUtil.mayFetch( getRequest(), executable, getDispatchedSuffix() ) )
 		{
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( getDispatchedSuffix(), false, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( getDispatchedSuffix(), false, true, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 		}
@@ -363,6 +364,11 @@ public class DelegatedResource extends ServerResource
 		try
 		{
 			Object r = enter( this.attributes.getEntryPointNameForGetInfo(), false, conversationService );
+			if( Status.CLIENT_ERROR_METHOD_NOT_ALLOWED.equals( conversationService.getStatus() ) )
+			{
+				conversationService.setStatus( Status.SUCCESS_OK );
+				return get( variant );
+			}
 			return getRepresentationInfo( r, conversationService );
 		}
 		catch( ResourceException x )
@@ -818,13 +824,16 @@ public class DelegatedResource extends ServerResource
 	 */
 	private Object enter( String entryPointName, boolean isInit, DelegatedResourceConversationService conversationService ) throws ResourceException
 	{
-		String documentName = cachingUtil.getValidDocumentName( getRequest() );
+		Request request = getRequest();
+		String documentName = cachingUtil.getValidDocumentName( request );
 		boolean isPassThrough = attributes.getPassThroughDocuments().contains( "/" + documentName );
+		boolean isCaptured = CapturingRedirector.getCapturedReference( request ) != null;
+
 		ConcurrentMap<String, Boolean> entryPointValidityCache = null;
 
 		try
 		{
-			documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough );
+			documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough || isCaptured );
 			executable = documentDescriptor.getDocument();
 			Object enteringKey = getApplication().hashCode();
 

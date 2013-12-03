@@ -325,7 +325,7 @@ public class GeneratedTextResource extends ServerResource
 		if( CachingUtil.mayFetch( getRequest(), null, null ) )
 		{
 			GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( null, true, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( null, true, false, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 		}
