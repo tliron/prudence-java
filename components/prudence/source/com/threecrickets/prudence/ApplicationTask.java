@@ -237,9 +237,11 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 	public T call()
 	{
 		Application oldApplication = Application.getCurrent();
+		Context oldContext = Context.getCurrent();
 		try
 		{
 			Application.setCurrent( application );
+			Context.setCurrent( application.getContext() );
 
 			ConcurrentMap<String, Boolean> entryPointValidityCache = null;
 
@@ -359,6 +361,7 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 		finally
 		{
 			Application.setCurrent( oldApplication );
+			Context.setCurrent( oldContext );
 		}
 
 		return null;

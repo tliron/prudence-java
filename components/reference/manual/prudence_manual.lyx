@@ -4467,8 +4467,8 @@ Some things to note:
 
 \begin_layout Itemize
 Prudence will attempt to use the programming language's naming conventions.
- For example, JavaScript generally prefers camel case, while Python uses
- lowercase and underscores: 
+ For example, JavaScript generally prefers camel-case, while Python uses
+ lowercase-with-underscores: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4486,7 +4486,7 @@ handle_init
 \end_inset
 
 .
- Clojure, for another example, uses lowercase and hyphens: 
+ Clojure, for another example, uses lowercase-with-hyphens: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4504,7 +4504,19 @@ from
 into
 \emph default
  the JVM, the convention depends on the language engine.
- For our example, Jython requires camel case.
+ For our example, Jython requires camel-case.
+ See 
+\bar under
+entry points (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-entry-points"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Itemize
@@ -10739,7 +10751,8 @@ name "implementing-resources"
 \end_layout
 
 \begin_layout Standard
-Prudence offers two options for implementing dynamic resources: 
+Prudence offers two options for implementing resources in which the content
+ dynamically changes: 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10766,11 +10779,8 @@ scriptlet
 
  resources are simplified and highly optimized for cached textual resources,
  such as HTML web pages.
-\end_layout
-
-\begin_layout Standard
-Additionally, Prudence offers good support for static resources, just like
- conventional web servers.
+ Prudence also provides comprehensive support for static (unchanging) resources,
+ just like conventional web servers.
 \end_layout
 
 \begin_layout Subsection
@@ -10784,13 +10794,121 @@ name "manual-resources"
 
 \end_layout
 
-\begin_layout Subsubsection
-Mapping vs.
- Dispatching
+\begin_layout Standard
+These are implemented as a set of encapsulated entry points in any of the
+ supported programming languages.
+ The entry points all receive the current 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation API namespace"
+target "http://threecrickets.com/api/javascript/?namespace=conversation"
+
+\end_inset
+
+ as their only argument.
 \end_layout
 
 \begin_layout Standard
-TODO
+Prudence does the encapsulation for you: it treats the entry points as together
+ belonging to a single logical RESTful resource, and ensures that the same
+ conversation namespace is used for every user request.
+\end_layout
+
+\begin_layout Standard
+There are two ways to define this encapsulation, depending on which 
+\bar under
+routing paradigm (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "two-routing-paradigms"
+
+\end_inset
+
+)
+\bar default
+ you're using:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Resource mapping
+\series default
+: Here, the entry points are in the global scope, probably defined within
+ the file, though they can be imported via a library or created programmatically
+ (as closures, for example).
+ What an 
+\begin_inset Quotes eld
+\end_inset
+
+entry point
+\begin_inset Quotes erd
+\end_inset
+
+ means exactly may vary per programming language: it's usually a function,
+ method, closure, etc.
+ See the 
+\bar under
+programming guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-entry-points"
+
+\end_inset
+
+)
+\bar default
+ for examples in all supported languages.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Resource dispatching
+\series default
+: The default dispatchers attempt an object-oriented encapsulation, which
+ again varies per programming language.
+ The dispatch ID defines an object instance, which must in turn implement
+ the entry points.
+\end_layout
+
+\begin_layout Standard
+The implementation is in essence the same for both styles.
+ For simplicity, our examples below will be tuned to resource mapping.
+\end_layout
+
+\begin_layout Quote
+Quick reminder: If you've captured a 
+\bar under
+URI template (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "uri-templates"
+
+\end_inset
+
+)
+\bar default
+, you can access the captured parts of the template via 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.wildcard"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.wildcard"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -10810,7 +10928,11 @@ This is the only required entry point.
 \emph on
 every user request
 \emph default
-, and always before any of the other entry points.
+, and 
+\emph on
+always before
+\emph default
+ any of the other entry points.
 \end_layout
 
 \begin_layout Standard
@@ -10844,7 +10966,7 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-    conversation.addMediaTypeByName('text/plain') 
+    conversation.addMediaTypeByName('text/plain')
 \end_layout
 
 \begin_layout Plain Layout
@@ -10858,22 +10980,114 @@ function handleInit(conversation) {
 \end_layout
 
 \begin_layout Standard
-Prudence handles content negotiation automatically, choosing the best media
- type according to list of acceptable and preferred formats sent by the
- client and this list.
-\end_layout
-
-\begin_layout Paragraph
-Dynamic Media Types
+Note that you can also add language information:
 \end_layout
 
 \begin_layout Standard
-You might wonder why we add these supported media types dynamically for
- each request via a call to handleInit, since they are usually always the
- same for a resource.
- The reason is that sometimes they may not be the same.
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+    conversation.addMediaTypeByNameWithLanguage('text/plain', 'en')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByNameWithLanguage('text/plain', 'fr')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence will use these values for content negotiation, choosing the best
+ media type and language according to list of acceptable and preferred formats
+ sent by the client and this list.
+\end_layout
+
+\begin_layout Standard
+handleInit is also where you should set up 
+\bar under
+caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "server-side-caching"
+
+\end_inset
+
+)
+\bar default
+, if you're using it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleInit(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.addMediaTypeByName('application/xml')
+\end_layout
+
+\begin_layout Plain Layout
+
+	caching.duration = '5s'
+\end_layout
+
+\begin_layout Plain Layout
+
+	caching.tags.add('blog')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Dynamic Content Negotiation
+\end_layout
+
+\begin_layout Standard
+You might wonder why we add these supported media types via API calls 
+\emph on
+for each request
+\emph default
+, since they are usually always the same for a resource.
+ Why not simply configure them into the resource permanently?
+\end_layout
+
+\begin_layout Standard
+The reason is that they should not always permanent.
  In handleInit, you can check for various conditions of the conversation,
- or even external to the conversation, to decide which media types to support.
+ or even external to the conversation, to decide which media types and languages
+ to support.
  For example, you might not want to support XHTML for old browsers, but
  you'd want it at the top of the list for new browsers.
  Or, you might not be able to support PDF in case an external conversion
@@ -10884,8 +11098,8 @@ You might wonder why we add these supported media types dynamically for
 \end_layout
 
 \begin_layout Standard
-So, this gives you a lot flexibility, at no real expense: adding media types
- per request is very lightweight.
+So, building your content negotiation table via API gives you a lot flexibility,
+ at no real expense: these API calls are very lightweight.
 \end_layout
 
 \begin_layout Subsubsection
@@ -10921,62 +11135,68 @@ reference "the-cast-for-rest"
 
 \begin_layout Standard
 What you'll usually do here is construct a representation of the resource,
- possibly according to specific parameters of the request, and return this
- representation to the client.
- See the 
-\begin_inset CommandInset href
-LatexCommand href
-name "“conversation” API documentation"
-target "http://threecrickets.com/api/javascript/?namespace=conversation"
+ possibly according to specific parameters of the request, and then return
+ this representation to the client, possibly with directions for client-side
+ caching.
+\end_layout
 
-\end_inset
-
- for a complete reference.
- Note especially that if you've 
+\begin_layout Standard
+The possible return values are discussed in greater length in the 
 \bar under
-captured URI segments (page 
+web data chapter (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "mapping-uri-templates"
-
-\end_inset
-
-)
-\bar default
-, they'll be available in 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
+reference "response-payloads"
 
 \end_inset
 
 )
 \bar default
 .
-\end_layout
-
-\begin_layout Standard
-The following return types are supported:
+ However, here's a brief reference of the supported return types:
 \end_layout
 
 \begin_layout Itemize
-Numbers: Returns the number as an HTTP status code to the client, with no
- other content.
- Usually used for errors.
- For example, 404 means “not found.” Note that 
+Numbers: Returns the number as an HTTP status code to the client.
+ If you you wish to set your own return representation, too, you can use
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.setResponseText"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.setResponseText"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.setResponseBinary"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.setResponseBinary"
+
+\end_inset
+
+.
+ Note that if the status code is an error, then the 
 \bar under
 error capturing (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../routing/|capturing-errors"
+reference "app-errors"
 
 \end_inset
 
 )
 \bar default
- can let you take over and return an appropriate error page to the client.
+ mechanism may override your response.
+ If you wish to bypass this mechanism, set 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.statusPassthrough"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.statusPassthrough"
+
+\end_inset
+
+ to true.
 \end_layout
 
 \begin_layout Itemize
@@ -10988,7 +11208,7 @@ ns of arrays, which are not exactly compatible with JVM arrays.
 \begin_inset CommandInset href
 LatexCommand href
 name "ByteArrayRepresentation"
-target "http://threecrickets.com/prudence/api/index.html?com/threecrickets/prudence/util/ByteArrayRepresentation.html"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ByteArrayRepresentation.html"
 
 \end_inset
 
@@ -11009,17 +11229,14 @@ target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/
 
 \begin_layout Itemize
 Other return values: If the 
-\bar under
-conversation.mediaType (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-media-type"
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.mediaType"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
 
 \end_inset
 
-)
-\bar default
- is “application/java” the value will be wrapped in an 
+ is “application/java” then the value will be wrapped in an 
 \begin_inset CommandInset href
 LatexCommand href
 name "ObjectRepresentation instance"
@@ -11029,69 +11246,15 @@ target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/rep
 
 .
  Otherwise, it will be converted into a string if it isn't a string already,
- and returned to the client as a textual representation.
-\end_layout
-
-\begin_layout Standard
-Beyond the return value, you can affect the response sent to the client
- by the response attributes in the “
-\bar under
-conversation” service (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation"
+ and returned to the client as a 
+\begin_inset CommandInset href
+LatexCommand href
+name "StringRepresentation"
+target "restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/StringRepresentation.html"
 
 \end_inset
 
-)
-\bar default
 .
- In particular, the 
-\bar under
-conversation.modificationDate (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-modification-date"
-
-\end_inset
-
-)
-\bar default
- and 
-\bar under
-conversation.tag (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-tag"
-
-\end_inset
-
-)
-\bar default
- can be used to affect 
-\bar under
-conditional HTTP requests (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../resources/|conditional-requests"
-
-\end_inset
-
-)
-\bar default
-.
- For these, you may also consider implementing the 
-\bar under
-handleGetInfo entry point (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "handle-get-info"
-
-\end_inset
-
-)
-\bar default
- for more scalable handling of conditional requests.
 \end_layout
 
 \begin_layout Subsubsection
@@ -11115,7 +11278,7 @@ In a conventional
 resource-oriented architecture (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../../rest/"
+reference "the-cast-for-rest"
 
 \end_inset
 
@@ -16216,8 +16379,11 @@ Note that if you return a
 number
 \emph default
 , it will be treated specially as an HTTP status code.
- If you wish to return the number as the content of an textual payload,
- simply convert it to a string:
+ If you wish to return the number as the content of a 
+\emph on
+textual payload
+\emph default
+, simply convert it to a string:
 \end_layout
 
 \begin_layout Standard
@@ -16259,6 +16425,16 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 
 \end_inset
 
+.
+ Note that if your status code is an error status code, you'll also want
+ to bypass this error page using 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.statusPassthrough"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.statusPassthrough"
+
+\end_inset
+
 :
 \end_layout
 
@@ -16275,6 +16451,11 @@ function handleGet(conversation) {
 \begin_layout Plain Layout
 
 	conversation.statusCode = 404
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.statusPassthrough = true
 \end_layout
 
 \begin_layout Plain Layout
@@ -16325,6 +16506,11 @@ function handleGet(conversation) {
 \begin_layout Plain Layout
 
 	conversation.setResponseText('Not found!', null, null, null)
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.statusPassthrough
 \end_layout
 
 \begin_layout Plain Layout
@@ -17488,6 +17674,22 @@ application
 \begin_inset Quotes erd
 \end_inset
 
+.
+\end_layout
+
+\begin_layout Standard
+For scriptlet resources, you may call these APIs anywhere on the page, but
+ for manual resources they should be called in 
+\bar under
+handleInit (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "handle-init"
+
+\end_inset
+
+)
+\bar default
 .
 \end_layout
 
@@ -21903,6 +22105,174 @@ JavaScript
 
 \begin_layout Subsection
 Other Languages
+\end_layout
+
+\begin_layout Subsubsection
+Entry Points
+\begin_inset CommandInset label
+LatexCommand label
+name "programming-entry-points"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Python uses global functions, using the lowercase-with-underscores naming
+ convention:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def handle_get(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, world!'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Ruby uses global methods, using the lowercase-with-underscores naming convention
+:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def handle_get conversation
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, world!'
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Clojure uses functions in the current namespace, using the lowercase-with-dashes
+ naming convention:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(defn handle-get [conversation]
+\end_layout
+
+\begin_layout Plain Layout
+
+	'Hello, World!')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+JavaScript uses global functions, using camel-case:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, world!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+PHP uses global functions, using the lowercase-with-underscores naming conventio
+n:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handle_get($conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, World!';
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Groovy uses closures tied to global variables (there are no global methods
+ in Groovy), using camel-case:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+handleGet = { conversation ->
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, World!'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
