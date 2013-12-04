@@ -364,7 +364,7 @@ public class DelegatedResource extends ServerResource
 		try
 		{
 			Object r = enter( this.attributes.getEntryPointNameForGetInfo(), false, conversationService );
-			if( Status.CLIENT_ERROR_METHOD_NOT_ALLOWED.equals( conversationService.getStatus() ) )
+			if( ( r == null ) || Status.CLIENT_ERROR_METHOD_NOT_ALLOWED.equals( conversationService.getStatus() ) )
 			{
 				conversationService.setStatus( Status.SUCCESS_OK );
 				return get( variant );
