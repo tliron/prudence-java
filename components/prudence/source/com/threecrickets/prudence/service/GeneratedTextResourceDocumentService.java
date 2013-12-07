@@ -41,6 +41,7 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ProgramParser;
 import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
@@ -254,7 +255,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	protected DocumentDescriptor<Executable> getDocumentDescriptor( String documentName ) throws ParsingException, DocumentException
 	{
 		documentName = attributes.validateDocumentName( documentName );
-		return attributes.createDocumentOnce( documentName, ScriptletsParser.NAME, false, false, true );
+		return attributes.createDocumentOnce( documentName, ProgramParser.NAME, false, false, true );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

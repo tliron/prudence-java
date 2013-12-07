@@ -34,6 +34,7 @@ import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ProgramParser;
 
 /**
  * Document service exposed to executables.
@@ -404,7 +405,7 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	protected DocumentDescriptor<Executable> getDocumentDescriptor( String documentName ) throws ParsingException, DocumentException
 	{
 		documentName = attributes.validateDocumentName( documentName );
-		return attributes.createDocumentOnce( documentName, null, true, true, true );
+		return attributes.createDocumentOnce( documentName, ProgramParser.NAME, true, true, true );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
