@@ -25,12 +25,13 @@ import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ParsingContext;
-import com.threecrickets.scripturian.ScriptletPlugin;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ScriptletPlugin;
+import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
  * @author Tal Liron
@@ -213,23 +214,18 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	@Override
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
-		throws ParsingException, DocumentException
+	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources ) throws ParsingException,
+		DocumentException
 	{
 		ParsingContext parsingContext = new ParsingContext();
 		parsingContext.setLanguageManager( getLanguageManager() );
+		parsingContext.setParserManager( getParserManager() );
 		parsingContext.setDefaultLanguageTag( getDefaultLanguageTag() );
 		parsingContext.setPrepare( isPrepare() );
 		parsingContext.setDebug( isDebug() );
+		parsingContext.getAttributes().put( ScriptletsParser.PLUGINS_ATTRIBUTE, getScriptletPlugins() );
 		if( includeMainSource )
 			parsingContext.setDocumentSource( getDocumentSource() );
-
-		if( isTextWithScriptlets )
-		{
-			Map<String, ScriptletPlugin> scriptletPlugins = getScriptletPlugins();
-			if( scriptletPlugins != null )
-				parsingContext.getScriptletPlugins().putAll( scriptletPlugins );
-		}
 
 		Iterator<DocumentSource<Executable>> iterator = null;
 		while( true )
@@ -239,7 +235,7 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 				if( parsingContext.getDocumentSource() == null )
 					throw new DocumentNotFoundException( documentName );
 
-				return Executable.createOnce( documentName, isTextWithScriptlets, parsingContext );
+				return Executable.createOnce( documentName, parserName, parsingContext );
 			}
 			catch( DocumentNotFoundException x )
 			{

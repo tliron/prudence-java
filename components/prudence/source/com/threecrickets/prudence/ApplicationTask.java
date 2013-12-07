@@ -30,12 +30,14 @@ import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ProgramParser;
 
 /**
  * A {@link Runnable} wrapper for a Scripturian {@link Executable}.
@@ -81,6 +83,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
+ * <li>
+ * <code>com.threecrickets.prudence.ApplicationTask.parserManager:</code>
+ * {@link ParserManager}, defaults to a new instance.</li>
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
@@ -249,9 +254,9 @@ public class ApplicationTask<T> implements Callable<T>, Runnable
 			{
 				DocumentDescriptor<Executable> documentDescriptor;
 				if( code != null )
-					documentDescriptor = attributes.createDocumentOnce( documentName, code );
+					documentDescriptor = attributes.createScriptletDocumentOnce( documentName, code );
 				else
-					documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, false );
+					documentDescriptor = attributes.createDocumentOnce( documentName, ProgramParser.NAME, true, true, false );
 
 				Executable executable = documentDescriptor.getDocument();
 

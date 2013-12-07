@@ -41,6 +41,7 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
  * Document service exposed to executables.
@@ -164,7 +165,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 		}
 
 		if( documentDescriptor == null )
-			documentDescriptor = attributes.createDocumentOnce( documentName, true, true, includeExtraSources || ( currentDocumentDescriptor != null ), false );
+			documentDescriptor = attributes.createDocumentOnce( documentName, ScriptletsParser.NAME, true, includeExtraSources || ( currentDocumentDescriptor != null ), false );
 
 		if( currentDocumentDescriptor == null )
 		{
@@ -253,7 +254,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	protected DocumentDescriptor<Executable> getDocumentDescriptor( String documentName ) throws ParsingException, DocumentException
 	{
 		documentName = attributes.validateDocumentName( documentName );
-		return attributes.createDocumentOnce( documentName, false, false, false, true );
+		return attributes.createDocumentOnce( documentName, ScriptletsParser.NAME, false, false, true );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -400,7 +401,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			// Try fetching from cache
 			if( CachingUtil.mayFetch( request, executable, null ) )
 			{
-				Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, null, true, request, encoding, writer, conversationService );
+				Representation representation = cachingUtil.fetchRepresentation( documentDescriptor, null, ScriptletsParser.NAME, request, encoding, writer, conversationService );
 				if( representation != null )
 					return representation;
 			}
@@ -463,7 +464,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 
 				// Cache successful requests
 				if( ( expirationTimestamp > 0 ) && resource.getResponse().getStatus().isSuccess() )
-					cachingUtil.store( encodedCacheEntry, cacheEntry, documentDescriptor, null, true, cacheTags, conversationService );
+					cachingUtil.store( encodedCacheEntry, cacheEntry, documentDescriptor, null, ScriptletsParser.NAME, cacheTags, conversationService );
 
 				// Make sure we're including the entire buffer for the
 				// representation

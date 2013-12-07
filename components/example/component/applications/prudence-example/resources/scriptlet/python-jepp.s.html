@@ -59,7 +59,7 @@ print_adapter(executable.getContext().getAdapter())
 %>
 <h3>Available languages:</h3>
 <%
-adapters = executable.getManager().getAdapters().toArray()
+adapters = executable.getLanguageManager().getAdapters().toArray()
 for adapter in adapters:
 	print_adapter(adapter)
 %>

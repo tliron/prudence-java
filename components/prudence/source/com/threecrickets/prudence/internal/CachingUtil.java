@@ -55,6 +55,7 @@ import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ProgramParser;
 
 /**
  * Caching utilities.
@@ -517,8 +518,8 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * 
 	 * @param suffix
 	 *        The optional attribute suffix
-	 * @param isTextWithScriptlets
-	 *        Whether the document is text with scriptlets
+	 * @param parserName
+	 *        The parser to use, or null for the default parser
 	 * @param includeExtraSources
 	 *        Whether to include the extra document sources
 	 * @param conversationService
@@ -526,7 +527,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * @return The cache entry
 	 * @throws ResourceException
 	 */
-	public CacheEntry fetchCacheEntry( String suffix, boolean isTextWithScriptlets, boolean includeExtraSources, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
+	public CacheEntry fetchCacheEntry( String suffix, String parserName, boolean includeExtraSources, ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Cache cache = attributes.getCache();
 		if( cache == null )
@@ -539,7 +540,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 
 		try
 		{
-			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, isTextWithScriptlets, true, true, isPassThrough || isCaptured );
+			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, parserName, true, true, isPassThrough || isCaptured );
 
 			ConcurrentMap<String, Object> attributes = request.getAttributes();
 			attributes.put( DOCUMENT_DESCRIPTOR_ATTRIBUTE, documentDescriptor );
@@ -550,7 +551,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			if( encoding != null )
 			{
 				// Try encoded cache entry first
-				String cacheKeyForEncoding = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, encoding );
+				String cacheKeyForEncoding = castKey( documentDescriptor, suffix, parserName, conversationService, encoding );
 				if( cacheKeyForEncoding != null )
 				{
 					attributes.put( CACHE_KEY_FOR_ENCODING_ATTRIBUTE, cacheKeyForEncoding );
@@ -561,7 +562,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			if( cacheEntry == null )
 			{
 				// Try un-encoded cache entry
-				String cacheKey = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, null );
+				String cacheKey = castKey( documentDescriptor, suffix, parserName, conversationService, null );
 				if( cacheKey != null )
 				{
 					attributes.put( CACHE_KEY_ATTRIBUTE, cacheKey );
@@ -602,8 +603,8 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The document descriptor
 	 * @param suffix
 	 *        The optional attribute suffix
-	 * @param isTextWithScriptlets
-	 *        Whether the document is text with scriptlets
+	 * @param parseName
+	 *        The parser to use, or null for the default parser
 	 * @param request
 	 *        The request
 	 * @param encoding
@@ -615,7 +616,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 * @return The cached, re-encoded representation or null if not found
 	 * @throws ResourceException
 	 */
-	public Representation fetchRepresentation( DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, Request request, Encoding encoding, Writer writer,
+	public Representation fetchRepresentation( DocumentDescriptor<Executable> documentDescriptor, String suffix, String parserName, Request request, Encoding encoding, Writer writer,
 		ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Cache cache = attributes.getCache();
@@ -633,7 +634,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		{
 			// Try encoded cache entry first
 			if( cacheKeyForEncoding == null )
-				cacheKeyForEncoding = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, encoding );
+				cacheKeyForEncoding = castKey( documentDescriptor, suffix, parserName, conversationService, encoding );
 			if( cacheKeyForEncoding != null )
 			{
 				cacheEntry = cache.fetch( cacheKeyForEncoding );
@@ -646,7 +647,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		{
 			// Try un-encoded cache entry
 			if( cacheKey == null )
-				cacheKey = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, null );
+				cacheKey = castKey( documentDescriptor, suffix, parserName, conversationService, null );
 			if( cacheKey != null )
 				cacheEntry = cache.fetch( cacheKey );
 		}
@@ -671,7 +672,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 				{
 					cacheEntry = new CacheEntry( cacheEntry, encoding );
 					if( cacheKeyForEncoding == null )
-						cacheKeyForEncoding = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, encoding );
+						cacheKeyForEncoding = castKey( documentDescriptor, suffix, parserName, conversationService, encoding );
 					if( cacheKeyForEncoding != null )
 					{
 						cacheKey = cacheKeyForEncoding;
@@ -706,15 +707,15 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The document descriptor
 	 * @param suffix
 	 *        The optional attribute suffix
-	 * @param isTextWithScriptlets
-	 *        Whether the document is text with scriptlets
+	 * @param parseName
+	 *        The parser to use, or null for the default parser
 	 * @param cacheTags
 	 *        The cache tags or null
 	 * @param conversationService
 	 *        The conversation service
 	 * @throws ResourceException
 	 */
-	public void store( CacheEntry encodedCacheEntry, CacheEntry cacheEntry, DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, Set<String> cacheTags,
+	public void store( CacheEntry encodedCacheEntry, CacheEntry cacheEntry, DocumentDescriptor<Executable> documentDescriptor, String suffix, String parserName, Set<String> cacheTags,
 		ResourceConversationServiceBase<R> conversationService ) throws ResourceException
 	{
 		Cache cache = attributes.getCache();
@@ -727,7 +728,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		String cacheKeyForEncoding = getExistingKeyForEncoding( request, true );
 
 		if( cacheKey == null )
-			cacheKey = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, null );
+			cacheKey = castKey( documentDescriptor, suffix, parserName, conversationService, null );
 
 		if( cacheKey != null )
 		{
@@ -743,7 +744,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			if( encoding != null )
 			{
 				if( cacheKeyForEncoding == null )
-					cacheKeyForEncoding = castKey( documentDescriptor, suffix, isTextWithScriptlets, conversationService, encoding );
+					cacheKeyForEncoding = castKey( documentDescriptor, suffix, parserName, conversationService, encoding );
 
 				if( cacheKeyForEncoding != null )
 				{
@@ -828,15 +829,15 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 	 *        The document descriptor
 	 * @param suffix
 	 *        The optional attribute suffix
-	 * @param isTextWithScriptlets
-	 *        Whether the document is text with scriptlets
+	 * @param parserName
+	 *        The parser to use, or null for the default parser
 	 * @param conversationService
 	 *        The conversation service
 	 * @param encoding
 	 *        The encoding
 	 * @return The cache key or null
 	 */
-	public String castKey( DocumentDescriptor<Executable> documentDescriptor, String suffix, boolean isTextWithScriptlets, ResourceConversationServiceBase<R> conversationService, Encoding encoding )
+	public String castKey( DocumentDescriptor<Executable> documentDescriptor, String suffix, String parserName, ResourceConversationServiceBase<R> conversationService, Encoding encoding )
 	{
 		Executable executable = documentDescriptor.getDocument();
 		String cacheKeyTemplate = getKeyTemplate( executable, suffix );
@@ -846,7 +847,7 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 		Request request = resource.getRequest();
 		Response response = resource.getResponse();
 
-		if( isTextWithScriptlets )
+		if( !ProgramParser.NAME.equals( parserName ) )
 		{
 			// Set initial media type according to the document's tag (might
 			// be used by resolver)

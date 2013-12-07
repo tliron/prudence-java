@@ -62,7 +62,7 @@ printAdapter executable.context.adapter
 %>
 <h3>Available languages:</h3>
 <%
-def adapters = executable.manager.adapters
+def adapters = executable.languageManager.adapters
 for(def adapter in adapters) {
 	printAdapter adapter
 }

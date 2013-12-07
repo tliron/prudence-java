@@ -31,6 +31,7 @@ import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
  * @author Tal Liron
@@ -196,11 +197,12 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 	// DocumentExecutionAttributes
 	//
 
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
-		throws ParsingException, DocumentException
+	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources ) throws ParsingException,
+		DocumentException
 	{
 		ParsingContext parsingContext = new ParsingContext();
 		parsingContext.setLanguageManager( getLanguageManager() );
+		parsingContext.setParserManager( getParserManager() );
 		parsingContext.setDefaultLanguageTag( getDefaultLanguageTag() );
 		parsingContext.setPrepare( isPrepare() );
 		parsingContext.setDebug( isDebug() );
@@ -215,7 +217,7 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 				if( parsingContext.getDocumentSource() == null )
 					throw new DocumentNotFoundException( documentName );
 
-				return Executable.createOnce( documentName, isTextWithScriptlets, parsingContext );
+				return Executable.createOnce( documentName, parserName, parsingContext );
 			}
 			catch( DocumentNotFoundException x )
 			{
@@ -241,7 +243,7 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 		}
 	}
 
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String code ) throws ParsingException, DocumentException
+	public DocumentDescriptor<Executable> createScriptletDocumentOnce( String documentName, String code ) throws ParsingException, DocumentException
 	{
 		DocumentSource<Executable> documentSource = getDocumentSource();
 		try
@@ -252,12 +254,13 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 		{
 			ParsingContext parsingContext = new ParsingContext();
 			parsingContext.setLanguageManager( getLanguageManager() );
+			parsingContext.setParserManager( getParserManager() );
 			parsingContext.setDefaultLanguageTag( getDefaultLanguageTag() );
 			parsingContext.setPrepare( isPrepare() );
 			parsingContext.setDebug( isDebug() );
 			parsingContext.setDocumentSource( documentSource );
 
-			Executable executable = new Executable( documentName, System.currentTimeMillis(), code, true, parsingContext );
+			Executable executable = new Executable( documentName, System.currentTimeMillis(), code, ScriptletsParser.NAME, parsingContext );
 			documentSource.setDocument( documentName, code, "", executable );
 			return documentSource.getDocument( documentName );
 		}

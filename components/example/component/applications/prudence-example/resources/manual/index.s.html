@@ -81,27 +81,27 @@ function seeMainSource() {
 	<h3>Resource</h3>
 	<p>
 		<input type="radio" name="resource" value="javascript/" checked="true">JavaScript</input><br />
-<% if (executable.manager.getAdapterByTag('jython')) { %>
+<% if (executable.languageManager.getAdapterByTag('jython')) { %>
 		<input type="radio" name="resource" value="python/">Python</input><br />
 <% } %>
 <!-- 
-<% if (executable.manager.getAdapterByTag('jepp')) { %>
+<% if (executable.languageManager.getAdapterByTag('jepp')) { %>
 		<input type="radio" name="resource" value="python-jepp/">Python (Jepp)</input><br />
 <% } %>
 -->
-<% if (executable.manager.getAdapterByTag('ruby')) { %>
+<% if (executable.languageManager.getAdapterByTag('ruby')) { %>
 		<input type="radio" name="resource" value="ruby/">Ruby</input><br />
 <% } %>
-<% if (executable.manager.getAdapterByTag('quercus')) { %>
+<% if (executable.languageManager.getAdapterByTag('quercus')) { %>
 		<input type="radio" name="resource" value="php/">PHP</input><br />
 <% } %>
-<% if (executable.manager.getAdapterByTag('lua')) { %>
+<% if (executable.languageManager.getAdapterByTag('lua')) { %>
 		<input type="radio" name="resource" value="lua/">Lua</input><br />
 <% } %>
-<% if (executable.manager.getAdapterByTag('groovy')) { %>
+<% if (executable.languageManager.getAdapterByTag('groovy')) { %>
 		<input type="radio" name="resource" value="groovy/">Groovy</input><br />
 <% } %>
-<% if (executable.manager.getAdapterByTag('clojure')) { %>
+<% if (executable.languageManager.getAdapterByTag('clojure')) { %>
 		<input type="radio" name="resource" value="clojure/">Clojure</input><br />
 <% } %>
 	</p>

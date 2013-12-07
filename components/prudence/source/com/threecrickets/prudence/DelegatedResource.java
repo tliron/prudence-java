@@ -54,6 +54,7 @@ import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
@@ -61,6 +62,7 @@ import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ProgramParser;
 
 /**
  * A Restlet resource that delegates functionality to a Scripturian
@@ -181,6 +183,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.negotiateEncoding:</code>
  * defaults to a true.</li>
+ * <li>
+ * <code>com.threecrickets.prudence.DelegatedResource.parserManager:</code>
+ * {@link ParserManager}, defaults to a new instance.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
@@ -356,7 +361,7 @@ public class DelegatedResource extends ServerResource
 
 		if( CachingUtil.mayFetch( getRequest(), executable, getDispatchedSuffix() ) )
 		{
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( getDispatchedSuffix(), false, true, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( getDispatchedSuffix(), ProgramParser.NAME, true, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 		}
@@ -698,7 +703,7 @@ public class DelegatedResource extends ServerResource
 
 				// Cache successful requests
 				if( ( expirationTimestamp > 0 ) && response.getStatus().isSuccess() )
-					cachingUtil.store( encodedCacheEntry, cacheEntry, documentDescriptor, getDispatchedSuffix(), false, CachingUtil.getTags( executable, getDispatchedSuffix(), false ), conversationService );
+					cachingUtil.store( encodedCacheEntry, cacheEntry, documentDescriptor, getDispatchedSuffix(), ProgramParser.NAME, CachingUtil.getTags( executable, getDispatchedSuffix(), false ), conversationService );
 
 				cacheEntry = encodedCacheEntry;
 			}
@@ -804,7 +809,7 @@ public class DelegatedResource extends ServerResource
 	{
 		Request request = getRequest();
 		if( CachingUtil.mayFetch( request, executable, getDispatchedSuffix() ) )
-			return cachingUtil.fetchRepresentation( documentDescriptor, getDispatchedSuffix(), false, request, conversationService.getEncoding(), null, conversationService );
+			return cachingUtil.fetchRepresentation( documentDescriptor, getDispatchedSuffix(), ProgramParser.NAME, request, conversationService.getEncoding(), null, conversationService );
 		return null;
 	}
 
@@ -833,7 +838,7 @@ public class DelegatedResource extends ServerResource
 
 		try
 		{
-			documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, isPassThrough || isCaptured );
+			documentDescriptor = attributes.createDocumentOnce( documentName, ProgramParser.NAME, true, true, isPassThrough || isCaptured );
 			executable = documentDescriptor.getDocument();
 			Object enteringKey = getApplication().hashCode();
 

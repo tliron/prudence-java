@@ -47,6 +47,7 @@ import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
@@ -54,6 +55,7 @@ import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
  * A Restlet resource which executes a "text with scriptlets" Scripturian
@@ -160,6 +162,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.negotiateEncoding:</code>
  * defaults to a true.</li>
+ * <li>
+ * <code>com.threecrickets.prudence.GeneratedTextResource.parserManager:</code>
+ * {@link ParserManager}, defaults to a new instance.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
@@ -325,7 +330,7 @@ public class GeneratedTextResource extends ServerResource
 		if( CachingUtil.mayFetch( getRequest(), null, null ) )
 		{
 			GeneratedTextResourceConversationService conversationService = new GeneratedTextResourceConversationService( this, null, null, attributes.getDefaultCharacterSet() );
-			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( null, true, false, conversationService );
+			CacheEntry cacheEntry = cachingUtil.fetchCacheEntry( null, ScriptletsParser.NAME, false, conversationService );
 			if( cacheEntry != null )
 				return cacheEntry.getInfo();
 		}

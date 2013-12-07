@@ -105,9 +105,9 @@ Prudence.Setup = Prudence.Setup || function() {
 	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
 	 * @property {String} [settings.code.sourceViewer='/source-code/'] Only used when settings.code.sourceViewable=true
 	 * 
-	 * @property {Object} [settings.scriptlet] Scriptlet settings
-	 * @property {Boolean} [settings.scriptlet.debug=false] When true, outputs the generated scriptlet code under "/cache/scripturian/"
-	 * @property {Object} [settings.scriptlet.plugins] Scriptlet plugins
+	 * @property {Object} [settings.scriptlets] Scriptlets settings
+	 * @property {Boolean} [settings.scriptlets.debug=false] When true, outputs the generated scriptlet code under "/cache/scripturian/"
+	 * @property {Object} [settings.scriptlets.plugins] Scriptlet plugins
 	 * 
 	 * @property {Object} [settings.caching] Caching settings
 	 * @property {Boolean} [settings.caching.debug=false] When true, adds caching debug headers to responses
@@ -205,7 +205,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
 			this.settings.code = Sincerity.Objects.ensure(this.settings.code, {})
-			this.settings.scriptlet = Sincerity.Objects.ensure(this.settings.scriptlet, {})
+			this.settings.scriptlets = Sincerity.Objects.ensure(this.settings.scriptlets, {})
 			this.settings.caching = Sincerity.Objects.ensure(this.settings.caching, {})
 			this.settings.compression = Sincerity.Objects.ensure(this.settings.compression, {})
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
@@ -225,10 +225,12 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.distributed.executor = Sincerity.Objects.ensure(this.settings.distributed.executor, 'default')
 
 			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
-			this.settings.scriptlet.plugins = Sincerity.Objects.ensure(this.settings.scriptlet.plugins, {})
-			this.settings.scriptlet.plugins['{{'] = Sincerity.Objects.ensure(this.settings.scriptlet.plugins['{{'], prudenceScriptletPlugin)
-			this.settings.scriptlet.plugins['}}'] = Sincerity.Objects.ensure(this.settings.scriptlet.plugins['}}'], prudenceScriptletPlugin)
-			this.settings.scriptlet.plugins['=='] = Sincerity.Objects.ensure(this.settings.scriptlet.plugins['=='], prudenceScriptletPlugin)
+			this.settings.scriptlets.plugins = Sincerity.Objects.ensure(this.settings.scriptlets.plugins, {})
+			this.settings.scriptlets.plugins['=='] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['=='], prudenceScriptletPlugin)
+			this.settings.scriptlets.plugins['{'] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['{'], prudenceScriptletPlugin)
+			this.settings.scriptlets.plugins['}'] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['}'], prudenceScriptletPlugin)
+			this.settings.scriptlets.plugins['['] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['['], prudenceScriptletPlugin)
+			this.settings.scriptlets.plugins[']'] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins[']'], prudenceScriptletPlugin)
 
 			this.settings.compression.sizeThreshold = Sincerity.Objects.ensure(this.settings.compression.sizeThreshold, 1024)
 
@@ -378,7 +380,8 @@ Prudence.Setup = Prudence.Setup || function() {
 								libraryDocumentSources: this.libraryDocumentSources,
 								defaultName: this.settings.code.defaultDocumentName,
 								defaultLanguageTag: this.settings.code.defaultLanguageTag,
-								languageManager: executable.manager,
+								languageManager: executable.languageManager,
+								parserManager: executable.parserManager,
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
 								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
@@ -396,7 +399,8 @@ Prudence.Setup = Prudence.Setup || function() {
 								libraryDocumentSources: this.libraryDocumentSources,
 								defaultName: this.settings.code.defaultDocumentName,
 								defaultLanguageTag: this.settings.code.defaultLanguageTag,
-								languageManager: executable.manager,
+								languageManager: executable.languageManager,
+								parserManager: executable.parserManager,
 								sourceViewable: this.settings.code.sourceViewable,
 								fileUploadDirectory: this.settings.uploads.root,
 								fileUploadSizeThreshold: this.settings.uploads.sizeThreshold
@@ -701,7 +705,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				com.threecrickets.scripturian.util.DefrostTask)
 				
 			if (true == this.settings.code.defrost) {
-				var tasks = DefrostTask.forDocumentSource(documentSource, executable.manager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.scriptlet.debug ? true : false)
+				var tasks = DefrostTask.forDocumentSource(documentSource, executable.languageManager, executable.parserManager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.scriptlets.debug ? true : false)
 				for (var t in tasks) {
 					startupTasks.push(tasks[t])
 				}
@@ -1007,7 +1011,8 @@ Prudence.Setup = Prudence.Setup || function() {
 					trailingSlashRequired: this.trailingSlashRequired,
 					clientCachingMode: this.clientCachingMode,
 					maxClientCachingDuration: this.maxClientCachingDuration, 
-					languageManager: executable.manager,
+					languageManager: executable.languageManager,
+					parserManager: executable.parserManager,
 					sourceViewable: app.settings.code.sourceViewable,
 					negotiateEncoding: this.compress,
 					encodeSizeThreshold: app.settings.compression.sizeThreshold,
@@ -1190,14 +1195,15 @@ Prudence.Setup = Prudence.Setup || function() {
 					maxClientCachingDuration: this.maxClientCachingDuration, 
 					defaultIncludedName: this.defaultDocumentName,
 					executionController: new PhpExecutionController(), // Adds PHP predefined variables
-					languageManager: executable.manager,
+					languageManager: executable.languageManager,
+					parserManager: executable.parserManager,
 					sourceViewable: app.settings.code.sourceViewable,
 					negotiateEncoding: this.compress,
 					encodeSizeThreshold: app.settings.compression.sizeThreshold,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
-					debug: app.settings.scriptlet.debug ? true : false,
+					debug: app.settings.scriptlets.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
 					defaultCachingKeyTemplate: app.settings.caching.defaultKeyTemplate,
 					cachingKeyTemplatePlugins: app.cachingKeyTemplatePlugins
@@ -1240,11 +1246,11 @@ Prudence.Setup = Prudence.Setup || function() {
 				}
 
 				// Scriptlet plugins
-				for (var code in app.settings.scriptlet.plugins) {
+				for (var code in app.settings.scriptlets.plugins) {
 					if (sincerity.verbosity >= 2) {
-						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptlet.plugins[code]))
+						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptlets.plugins[code]))
 					}
-					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptlet.plugins[code])
+					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptlets.plugins[code])
 				}
 				
 				// Defrost
@@ -1311,7 +1317,8 @@ Prudence.Setup = Prudence.Setup || function() {
 					defaultLanguageTag: app.settings.code.defaultLanguageTag,
 					trailingSlashRequired: this.trailingSlashRequired,
 					executionController: new PhpExecutionController(), // Adds PHP predefined variables
-					languageManager: executable.manager,
+					languageManager: executable.languageManager,
+					parserManager: executable.parserManager,
 					sourceViewable: app.settings.code.sourceViewable,
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold

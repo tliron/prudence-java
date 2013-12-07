@@ -25,6 +25,7 @@ import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
@@ -89,6 +90,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.libraryDocumentSources:</code>
  * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
+ * <li>
+ * <code>com.threecrickets.prudence.ExecutionResource.parserManager:</code>
+ * {@link ParserManager}, defaults to a new instance.</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
@@ -190,7 +194,7 @@ public class ExecutionResource extends ServerResource
 			String code = entity.getText();
 			String documentName = getDocumentName( code );
 
-			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, code );
+			DocumentDescriptor<Executable> documentDescriptor = attributes.createScriptletDocumentOnce( documentName, code );
 
 			StringWriter output = new StringWriter();
 			ExecutionContext executionContext = new ExecutionContext( output, output );

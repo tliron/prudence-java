@@ -19,6 +19,7 @@ import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.ParsingContext;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentSource;
@@ -65,6 +66,17 @@ public interface DocumentExecutionAttributes
 	 * @return The language manager
 	 */
 	public LanguageManager getLanguageManager();
+
+	/**
+	 * The {@link ParserManager} used to create the executable parsers. Uses a
+	 * default instance, but can be set to something else.
+	 * <p>
+	 * This setting can be configured by setting an attribute named
+	 * <code>parserManager</code> in the application's {@link Context}.
+	 * 
+	 * @return The parser manager
+	 */
+	public ParserManager getParserManager();
 
 	/**
 	 * The default language tag name to be used if the script doesn't specify
@@ -196,9 +208,8 @@ public interface DocumentExecutionAttributes
 	 *        Whether it's a text-with-scriptlets document
 	 * @param includeMainSource
 	 *        Whether to include {@link #getDocumentSource()} in the search
-	 * @param includeExtraSources
-	 *        Whether to include {@link #getExtraDocumentSources()} in the
-	 *        search
+	 * @param parserName
+	 *        The parser to use, or null for the default parser
 	 * @param includeLibrarySources
 	 *        Whether to include {@link #getLibraryDocumentSources()} in the
 	 *        search
@@ -208,8 +219,8 @@ public interface DocumentExecutionAttributes
 	 * @throws DocumentException
 	 *         In case of a Scripturian document retrieval error
 	 */
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, boolean isTextWithScriptlets, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
-		throws ParsingException, DocumentException;
+	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources ) throws ParsingException,
+		DocumentException;
 
 	/**
 	 * Creates an on-the-fly document, or retrieves it if it already exists.
@@ -224,5 +235,5 @@ public interface DocumentExecutionAttributes
 	 * @throws DocumentException
 	 *         In case of a Scripturian document retrieval error
 	 */
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String code ) throws ParsingException, DocumentException;
+	public DocumentDescriptor<Executable> createScriptletDocumentOnce( String documentName, String code ) throws ParsingException, DocumentException;
 }

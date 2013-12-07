@@ -25,6 +25,7 @@ import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.document.DocumentFormatter;
 import com.threecrickets.scripturian.document.DocumentSource;
 
@@ -251,6 +252,27 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 		return languageManager;
 	}
 
+	public ParserManager getParserManager()
+	{
+		if( parserManager == null )
+		{
+			ConcurrentMap<String, Object> attributes = getAttributes();
+			String key = prefix + ".parserManager";
+			parserManager = (ParserManager) attributes.get( key );
+
+			if( parserManager == null )
+			{
+				parserManager = new ParserManager();
+
+				ParserManager existing = (ParserManager) attributes.putIfAbsent( key, parserManager );
+				if( existing != null )
+					parserManager = existing;
+			}
+		}
+
+		return parserManager;
+	}
+
 	/**
 	 * The default language tag name to be used if the script doesn't specify
 	 * one. Defaults to "javascript".
@@ -417,6 +439,11 @@ public abstract class NonVolatileContextualAttributes extends ContextualAttribut
 	 * The {@link LanguageManager} used to create the language adapters.
 	 */
 	protected LanguageManager languageManager;
+
+	/**
+	 * The {@link ParserManager} used to create the executable parsers.
+	 */
+	protected ParserManager parserManager;
 
 	/**
 	 * The default language tag to be used if the executable doesn't specify

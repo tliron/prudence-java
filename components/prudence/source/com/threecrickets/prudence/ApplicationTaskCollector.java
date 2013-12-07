@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.restlet.Application;
 
 import com.threecrickets.prudence.internal.ApplicationCronTask;
-import com.threecrickets.scripturian.ParsingContext;
+import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
  * A <a href="http://www.sauronsoftware.it/projects/cron4j/">cron4j</a>
@@ -131,11 +131,9 @@ public class ApplicationTaskCollector implements TaskCollector
 					if( entry.length() == 0 )
 						continue;
 
-					if( entry.startsWith( ParsingContext.DEFAULT_DELIMITER1_START ) && entry.endsWith( ParsingContext.DEFAULT_DELIMITER1_END ) )
-					{
+					if( ScriptletsParser.isScriptlet( entry ) )
 						// Add the task
 						taskTable.add( pattern, new ApplicationCronTask( application, entry ) );
-					}
 					else
 					{
 						// Find context, if there is any

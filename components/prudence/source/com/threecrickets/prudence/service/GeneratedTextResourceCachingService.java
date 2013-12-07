@@ -14,6 +14,7 @@ package com.threecrickets.prudence.service;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.attributes.GeneratedTextResourceAttributes;
+import com.threecrickets.scripturian.parser.ScriptletsParser;
 
 /**
  * Caching service exposed to executables.
@@ -58,7 +59,7 @@ public class GeneratedTextResourceCachingService extends CachingServiceBase<Gene
 	{
 		String key = CachingUtil.getExistingKey( resource.getRequest(), false );
 		if( key == null )
-			key = cachingUtil.castKey( documentService.getDescriptor(), null, true, conversationService, conversationService.getEncoding() );
+			key = cachingUtil.castKey( documentService.getDescriptor(), null, ScriptletsParser.NAME, conversationService, conversationService.getEncoding() );
 		return key;
 	}
 }

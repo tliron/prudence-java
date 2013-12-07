@@ -64,7 +64,7 @@ print_adapter(executable:getContext():getAdapter())
 </p>
 <h3>Available languages:</h3>
 <%
-adapters = executable:getManager():getAdapters():toArray()
+adapters = executable:getLanguageManager():getAdapters():toArray()
 for i = 1, #adapters do
 	print_adapter(adapters[i])
 end

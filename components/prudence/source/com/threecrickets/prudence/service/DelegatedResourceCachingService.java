@@ -14,6 +14,7 @@ package com.threecrickets.prudence.service;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.attributes.DelegatedResourceAttributes;
+import com.threecrickets.scripturian.parser.ProgramParser;
 
 /**
  * Caching service exposed to executables.
@@ -53,7 +54,7 @@ public class DelegatedResourceCachingService extends CachingServiceBase<Delegate
 	{
 		String key = CachingUtil.getExistingKey( resource.getRequest(), false );
 		if( key == null )
-			key = cachingUtil.castKey( documentService.getDescriptor(), getSuffix(), false, conversationService, conversationService.getEncoding() );
+			key = cachingUtil.castKey( documentService.getDescriptor(), getSuffix(), ProgramParser.NAME, conversationService, conversationService.getEncoding() );
 		return key;
 	}
 

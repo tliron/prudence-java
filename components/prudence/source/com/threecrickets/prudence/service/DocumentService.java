@@ -404,7 +404,7 @@ public class DocumentService<A extends DocumentExecutionAttributes>
 	protected DocumentDescriptor<Executable> getDocumentDescriptor( String documentName ) throws ParsingException, DocumentException
 	{
 		documentName = attributes.validateDocumentName( documentName );
-		return attributes.createDocumentOnce( documentName, false, true, true, true );
+		return attributes.createDocumentOnce( documentName, null, true, true, true );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

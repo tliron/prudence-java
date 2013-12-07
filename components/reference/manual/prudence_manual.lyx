@@ -1029,7 +1029,7 @@ debug
  mode to false (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "settings-scriptlet"
+reference "settings-scriptlets"
 
 \end_inset
 
@@ -5874,6 +5874,13 @@ resource or
 $\SpecialChar \ldots{}
 
 \begin_inset Quotes erd
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "resource-route-type"
+
 \end_inset
 
 
@@ -10784,6 +10791,90 @@ scriptlet
 \end_layout
 
 \begin_layout Subsection
+Programmable Resources
+\end_layout
+
+\begin_layout Standard
+These notes apply to both manual and scriptlet resources:
+\end_layout
+
+\begin_layout Itemize
+Resources can be implemented using any of the supported programming languages.
+\end_layout
+
+\begin_layout Itemize
+Uncaught exceptions in any entry point or scriptlet will result in the conversat
+ion ending and a 500 (
+\begin_inset Quotes eld
+\end_inset
+
+internal server error
+\begin_inset Quotes erd
+\end_inset
+
+) HTTP status code returned to the user.
+ To help you debug these errors, 
+\bar under
+turn on debug mode (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-errors-uncaught-exceptions"
+
+\end_inset
+
+)
+\bar default
+, which will enable a detailed debug representation.
+ Otherwise, you can set up a 
+\bar under
+custom error page (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-errors"
+
+\end_inset
+
+)
+\bar default
+, or, in the last resort, a simple error page will be shown, that at least
+ notifies the user that something went wrong.
+\end_layout
+
+\begin_layout Itemize
+If you've captured a 
+\bar under
+URI template (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "uri-templates"
+
+\end_inset
+
+)
+\bar default
+, you can access the captured parts of the template via 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.wildcard"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.wildcard"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
 Manual Resources
 \begin_inset CommandInset label
 LatexCommand label
@@ -10875,40 +10966,6 @@ Resource dispatching
 \begin_layout Standard
 The implementation is in essence the same for both styles.
  For simplicity, our examples below will be tuned to resource mapping.
-\end_layout
-
-\begin_layout Quote
-Quick reminder: If you've captured a 
-\bar under
-URI template (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "uri-templates"
-
-\end_inset
-
-)
-\bar default
-, you can access the captured parts of the template via 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
- or 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.wildcard"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.wildcard"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Subsubsection
@@ -11102,6 +11159,26 @@ So, building your content negotiation table via API gives you a lot flexibility,
  at no real expense: these API calls are very lightweight.
 \end_layout
 
+\begin_layout Standard
+Note that handleInit is called 
+\emph on
+even if your resource is cached
+\emph default
+ (on the server), exactly because you need to set up content negotiation
+ before casting the 
+\bar under
+cache key template (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
 \begin_layout Subsubsection
 handleGet
 \begin_inset CommandInset label
@@ -11136,12 +11213,23 @@ reference "the-cast-for-rest"
 \begin_layout Standard
 What you'll usually do here is construct a representation of the resource,
  possibly according to specific parameters of the request, and then return
- this representation to the client, possibly with directions for client-side
- caching.
+ this representation to the client, possibly with directions for 
+\bar under
+client-side caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "client-side-caching-manual"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-The possible return values are discussed in greater length in the 
+There are many kinds of payloads you can return to the client: they are
+ discussed in depth in the 
 \bar under
 web data chapter (page 
 \begin_inset CommandInset ref
@@ -11153,7 +11241,7 @@ reference "response-payloads"
 )
 \bar default
 .
- However, here's a brief reference of the supported return types:
+ However, here's a reference of the supported return types:
 \end_layout
 
 \begin_layout Itemize
@@ -11202,7 +11290,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \begin_layout Itemize
 Arrays of bytes: Used for returning binary representations.
  Note that some languages (JavaScript, for example) have their own implementatio
-ns of arrays, which are not exactly compatible with JVM arrays.
+ns of arrays, which are not compatible with JVM arrays.
  In such cases, you have to make sure to return JVM arrays.
  Internally, Prudence represents these values with a 
 \begin_inset CommandInset href
@@ -11216,15 +11304,14 @@ target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/rep
 \end_layout
 
 \begin_layout Itemize
-Representation instances: You can construct and return a 
 \begin_inset CommandInset href
 LatexCommand href
-name "Restlet representation"
-target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/Representation.html"
+name "Representation"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html"
 
 \end_inset
 
- directly.
+ instances: You can construct and return a directly.
 \end_layout
 
 \begin_layout Itemize
@@ -11255,6 +11342,37 @@ target "restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representa
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Standard
+If your resource has been cached (on the server) then handleGet 
+\emph on
+will not be called
+\emph default
+.
+ The cache entry will be returned to the client instead.
+\end_layout
+
+\begin_layout Paragraph
+Integrating Scriptlet Resources
+\end_layout
+
+\begin_layout Standard
+It's possible to return scriptlet resources as your payload.
+ This could be useful if you're implementing the Model-View-Controller (MVC)
+ pattern.
+ See the 
+\bar under
+MVC chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc"
+
+\end_inset
+
+)
+\bar default
+ for complete examples.
 \end_layout
 
 \begin_layout Subsubsection
@@ -11291,58 +11409,88 @@ reference "the-cast-for-rest"
  Clients expect you to return a modified representation, in the selected
  media type, if the POST succeeded.
  Subsequent GET operations would then return the same modified representation.
- A failed POST should not alter the resource.
+ A failed POST should not alter the resource: only a success status code
+ should indicate a change.
+ That means that ideally you should roll back changes if the entire operation
+ fails along the way.
 \end_layout
 
 \begin_layout Standard
 Note that the entity sent by the client does not have to be identical in
  format or content to what you return.
  In fact, it's likely that the client will send smaller delta updates in
- a POST, rather than a complete representation.
+ a POST, rather than a comprehensive representation.
 \end_layout
 
 \begin_layout Standard
-What you'll usually do here is fetch the data, and alter it according to
- data sent by the client.
- See the “
-\bar under
-conversation” API documentation (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation"
+What you'll usually do here is alter 
+\emph on
+existing 
+\emph default
+data according to data sent by the client.
+\end_layout
 
-\end_inset
-
-)
-\bar default
- for a complete reference.
- Note especially that if you've 
-\bar under
-captured URI segments (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../routing/|static-capturing"
-
-\end_inset
-
-)
-\bar default
-, they'll be available in 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
+\begin_layout Quote
+The most important thing to realize is that POST is the only HTTP operation
+ that is not “idempotent,” which means that multiple 
+\emph on
+identical
+\emph default
+ POST operations on a resource 
+\emph on
+may
+\emph default
+ yield results that are different from that of a single POST operation.
+ This is why web browsers warn you if you try to refresh or go back to a
+ web page that is the result of a POST operation.
+ As such, POST is the correct operation to use for manipulations of a resource
+ that 
+\emph on
+cannot be repeated
+\emph default
 .
+ So, if you're thinking in terms of CRUD, POST can mean 
+\emph on
+either 
+\emph default
+
+\begin_inset Quotes eld
+\end_inset
+
+update
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+create
+\begin_inset Quotes erd
+\end_inset
+
+: it depends on whether or not 
+\begin_inset Quotes eld
+\end_inset
+
+create
+\begin_inset Quotes erd
+\end_inset
+
+ is a repeatable operation in your specific data semantics.
+ See 
+\begin_inset CommandInset href
+LatexCommand href
+name "this blog post by John Calcote"
+target "http://jcalcote.wordpress.com/2008/10/16/put-or-post-the-rest-of-the-story/"
+
+\end_inset
+
+ for one explanation.
 \end_layout
 
 \begin_layout Standard
-See 
+Return value behavior is identical to that in 
 \bar under
 handleGet (page 
 \begin_inset CommandInset ref
@@ -11353,39 +11501,41 @@ reference "handle-get"
 
 )
 \bar default
- for supported return types.
+.
  In fact, you may want handlePost to share the same code path as handleGet
  for creating the representation.
 \end_layout
 
-\begin_layout Quote
-POST is the only HTTP operation that is not “idempotent,” which means that
- multiple 
-\emph on
-identical
-\emph default
- POST operations on a resource 
-\emph on
-may
-\emph default
- yield different results from a single POST operation.
- This is why web browsers warn you if you try to refresh a web page that
- is the result of a POST operation.
- As such, POST is the correct operation to use for manipulations of a resource
- that 
-\emph on
-cannot be repeated
-\emph default
-.
- See 
-\begin_inset CommandInset href
-LatexCommand href
-name "this blog post by John Calcote"
-target "http://jcalcote.wordpress.com/2008/10/16/put-or-post-the-rest-of-the-story/"
-
+\begin_layout Standard
+Note that the default return status for successful operations, 200 (
+\begin_inset Quotes eld
 \end_inset
 
- for an in-depth explanation.
+ok
+\begin_inset Quotes erd
+\end_inset
+
+), is indeed OK.
+ However, it is better to return a 201 (
+\begin_inset Quotes eld
+\end_inset
+
+created
+\begin_inset Quotes erd
+\end_inset
+
+) status if indeed the resource was created, and also return the full representa
+tion.
+ If you cannot handle the operation at the moment, it is correct to return
+ a 202 (
+\begin_inset Quotes eld
+\end_inset
+
+accepted
+\begin_inset Quotes erd
+\end_inset
+
+) status, signifying that the operation has been queued for later.
 \end_layout
 
 \begin_layout Subsubsection
@@ -11409,7 +11559,7 @@ In a conventional
 resource-oriented architecture (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../../rest/"
+reference "the-cast-for-rest"
 
 \end_inset
 
@@ -11425,41 +11575,41 @@ reference "../../rest/"
 \begin_layout Standard
 Note that the entity sent by the client does not have to be identical in
  format or content to what you return.
- In fact, it's likely that you will return more information to the client
- than what was sent.
 \end_layout
 
 \begin_layout Standard
-What you'll usually do here is parse and store the data sent by the client.
- See the “
+What you'll usually do here is parse and store the data sent by the client,
+ 
+\emph on
+overwriting 
+\emph default
+data if it already exists.
+\end_layout
+
+\begin_layout Quote
+PUT, like most HTTP operations, is “idempotent,” which means that multiple
+ 
+\emph on
+identical
+\emph default
+ PUT operations on a resource are expected to yield the same result as a
+ single PUT operation.
+ PUT should thus 
+\emph on
+overwrite any existing data
+\emph default
+.
+ If you are implementing a “create” operation that 
+\emph on
+cannot
+\emph default
+ be repeated, then you should use POST instead.
+ See note in 
 \bar under
-conversation” API documentation (page 
+POST (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation"
-
-\end_inset
-
-)
-\bar default
- for a complete reference.
- Note especially that if you've 
-\bar under
-captured URI segments (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../routing/|static-capturing"
-
-\end_inset
-
-)
-\bar default
-, they'll be available in 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
+reference "handle-post"
 
 \end_inset
 
@@ -11485,20 +11635,36 @@ reference "handle-get"
  for creating the representation.
 \end_layout
 
-\begin_layout Quote
-PUT, like most HTTP operations, is “idempotent,” which means that multiple
- 
-\emph on
-identical
-\emph default
- PUT operations on a resource are expected to yield the same result as a
- single PUT operation.
- If you are implementing a “create” operation that 
-\emph on
-cannot
-\emph default
- be repeated, then you should use POST instead.
- See note in POST.
+\begin_layout Standard
+Note that the default return status for successful operations, 200 (
+\begin_inset Quotes eld
+\end_inset
+
+ok
+\begin_inset Quotes erd
+\end_inset
+
+), is indeed OK.
+ However, it is better to return a 201 (
+\begin_inset Quotes eld
+\end_inset
+
+created
+\begin_inset Quotes erd
+\end_inset
+
+) status if indeed the resource was created, and also return the full representa
+tion.
+ If you cannot handle the operation at the moment, it is correct to return
+ a 202 (
+\begin_inset Quotes eld
+\end_inset
+
+accepted
+\begin_inset Quotes erd
+\end_inset
+
+) status, signifying that the operation has been queued for later.
 \end_layout
 
 \begin_layout Subsubsection
@@ -11522,13 +11688,13 @@ In a conventional
 resource-oriented architecture (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../../rest/"
+reference "the-cast-for-rest"
 
 \end_inset
 
 )
 \bar default
-, clients expect subsequent GET operations to fail with a “not found” (404)
+, clients expect subsequent GET operations to fail with a 404 (“not found”)
  code.
  A DELETE should fail with 404 if the resource is not already there; it
  should 
@@ -11584,15 +11750,17 @@ The following return types are supported:
 \end_layout
 
 \begin_layout Itemize
-Numbers: Returns the number as an HTTP status code to the client, with no
- other content.
- Usually used for errors.
- For example, 404 means “not found.” Note that 
+Null: Signifies success.
+\end_layout
+
+\begin_layout Itemize
+Number: Returns the number as an HTTP status code to the client, with no
+ other content: for example, returning 404 means “not found.” Note that 
 \bar under
 error capturing (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../routing/|capturing-errors"
+reference "app-errors"
 
 \end_inset
 
@@ -11601,18 +11769,29 @@ reference "../routing/|capturing-errors"
  can let you take over and return an appropriate error page to the client.
 \end_layout
 
-\begin_layout Itemize
-Null: Signifies success.
+\begin_layout Quote
+Though some languages return null if no explicit return statement is used,
+ others return the value of the last executed operation, which could be
+ a number, which would in turn become an HTTP status code for the client.
+ This can lead to some very bizarre bugs, as clients receive apparently
+ random status codes! It's thus good practice to always 
+\emph on
+explicitly
+\emph default
+ return null in handleDelete, if only to add clarity to your code's intent.
 \end_layout
 
-\begin_layout Quote
-Note: It's good practice to always explicitly return null in handleDelete.
- Some languages return null if no explicit return statement is used.
- Others, however, return the value of the last executed operation, which
- could be a number, which would in turn become an HTTP status code for the
- client.
- This can lead to some very bizarre bugs, as clients receive apparently
- random status codes!
+\begin_layout Standard
+If you cannot handle the operation at the moment, it is correct to return
+ a 202 (
+\begin_inset Quotes eld
+\end_inset
+
+accepted
+\begin_inset Quotes erd
+\end_inset
+
+) status, signifying that the operation has been queued for later.
 \end_layout
 
 \begin_layout Subsubsection
@@ -11652,7 +11831,7 @@ This entry point, if it exists, is called before handleGet in order to provide
 conditional HTTP requests (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../resources/|conditional-requests"
+reference "client-side-caching"
 
 \end_inset
 
@@ -11665,21 +11844,52 @@ reference "../resources/|conditional-requests"
  Using handleGetInfo can thus improve on the gains of conditional requests:
  not only are you saving bandwidth, but you are also avoiding a potentially
  costly handleGet call.
+ Note that if the client is 
+\emph on
+not 
+\emph default
+doing a conditional request, then handleGetInfo will 
+\emph on
+not 
+\emph default
+be called.
 \end_layout
 
 \begin_layout Standard
-The following return types are supported:
+This use of handleGetInfo discussed in detail in the 
+\bar under
+caching chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "client-side-caching-handle-get-info"
+
+\end_inset
+
+)
+\bar default
+.
+ However, here's a reference of the supported return types:
 \end_layout
 
 \begin_layout Itemize
-Numbers: Considered as Unix timestamps, and converted into the modification
- date.
- See 
+Null: Means that you wish to continue directly to handleGet.
+\end_layout
+
+\begin_layout Itemize
+Numbers or JVM 
+\begin_inset CommandInset href
+LatexCommand href
+name "Date"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Date.html"
+
+\end_inset
+
+ instances: Considered as Unix timestamps, and converted into the 
 \bar under
-conversation.modificationDate (page 
+modification date (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-modification-date"
+reference "client-side-caching-manual"
 
 \end_inset
 
@@ -11689,18 +11899,20 @@ reference "../api/|conversation-modification-date"
 \end_layout
 
 \begin_layout Itemize
-JVM Date instances: The modification date.
- Refer to the Java API documentation for details.
-\end_layout
+Strings or 
+\begin_inset CommandInset href
+LatexCommand href
+name "Tag"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Tag.html"
 
-\begin_layout Itemize
-Strings: Considered as HTTP tags.
- See 
+\end_inset
+
+ instances: Considered as 
 \bar under
-conversation.tag (page 
+HTTP tags (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-tag"
+reference "client-side-caching-manual"
 
 \end_inset
 
@@ -11710,48 +11922,28 @@ reference "../api/|conversation-tag"
 \end_layout
 
 \begin_layout Itemize
-Tag instances: You can construct and return your own 
 \begin_inset CommandInset href
 LatexCommand href
-name "Restlet tag"
-target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/data/Tag.html"
+name "RepresentationInfo"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/RepresentationInfo.html"
 
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Itemize
-RepresentationInfo instances: You can construct and return your own 
-\begin_inset CommandInset href
-LatexCommand href
-name "Restlet representation info"
-target "http://www.restlet.org/documentation/2.0/jse/api/index.html?org/restlet/representation/RepresentationInfo.html"
-
-\end_inset
-
-.
+ instances: Returned as is.
 \end_layout
 
 \begin_layout Standard
-Note that even if though you can only set either the modification date or
- the tag by the return value, you can set the other one using 
+Note that even though you can only return the modification date 
+\emph on
+or 
+\emph default
+the tag, it is possible set both together by returning one and setting the
+ other 
 \bar under
-conversation.modificationDate (page 
+via the APIs (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|conversation-modification-date"
-
-\end_inset
-
-)
-\bar default
- and 
-\bar under
-conversation.tag (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-tag"
+reference "client-side-caching"
 
 \end_inset
 
@@ -11768,96 +11960,8 @@ If you implement handleGetInfo, you should be returning the same conditional
  client: it is only used internally by Prudence to process conditional requests.
 \end_layout
 
-\begin_layout Paragraph
-In the real world\SpecialChar \ldots{}
-
-\end_layout
-
-\begin_layout Standard
-You might be tempted to go ahead and provide a handleGetInfo entry point
- for every resource you create.
- This is not necessarily a good practice, for three reasons:
-\end_layout
-
-\begin_layout Enumerate
-It could be that you don't need this optimization.
- Make sure, first, that you've actually identified a problem with performance
- or scalability, and that you've traced it to handleGet on this resource.
-\end_layout
-
-\begin_layout Enumerate
-It could be that you won't gain anything from this optimization.
- Caches and other optimizations along the route between your data and your
- client might already be doing a great job at keeping handleGet as efficient
- as it could be.
- If not, improving them could offer far greater benefits overall than a
- handleGetInfo.
-\end_layout
-
-\begin_layout Enumerate
-It could be that you'll even hurt your scalability! The reason is that an
- efficient handleGetInfo implementation would need some mechanism in place
- to track of data modification, and this mechanism can introduce overhead
- into your system that causes it to scale worse than without your handleGetInfo.
-\end_layout
-
-\begin_layout Standard
-See “
-\bar under
-Scaling Tips” (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../../scaling/"
-
-\end_inset
-
-)
-\bar default
- for a thorough discussion of the problem of scalability.
-\end_layout
-
 \begin_layout Subsubsection
-Controlling the Formats
-\end_layout
-
-\begin_layout Standard
-Negotiated via handleInit: the order matters
-\end_layout
-
-\begin_layout Standard
-You can check what was negotiated
-\end_layout
-
-\begin_layout Standard
-But you can set it to whatever you want later
-\end_layout
-
-\begin_layout Subsubsection
-Client-Side Caching
-\end_layout
-
-\begin_layout Standard
-conversation.modificationDate, conversation.tag
-\end_layout
-
-\begin_layout Subsubsection
-Server-Side Caching
-\end_layout
-
-\begin_layout Standard
-Not supported directly.
-\end_layout
-
-\begin_layout Subsubsection
-Integrating Textual Resources
-\end_layout
-
-\begin_layout Standard
-MVC
-\end_layout
-
-\begin_layout Subsubsection
-Java Resources
+Implementing Manual Resources in Java
 \begin_inset CommandInset label
 LatexCommand label
 name "java-resources"
@@ -11868,11 +11972,76 @@ name "java-resources"
 \end_layout
 
 \begin_layout Standard
-Resources
+You may prefer to implement some of your manual resources directly in Java,
+ by inheriting 
+\begin_inset CommandInset href
+LatexCommand href
+name "ServerResource"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html"
+
+\end_inset
+
+, or perhaps you are relying a JVM library that already comes with such
+ resources.
+ To use them, set them up in your routing.js via the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+resource
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-route-type"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-Other Restlets
+Some notes:
+\end_layout
+
+\begin_layout Itemize
+Sure, Java can offer better performance than dynamic languages, but it's
+ very rare for language performance to be the bottleneck: communication
+ with a database server, for example, is orders of magnitude slower.
+ Don't 
+\begin_inset Quotes eld
+\end_inset
+
+drop down
+\begin_inset Quotes erd
+\end_inset
+
+ to Java in order to optimize unless you've really confirmed that language
+ performance is a problem.
+\end_layout
+
+\begin_layout Itemize
+Prudence's manual resources are not merely dynamic-language implementations
+ of ServerResource, but they also provide extra features, such as integrated
+ 
+\bar under
+server-side caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+.
+ If you switch to Java, you would have to implement such features on your
+ own.
 \end_layout
 
 \begin_layout Subsection
@@ -14659,6 +14828,48 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \end_layout
 
 \begin_layout Subsubsection
+Captured Segments
+\end_layout
+
+\begin_layout Standard
+Variables in the 
+\bar under
+URI template (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "uri-templates"
+
+\end_inset
+
+)
+\bar default
+ you configured in routing.js will be captured into 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+ Note that you can also 
+\bar under
+interpolate the captured variables into the target URI (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "interpolation-conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
 The Wildcard
 \begin_inset CommandInset label
 LatexCommand label
@@ -14698,10 +14909,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Standard
-Note that you can also 
+ Note that you can also 
 \bar under
 interpolate the wildcard into the target URI (page 
 \begin_inset CommandInset ref
@@ -17695,6 +17903,13 @@ reference "handle-init"
 
 \begin_layout Subsubsection
 caching.duration
+\begin_inset CommandInset label
+LatexCommand label
+name "caching-duration"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -18929,6 +19144,13 @@ reference "static-resources-client-side-caching"
 
 \begin_layout Subsubsection
 Manual Client-Side Caching
+\begin_inset CommandInset label
+LatexCommand label
+name "client-side-caching-manual"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -19073,6 +19295,13 @@ In some cases, calculating a tag might be less costly than keeping track
 
 \begin_layout Paragraph
 Optimizing the Server
+\begin_inset CommandInset label
+LatexCommand label
+name "client-side-caching-handle-get-info"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -19462,6 +19691,48 @@ Welcome to the world of high-volume web! The solutions for massive scalability
  least it provides you with the tools on which you can build comprehensive
  solutions.
  With careful planning, you can go very far indeed.
+\end_layout
+
+\begin_layout Standard
+In summary, before you go ahead and provide a handleGetInfo entry point
+ for every resource you create, consider:
+\end_layout
+
+\begin_layout Enumerate
+It could be that you don't need this optimization.
+ Make sure, first, that you've actually identified a problem with performance
+ or scalability, and that you've traced it to handleGet on this resource.
+\end_layout
+
+\begin_layout Enumerate
+It could be that you won't gain anything from this optimization.
+ Caches and other optimizations along the route between your data and your
+ client might already be doing a great job at keeping handleGet as efficient
+ as it could be.
+ If not, improving them could offer far greater benefits overall than a
+ complex handleGetInfo mechanism.
+\end_layout
+
+\begin_layout Enumerate
+It could be that you'll even hurt your scalability! The reason is that an
+ efficient handleGetInfo implementation would need some mechanism in place
+ to track of data modification, and this mechanism can introduce overhead
+ into your system that causes it to scale worse than without your handleGetInfo.
+\end_layout
+
+\begin_layout Standard
+See “
+\bar under
+Scaling Tips” (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips"
+
+\end_inset
+
+)
+\bar default
+ for a thorough discussion of the problem of scalability.
 \end_layout
 
 \begin_layout Subsubsection
@@ -20700,10 +20971,10 @@ javascript
 \end_layout
 
 \begin_layout Subsection
-app.settings.scriptlet
+app.settings.scriptlets
 \begin_inset CommandInset label
 LatexCommand label
-name "settings-scriptlet"
+name "settings-scriptlets"
 
 \end_inset
 
@@ -20739,6 +21010,8 @@ debug
 \end_inset
 
  directory you will see the generated source code for each scriptlet resource.
+ The filenames will include the timestamp for their creation, so you can
+ see all versions of code that were created.
 \end_layout
 
 \begin_layout Itemize
@@ -33360,16 +33633,44 @@ Implications for Caching
 \end_layout
 
 \begin_layout Standard
-Caching of scriptlet resources (
-\begin_inset Quotes eld
+You have two options for implementing 
+\bar under
+caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
 \end_inset
 
-views
-\begin_inset Quotes erd
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Itemize
+You can cache the presenter, by simply adding a 
+\bar under
+caching.duration (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-duration"
+
 \end_inset
 
-) works as usual here, though you should take care to remember that the
- request hitting the scriptlet resource is the 
+)
+\bar default
+ directive in handleInit.
+ However, this would mean that all views would be cached using the same
+ parameters, which may not be flexible enough.
+\end_layout
+
+\begin_layout Itemize
+You can cache the views.
+ Your presenter logic will always be called for every request, but the views
+ may be fetched from the cache.
+ This will allow every view to use its own caching parameters.
+ However, you should take care to remember that the request hitting the
+ scriptlet resource is the 
 \emph on
 internal
 \emph default
@@ -33522,7 +33823,7 @@ target "http://www.thymeleaf.org/"
 
 \end_inset
 
- and 
+, 
 \begin_inset CommandInset href
 LatexCommand href
 name "Snippetory"
@@ -33530,8 +33831,16 @@ target "http://www.jproggy.org/snippetory/"
 
 \end_inset
 
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Chunk"
+target "http://www.x5software.com/chunk/"
+
+\end_inset
+
 .
- However, the most popular ones use other languages, for example 
+ However, popular ones use other languages, for example 
 \begin_inset CommandInset href
 LatexCommand href
 name "Jinja2"
@@ -33540,7 +33849,7 @@ target "http://jinja.pocoo.org/docs/"
 \end_inset
 
  for Python.
- Below are examples per each type.
+ Below are examples per both types.
 \end_layout
 
 \begin_layout Standard
@@ -34267,28 +34576,27 @@ That's it!
 \end_layout
 
 \begin_layout Paragraph
-Caching?
+Implications for Caching
 \end_layout
 
 \begin_layout Standard
-Not with StringTemplate, unfortunately.
- Its brutal rejection of any kind of programming logic in templates means
- that you can't create a plugin to support caching.
- Your only option would be to cache the views yourself in the presenter,
- or even use an 
-\bar under
-upstream cache (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "scaling-tips-upstream-caching"
-
+You can set caching on your presenter, but unfortunately you can't set different
+ caching parameters per view.
+ StringTemplate's brutal rejection of any kind of programming logic in templates
+ means that you can't 
+\begin_inset Quotes eld
 \end_inset
 
-)
-\bar default
-.
- In our next example, we'll be using a more flexible engine that allows
- for more integration with Prudence features.
+call
+\begin_inset Quotes erd
+\end_inset
+
+ anything from within a template, not even to change a parameter.
+\end_layout
+
+\begin_layout Standard
+In our next example, we'll be using a more flexible engine that allows for
+ more integration with Prudence features.
 \end_layout
 
 \begin_layout Subsubsection

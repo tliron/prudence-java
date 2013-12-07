@@ -14,7 +14,7 @@ package com.threecrickets.prudence;
 import org.restlet.Context;
 
 import com.threecrickets.scripturian.LanguageAdapter;
-import com.threecrickets.scripturian.ScriptletPlugin;
+import com.threecrickets.scripturian.parser.ScriptletPlugin;
 
 /**
  * <p>

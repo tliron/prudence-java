@@ -34,12 +34,14 @@ import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.LanguageManager;
+import com.threecrickets.scripturian.ParserManager;
 import com.threecrickets.scripturian.document.DocumentDescriptor;
 import com.threecrickets.scripturian.document.DocumentSource;
 import com.threecrickets.scripturian.exception.DocumentException;
 import com.threecrickets.scripturian.exception.DocumentNotFoundException;
 import com.threecrickets.scripturian.exception.ExecutionException;
 import com.threecrickets.scripturian.exception.ParsingException;
+import com.threecrickets.scripturian.parser.ProgramParser;
 
 /**
  * A general-purpose delegate used to enter defined entry points in a
@@ -101,6 +103,9 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
+ * <li>
+ * <code>com.threecrickets.prudence.DelegatedHandler.parserManager:</code>
+ * {@link ParserManager}, defaults to a new instance.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
@@ -176,7 +181,7 @@ public class DelegatedHandler
 
 		try
 		{
-			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, false, true, true, false );
+			DocumentDescriptor<Executable> documentDescriptor = attributes.createDocumentOnce( documentName, ProgramParser.NAME, true, true, false );
 			Executable executable = documentDescriptor.getDocument();
 			Object enteringKey = application.hashCode();
 

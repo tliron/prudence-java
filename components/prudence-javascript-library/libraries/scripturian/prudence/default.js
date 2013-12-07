@@ -1688,10 +1688,17 @@ var Prudence = {}
 /**
  * Low-level access to the Scripturian language manager used to create this executable.
  * <p>
- * Here you can query which languages are supported by the current Sincerity container, specifically: executable.manager.adapters.
+ * Here you can query which languages are supported by the current Sincerity container, specifically: executable.languageManager.adapters.
  * 
- * @name executable.manager
+ * @name executable.languageManager
  * @type <a href="http://threecrickets.com/api/java/scripturian/index.html?com/threecrickets/scripturian/LanguageManager.html">com.threecrickets.scripturian.LanguageManager</a>
+ */
+
+/**
+ * Low-level access to the Scripturian parsing manager used to create this executable.
+ * 
+ * @name executable.parsingManager
+ * @type <a href="http://threecrickets.com/api/java/scripturian/index.html?com/threecrickets/scripturian/ParsingManager.html">com.threecrickets.scripturian.ParsingManager</a>
  */
 
 /**
