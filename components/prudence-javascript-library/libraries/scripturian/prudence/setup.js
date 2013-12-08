@@ -105,9 +105,10 @@ Prudence.Setup = Prudence.Setup || function() {
 	 *                     (can work in conjunction with the debug page when settings.errors.debug is true)
 	 * @property {String} [settings.code.sourceViewer='/source-code/'] Only used when settings.code.sourceViewable=true
 	 * 
-	 * @property {Object} [settings.scriptlets] Scriptlets settings
-	 * @property {Boolean} [settings.scriptlets.debug=false] When true, outputs the generated scriptlet code under "/cache/scripturian/"
-	 * @property {Object} [settings.scriptlets.plugins] Scriptlet plugins
+	 * @property {Object} [settings.templates] Templates settings
+	 * @property {Boolean} [settings.templates.debug=false] When true, outputs the generated template code under "/cache/scripturian/"
+	 * @property {String} [settings.templates.parser='scriptlets'] Allows to set the parser to use for templates
+	 * @property {Object} [settings.templates.plugins] Parser plugins
 	 * 
 	 * @property {Object} [settings.caching] Caching settings
 	 * @property {Boolean} [settings.caching.debug=false] When true, adds caching debug headers to responses
@@ -205,7 +206,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.description = Sincerity.Objects.ensure(this.settings.description, {})
 			this.settings.errors = Sincerity.Objects.ensure(this.settings.errors, {})
 			this.settings.code = Sincerity.Objects.ensure(this.settings.code, {})
-			this.settings.scriptlets = Sincerity.Objects.ensure(this.settings.scriptlets, {})
+			this.settings.templates = Sincerity.Objects.ensure(this.settings.templates, {})
 			this.settings.caching = Sincerity.Objects.ensure(this.settings.caching, {})
 			this.settings.compression = Sincerity.Objects.ensure(this.settings.compression, {})
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
@@ -223,14 +224,15 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.distributed.instance = Sincerity.Objects.ensure(this.settings.distributed.instance, 'com.threecrickets.prudence')
 			this.settings.distributed.map = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedGlobals')
 			this.settings.distributed.executor = Sincerity.Objects.ensure(this.settings.distributed.executor, 'default')
+			this.settings.templates.parser = Sincerity.Objects.ensure(this.settings.templates.parser, 'scriptlets')
 
 			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
-			this.settings.scriptlets.plugins = Sincerity.Objects.ensure(this.settings.scriptlets.plugins, {})
-			this.settings.scriptlets.plugins['=='] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['=='], prudenceScriptletPlugin)
-			this.settings.scriptlets.plugins['{'] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['{'], prudenceScriptletPlugin)
-			this.settings.scriptlets.plugins['}'] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['}'], prudenceScriptletPlugin)
-			this.settings.scriptlets.plugins['['] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins['['], prudenceScriptletPlugin)
-			this.settings.scriptlets.plugins[']'] = Sincerity.Objects.ensure(this.settings.scriptlets.plugins[']'], prudenceScriptletPlugin)
+			this.settings.templates.plugins = Sincerity.Objects.ensure(this.settings.templates.plugins, {})
+			this.settings.templates.plugins['=='] = Sincerity.Objects.ensure(this.settings.templates.plugins['=='], prudenceScriptletPlugin)
+			this.settings.templates.plugins['{'] = Sincerity.Objects.ensure(this.settings.templates.plugins['{'], prudenceScriptletPlugin)
+			this.settings.templates.plugins['}'] = Sincerity.Objects.ensure(this.settings.templates.plugins['}'], prudenceScriptletPlugin)
+			this.settings.templates.plugins['['] = Sincerity.Objects.ensure(this.settings.templates.plugins['['], prudenceScriptletPlugin)
+			this.settings.templates.plugins[']'] = Sincerity.Objects.ensure(this.settings.templates.plugins[']'], prudenceScriptletPlugin)
 
 			this.settings.compression.sizeThreshold = Sincerity.Objects.ensure(this.settings.compression.sizeThreshold, 1024)
 
@@ -658,7 +660,8 @@ Prudence.Setup = Prudence.Setup || function() {
 						return this.createRestlet({type: restlet}, uri)
 					}
 					else {
-						var colon = restlet.indexOf(':')
+						throw new SincerityException('Unknown routing type: ' + restlet)
+						/*var colon = restlet.indexOf(':')
 						if (colon != -1) {
 							var dispatcher = restlet.substring(0, colon)
 							var id = restlet.substring(colon + 1)
@@ -666,7 +669,7 @@ Prudence.Setup = Prudence.Setup || function() {
 						}
 						else {
 							return new Module.Dispatch({id: restlet}).create(this, uri)
-						}
+						}*/
 					}
 				}
 			}
@@ -700,12 +703,12 @@ Prudence.Setup = Prudence.Setup || function() {
 			)
 		}
 		
-		Public.defrost = function(documentSource, isTextWithScriptlets) {
+		Public.defrost = function(documentSource, parserName) {
 			importClass(
 				com.threecrickets.scripturian.util.DefrostTask)
 				
 			if (true == this.settings.code.defrost) {
-				var tasks = DefrostTask.forDocumentSource(documentSource, executable.languageManager, executable.parserManager, this.settings.code.defaultLanguageTag, isTextWithScriptlets, true, this.settings.scriptlets.debug ? true : false)
+				var tasks = DefrostTask.forDocumentSource(documentSource, executable.languageManager, executable.parserManager, this.settings.code.defaultLanguageTag, parserName, true, this.settings.templates.debug ? true : false)
 				for (var t in tasks) {
 					startupTasks.push(tasks[t])
 				}
@@ -1040,7 +1043,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				}
 
 				// Defrost
-				app.defrost(delegatedResource.documentSource, false)
+				app.defrost(delegatedResource.documentSource, 'program')
 
 				// Merge globals
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.DelegatedResource': delegatedResource}))
@@ -1058,7 +1061,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	}(Public))
 
 	/**
-	 * Maps specially marked files in a subdirectory to scriptlet resources.
+	 * Maps specially marked files in a subdirectory to template resources.
 	 * <p>
 	 * Each file represents a single resource.
 	 * These resources work best with textual formats such as HTML, XML, JSON and
@@ -1069,8 +1072,8 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * programming and templating languages.
 	 * <p>
 	 * You will almost always want use a wildcard URI template with this class, because it will attempt to match
-	 * all URIs to files. However, only files with a ".s." pre-extension will be matched. For example:
-	 * "index.s.html", "sitemap.s.xml", "info.s.json". Files without this pre-extension will not be
+	 * all URIs to files. However, only files with a ".t." pre-extension will be matched. For example:
+	 * "index.t.html", "sitemap.t.xml", "info.t.json". Files without this pre-extension will not be
 	 * matched, and will return a 404 error even if they exist. It is thus possible to combine
 	 * this class with {@link Prudence.Resources.Static} via a {@link Prudence.Resources.Chain},
 	 * though note that this class must be before the static instance in the chain.
@@ -1085,7 +1088,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * to the URI "/info/main/". Note that the extension does not have to be ".html", and can be of any
 	 * textual format.
 	 * <p>
-	 * Prudence supports powerful server-side caching for scriptlet resources. See {@link conversation#cacheDuration}
+	 * Prudence supports powerful server-side caching for template resources. See {@link conversation#cacheDuration}
 	 * for the most important API for enabling caching. Client-side caching is implemented to match the
 	 * server-side cache, and can work in three modes, according to the "clientCachingMode" param.
 	 * <p>
@@ -1104,24 +1107,24 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * via a <a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
-	 * @name Prudence.Setup.Scriptlet
+	 * @name Prudence.Setup.Templates
 	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param [config]
 	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.root='resources'] The path from which files are searched
 	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [config.includeRoot='libraries/includes']
 	 * @param {String[]} [config.passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
-	 * @param {String} [config.preExtension='s'] The pre-extension
+	 * @param {String} [config.preExtension='t'] The pre-extension
 	 * @param {Boolean} [config.trailingSlashRequired=true] Whether trailing slashses are required
 	 * @param {String} [config.defaultDocumentName='index'] The default document name for directories
 	 * @param {String} [config.defaultExtension='html'] The preferred filename extension
 	 * @param {String} [config.clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
 	 * @param {Number|String} [config.maxClientCachingDuration=-1] In milliseconds, where -1 means no maximum
 	 * @param {Boolean} [config.compress=true] If true will automatically compress files in gzip, zip, deflate or compress encoding if requested by the client (requires "negotiate" to be true)
-	 * @param {Object} [config.plugins] Scriptlet plugins
+	 * @param {Object} [config.plugins] Template plugins
 	 */
-	Public.Scriptlet = Sincerity.Classes.define(function(Module) {
-		/** @exports Public as Prudence.Setup.Scriptlet */
+	Public.Templates = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Setup.Templates */
 		var Public = {}
 		
 		/** @ignore */
@@ -1173,7 +1176,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				this.maxClientCachingDuration = Sincerity.Objects.ensure(this.maxClientCachingDuration, -1)
 				this.defaultDocumentName = Sincerity.Objects.ensure(this.defaultDocumentName, 'index')
 				this.defaultExtension = Sincerity.Objects.ensure(this.defaultExtension, 'html')
-				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 's')
+				this.preExtension = Sincerity.Objects.ensure(this.preExtension, 't')
 				this.trailingSlashRequired = Sincerity.Objects.ensure(this.trailingSlashRequired, true)
 
 				this.maxClientCachingDuration = Sincerity.Localization.toMilliseconds(this.maxClientCachingDuration)
@@ -1181,7 +1184,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				this.compress = Sincerity.Objects.ensure(this.compress, true)
 				
 				if (sincerity.verbosity >= 2) {
-					println('    Scriptlet:')
+					println('    Templates:')
 					println('      Root: "{0}"'.cast(sincerity.container.getRelativePath(this.root)))
 				}
 
@@ -1203,7 +1206,7 @@ Prudence.Setup = Prudence.Setup || function() {
 					fileUploadDirectory: app.settings.uploads.root,
 					fileUploadSizeThreshold: app.settings.uploads.sizeThreshold,
 					scriptletPlugins: new ConcurrentHashMap(),
-					debug: app.settings.scriptlets.debug ? true : false,
+					debug: app.settings.templates.debug ? true : false,
 					debugCaching: app.settings.caching.debug ? true : false,
 					defaultCachingKeyTemplate: app.settings.caching.defaultKeyTemplate,
 					cachingKeyTemplatePlugins: app.cachingKeyTemplatePlugins
@@ -1218,16 +1221,16 @@ Prudence.Setup = Prudence.Setup || function() {
 				}
 
 				// Common libraries
-				if (!Sincerity.Objects.exists(app.commonScriptletDocumentSource)) {
+				if (!Sincerity.Objects.exists(app.commonTemplatesDocumentSource)) {
 					var library = sincerity.container.getFile('libraries', 'prudence-includes')
-					app.commonScriptletDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
-					app.commonScriptletDocumentSource = app.commonScriptletDocumentSource
+					app.commonTemplatesDocumentSource = app.createDocumentSource(library, null, this.defaultDocumentName, this.defaultExtenion)
+					app.commonTemplatesDocumentSource = app.commonTemplatesDocumentSource
 				}
 
 				if (sincerity.verbosity >= 2) {
-					println('      Common includes: "{0}"'.cast(sincerity.container.getRelativePath(app.commonScriptletDocumentSource.basePath)))
+					println('      Common includes: "{0}"'.cast(sincerity.container.getRelativePath(app.commonTemplatesDocumentSource.basePath)))
 				}
-				generatedTextResource.extraDocumentSources.add(app.commonScriptletDocumentSource)
+				generatedTextResource.extraDocumentSources.add(app.commonTemplatesDocumentSource)
 
 				// Viewable source
 				if (true == app.settings.code.sourceViewable) {
@@ -1246,15 +1249,15 @@ Prudence.Setup = Prudence.Setup || function() {
 				}
 
 				// Scriptlet plugins
-				for (var code in app.settings.scriptlets.plugins) {
+				for (var code in app.settings.templates.plugins) {
 					if (sincerity.verbosity >= 2) {
-						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.scriptlets.plugins[code]))
+						println('      Scriptlet plugin: "{0}" -> "{1}"'.cast(code, app.settings.templates.plugins[code]))
 					}
-					generatedTextResource.scriptletPlugins.put(code, app.settings.scriptlets.plugins[code])
+					generatedTextResource.scriptletPlugins.put(code, app.settings.templates.plugins[code])
 				}
 				
 				// Defrost
-				app.defrost(generatedTextResource.documentSource, true)
+				app.defrost(generatedTextResource.documentSource, app.settings.templates.parser)
 
 				// Merge globals
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.GeneratedTextResource': generatedTextResource}))
@@ -1262,7 +1265,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				app.generatedTextResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
 			}
 			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.includeRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode) || Sincerity.Objects.exists(thismaxClientCachingDuration)) {
-				throw new SincerityException('You can configure a Scriptlet only once per application')
+				throw new SincerityException('You can configure a Templates only once per application')
 			}
 			
 			return app.generatedTextResource

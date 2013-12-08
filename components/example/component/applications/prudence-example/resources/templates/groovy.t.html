@@ -1,105 +1,103 @@
 <html>
 <head>
-	<title>Ruby Scriptlet Example</title>
+	<title>Groovy Template Example</title>
 	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
 	<link href="http://fonts.googleapis.com/css?family=Ubuntu|Ubuntu:italic|Ubuntu:bold|Ubuntu:bolditalic" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="main"><div id="main-content">
-<h1>Ruby Scriptlet Example</h1>
+<h1>Groovy Template Example</h1>
 <table width="100%"><tr valign="top"><td>
-<%ruby
+<%groovy
 
-#
-# Defer this page
-#
+//
+// Defer this page
+//
 
-if $conversation.query['defer'] == 'true'
-	if $conversation.defer
-		$conversation.stop
-	end
-end
+if(conversation.query['defer'] == 'true') {
+	if(conversation.defer()) {
+		conversation.stop()
+	}
+}
 
-#
-# Cache this page
-#
+//
+// Cache this page
+//
 
-$caching.duration = 5000
+caching.duration = 5000
 
-#
-# Calling Java
-#
+//
+// Calling Java
+//
 
-include Java
-import java.lang.System
-print '<p>This page was dynamically generated at ', System::current_time_millis, '</p>'
+print '<p>This page was dynamically generated at ' + System.currentTimeMillis() + '</p>'
 
-#
-# An example of a method
-#
+//
+// An example of a closure
+//
 
-def print_adapter adapter
+def printAdapter = { adapter ->
 %>
 <p>
 	<i>Adapter:</i> <%= adapter.attributes['name'] %> version <%= adapter.attributes['version'] %><br />
 	<i>Language:</i> <%= adapter.attributes['language.name'] %> version <%= adapter.attributes['language.version'] %><br />
 	<i>Tags:</i> 
 <%
-	tags = adapter.attributes['tags'].to_array
-	for i in 0 .. tags.length - 1
+	def tags = adapter.attributes['tags'].toArray()
+	for(def i in 0 .. tags.length - 1) {
 		print tags[i]
-		if i < tags.length - 1
+		if(i < tags.length - 1) {
 			print ', '
-		end
-	end
+		}
+	}
 %>
 </p>
 <%
-end
+}
 
 %>
 <h3>Language used:</h3>
 <%
-print_adapter $executable.context.adapter
+printAdapter executable.context.adapter
 %>
 <h3>Available languages:</h3>
 <%
-adapters = $executable.language_manager.adapters.to_array
-for adapter in adapters
-	print_adapter adapter
-end
+def adapters = executable.languageManager.adapters
+for(def adapter in adapters) {
+	printAdapter adapter
+}
 %>
 </td><td>
 <h3>The "id" attribute in the URL query is:</h3>
-<p><%= $conversation.query['id'] || '' %></p>
+<p><%= conversation.query['id'] ?: '' %></p>
 <h3>A few tests:</h3>
 <p>
 <%
 
-#
-# Including a document
-#
-# This is identical to:
-#
-#   $document.include '/triple/ruby/'
-#
+//
+// Including a document
+//
+// This is identical to:
+//
+//   document.include '/triple/groovy/'
+//
 
 %>
-<%& '/triple/ruby/' %>
+<%& '/triple/groovy/' %>
 <%
 
-for i in 0 .. 9
+for(def i in 0 .. 9) {
 %>
 A multiple of three: 
 <%
-	print_triple i
+	printTriple i
 %>
 <br />
 <%
-end
+}
 %>
 </p>
 </td></tr></table>
-</body>
 </div></div>
+</body>
 <html>

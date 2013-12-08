@@ -1,12 +1,12 @@
 <html>
 <head>
-	<title>PHP Scriptlet Example</title>
+	<title>PHP Template Example</title>
 	<link rel="stylesheet" type="text/css" href="<?=php $conversation->base ?>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
 	<link href="http://fonts.googleapis.com/css?family=Ubuntu|Ubuntu:italic|Ubuntu:bold|Ubuntu:bolditalic" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="main"><div id="main-content">
-<h1>PHP Scriptlet Example</h1>
+<h1>PHP Template Example</h1>
 <table width="100%"><tr valign="top"><td>
 <?php
 

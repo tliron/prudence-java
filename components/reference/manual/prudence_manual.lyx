@@ -629,7 +629,7 @@ Actually, you'll notice that our root index is named
 \begin_inset Quotes eld
 \end_inset
 
-index.s.html
+index.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -638,7 +638,7 @@ index.s.html
 \begin_inset Quotes eld
 \end_inset
 
-s
+t
 \begin_inset Quotes erd
 \end_inset
 
@@ -646,7 +646,7 @@ s
 \begin_inset Quotes eld
 \end_inset
 
-s
+t
 \begin_inset Quotes erd
 \end_inset
 
@@ -654,7 +654,7 @@ s
 \begin_inset Quotes eld
 \end_inset
 
-scriptlet,
+template,
 \begin_inset Quotes erd
 \end_inset
 
@@ -764,12 +764,12 @@ Our reusable code is all under the
 \begin_inset Quotes erd
 \end_inset
 
- contains fragments that can be included into our scriptlet pages.
+ contains fragments that can be included into our template pages.
  You'll see that our 
 \begin_inset Quotes eld
 \end_inset
 
-index.s.html
+index.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -874,7 +874,7 @@ We'll get into all that as we go along this tutorial.
 \end_layout
 
 \begin_layout Subsubsection
-Scriptlets
+Templates
 \end_layout
 
 \begin_layout Standard
@@ -882,7 +882,7 @@ Let's look more closely at our
 \begin_inset Quotes eld
 \end_inset
 
-index.s.html
+index.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -999,7 +999,7 @@ Behind the scenes, Prudence parses
 \begin_inset Quotes eld
 \end_inset
 
-index.s.html
+index.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1029,7 +1029,7 @@ debug
  mode to false (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "settings-scriptlets"
+reference "settings-templates"
 
 \end_inset
 
@@ -1119,7 +1119,7 @@ Let's create a new page for our wiki, under our application's
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1183,7 +1183,7 @@ You'll notice that even though the file has a
 \begin_inset Quotes eld
 \end_inset
 
-.s.html
+.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1264,7 +1264,7 @@ necessary
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1272,7 +1272,7 @@ page.s.html
 \begin_inset Quotes eld
 \end_inset
 
-page/index.s.html
+page/index.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1369,7 +1369,7 @@ It's time to flesh out out
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1738,11 +1738,11 @@ target "http://localhost:8080/wiki/page/test/"
 \end_layout
 
 \begin_layout Standard
-Let's edit our scriptlet in 
+Let's edit our template in 
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -1963,10 +1963,10 @@ reference "the-uri-space"
 \begin_layout Itemize
 There's also, of course, a lot more you can do with 
 \bar under
-scriptlets (page 
+templates (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -1976,7 +1976,7 @@ reference "scriptlet-resources"
 \end_layout
 
 \begin_layout Itemize
-Are you a fan of MVC (Model-View-Controller)? It's possible to treat scriptlet
+Are you a fan of MVC (Model-View-Controller)? It's possible to treat template
  pages as 
 \begin_inset Quotes eld
 \end_inset
@@ -2346,7 +2346,7 @@ Note that editing your
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -2601,7 +2601,7 @@ Hello, API World
 \end_layout
 
 \begin_layout Standard
-As we've seen, scriptlets are Prudence's way of making scalable web pages.
+As we've seen, templates are Prudence's way of making scalable web pages.
  The other side of Prudence is manual resources.
 \end_layout
 
@@ -2777,7 +2777,7 @@ Fleshed Out
 
 \begin_layout Standard
 We can now fully flesh out our API.
- It will look quite similar to the scriptlet we wrote above:
+ It will look quite similar to the template we wrote above:
 \end_layout
 
 \begin_layout Standard
@@ -3014,7 +3014,7 @@ Note that we're making sure to invalidate the cache when we change the data:
 
 \begin_layout Standard
 We'll also need to change our routing.js to capture the wildcard, again similar
- to what we did with the scriptlet page:
+ to what we did with the template page:
 \end_layout
 
 \begin_layout Standard
@@ -3145,7 +3145,7 @@ Cached
 
 \begin_layout Standard
 Let's add support for caching our API results.
- Again, it's very similar to what we did with our scriptlet, except that
+ Again, it's very similar to what we did with our template, except that
  caching should be set up in handleInit:
 \end_layout
 
@@ -3190,8 +3190,8 @@ function handleInit(conversation) {
 \end_layout
 
 \begin_layout Standard
-Note that the cache tag is exactly the same as we're using for scriptlet
- pages: this guarantees that the scriptlet pages will be updated even though
+Note that the cache tag is exactly the same as we're using for template
+ pages: this guarantees that the template pages will be updated even though
  the wiki is changed from here, and vice versa, even though what is being
  cached is quite different.
  Because the cache key depends on the URI, and the URIs for the pages and
@@ -3298,7 +3298,7 @@ Let's zuss up our wiki pages! First, let's include the CSS in our
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -3587,7 +3587,7 @@ Now let's edit our
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -3689,7 +3689,7 @@ Actually, there's another nice trick we can do with markup languages: once
 \begin_inset Quotes eld
 \end_inset
 
-/resources/markup.s.html
+/resources/markup.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -3835,7 +3835,7 @@ Let's modify our
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -4171,7 +4171,7 @@ Now let's rewrite our
 \begin_inset Quotes eld
 \end_inset
 
-page.s.html
+page.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -4666,7 +4666,7 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-You can even mix scriptlets in several languages on the same page, 
+You can even mix scriptlets in several languages on the same template, 
 \begin_inset CommandInset href
 LatexCommand href
 name "like magic"
@@ -4725,7 +4725,7 @@ Runtime debugging of web applications is often difficult.
 live execution (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "on-the-fly-scriptlet-resources"
+reference "on-the-fly-template-resources"
 
 \end_inset
 
@@ -5115,7 +5115,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		'scriptlet',
+		'templates',
 \end_layout
 
 \begin_layout Plain Layout
@@ -5957,7 +5957,7 @@ execute
 
  type to attach a code execution resource.
  This powerful (and dangerous) resource executes all POST payloads as Scripturia
-n text-with-scriptlets documents.
+n templates.
  The standard output of the script will be returned as a response.
  Because it always execution of arbitrary code, you very likely do not want
  this resource publicly exposed.
@@ -6150,7 +6150,7 @@ manual
 \begin_inset Quotes eld
 \end_inset
 
-scriptlet
+templates
 \begin_inset Quotes erd
 \end_inset
 
@@ -6206,7 +6206,7 @@ manual
 \begin_inset Quotes erd
 \end_inset
 
- type to create a static resource handler.
+ type to create a manual resource handler.
  By default uses the application's 
 \begin_inset Quotes eld
 \end_inset
@@ -6255,10 +6255,10 @@ reference "manual-resources"
 \end_layout
 
 \begin_layout Paragraph
-scriptlet
+templates
 \begin_inset CommandInset label
 LatexCommand label
-name "scriptlet-route-type"
+name "templates-route-type"
 
 \end_inset
 
@@ -6270,11 +6270,11 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-scriptlet
+templates
 \begin_inset Quotes erd
 \end_inset
 
- type to create a static resource handler.
+ type to create a template resource handler.
  By default uses the application's 
 \begin_inset Quotes eld
 \end_inset
@@ -6302,18 +6302,18 @@ All
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Setup.Scriptlet"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Scriptlet"
+name "Prudence.Setup.Templates"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Templates"
 
 \end_inset
 
  class.
  See the 
 \bar under
-scriptlet resources guide (page 
+template resources guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -6591,7 +6591,7 @@ not found
 
 ) error will have its value returned.
  This is very commonly used to combine mapping types, for example: ['manual',
- 'scriptlet', 'static'].
+ 'templates', 'static'].
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -7613,7 +7613,7 @@ Prudence differs from the familiar paradigm in three ways:
 \end_layout
 
 \begin_layout Enumerate
-For manual and scriptlet resources, Prudence hides filename extensions from
+For manual and template resources, Prudence hides filename extensions from
  the URIs by default.
  Thus, 
 \begin_inset Quotes eld
@@ -7636,7 +7636,7 @@ For manual and scriptlet resources, Prudence hides filename extensions from
  implementation of the resource, and 2) it allows for cleaner and more coherent
  URIs.
  Note the filename extensions are used internally by Prudence (differently
- for manual and scriptlet resources).
+ for manual and template resources).
  Note that this does not apply to static resources: 
 \begin_inset Quotes eld
 \end_inset
@@ -7657,7 +7657,7 @@ For manual and scriptlet resources, Prudence hides filename extensions from
 \end_layout
 
 \begin_layout Enumerate
-For manual and scriptlet resources, Prudence by default 
+For manual and template resources, Prudence by default 
 \emph on
 requires 
 \emph default
@@ -7765,11 +7765,11 @@ capturing
 \end_inset
 
  mechanism, which works on URI templates.
- For example, let's say you have a scriptlet resource file at 
+ For example, let's say you have a template resource file at 
 \begin_inset Quotes eld
 \end_inset
 
-/resources/user/profile.s.html
+/resources/user/profile.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -7844,7 +7844,7 @@ A URI such as
 \begin_inset Quotes eld
 \end_inset
 
-profile.s.html
+profile.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -7908,8 +7908,8 @@ User profile for user <%= conversation.locals.get('userId') %>.
 \end_layout
 
 \begin_layout Standard
-We've used a scriptlet resource in this example, but capturing can be used
- for both scriptlet and manual resources.
+We've used a template resource in this example, but capturing can be used
+ for both template and manual resources.
  The same 
 \bar under
 conversation.locals API (page 
@@ -8358,7 +8358,7 @@ name "resource-capturing"
 
 \begin_layout Standard
 Resource capturing, for the purpose of the URI/resource separation paradigm,
- only makes sense for scriptlet resources.
+ only makes sense for template resources.
  For manual resources, 
 \bar under
 resource dispatching (page 
@@ -8374,7 +8374,7 @@ reference "resource-dispatching"
 \end_layout
 
 \begin_layout Standard
-Resource capturing lets you use any public URI for any library scriptlet
+Resource capturing lets you use any public URI for any library template
  resource.
  For example, let's assume that you have the following files in 
 \begin_inset Quotes eld
@@ -8492,7 +8492,7 @@ URI rewriting
 
 ), with the added ability to use hidden URIs as the destination.
  It's this added ability that makes capturing useful for URI/resource separation
-: hidden URIs include both scriptlet resource files in your application's
+: hidden URIs include both template resource files in your application's
  
 \begin_inset Quotes eld
 \end_inset
@@ -8541,7 +8541,7 @@ name "resource-dispatching"
 \begin_layout Standard
 Resource dispatching, for the purpose of the URI/resource separation paradigm,
  only makes sense for manual resources.
- For scriptlet resources, 
+ For template resources, 
 \bar under
 resource capturing (page 
 \begin_inset CommandInset ref
@@ -9299,7 +9299,7 @@ reference "resource-capturing"
 \bar default
 .
  This means that you can implement your error pages using any kind of resource:
- manual, scriptlet or static.
+ manual, template or static.
 \end_layout
 
 \begin_layout Standard
@@ -10365,7 +10365,7 @@ To avoid the delay, it's recommended that you ready your resources by hitting
 \series bold
 Defrosting
 \series default
-: Prudence will by default parse and compile the code for manual and scriptlet
+: Prudence will by default parse and compile the code for manual and template
  resources under your application's 
 \begin_inset Quotes eld
 \end_inset
@@ -10780,7 +10780,7 @@ raw,
 \begin_inset Quotes eld
 \end_inset
 
-scriptlet
+template
 \begin_inset Quotes erd
 \end_inset
 
@@ -10795,7 +10795,7 @@ Programmable Resources
 \end_layout
 
 \begin_layout Standard
-These notes apply to both manual and scriptlet resources:
+These notes apply to both manual and template resources:
 \end_layout
 
 \begin_layout Itemize
@@ -11354,11 +11354,11 @@ will not be called
 \end_layout
 
 \begin_layout Paragraph
-Integrating Scriptlet Resources
+Integrating Template Resources
 \end_layout
 
 \begin_layout Standard
-It's possible to return scriptlet resources as your payload.
+It's possible to return template resources as your payload.
  This could be useful if you're implementing the Model-View-Controller (MVC)
  pattern.
  See the 
@@ -12045,10 +12045,10 @@ reference "caching"
 \end_layout
 
 \begin_layout Subsection
-Scriptlet Resources
+Template Resources
 \begin_inset CommandInset label
 LatexCommand label
-name "scriptlet-resources"
+name "template-resources"
 
 \end_inset
 
@@ -12118,10 +12118,10 @@ name "scriptlet-plugins"
 \end_layout
 
 \begin_layout Subsubsection
-On-the-Fly Scriptlet Resources
+On-the-Fly Template Resources
 \begin_inset CommandInset label
 LatexCommand label
-name "on-the-fly-scriptlet-resources"
+name "on-the-fly-template-resources"
 
 \end_inset
 
@@ -12129,7 +12129,7 @@ name "on-the-fly-scriptlet-resources"
 \end_layout
 
 \begin_layout Standard
-You can add support for on-the-fly scriptlet resources to your application
+You can add support for on-the-fly template resources to your application
  via the 
 \bar under
 
@@ -12151,7 +12151,7 @@ reference "execute-route-type"
 \bar default
 .
  This powerful (and dangerous) resource executes all POST payloads as if
- they were scriptlet resources in the application, and is very useful for
+ they were template resources in the application, and is very useful for
  
 \bar under
 debugging (page 
@@ -12305,7 +12305,7 @@ println(Hello, {0}'.cast('Linus'))
 \end_layout
 
 \begin_layout Standard
-Almost all the usual scriptlet resource APIs work (with the exception of
+Almost all the usual template resource APIs work (with the exception of
  caching, which isn't supported):
 \end_layout
 
@@ -12699,7 +12699,7 @@ app.routes = {
 \end_layout
 
 \begin_layout Standard
-If you want to also support manual and scriptlet resources, make sure to
+If you want to also support manual and template resources, make sure to
  chain 
 \begin_inset Quotes eld
 \end_inset
@@ -12720,7 +12720,7 @@ static
 \begin_inset Quotes eld
 \end_inset
 
-.s.
+.t.
 \begin_inset Quotes erd
 \end_inset
 
@@ -12749,7 +12749,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		'scriptlet',
+		'templates',
 \end_layout
 
 \begin_layout Plain Layout
@@ -14000,7 +14000,7 @@ Other Effects
 \end_layout
 
 \begin_layout Standard
-Because static resources don't allow for code (unlike manual and scriptlet
+Because static resources don't allow for code (unlike manual and template
  resources), the way to program your own effects is to add 
 \bar under
 filters (page 
@@ -14188,7 +14188,7 @@ Manual
 \begin_layout Plain Layout
 
 \series bold
-Scriptlet
+Template
 \end_layout
 
 \end_inset
@@ -14350,7 +14350,7 @@ Filename Pre-extension
 \begin_inset Text
 
 \begin_layout Plain Layout
-*.s.*
+*.t.*
 \end_layout
 
 \end_inset
@@ -15794,7 +15794,7 @@ In HTML
 \begin_layout Standard
 We're mentioning this here only for completion: via HTML, redirection is
  handled entirely in the web browser, with no data going to/from the server.
- A scriptlet resource example:
+ A template resource example:
 \end_layout
 
 \begin_layout Standard
@@ -16396,10 +16396,10 @@ reference "manual-resources"
 \bar default
 , although it can prove useful to affect the textual payloads of 
 \bar under
-scriptlet resources (page 
+template resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -16464,10 +16464,10 @@ Textual and Binary Payloads
 \begin_layout Standard
 
 \bar under
-Scriptlet resources (page 
+Template resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -17121,8 +17121,8 @@ function handleGet(conversation) {
 \end_layout
 
 \begin_layout Standard
-Note that these APIs works just as well for scriptlet resources, though
- again content negotiation should be preferred.
+Note that these APIs works just as well for template resources, though again
+ content negotiation should be preferred.
 \end_layout
 
 \begin_layout Paragraph
@@ -17886,7 +17886,7 @@ application
 \end_layout
 
 \begin_layout Standard
-For scriptlet resources, you may call these APIs anywhere on the page, but
+For template resources, you may call these APIs anywhere on the page, but
  for manual resources they should be called in 
 \bar under
 handleInit (page 
@@ -19028,7 +19028,7 @@ ly per request.
 \end_layout
 
 \begin_layout Standard
-Automatic client-side caching applies to both scriptlet and manual resources.
+Automatic client-side caching applies to both template and manual resources.
 \end_layout
 
 \begin_layout Paragraph
@@ -19059,7 +19059,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		type: 'scriptlet',
+		type: 'templates',
 \end_layout
 
 \begin_layout Plain Layout
@@ -19834,7 +19834,7 @@ Our strategy would then be to:
 \end_layout
 
 \begin_layout Itemize
-Use conditional caching mode for manual and scriptlet resources.
+Use conditional caching mode for manual and template resources.
  (This is the default.) This would guarantee that we can always push changes
  to users even when cached.
 \end_layout
@@ -19878,7 +19878,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		'scriptlet', // clientCachingMode: conditional
+		'templates', // clientCachingMode: conditional
 \end_layout
 
 \begin_layout Plain Layout
@@ -19979,7 +19979,7 @@ reference "static-resources-bypassing-the-client-cache"
 \end_layout
 
 \begin_layout Itemize
-Your HTML scriptlet pages can be cached offline, too, but this means two
+Your HTML template pages can be cached offline, too, but this means two
  things:
 \end_layout
 
@@ -20015,7 +20015,7 @@ Our strategy would then be to:
 \end_layout
 
 \begin_layout Itemize
-Enable offline caching mode for scriptlet resources.
+Enable offline caching mode for template resources.
  Per resource, we would have to carefully consider what a reasonable caching
  duration would be.
  It should usually be the average length of a user visit to our site, and
@@ -20077,7 +20077,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			type: 'scriptlet',
+			type: 'templates',
 \end_layout
 
 \begin_layout Plain Layout
@@ -20430,7 +20430,7 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-	scriptlet: {
+	templates: {
 \end_layout
 
 \begin_layout Plain Layout
@@ -20806,7 +20806,10 @@ defrost
 \begin_inset Quotes erd
 \end_inset
 
- manual and scriptlet resources under the 
+ manual and 
+template
+\lang english
+ resources under the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -20971,10 +20974,13 @@ javascript
 \end_layout
 
 \begin_layout Subsection
-app.settings.scriptlets
+app.settings.
+template
+\lang english
+s
 \begin_inset CommandInset label
 LatexCommand label
-name "settings-scriptlets"
+name "settings-templates"
 
 \end_inset
 
@@ -20984,10 +20990,10 @@ name "settings-scriptlets"
 \begin_layout Standard
 Configure 
 \bar under
-scriptlet resources (page 
+templates resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -21012,6 +21018,23 @@ debug
  directory you will see the generated source code for each scriptlet resource.
  The filenames will include the timestamp for their creation, so you can
  see all versions of code that were created.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+parser
+\series default
+: The parser name; allows you to change the default scriptlets parser to
+ your own custom Scripturian parser; defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlets
+\begin_inset Quotes erd
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -21311,7 +21334,18 @@ and only one
 \end_layout
 
 \begin_layout Standard
-This setting is used mostly for scriptlet and 
+This setting is used mostly for 
+\bar under
+textual (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources"
+
+\end_inset
+
+)
+\bar default
+ and 
 \bar under
 static resources (page 
 \begin_inset CommandInset ref
@@ -21323,11 +21357,11 @@ reference "static-resources-mime-types-and-compression"
 )
 \bar default
 .
- For example, a scriptlet resource named 
+ For example, a template resource named 
 \begin_inset Quotes eld
 \end_inset
 
-person.s.html
+person.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -23965,7 +23999,7 @@ Manual Resources and Handlers
 \end_layout
 
 \begin_layout Subsubsection
-Scriptlet Resources
+Template Resources
 \end_layout
 
 \begin_layout Subsubsection
@@ -24044,10 +24078,10 @@ name "live-execution"
 \begin_layout Standard
 See the 
 \bar under
-on-the-fly scriptlet resources (page 
+on-the-fly template resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "on-the-fly-scriptlet-resources"
+reference "on-the-fly-template-resources"
 
 \end_inset
 
@@ -25574,13 +25608,13 @@ target "http://threecrickets.com/api/javascript/?namespace=application&item=appl
 \end_inset
 
 .
- Note that the source code must provided as scriptlets, similar to the format
- of 
+ Note that the source code must provided as scriptlets, identical to the
+ format of 
 \bar under
-scriptlet resources (page 
+template resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -27030,7 +27064,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			'scriptlet',
+			'templates',
 \end_layout
 
 \begin_layout Plain Layout
@@ -28108,7 +28142,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-			'scriptlet'
+			'templates'
 \end_layout
 
 \begin_layout Plain Layout
@@ -33002,10 +33036,10 @@ name "mvc-views"
 \begin_layout Standard
 In Prudence, these are hidden 
 \bar under
-scriptlet resources (page 
+template resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
@@ -33083,7 +33117,7 @@ view
 
  file.
  If you're afraid of losing control, then you can simply make yourself a
- rule that only templating languages are allowed in scriptlets.
+ rule that only templating languages are allowed in template resources.
  It's purely a matter of project management discipline.
  We recommend, however, relaxing some of that extremism: for example, you
  can make the rule that no 
@@ -33273,7 +33307,7 @@ In Prudence, these are the resources that are actually exposed in the URI-space,
 \end_layout
 
 \begin_layout Standard
-You can use either manual or scriptlet resources as your presenters.
+You can use either manual or template resources as your presenters.
  However, 
 \bar under
 manual resources (page 
@@ -33670,7 +33704,7 @@ You can cache the views.
  may be fetched from the cache.
  This will allow every view to use its own caching parameters.
  However, you should take care to remember that the request hitting the
- scriptlet resource is the 
+ template resource is the 
 \emph on
 internal
 \emph default
@@ -34693,17 +34727,17 @@ For our dispatcher, we'll do something a bit different from before: because
  we want to support caching of templates, we will want the actual template
  renderer as a 
 \bar under
-scriptlet resource (page 
+template resource (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "scriptlet-resources"
+reference "template-resources"
 
 \end_inset
 
 )
 \bar default
 .
- The dispatcher, then, will simply delegate to that scriptlet resource.
+ The dispatcher, then, will simply delegate to that template resource.
  Another change is that we'll be writing it all in Python, so we can call
  the Jinja2 API.
  Let's start with 
@@ -34941,11 +34975,11 @@ reference "avoiding-serialization-for-internal-requests"
 \end_layout
 
 \begin_layout Standard
-Our scriptlet resource is 
+Our template resource is 
 \begin_inset Quotes eld
 \end_inset
 
-/resources/jinja-template.s.html
+/resources/jinja-template.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -35663,7 +35697,7 @@ We'll then modify our
 \begin_inset Quotes eld
 \end_inset
 
-/resources/jinja-template.s.html
+/resources/jinja-template.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -37218,7 +37252,7 @@ prudence
 \begin_inset Quotes erd
 \end_inset
 
- tool to create a new application for your application name:
+ Sincerity tool to create a new application for your application name:
 \begin_inset listings
 inline false
 status open
@@ -37327,7 +37361,7 @@ Rename
 \begin_inset Quotes eld
 \end_inset
 
-.s.
+.t.
 \begin_inset Quotes erd
 \end_inset
 
@@ -37335,7 +37369,7 @@ Rename
 \begin_inset Quotes eld
 \end_inset
 
-scriptlet resources
+template resources
 \begin_inset Quotes erd
 \end_inset
 
@@ -37353,7 +37387,7 @@ find .
 \backslash
 .html$/
 \backslash
-.s.html/i' {} 
+.t.html/i' {} 
 \backslash
 ;
 \end_layout
@@ -37404,7 +37438,7 @@ Move
 \begin_inset Quotes eld
 \end_inset
 
-/libraries/includes
+/libraries/includes/
 \begin_inset Quotes erd
 \end_inset
 

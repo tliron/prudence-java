@@ -1,20 +1,20 @@
 <html>
 <head>
-	<title>Python (Jepp) Scriptlet Example</title>
+	<title>Python (Jython) Template Example</title>
 	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
 	<link href="http://fonts.googleapis.com/css?family=Ubuntu|Ubuntu:italic|Ubuntu:bold|Ubuntu:bolditalic" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="main"><div id="main-content">
-<h1>Python (Jepp) Scriptlet Example</h1>
+<h1>Python (Jython) Template Example</h1>
 <table width="100%"><tr valign="top"><td>
-<%jepp
+<%python
 
 #
 # Defer this page
 #
 
-if str(conversation.getQuery().get('defer')) == 'true':
+if conversation.query['defer'] == 'true':
 	if conversation.defer():
 		conversation.stop()
 
@@ -22,7 +22,7 @@ if str(conversation.getQuery().get('defer')) == 'true':
 # Cache this page
 #
 
-caching.setDuration(5000)
+caching.duration = 5000
 
 #
 # Calling Java
@@ -42,12 +42,12 @@ sys.stdout.write('<p>This page was dynamically generated at %s</p>' % System.cur
 
 def print_adapter(adapter):
 	%><p>
-	<i>Adapter:</i> <%= adapter.getAttributes().get('name') %> version <%= adapter.getAttributes().get('version') %><br />
-	<i>Language:</i> <%= adapter.getAttributes().get('language.name') %> version <%= adapter.getAttributes().get('language.version') %><br />
+	<i>Adapter:</i> <%= adapter.attributes['name'] %> version <%= adapter.attributes['version'] %><br />
+	<i>Language:</i> <%= adapter.attributes['language.name'] %> version <%= adapter.attributes['language.version'] %><br />
 	<i>Tags:</i> <%
-	tags = adapter.getAttributes().get('tags').toArray()
+	tags = adapter.attributes['tags'].toArray()
 	for i in range(len(tags)):
-		sys.stdout.write(str(tags[i]))
+		sys.stdout.write(tags[i])
 		if i < len(tags) - 1:
 			sys.stdout.write(', ')
 	%></p><%
@@ -55,17 +55,17 @@ def print_adapter(adapter):
 %>
 <h3>Language used:</h3>
 <%
-print_adapter(executable.getContext().getAdapter())
+print_adapter(executable.context.adapter)
 %>
 <h3>Available languages:</h3>
 <%
-adapters = executable.getLanguageManager().getAdapters().toArray()
+adapters = executable.languageManager.adapters.toArray()
 for adapter in adapters:
 	print_adapter(adapter)
 %>
 </td><td>
 <h3>The "id" attribute in the URL query is:</h3>
-<p><%= conversation.getQuery().get('id') or '' %></p>
+<p><%= conversation.query['id'] or '' %></p>
 <h3>A few tests:</h3>
 <p>
 <%
@@ -75,11 +75,11 @@ for adapter in adapters:
 #
 # This is identical to:
 #
-#   document.include('/triple/python-jepp/')
+#   document.include('/triple/python/')
 #
 
 %>
-<%& '/triple/python-jepp/' %>
+<%& '/triple/python/' %>
 <%
 
 for i in range(10):
