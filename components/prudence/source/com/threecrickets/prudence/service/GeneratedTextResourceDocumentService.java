@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.restlet.Request;
 import org.restlet.data.Encoding;
@@ -33,6 +32,7 @@ import com.threecrickets.prudence.cache.CacheEntry;
 import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.internal.CaptureWriter;
 import com.threecrickets.prudence.internal.GeneratedTextDeferredRepresentation;
+import com.threecrickets.prudence.internal.StackedWriter;
 import com.threecrickets.prudence.internal.attributes.GeneratedTextResourceAttributes;
 import com.threecrickets.prudence.util.PrudenceScriptletPlugin;
 import com.threecrickets.scripturian.Executable;
@@ -210,8 +210,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 */
 	public void startCapture( String name )
 	{
-		getWriterStack().add( 0, executionContext.getWriter() );
-		executionContext.setWriter( new CaptureWriter( name ) );
+		getStackedWriter().push( new CaptureWriter( name ) );
 	}
 
 	/**
@@ -227,15 +226,10 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 */
 	public String endCapture()
 	{
-		Writer currentWriter = executionContext.getWriter();
+		Writer currentWriter = getStackedWriter().pop();
 		if( currentWriter instanceof CaptureWriter )
 		{
 			CaptureWriter captureWriter = (CaptureWriter) currentWriter;
-
-			Writer lastWriter = getWriterStack().remove( 0 );
-			if( lastWriter != null )
-				executionContext.setWriter( lastWriter );
-
 			String r = captureWriter.toString();
 			ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
 			Object existing = attributes.get( captureWriter.name );
@@ -264,7 +258,7 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	/**
 	 * Writer stack attribute for an {@link Request}.
 	 */
-	private static final String WRITER_STACK_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".writerStack";
+	private static final String STACKED_WRITER_ATTRIBUTE = GeneratedTextResourceDocumentService.class.getCanonicalName() + ".stackedWriter";
 
 	/**
 	 * The application service.
@@ -292,15 +286,14 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 	 * 
 	 * @return The writer stack
 	 */
-	@SuppressWarnings("unchecked")
-	private CopyOnWriteArrayList<Writer> getWriterStack()
+	private StackedWriter getStackedWriter()
 	{
 		ConcurrentMap<String, Object> attributes = resource.getRequest().getAttributes();
-		CopyOnWriteArrayList<Writer> writerStack = (CopyOnWriteArrayList<Writer>) attributes.get( WRITER_STACK_ATTRIBUTE );
+		StackedWriter writerStack = (StackedWriter) attributes.get( STACKED_WRITER_ATTRIBUTE );
 		if( writerStack == null )
 		{
-			writerStack = new CopyOnWriteArrayList<Writer>();
-			attributes.put( WRITER_STACK_ATTRIBUTE, writerStack );
+			writerStack = new StackedWriter();
+			attributes.put( STACKED_WRITER_ATTRIBUTE, writerStack );
 		}
 		return writerStack;
 	}
@@ -389,9 +382,12 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 			if( writer == null )
 			{
 				StringWriter stringWriter = new StringWriter();
+				Writer bufferedWriter = new BufferedWriter( stringWriter );
 				writerBuffer = stringWriter.getBuffer();
-				writer = new BufferedWriter( stringWriter );
-				executionContext.setWriter( writer );
+				StackedWriter stackedWriter = getStackedWriter();
+				stackedWriter.push( bufferedWriter );
+				executionContext.setWriter( stackedWriter );
+				writer = stackedWriter;
 			}
 			else
 			{
@@ -416,7 +412,6 @@ public class GeneratedTextResourceDocumentService extends ResourceDocumentServic
 
 		try
 		{
-			executionContext.setWriter( writer );
 			executionContext.getServices().put( attributes.getDocumentServiceName(), this );
 			executionContext.getServices().put( attributes.getCachingServiceName(), cachingService );
 			executionContext.getServices().put( attributes.getApplicationServiceName(), applicationService );

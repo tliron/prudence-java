@@ -93,7 +93,7 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 			else if( CLOJURE.equals( language ) )
 				return "(.endCapture document)";
 			else if( PHP.equals( language ) )
-				return "$document->endCapture();";
+				return "flush();$document->endCapture();";
 			else if( LUA.equals( language ) )
 				return "document:endCapture();";
 		}
@@ -103,12 +103,36 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 			String name = ScripturianUtil.doubleQuotedLiteral( content.trim() );
 			if( JAVASCRIPT.equals( language ) )
 				return "if(null!==conversation.locals.get(" + name + ")){print(conversation.locals.get(" + name + "))}else{document.startCapture(" + name + ");";
+			else if( PYTHON.equals( language ) )
+				return "\nif conversation.locals.get(" + name + "):\n sys.stdout.write(conversation.locals.get(" + name + "))\nelse:\n document.startCapture(" + name + ");";
+			else if( RUBY.equals( language ) )
+				return "if $conversation.locals.get(" + name + ");print($conversation.locals.get(" + name + "));else;$document.start_capture(" + name + ");";
+			else if( GROOVY.equals( language ) )
+				return "if(conversation.locals.get(" + name + ")){print(conversation.locals.get(" + name + "))}\nelse{document.startCapture(" + name + ");";
+			else if( CLOJURE.equals( language ) )
+				return "(if (.. conversation getLocals (get " + name + ")) (print (.. conversation getLocals (get " + name + "))) (do (.startCapture document " + name + ")";
+			else if( PHP.equals( language ) )
+				return "if($conversation->locals->get(" + name + ")){print($conversation->locals->get(" + name + "))}else{$document->startCapture(" + name + ");";
+			else if( LUA.equals( language ) )
+				return "if conversation:getLocals():get(" + name + ") then;print(conversation:getLocals():get(" + name + "));else;document:startCapture(" + name + ");";
 		}
 		else if( "]".equals( code ) )
 		{
 			String language = (String) languageAdapter.getAttributes().get( LanguageAdapter.LANGUAGE_NAME );
 			if( JAVASCRIPT.equals( language ) )
 				return "print(document.endCapture())}";
+			else if( PYTHON.equals( language ) )
+				return "\n print(document.endCapture())\n";
+			else if( RUBY.equals( language ) )
+				return "print($document.end_capture());end;";
+			else if( GROOVY.equals( language ) )
+				return "print(document.endCapture())}\n";
+			else if( CLOJURE.equals( language ) )
+				return "(print (.endCapture document))))";
+			else if( PHP.equals( language ) )
+				return "flush();print($document->endCapture());}";
+			else if( LUA.equals( language ) )
+				return "print(document:endCapture());end;";
 		}
 		return "";
 	}
