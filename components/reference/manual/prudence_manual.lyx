@@ -701,7 +701,7 @@ Under
 \begin_inset Quotes eld
 \end_inset
 
-site.zuss
+site.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -709,33 +709,17 @@ site.zuss
  
 \begin_inset CommandInset href
 LatexCommand href
-name "ZUSS"
-target "https://github.com/tomyeh/ZUSS"
-
-\end_inset
-
- is an extended CSS language, inspired by 
-\begin_inset CommandInset href
-LatexCommand href
 name "LESS"
 target "http://lesscss.org/"
 
 \end_inset
 
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "SASS"
-target "http://sass-lang.com/"
-
-\end_inset
-
-.
- Prudence will automatically recognize the 
+ is a powerful extended CSS language: Prudence will automatically recognize
+ the 
 \begin_inset Quotes eld
 \end_inset
 
-.zuss
+.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -3260,19 +3244,11 @@ Here, we'll beef up our wiki a bit, and along the way introduce you to a
 \end_layout
 
 \begin_layout Subsubsection
-CSS with ZUSS
+CSS with LESS
 \end_layout
 
 \begin_layout Standard
 Prudence comes with 
-\begin_inset CommandInset href
-LatexCommand href
-name "ZUSS"
-target "https://github.com/tomyeh/ZUSS"
-
-\end_inset
-
- built in: it's an extended CSS language inspired by 
 \begin_inset CommandInset href
 LatexCommand href
 name "LESS"
@@ -3280,21 +3256,21 @@ target "http://lesscss.org/"
 
 \end_inset
 
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "SASS"
-target "http://sass-lang.com/"
-
-\end_inset
-
-.
- ZUSS greatly increases the power of CSS by allowing for code re-usability,
+ built in: it's an extended CSS language.
+ LESS greatly increases the power of CSS by allowing for code re-usability,
  variables and expressions, as well as nesting CSS.
 \end_layout
 
 \begin_layout Standard
-Let's zuss up our wiki pages! First, let's include the CSS in our 
+Let's 
+\begin_inset Quotes eld
+\end_inset
+
+less up
+\begin_inset Quotes erd
+\end_inset
+
+ our wiki pages! First, let's include the CSS in our 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3385,7 +3361,7 @@ Now, let's edit the
 \begin_inset Quotes eld
 \end_inset
 
-/resources/style/site.zuss
+/resources/style/site.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -3403,7 +3379,7 @@ Now, let's edit the
 \begin_inset Quotes eld
 \end_inset
 
-.zuss
+.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -3418,8 +3394,7 @@ status open
 
 \begin_layout Plain Layout
 
-@sans-serif: Lucida Sans Unicode "," Lucida Grande "," Verdana "," Arial
- "," sans-serif;
+@sans-serif: Lucida Sans Unicode, Lucida Grande, Verdana, Arial, sans-serif;
 \end_layout
 
 \begin_layout Plain Layout
@@ -4033,7 +4008,10 @@ You don't
 \emph on
 have to
 \emph default
- use ZUSS: Prudence can also 
+ use 
+LESS
+\lang english
+: Prudence can also 
 \bar under
 unify and minify regular CSS, as well as client-side JavaScript (page 
 \begin_inset CommandInset ref
@@ -4053,13 +4031,13 @@ Read the
 FAQ (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "why-zuss"
+reference "why-less"
 
 \end_inset
 
 )
 \bar default
- as to why Prudence supports ZUSS but not LESS or SASS.
+ as to why Prudence supports LESS but not SASS.
 \end_layout
 
 \begin_layout Itemize
@@ -5160,7 +5138,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				type: 'zuss',
+				type: 'less',
 \end_layout
 
 \begin_layout Plain Layout
@@ -7114,10 +7092,13 @@ reference "static-resources-javascript-and-css-optimization"
 \end_layout
 
 \begin_layout Paragraph
-zuss
+
+less
+\lang english
+
 \begin_inset CommandInset label
 LatexCommand label
-name "zuss-route-type"
+name "less-route-type"
 
 \end_inset
 
@@ -7129,7 +7110,7 @@ Use the
 \begin_inset Quotes eld
 \end_inset
 
-zuss
+less
 \begin_inset Quotes erd
 \end_inset
 
@@ -7144,8 +7125,8 @@ next
  param to create a 
 \begin_inset CommandInset href
 LatexCommand href
-name "ZUSS"
-target "https://github.com/tomyeh/ZUSS"
+name "LESS"
+target "http://lesscss.org/"
 
 \end_inset
 
@@ -7187,8 +7168,8 @@ next
  Handled by the 
 \begin_inset CommandInset href
 LatexCommand href
-name "Prudence.Setup.Zuss"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Zuss"
+name "Prudence.Setup.Less"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Less"
 
 \end_inset
 
@@ -7198,7 +7179,7 @@ target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Zuss"
 static resources guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "static-resources-zuss-to-css"
+reference "static-resources-less-to-css"
 
 \end_inset
 
@@ -13600,10 +13581,10 @@ all.min.css
 .
  Note, however, that similar functionality is provided by using 
 \bar under
-ZUSS (page 
+LESS (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "static-resources-zuss-to-css"
+reference "static-resources-less-to-css"
 
 \end_inset
 
@@ -13706,10 +13687,10 @@ status open
 \end_layout
 
 \begin_layout Subsubsection
-ZUSS to CSS
+LESS to CSS
 \begin_inset CommandInset label
 LatexCommand label
-name "static-resources-zuss-to-css"
+name "static-resources-less-to-css"
 
 \end_inset
 
@@ -13719,28 +13700,12 @@ name "static-resources-zuss-to-css"
 \begin_layout Standard
 \begin_inset CommandInset href
 LatexCommand href
-name "ZUSS"
-target "https://github.com/tomyeh/ZUSS"
-
-\end_inset
-
- is an extended CSS language, inspired by 
-\begin_inset CommandInset href
-LatexCommand href
 name "LESS"
 target "http://lesscss.org/"
 
 \end_inset
 
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "SASS"
-target "http://sass-lang.com/"
-
-\end_inset
-
-.
+ is an extended CSS language.
  It greatly increases the power of CSS by allowing for code re-usability,
  variables and expressions, as well as nesting CSS.
  Using the the 
@@ -13749,14 +13714,14 @@ target "http://sass-lang.com/"
 \begin_inset Quotes eld
 \end_inset
 
-zuss
+less
 \begin_inset Quotes erd
 \end_inset
 
  filter (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "zuss-route-type"
+reference "less-route-type"
 
 \end_inset
 
@@ -13766,7 +13731,7 @@ reference "zuss-route-type"
 \begin_inset Quotes eld
 \end_inset
 
-.zuss
+.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -13813,7 +13778,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-		type: 'zuss',
+		type: 'less',
 \end_layout
 
 \begin_layout Plain Layout
@@ -13858,7 +13823,7 @@ The filter works by catching all URLs ending in
 \begin_inset Quotes eld
 \end_inset
 
-.zuss
+.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -13883,7 +13848,7 @@ The filter works by catching all URLs ending in
 \begin_inset Quotes eld
 \end_inset
 
-.zuss
+.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -13895,7 +13860,7 @@ For a usage example, let's say we have a
 \begin_inset Quotes eld
 \end_inset
 
-/resources/style/dark/main.zuss
+/resources/style/dark/main.less
 \begin_inset Quotes erd
 \end_inset
 
@@ -13938,7 +13903,7 @@ The
 \begin_inset Quotes eld
 \end_inset
 
-zuss
+less
 \begin_inset Quotes erd
 \end_inset
 
@@ -13986,13 +13951,13 @@ See the
 FAQ (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "why-zuss"
+reference "why-less"
 
 \end_inset
 
 )
 \bar default
- as to why Prudence supports ZUSS but not LESS or SASS.
+ as to why Prudence supports LESS or SASS.
 \end_layout
 
 \begin_layout Subsubsection
@@ -19923,7 +19888,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				type: 'zuss',
+				type: 'less',
 \end_layout
 
 \begin_layout Plain Layout
@@ -20137,7 +20102,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-				type: 'zuss',
+				type: 'less',
 \end_layout
 
 \begin_layout Plain Layout
@@ -20806,10 +20771,7 @@ defrost
 \begin_inset Quotes erd
 \end_inset
 
- manual and 
-template
-\lang english
- resources under the 
+ manual and template resources under the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -20974,10 +20936,7 @@ javascript
 \end_layout
 
 \begin_layout Subsection
-app.settings.
-template
-\lang english
-s
+app.settings.templates
 \begin_inset CommandInset label
 LatexCommand label
 name "settings-templates"
@@ -24667,10 +24626,13 @@ Choose the right tool for the job! Node.js is a great choice for streaming
 \end_layout
 
 \begin_layout Subsubsection*
-Why does Prudence support ZUSS instead of LESS or SASS?
+Why does Prudence support 
+LESS
+\lang english
+ instead SASS?
 \begin_inset CommandInset label
 LatexCommand label
-name "why-zuss"
+name "why-less"
 
 \end_inset
 
@@ -24678,14 +24640,7 @@ name "why-zuss"
 \end_layout
 
 \begin_layout Standard
-\begin_inset CommandInset href
-LatexCommand href
-name "ZUSS"
-target "https://github.com/tomyeh/ZUSS"
-
-\end_inset
-
- is less mature, less comprehensive, and not as popular as 
+Prudence implements 
 \begin_inset CommandInset href
 LatexCommand href
 name "LESS"
@@ -24693,7 +24648,16 @@ target "http://lesscss.org/"
 
 \end_inset
 
- and 
+ using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Less4j library"
+target "https://github.com/SomMeri/less4j"
+
+\end_inset
+
+.
+ Unfortunately, there is no 
 \begin_inset CommandInset href
 LatexCommand href
 name "SASS"
@@ -24701,25 +24665,28 @@ target "http://sass-lang.com/"
 
 \end_inset
 
-.
- We chose it because of a single advantage: it is a pure JVM library.
+ implementation that would directly work on the JVM: we could potentially
+ run it using JRuby, but that is simply too big a dependency for a single
+ feature.
 \end_layout
 
 \begin_layout Standard
-Try as we might, we could not get LESS to run properly in a server-side
- JavaScript environment.
- As for SASS, it requires Ruby, which is simply too big a dependency for
- a single feature.
+However, nothing is stopping you from running SASS from the command line
+ to create your CSS.
 \end_layout
 
 \begin_layout Standard
-However, nothing is stopping you from running LESS or SASS from the command
- line to create your CSS.
-\end_layout
+An alternative to LESS is 
+\begin_inset CommandInset href
+LatexCommand href
+name "ZUSS"
+target "https://github.com/tomyeh/ZUSS"
 
-\begin_layout Standard
-And we would, of course, welcome patches that allow for proper integration
- of LESS and SASS!
+\end_inset
+
+: smaller, but not quite as comprehensive.
+ Code to support it is included in Prudence, though you must install the
+ ZUSS Jar yourself.
 \end_layout
 
 \begin_layout Subsection
