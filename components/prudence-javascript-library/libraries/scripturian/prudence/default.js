@@ -835,6 +835,10 @@ var Prudence = {}
  * The above snippet can be used in <i>any</i> textual resource, no matter its URI, and will alwaus refer to the "/contact/"
  * URI starting at the root URI of the application.
  * <p>
+ * By default, Prudence uses a scriptlet plugin to create a shortcut for the above:
+ * <pre>
+ * Click &lt;a href="&lt;%.%&gt;/contact/"&gt;here&lt;/a&gt; to contact us.
+ * </pre>
  * Note that it can also be useful to use the base as part of your {@link caching#keyTemplate}, where it is
  * available as "{cb}".
  *

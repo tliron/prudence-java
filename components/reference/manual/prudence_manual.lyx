@@ -3306,8 +3306,7 @@ status open
 
 \begin_layout Plain Layout
 
-	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/site.
-css" />
+	<link rel="stylesheet" type="text/css" href="<%.%>/style/site.css" />
 \end_layout
 
 \begin_layout Plain Layout
@@ -3321,7 +3320,15 @@ css" />
 \end_layout
 
 \begin_layout Standard
-You'll notice our use of the 
+You'll notice our use of 
+\begin_inset Quotes eld
+\end_inset
+
+<%.%>
+\begin_inset Quotes erd
+\end_inset
+
+: this is a shortcut to printing out the 
 \begin_inset CommandInset href
 LatexCommand href
 name "conversation.base API"
@@ -3329,7 +3336,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 
 \end_inset
 
-: it return a 
+, which returns a 
 \emph on
 relative
 \emph default
@@ -3496,8 +3503,7 @@ status open
 
 \begin_layout Plain Layout
 
-	<link rel="stylesheet" type="text/css" href="<%= conversation.base %>/style/site.
-min.css" />
+	<link rel="stylesheet" type="text/css" href="<%.%>/style/site.min.css" />
 \end_layout
 
 \begin_layout Plain Layout
@@ -4008,10 +4014,7 @@ You don't
 \emph on
 have to
 \emph default
- use 
-LESS
-\lang english
-: Prudence can also 
+ use LESS: Prudence can also 
 \bar under
 unify and minify regular CSS, as well as client-side JavaScript (page 
 \begin_inset CommandInset ref
@@ -7092,10 +7095,7 @@ reference "static-resources-javascript-and-css-optimization"
 \end_layout
 
 \begin_layout Paragraph
-
 less
-\lang english
-
 \begin_inset CommandInset label
 LatexCommand label
 name "less-route-type"
@@ -15769,7 +15769,7 @@ status open
 
 \begin_layout Plain Layout
 
-Go <a href="<%= conversation.base + '/elsewhere/' %>">elsewhere</a>.
+Go <a href="<%.%>/elsewhere/">elsewhere</a>.
 \end_layout
 
 \end_inset
@@ -15944,7 +15944,7 @@ status open
 
 \begin_layout Plain Layout
 
-<form action="<%= conversation.base + '/user/' %>" method="post">
+<form action="<%.%>/user/" method="post">
 \end_layout
 
 \begin_layout Plain Layout
@@ -16171,8 +16171,7 @@ status open
 
 \begin_layout Plain Layout
 
-<form action="<%= conversation.base + '/user/' %>" method="post" enctype="multipa
-rt/form-data">
+<form action="<%.%>/user/" method="post" enctype="multipart/form-data">
 \end_layout
 
 \begin_layout Plain Layout
@@ -16328,7 +16327,7 @@ tmpAvatar.renameTo(avatar)
 
 \begin_layout Plain Layout
 
-<img src="<%= conversation.base + '/avatars/' + avatar.name %>" />
+<img src="<%.%>/avatars/<%= avatar.name %>" />
 \end_layout
 
 \end_inset
@@ -24626,10 +24625,7 @@ Choose the right tool for the job! Node.js is a great choice for streaming
 \end_layout
 
 \begin_layout Subsubsection*
-Why does Prudence support 
-LESS
-\lang english
- instead SASS?
+Why does Prudence support LESS instead SASS?
 \begin_inset CommandInset label
 LatexCommand label
 name "why-less"

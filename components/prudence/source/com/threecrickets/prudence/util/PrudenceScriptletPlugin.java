@@ -29,6 +29,7 @@ import com.threecrickets.scripturian.parser.ScriptletPlugin;
  * conversation.local is not already defined</li>
  * <li><b>]</b>: like "}", but will close the "{{{" conditional, and also output
  * the resulting capture</li>
+ * <li><b>.</b>: a shortcut to conversation.base</li>
  * </ul>
  * 
  * @author Tal Liron
@@ -133,6 +134,24 @@ public class PrudenceScriptletPlugin implements ScriptletPlugin
 				return "flush();print($document->endCapture());}";
 			else if( LUA.equals( language ) )
 				return "print(document:endCapture());end;";
+		}
+		else if( ".".equals( code ) )
+		{
+			String language = (String) languageAdapter.getAttributes().get( LanguageAdapter.LANGUAGE_NAME );
+			if( JAVASCRIPT.equals( language ) )
+				return "print(conversation.base);";
+			else if( PYTHON.equals( language ) )
+				return "sys.stdout.write(conversation.base);";
+			else if( RUBY.equals( language ) )
+				return "print($conversation.base);";
+			else if( GROOVY.equals( language ) )
+				return "print(conversation.base);";
+			else if( CLOJURE.equals( language ) )
+				return "(print (.getBase conversation))";
+			else if( PHP.equals( language ) )
+				return "print($conversation->base);";
+			else if( LUA.equals( language ) )
+				return "print(conversation:getBase());";
 		}
 		return "";
 	}

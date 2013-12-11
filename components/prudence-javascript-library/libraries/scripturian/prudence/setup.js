@@ -233,6 +233,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.templates.plugins['}'] = Sincerity.Objects.ensure(this.settings.templates.plugins['}'], prudenceScriptletPlugin)
 			this.settings.templates.plugins['['] = Sincerity.Objects.ensure(this.settings.templates.plugins['['], prudenceScriptletPlugin)
 			this.settings.templates.plugins[']'] = Sincerity.Objects.ensure(this.settings.templates.plugins[']'], prudenceScriptletPlugin)
+			this.settings.templates.plugins['.'] = Sincerity.Objects.ensure(this.settings.templates.plugins['.'], prudenceScriptletPlugin)
 
 			this.settings.compression.sizeThreshold = Sincerity.Objects.ensure(this.settings.compression.sizeThreshold, 1024)
 
