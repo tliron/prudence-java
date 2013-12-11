@@ -858,7 +858,7 @@ We'll get into all that as we go along this tutorial.
 \end_layout
 
 \begin_layout Subsubsection
-Templates
+Scriptlets
 \end_layout
 
 \begin_layout Standard
@@ -883,7 +883,7 @@ status open
 
 \begin_layout Plain Layout
 
-<% for (var x = 0; x < 10; x++ ) { %>
+<% for (var x = 0; x < 10; x++) { %>
 \end_layout
 
 \begin_layout Plain Layout
@@ -1956,7 +1956,7 @@ reference "template-resources"
 
 )
 \bar default
-.
+, such as reusing fragments and template inheritance.
 \end_layout
 
 \begin_layout Itemize
@@ -4706,7 +4706,7 @@ Runtime debugging of web applications is often difficult.
 live execution (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "on-the-fly-template-resources"
+reference "on-the-fly-resources"
 
 \end_inset
 
@@ -10950,6 +10950,101 @@ The implementation is in essence the same for both styles.
 \end_layout
 
 \begin_layout Subsubsection
+Configuration
+\end_layout
+
+\begin_layout Standard
+Add support for manual resources using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-route-type"
+
+\end_inset
+
+)
+\bar default
+ in your routing.js, mapping it to a URI template ending in a wildcard:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': 'manual'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The default configuration for 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ will map all files from your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory with the 
+\begin_inset Quotes eld
+\end_inset
+
+.m.
+\begin_inset Quotes erd
+\end_inset
+
+ pre-extension.
+\end_layout
+
+\begin_layout Standard
+General configuration for your code is done in 
+\bar under
+setting.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
 handleInit
 \begin_inset CommandInset label
 LatexCommand label
@@ -11941,90 +12036,6 @@ If you implement handleGetInfo, you should be returning the same conditional
  client: it is only used internally by Prudence to process conditional requests.
 \end_layout
 
-\begin_layout Subsubsection
-Implementing Manual Resources in Java
-\begin_inset CommandInset label
-LatexCommand label
-name "java-resources"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You may prefer to implement some of your manual resources directly in Java,
- by inheriting 
-\begin_inset CommandInset href
-LatexCommand href
-name "ServerResource"
-target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html"
-
-\end_inset
-
-, or perhaps you are relying a JVM library that already comes with such
- resources.
- To use them, set them up in your routing.js via the 
-\bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-resource
-\begin_inset Quotes erd
-\end_inset
-
- route type (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "resource-route-type"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-Some notes:
-\end_layout
-
-\begin_layout Itemize
-Sure, Java can offer better performance than dynamic languages, but it's
- very rare for language performance to be the bottleneck: communication
- with a database server, for example, is orders of magnitude slower.
- Don't 
-\begin_inset Quotes eld
-\end_inset
-
-drop down
-\begin_inset Quotes erd
-\end_inset
-
- to Java in order to optimize unless you've really confirmed that language
- performance is a problem.
-\end_layout
-
-\begin_layout Itemize
-Prudence's manual resources are not merely dynamic-language implementations
- of ServerResource, but they also provide extra features, such as integrated
- 
-\bar under
-server-side caching (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "caching"
-
-\end_inset
-
-)
-\bar default
-.
- If you switch to Java, you would have to implement such features on your
- own.
-\end_layout
-
 \begin_layout Subsection
 Template Resources
 \begin_inset CommandInset label
@@ -12036,17 +12047,787 @@ name "template-resources"
 
 \end_layout
 
+\begin_layout Subsubsection
+Configuration
+\end_layout
+
 \begin_layout Standard
-Must be mapped.
- In the future may be dispatched.
+Add support for template resources using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+templates
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "templates-route-type"
+
+\end_inset
+
+)
+\bar default
+ in your routing.js, mapping it to a URI template ending in a wildcard:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': 'templates'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The default configuration for 
+\begin_inset Quotes eld
+\end_inset
+
+templates
+\begin_inset Quotes erd
+\end_inset
+
+ will map all files from your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/resources/
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory with the 
+\begin_inset Quotes eld
+\end_inset
+
+.t.
+\begin_inset Quotes erd
+\end_inset
+
+ pre-extension.
+\end_layout
+
+\begin_layout Standard
+General configuration for templates is in 
+\bar under
+setting.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-templates"
+
+\end_inset
+
+)
+\bar default
+, as are the general configuration for 
+\bar under
+code (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
 Scriptlets
 \end_layout
 
+\begin_layout Standard
+By default, you can use either 
+\begin_inset Quotes eld
+\end_inset
+
+<%\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+ (ASP/JSP-style) or 
+\begin_inset Quotes eld
+\end_inset
+
+<?\SpecialChar \ldots{}
+?>
+\begin_inset Quotes erd
+\end_inset
+
+ (PHP-style) scriptlet delimiters in your templates.
+ Note that you can only use one or the other, though, in the same template.
+\end_layout
+
+\begin_layout Standard
+The entire template is turned into a single program (or several programs
+ if you are mixing languages: more on that below): the code between the
+ delimiters is output as-is to the program, while the rest will be printed
+ out.
+ For example, the following template:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% for (var x = 0; x < 10; x++) { %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>This is a "line"</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% } %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Will become the following program behind the scenes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+for (var x = 0; x < 10; x++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+print("<p>This is a 
+\backslash
+"line
+\backslash
+"</p>")
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can see the programs generated behind the scenes by enabling 
+\bar under
+debug mode (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-templates"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Quote
+It's important to emphasize that 
+\emph on
+any 
+\emph default
+code can be used in templates: you can import libraries, define functions
+ and classes, etc.
+ It's up to you to decide how much and what kind of programming logic to
+ use in templates.
+ There are indeed strict coding disciplines, such as MVC, that forbid anything
+ but visual logic in template.
+ See the 
+\bar under
+MVC chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
+\end_layout
+
+\begin_layout Subsubsection
+Shortcuts
+\end_layout
+
+\begin_layout Standard
+There are also a few useful shortcut scriptlets.
+ For example, to output an expression:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%= x*2 %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above is equivalent to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% print(x*2) %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also useful is the inclusion scriptlet:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%& '/header/' %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The above is equivalent to:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% document.include('/header/') %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A shortcut to print out 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.base"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.base"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%.%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A few other special scriptlets are introduced below, under 
+\begin_inset Quotes eld
+\end_inset
+
+inheritance.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Fragments
+\begin_inset CommandInset label
+LatexCommand label
+name "template-resources-fragments"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can compose your templates out of reusable 
+\begin_inset Quotes eld
+\end_inset
+
+fragments
+\begin_inset Quotes erd
+\end_inset
+
+ by placing them in the 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/includes/
+\begin_inset Quotes erd
+\end_inset
+
+ directory, and then including them in other templates using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.include API"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.include"
+
+\end_inset
+
+ or the 
+\begin_inset Quotes eld
+\end_inset
+
+<%&\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+ shortcut.
+ For example, we can create this fragment in 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/includes/lists/simple.t.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<li><%= line %></li>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And then use it like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% for (int l in lines) { var line = lines[l] %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%& '/lists/simple/' %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% } %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Fragment's don't have to include scriptlets: they can be purely textual
+ reusable.
+ On the other hand, they can contain sophisticated code.
+\end_layout
+
+\begin_layout Quote
+Fragments in Prudence are not merely 
+\begin_inset Quotes eld
+\end_inset
+
+server-side includes
+\begin_inset Quotes erd
+\end_inset
+
+: in fact, each fragment is cached separately, with its own cache key and
+ cache duration.
+ This allows you to create sophisticated and extremely efficient fine-grained
+ caching strategies.
+ See the 
+\bar under
+caching chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "external-requests-timeout"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Blocks and Inheritance
+\begin_inset CommandInset label
+LatexCommand label
+name "template-resources-blocks-and-Inheritance"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This feature is related to fragments, and can be understood as its inverse:
+ rather than inserting a fragment into the current location using 
+\begin_inset Quotes eld
+\end_inset
+
+<%&\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+, you define blocks that will be inserted into a template.
+\end_layout
+
+\begin_layout Standard
+This all handled via special scriptlets for blocks.
+ As an example, let's define a block and then include the actual template:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%{ title %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<h1>My Title</h1>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%}%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%& '/main/' %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The block is enclosed in 
+\begin_inset Quotes eld
+\end_inset
+
+<%{\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+<%}%>
+\begin_inset Quotes erd
+\end_inset
+
+ scriptlets.
+ In the opening scriptlet, you must provide the block's name.
+\end_layout
+
+\begin_layout Standard
+Now, let's see the actual template, in 
+\begin_inset Quotes eld
+\end_inset
+
+/includes/main.t.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%== title %>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+<%==\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+ scriptlet is a a shortcut to print any 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.local"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.local"
+
+\end_inset
+
+: indeed, our block was simply a temporary capturing of output into a conversati
+on.local.
+ Behind the scenes, blocks are simply calls to 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.startCapture"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.startCapture"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.endCapture"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.endCapture"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+But what if you want to give the block a default value in the actual template?
+ There are special scriptlets for that, too.
+ Let's change our 
+\begin_inset Quotes eld
+\end_inset
+
+main.t.html
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%[ title %><h1>Default Title<%]%>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+<%[\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+<%]%>
+\begin_inset Quotes erd
+\end_inset
+
+ scriptlets also define blocks, except that they are conditional: the code
+ between them will not be executed if the conversation.local is already defined.
+ If it 
+\emph on
+is
+\emph default
+ defined, then it will simply be printed out.
+\end_layout
+
+\begin_layout Standard
+Using all these special scriptlets together, you can achieve powerful template
+ 
+\begin_inset Quotes eld
+\end_inset
+
+inheritance
+\begin_inset Quotes erd
+\end_inset
+
+: your 
+\begin_inset Quotes eld
+\end_inset
+
+main.t.html
+\begin_inset Quotes erd
+\end_inset
+
+ can be your 
+\begin_inset Quotes eld
+\end_inset
+
+base
+\begin_inset Quotes erd
+\end_inset
+
+ template, which you can 
+\begin_inset Quotes eld
+\end_inset
+
+inherit
+\begin_inset Quotes erd
+\end_inset
+
+ while overriding any of its blocks, by defining them before inclusion of
+ the template.
+\end_layout
+
 \begin_layout Subsubsection
 Choice of Programming Language
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsubsection
@@ -12060,6 +12841,10 @@ name "templating-languages"
 
 \end_layout
 
+\begin_layout Standard
+TODO
+\end_layout
+
 \begin_layout Subsubsection
 Markup Languages
 \begin_inset CommandInset label
@@ -12069,6 +12854,10 @@ name "markup-languages"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+TODO
 \end_layout
 
 \begin_layout Subsubsection
@@ -12092,343 +12881,6 @@ Scriptlet Plugins
 \begin_inset CommandInset label
 LatexCommand label
 name "scriptlet-plugins"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-On-the-Fly Template Resources
-\begin_inset CommandInset label
-LatexCommand label
-name "on-the-fly-template-resources"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You can add support for on-the-fly template resources to your application
- via the 
-\bar under
-
-\begin_inset Quotes eld
-\end_inset
-
-execute
-\begin_inset Quotes erd
-\end_inset
-
- route type (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "execute-route-type"
-
-\end_inset
-
-)
-\bar default
-.
- This powerful (and dangerous) resource executes all POST payloads as if
- they were template resources in the application, and is very useful for
- 
-\bar under
-debugging (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "live-execution"
-
-\end_inset
-
-)
-\bar default
- and maintenance.
-\end_layout
-
-\begin_layout Standard
-To install it, modify your application's routing.js and create a route for
- the 
-\begin_inset Quotes eld
-\end_inset
-
-execute
-\begin_inset Quotes erd
-\end_inset
-
- type:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-app.routes = {
-\end_layout
-
-\begin_layout Plain Layout
-
-	...
-\end_layout
-
-\begin_layout Plain Layout
-
-	'/execute/': 'execute'
-\end_layout
-
-\begin_layout Plain Layout
-
-}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Quote
-Because it allows execution of arbitrary code, you very likely do not want
- its URL publicly exposed.
- If you use it, make sure to protect its URL on publicly available machines!
-\end_layout
-
-\begin_layout Standard
-Example use with 
-\begin_inset CommandInset href
-LatexCommand href
-name "cURL"
-target "http://curl.haxx.se/"
-
-\end_inset
-
- command line:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-curl --verbose --data '<% println(1+2) %>' http://localhost:8080/myapp/execute/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that if you use cURL with a file, you need to send it as binary, otherwise
- curl will strip your newlines:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-curl --verbose --data-binary @myscriptfile http://localhost:8080/myapp/execute/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Where 
-\begin_inset Quotes eld
-\end_inset
-
-myscriptfile
-\begin_inset Quotes erd
-\end_inset
-
- could be something like this:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-document.require('/sincerity/templates/')
-\end_layout
-
-\begin_layout Plain Layout
-
-println(Hello, {0}'.cast('Linus'))
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Almost all the usual template resource APIs work (with the exception of
- caching, which isn't supported):
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-document.require('/sincerity/templates/')
-\end_layout
-
-\begin_layout Plain Layout
-
-var name = conversation.query.get('name') || 'Linus'
-\end_layout
-
-\begin_layout Plain Layout
-
-println('Hello, {0}'.cast(name))
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-For the above, you could then POST with a query param:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-curl --verbose --data-binary @myscriptfile 'http://localhost:8080/myapp/execute/
-?name=Richard'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Note that you can, as usual, use scriptlets in any supported programming
- language:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%python
-\end_layout
-
-\begin_layout Plain Layout
-
-name = conversation.query['name'] or 'Linus'
-\end_layout
-
-\begin_layout Plain Layout
-
-print 'Hello, %s' % name
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Also note that the default response MIME type is 
-\begin_inset Quotes eld
-\end_inset
-
-text/plain
-\begin_inset Quotes erd
-\end_inset
-
-, but you can modify it with the 
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation.mediaType APIs"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<%
-\end_layout
-
-\begin_layout Plain Layout
-
-document.require('/sincerity/json/')
-\end_layout
-
-\begin_layout Plain Layout
-
-conversation.mediaTypeName = 'application/json'
-\end_layout
-
-\begin_layout Plain Layout
-
-println(Sincerity.JSON.to({greeting: 'Hello'}, true))
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
 
 \end_inset
 
@@ -13957,7 +14409,7 @@ reference "why-less"
 
 )
 \bar default
- as to why Prudence supports LESS or SASS.
+ as to why Prudence supports LESS but not SASS.
 \end_layout
 
 \begin_layout Subsubsection
@@ -14112,6 +14564,427 @@ app.routes = {
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+On-the-Fly Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "on-the-fly-resources"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can add support for on-the-fly template resources to your application
+ via the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "execute-route-type"
+
+\end_inset
+
+)
+\bar default
+.
+ This powerful (and dangerous) resource executes all POST payloads as if
+ they were template resources in the application, and is very useful for
+ 
+\bar under
+debugging (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "live-execution"
+
+\end_inset
+
+)
+\bar default
+ and maintenance.
+\end_layout
+
+\begin_layout Standard
+To install it, modify your application's routing.js and create a route for
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+execute
+\begin_inset Quotes erd
+\end_inset
+
+ type:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/execute/': 'execute'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+Because it allows execution of arbitrary code, you very likely do not want
+ its URL publicly exposed.
+ If you use it, make sure to protect its URL on publicly available machines!
+\end_layout
+
+\begin_layout Standard
+Example use with 
+\begin_inset CommandInset href
+LatexCommand href
+name "cURL"
+target "http://curl.haxx.se/"
+
+\end_inset
+
+ command line:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --verbose --data '<% println(1+2) %>' http://localhost:8080/myapp/execute/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if you use cURL with a file, you need to send it as binary, otherwise
+ curl will strip your newlines:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --verbose --data-binary @myscriptfile http://localhost:8080/myapp/execute/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Quotes eld
+\end_inset
+
+myscriptfile
+\begin_inset Quotes erd
+\end_inset
+
+ could be something like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/templates/')
+\end_layout
+
+\begin_layout Plain Layout
+
+println(Hello, {0}'.cast('Linus'))
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Almost all the usual template resource APIs work (with the exception of
+ caching, which isn't supported):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/templates/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var name = conversation.query.get('name') || 'Linus'
+\end_layout
+
+\begin_layout Plain Layout
+
+println('Hello, {0}'.cast(name))
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For the above, you could then POST with a query param:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --verbose --data-binary @myscriptfile 'http://localhost:8080/myapp/execute/
+?name=Richard'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that you can, as usual, use scriptlets in any supported programming
+ language:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%python
+\end_layout
+
+\begin_layout Plain Layout
+
+name = conversation.query['name'] or 'Linus'
+\end_layout
+
+\begin_layout Plain Layout
+
+print 'Hello, %s' % name
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also note that the default response MIME type is 
+\begin_inset Quotes eld
+\end_inset
+
+text/plain
+\begin_inset Quotes erd
+\end_inset
+
+, but you can modify it with the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.mediaType APIs"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.mediaType"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/json/')
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.mediaTypeName = 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+println(Sincerity.JSON.to({greeting: 'Hello'}, true))
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Java Resources
+\begin_inset CommandInset label
+LatexCommand label
+name "java-resources"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You may prefer to implement some of your manual resources directly in Java,
+ by inheriting 
+\begin_inset CommandInset href
+LatexCommand href
+name "ServerResource"
+target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/resource/ServerResource.html"
+
+\end_inset
+
+, or perhaps you are relying a JVM library that already comes with such
+ resources.
+ To use them, set them up in your routing.js via the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+resource
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-route-type"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Some notes:
+\end_layout
+
+\begin_layout Itemize
+Sure, Java can offer better performance than dynamic languages, but it's
+ very rare for language performance to be the bottleneck: communication
+ with a database server, for example, is orders of magnitude slower.
+ Don't 
+\begin_inset Quotes eld
+\end_inset
+
+drop down
+\begin_inset Quotes erd
+\end_inset
+
+ to Java in order to optimize unless you've really confirmed that language
+ performance is a problem.
+\end_layout
+
+\begin_layout Itemize
+Prudence's manual resources are not merely dynamic-language implementations
+ of ServerResource, but they also provide extra features, such as integrated
+ 
+\bar under
+server-side caching (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching"
+
+\end_inset
+
+)
+\bar default
+.
+ If you switch to Java, you would have to implement such features on your
+ own.
 \end_layout
 
 \begin_layout Subsection
@@ -24039,7 +24912,7 @@ See the
 on-the-fly template resources (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "on-the-fly-template-resources"
+reference "on-the-fly-resources"
 
 \end_inset
 
@@ -24160,10 +25033,10 @@ Purpose and Architecture
 \end_layout
 
 \begin_layout Standard
-Prudence is a platform for REST services, such as web pages and RESTful
- APIs.
- Node.js is a platform for asynchronous services, such as streaming video
- and audio servers.
+Prudence is a comprehensive platform for REST services, such as web pages
+ and RESTful APIs.
+ Node.js is a minimalist platform for asynchronous services, such as streaming
+ video and audio servers.
  These are 
 \emph on
 very

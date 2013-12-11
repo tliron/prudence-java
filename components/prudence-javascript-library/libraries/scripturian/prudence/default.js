@@ -642,15 +642,15 @@ var Prudence = {}
  * Redirects the output of the scriptlet resource to a {@link conversation#locals} string variable.
  * Redirection will continue until {@link document#endCapture} is called.
  * <p>
- * Calling this API is identical to using the "&lt;%{{ .. %&gt;" Scripturian tag.
+ * Calling this API is identical to using the "&lt;%{ .. %&gt;" Scripturian tag.
  * <p>
  * Captures are very useful for creating page templates: first all the different blocks can be captured,
  * and then they can be assembled together using "&lt;%== .. %&gt;" tags.
  * For example:
  * <pre>
- * &lt;%{{ title }}%&gt;
+ * &lt;%{ title %&gt;
  * This is my title!
- * &lt;%}}%&gt;
+ * &lt;%}%&gt;
  * 
  * &lt;h1&gt;&lt;== title %&gt;&lt;/h1&gt;
  * </pre>
@@ -665,7 +665,7 @@ var Prudence = {}
 /**
  * See {@link document#startCapture}.
  * <p>
- * Calling this API is identical to using the "&lt;%}}%&gt;" Scripturian tag, though when used as
+ * Calling this API is identical to using the "&lt;%}%&gt;" Scripturian tag, though when used as
  * a tag use the return value is discarded.
  * <p>
  * <i>Availability: only available for scriptlet resources.</i>
