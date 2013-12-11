@@ -1,17 +1,17 @@
 
-/* Colors */
+// Colors
 
 @status: #505050;
 @error: #FF0000;
 @recaptcha: #D0D0D0;
 
-/* Proportions */
+// Proportions
 
 @centerpiece-width: 550px;
 @centerpiece-margin: 20px;
 
 @form-padding: 10px;
-@input-width: 312px; /* to match recaptcha width */ 
+@input-width: 312px; // to match recaptcha width 
 @button-width: 150px;
 
 @recaptcha-width: 800px;
@@ -52,7 +52,7 @@ div.centerpiece {
 		}
 		div.error {
 			color: @error;
-			margin-left: @eval(@label-width + @form-padding);
+			margin-left: @label-width + @form-padding;
 		}
 	}
 	
@@ -61,7 +61,7 @@ div.centerpiece {
 		padding-bottom: 20px;
 		input {
 			width: @button-width;
-			margin-left: @eval(@centerpiece-width - @button-width - @centerpiece-margin);
+			margin-left: @centerpiece-width - @button-width - @centerpiece-margin;
 		}
 	}
 
@@ -86,11 +86,9 @@ div.centerpiece {
 #recaptcha {
 	overflow: auto;
 	width: @recaptcha-width;
-	margin: {
-		left: auto;
-		right: auto;
-		top: 10px;
-	}
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
 	background-color: @recaptcha;
 	color: black;
 	text-align: center;

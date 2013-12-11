@@ -2121,6 +2121,97 @@ Prudence.Setup = Prudence.Setup || function() {
 	}(Public))
 
 	/**
+	 * A powerful filter that compiles <a href="http://lesscss.org/">LESS</a>
+	 * files to CSS and optionally minifies them on demand. LESS is a powerful CSS meta-language, similar to
+	 * <a href="http://sass-lang.com/">Sass</a>, that can greatly
+	 * improve the clarity and reusability of your CSS.
+	 * <p>
+	 * By default, LESS files are expected to be found under the "/resources/style/"
+	 * subdirectory of your application, as well as the "/libraries/web/style/" subdirectory
+	 * of your Sincerity container. These locations can be changed via the "roots" param.
+	 * <p>
+	 * Note that the first entry in the "roots" is special: it is where the compiled/minified files
+	 * will be stored.
+	 * <p>
+	 * This class works by intercepting requested URIs. If the URI ends in ".css", then it will
+	 * attempt to find a file with the same name but with a ".less" extension. If found, it will
+	 * be compiled to ".css". If the URI ends in ".css.min", then it will compile and then
+	 * minify the resulting CSS. After doing this work, the request will continue
+	 * to the route type specified by the "next" param.
+	 * <p>
+	 * For the resulting file to actually be served to the client, you will likely want a
+	 * {@link Prudence.Setup.Static} nested in "next". 
+	 * <p>
+	 * Once a ".css" or ".css.min" is created by this filter, it will not be recreated unless the source file
+	 * has changed. Change is tracked according to the timestamp of files.
+	 * <p>
+	 * Implementation note: Internally handled by a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/LessFilter.html">LessFilter</a> instance.
+	 * Compression is done via <a href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
+	 * 
+	 * @class
+	 * @name Prudence.Setup.Less
+	 * @augments Prudence.Setup.Restlet
+	 * 
+	 * @param config
+	 * @param {String[]} config.roots The root directories
+	 * @param {com.github.sommeri.less4j.LessCompiler} [compiler=new com.github.sommeri.less4j.core.DefaultLessCompiler()] The compiler
+	 * @param {Object} config.next The next route configuration
+	 * @see Prudence.Setup.CssUnifyMinify
+	 */
+	Public.Less = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Setup.Less */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['roots', 'next' ,'compiler']
+
+		Public.create = function(app, uri) {
+			importClass(
+				com.threecrickets.prudence.util.LessFilter,
+				java.io.File)
+   
+			this.roots = Sincerity.Objects.array(this.roots)
+			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
+				this.roots = [Sincerity.Files.build(app.root, 'resources', 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+			}
+			var target = this.roots[0]
+			if (!(target instanceof File)) {
+				target = Sincerity.Files.build(app.root, target)
+			}
+
+			this.next = app.createRestlet(this.next, uri)
+			var filter
+			if (Sincerity.Objects.exists(this.compiler)) {
+				filter = new LessFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks, this.compiler)
+			}
+			else {
+				filter = new LessFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks)
+			}
+			
+			if (sincerity.verbosity >= 2) {
+				println('    LESS: "{0}"'.cast(sincerity.container.getRelativePath(target)))
+			}
+			for (var r in this.roots) {
+				var root = this.roots[r]
+				if (!(root instanceof File)) {
+					root = Sincerity.Files.build(app.root, root)
+				}
+				filter.sourceDirectories.add(root)
+				if (sincerity.verbosity >= 2) {
+					println('      Directory: "{0}"'.cast(sincerity.container.getRelativePath(root)))
+				}
+			}
+			
+			return filter
+		}
+		
+		return Public
+	}(Public))
+
+	/**
 	 * A powerful filter that compiles <a href="https://github.com/tomyeh/ZUSS">ZUSS</a>
 	 * files to CSS and optionally minifies them on demand. ZUSS is a powerful CSS meta-language, similar to
 	 * <a href="http://lesscss.org/">LESS</a> and <a href="http://sass-lang.com/">Sass</a>, that can greatly
@@ -2185,14 +2276,14 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.next = app.createRestlet(this.next, uri)
 			var filter
 			if (Sincerity.Objects.exists(this.resolver)) {
-				filter = new ZussFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks, resolver)
+				filter = new ZussFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks, this.resolver)
 			}
 			else {
 				filter = new ZussFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks)
 			}
 			
 			if (sincerity.verbosity >= 2) {
-				println('    Zuss: "{0}"'.cast(sincerity.container.getRelativePath(target)))
+				println('    ZUSS: "{0}"'.cast(sincerity.container.getRelativePath(target)))
 			}
 			for (var r in this.roots) {
 				var root = this.roots[r]

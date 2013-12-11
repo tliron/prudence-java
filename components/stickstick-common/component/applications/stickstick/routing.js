@@ -11,7 +11,7 @@ app.routes = {
 				'application/x-javascript': 'farFuture'
 			},
 			next: {
-				type: 'zuss',
+				type: 'less',
 				next: 'static'
 			}
 		}

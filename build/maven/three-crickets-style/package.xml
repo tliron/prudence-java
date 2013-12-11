@@ -23,7 +23,7 @@
 			</excludes>
 		</fileSet>
 		<fileSet>
-			<directory>@ROOT/build/cache/three-crickets-style</directory>
+			<directory>@ROOT@/build/cache/three-crickets-style</directory>
 			<outputDirectory>.</outputDirectory>
 			<includes>
 				<include>**</include>

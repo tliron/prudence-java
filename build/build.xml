@@ -34,6 +34,39 @@
 	
 	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpath="${dependencies}/libraries/jars/org.apache.ivy/ivy/${ivy.version}/ivy.jar" />
 
+	<macrodef name="less4j">
+		<attribute name="src" />
+		<attribute name="css" />
+		<sequential>
+			<java classname="com.github.sommeri.less4j.commandline.CommandLine">
+				<classpath>
+					<file file="${dependencies}/libraries/jars/com.github.sommeri/less4j/${less4j.version}/less4j.jar" />
+					<file file="${dependencies}/libraries/jars/com.beust/jcommander/${jcommander.version}/jcommander.jar" />
+					<file file="${dependencies}/libraries/jars/org.antlr/antlr-runtime/${antlr.version}/antlr-runtime.jar" />
+					<file file="${dependencies}/libraries/jars/org.apache.commons/commons-io/${commons-io.version}/commons-io.jar" />
+					<file file="${dependencies}/libraries/jars/org.apache.commons/commons-beanutils/${commons-beanutils.version}/commons-beanutils.jar" />
+					<file file="${dependencies}/libraries/jars/org.apache.commons/commons-logging/${commons-logging.version}/commons-logging.jar" />
+				</classpath>
+				<arg value="@{src}" />
+				<arg value="@{css}" />
+			</java>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="zuss">
+		<attribute name="src" />
+		<attribute name="css" />
+		<sequential>
+			<java
+				classpath="${dependencies}/libraries/jars/org.zkoss.zuss/zuss/${zuss.version}/zuss.jar"
+				classname="org.zkoss.zuss.Zuss">
+				<arg value="-o" />
+				<arg value="@{src}" />
+				<arg value="@{css}" />
+			</java>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="googledrive">
 		<attribute name="suffix" />
 		<sequential>
@@ -170,14 +203,14 @@
 	</target>
 
 	<target name="css" description="Create CSS">
-		<mkdir dir="${cache.css}" />
-		<java
-			classpath="${dependencies}/libraries/jars/org.zkoss.zuss/zuss/${zuss.version}/zuss.jar"
-			classname="org.zkoss.zuss.Zuss">
-			<arg value="-o" />
-			<arg value="${component.three-crickets-style}/libraries/web/style/three-crickets/soft-cricket.zuss" />
-			<arg value="${cache.css}/soft-cricket-original.css" />
-		</java>
+		<mkdir dir="${cache.css}/dark-cricket" />
+		<less4j
+			src="${component.three-crickets-style}/libraries/web/style/three-crickets/dark-cricket/dark-cricket.less"
+			css="${cache.css}/dark-cricket/dark-cricket.original.css" />
+		<mkdir dir="${cache.css}/soft-cricket" />
+		<less4j
+			src="${component.three-crickets-style}/libraries/web/style/three-crickets/soft-cricket/soft-cricket.less"
+			css="${cache.css}/soft-cricket/soft-cricket.original.css" />
 	</target>
 
 	<target name="libraries" depends="classes, version" description="Create jar">

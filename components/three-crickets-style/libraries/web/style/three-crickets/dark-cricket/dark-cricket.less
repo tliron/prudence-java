@@ -1,12 +1,14 @@
-/***********************
- *  Dark Cricket 1.02  *
- *                     *
- *    By: Tal Liron    *
- **********************/
+// ************************
+// *  Dark Cricket 1.1.0  *
+// *                      *
+// *    By: Tal Liron     *
+// ************************
 
-@include three-crickets/dark-cricket/_common.zuss;
+@import '_common';
 
-/* Colors */
+//
+// Colors
+//
 
 @fringe: #222;
 @paper: #ffffff;
@@ -20,25 +22,29 @@
 @navigation-background: #89866F;
 @navigation-heading: #FFE;
 
-/* Font sizes */
+//
+// Font sizes
+//
 
 @font-size: 15px;
 @pre-font-size: 13px;
 @navigation-font-size: 13px;
 
-/* Navigation */
+//
+// Navigation
+//
 
 @navigation-width: 210px;
 @navigation-indent: 30px;
 @navigation-highlight: 10px;
 
-/**********
- * Layout *
- **********/
+//
+// Layout
+//
 
 body {
-	margin: 0px 8px; /* To counteract Ext JS css */
-	background: url(../../../media/three-crickets/dark-cricket/background.png); /* From: http://www.eosdev.com/Backgrounds/Back_Tilework/EosTilework2h.htm */
+	margin: 0px 8px; // To counteract Ext JS css
+	background: url(../../../media/three-crickets/dark-cricket/background.png); // From: http://www.eosdev.com/Backgrounds/Back_Tilework/EosTilework2h.htm
 	font-family: @sans-serif !important;
 	font-size: @font-size !important;
 }
@@ -58,7 +64,7 @@ div#main-content {
 
 table.soft {
 	border-spacing: 0px;
-	border-collapse: separate; /* To counteract Ext JS css */
+	border-collapse: separate; // To counteract Ext JS css
 	> tbody {
 		> tr {
 			> td {
@@ -68,12 +74,12 @@ table.soft {
 	}
 }
 
-/*************
- * Main Text *
- *************/
+//
+// Main Text
+//
 
 p {
-	margin: 12px 0px; /* To counteract Ext JS css */
+	margin: 12px 0px; // To counteract Ext JS css
 }
 p, ul, li, div.Indented, div.Unindented, blockquote.Quote {
 	font-size: @font-size;
@@ -83,7 +89,7 @@ div.Indented + div.Indented, div.Unindented + div.Indented, div.Indented + div.U
 	margin-top: 14px;
 }
 
-/* To counteract Ext JS css */
+// To counteract Ext JS css
 div#main-content {
 	ol {
 		-moz-padding-start: 40px;
@@ -101,9 +107,9 @@ div#main-content {
 	}
 }
 
-/***********
- * Headers *
- ***********/
+//
+// Headers
+//
 
 h1 {
 	color: @heading;
@@ -119,7 +125,7 @@ h2 {
 	font-size: @font-size + 10px;
 	font-style: italic;
 	margin-top: 42px;
-	margin-bottom: 18px; /* To counteract Ext JS css */
+	margin-bottom: 18px; // To counteract Ext JS css
 }
 
 h3 {
@@ -127,7 +133,7 @@ h3 {
 	font-family: @serif;
 	font-size: @font-size + 2px;
 	margin-top: 28px;
-	margin-bottom: 14px; /* To counteract Ext JS css */
+	margin-bottom: 14px; // To counteract Ext JS css
 }
 
 h4, div.Paragraph {
@@ -136,13 +142,13 @@ h4, div.Paragraph {
 	margin-bottom: 6px;
 }
 
-/***************
- * Text Blocks *
- ***************/
+//
+// Text Blocks
+//
 
 pre {
-	@pre-wrap();
-	@tab-size(4);
+	.pre-wrap();
+	.tab-size(4);
 	border: 1px dashed black;
 	font-size: @pre-font-size;
 	background-color: white;
@@ -159,15 +165,15 @@ pre {
 }
 
 .result {
-	@pre-wrap();
-	@tab-size(4);
+	.pre-wrap();
+	.tab-size(4);
 	width: 200px;
 	overflow: auto;
 }
 
-/**********
- * Breaks *
- **********/
+//
+// Breaks
+//
 
 div.hr {
 	height: 57px;
@@ -179,9 +185,9 @@ div.hr {
 	}
 }
 
-/*********
- * Links *
- *********/
+//
+// Links
+//
 
 a {
 	text-decoration: none;
@@ -213,9 +219,9 @@ a.neutral {
 	}
 }
 
-/**********
- * Tables *
- **********/
+//
+// Tables
+//
 
 table.grid {
 	width: 100%;
@@ -229,5 +235,5 @@ table.grid {
 	}
 }
 
-@include three-crickets/dark-cricket/_navigation.zuss;
-@include three-crickets/dark-cricket/_forms.zuss;
+@import '_navigation';
+@import '_forms';

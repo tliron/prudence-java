@@ -12,17 +12,12 @@
 package com.threecrickets.prudence.util;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -35,19 +30,19 @@ import org.restlet.Restlet;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.routing.Filter;
-import org.zkoss.zuss.Locator;
-import org.zkoss.zuss.Resolver;
-import org.zkoss.zuss.Zuss;
-import org.zkoss.zuss.impl.out.BuiltinResolver;
-import org.zkoss.zuss.metainfo.ZussDefinition;
 
+import com.github.sommeri.less4j.Less4jException;
+import com.github.sommeri.less4j.LessCompiler;
+import com.github.sommeri.less4j.LessCompiler.CompilationResult;
+import com.github.sommeri.less4j.core.DefaultLessCompiler;
 import com.threecrickets.prudence.internal.CSSMin;
 import com.threecrickets.scripturian.internal.ScripturianUtil;
 
 /**
  * A {@link Filter} that automatically parses <a
- * href="https://github.com/tomyeh/ZUSS">ZUSS</a> code and renders CSS. Also
- * supports minifying files, if the ".min.css" extension is used. See
+ * href="http://lesscss.org/">LESS</a> code and renders CSS using the <a
+ * href="https://github.com/SomMeri/less4j">Less4j</a> library. Also supports
+ * minifying files, if the ".min.css" extension is used. See
  * {@link CssUnifyMinifyFilter}.
  * <p>
  * This filter can track changes to the source files, updating the result file
@@ -58,14 +53,14 @@ import com.threecrickets.scripturian.internal.ScripturianUtil;
  * 
  * @author Tal Liron
  */
-public class ZussFilter extends Filter implements Locator
+public class LessFilter extends Filter
 {
 	//
 	// Construction
 	//
 
 	/**
-	 * Constructor using {@link BuiltinResolver}.
+	 * Constructor using {@link DefaultLessCompiler}.
 	 * 
 	 * @param context
 	 *        The context
@@ -76,9 +71,9 @@ public class ZussFilter extends Filter implements Locator
 	 * @param minimumTimeBetweenValidityChecks
 	 *        See {@link #getMinimumTimeBetweenValidityChecks()}
 	 */
-	public ZussFilter( Context context, Restlet next, File targetDirectory, long minimumTimeBetweenValidityChecks )
+	public LessFilter( Context context, Restlet next, File targetDirectory, long minimumTimeBetweenValidityChecks )
 	{
-		this( context, next, targetDirectory, minimumTimeBetweenValidityChecks, new BuiltinResolver() );
+		this( context, next, targetDirectory, minimumTimeBetweenValidityChecks, new DefaultLessCompiler() );
 	}
 
 	/**
@@ -92,15 +87,15 @@ public class ZussFilter extends Filter implements Locator
 	 *        The directory into which CSS results should be written
 	 * @param minimumTimeBetweenValidityChecks
 	 *        See {@link #getMinimumTimeBetweenValidityChecks()}
-	 * @param resolver
-	 *        The ZUSS resolver
+	 * @param lessCompiler
+	 *        The LESS compiler
 	 */
-	public ZussFilter( Context context, Restlet next, File targetDirectory, long minimumTimeBetweenValidityChecks, Resolver resolver )
+	public LessFilter( Context context, Restlet next, File targetDirectory, long minimumTimeBetweenValidityChecks, LessCompiler lessCompiler )
 	{
 		super( context, next );
 		this.targetDirectory = targetDirectory;
 		this.minimumTimeBetweenValidityChecks = minimumTimeBetweenValidityChecks;
-		this.resolver = resolver;
+		this.lessCompiler = lessCompiler;
 		describe();
 	}
 
@@ -146,11 +141,11 @@ public class ZussFilter extends Filter implements Locator
 	//
 
 	/**
-	 * Translate ZUSS to CSS, only if the ZUSS source is newer. Can optionally
+	 * Translate LESS to CSS, only if the LESS source is newer. Can optionally
 	 * minify the CSS, too.
 	 * 
-	 * @param zussFile
-	 *        The ZUSS source file
+	 * @param lessFile
+	 *        The LESS source file
 	 * @param cssFile
 	 *        The CSS target file (will be overwritten)
 	 * @param minify
@@ -159,12 +154,12 @@ public class ZussFilter extends Filter implements Locator
 	 *         In case of a reading, writing or translation error
 	 * @see CSSMin
 	 */
-	public void translate( File zussFile, File cssFile, boolean minify ) throws IOException
+	public void translate( File lessFile, File cssFile, boolean minify ) throws IOException
 	{
 		cssFile = IoUtil.getUniqueFile( cssFile );
 		synchronized( cssFile )
 		{
-			long lastModified = zussFile.lastModified();
+			long lastModified = lessFile.lastModified();
 			if( lastModified == cssFile.lastModified() )
 				return;
 
@@ -173,23 +168,22 @@ public class ZussFilter extends Filter implements Locator
 					throw new IOException( "Could not delete file: " + cssFile );
 			cssFile.getParentFile().mkdirs();
 
-			BufferedReader reader = new BufferedReader( new FileReader( zussFile ) );
 			try
 			{
 				if( minify )
-					getLogger().info( "Translating and minifying ZUSS: \"" + zussFile + "\" into file \"" + cssFile + "\"" );
+					getLogger().info( "Translating and minifying LESS: \"" + lessFile + "\" into file \"" + cssFile + "\"" );
 				else
-					getLogger().info( "Translating ZUSS: \"" + zussFile + "\" into file \"" + cssFile + "\"" );
+					getLogger().info( "Translating LESS: \"" + lessFile + "\" into file \"" + cssFile + "\"" );
 
-				ZussDefinition zussDefinition = Zuss.parse( reader, this, zussFile.getName() );
+				CompilationResult result = lessCompiler.compile( lessFile );
+				String css = result.getCss();
+
 				if( minify )
 				{
-					StringWriter writer = new StringWriter();
-					Zuss.translate( zussDefinition, writer, resolver );
 					BufferedOutputStream output = new BufferedOutputStream( new FileOutputStream( cssFile ) );
 					try
 					{
-						CSSMin.formatFile( new StringReader( writer.toString() ), output );
+						CSSMin.formatFile( new StringReader( css ), output );
 					}
 					finally
 					{
@@ -201,7 +195,7 @@ public class ZussFilter extends Filter implements Locator
 					BufferedWriter writer = new BufferedWriter( new FileWriter( cssFile ) );
 					try
 					{
-						Zuss.translate( zussDefinition, writer, resolver );
+						writer.write( css );
 					}
 					finally
 					{
@@ -209,9 +203,9 @@ public class ZussFilter extends Filter implements Locator
 					}
 				}
 			}
-			finally
+			catch( Less4jException x )
 			{
-				reader.close();
+				throw new IOException( "Could not compile LESS file: " + lessFile );
 			}
 
 			if( !cssFile.setLastModified( lastModified ) )
@@ -231,17 +225,17 @@ public class ZussFilter extends Filter implements Locator
 		try
 		{
 			String name = reference.getLastSegment();
-			String zussName = null;
+			String lessName = null;
 			boolean minify = false;
 			if( path.endsWith( CSS_MIN_EXTENSION ) )
 			{
-				zussName = name.substring( 0, name.length() - CSS_MIN_EXTENSION_LENGTH ) + ZUSS_EXTENSION;
+				lessName = name.substring( 0, name.length() - CSS_MIN_EXTENSION_LENGTH ) + LESS_EXTENSION;
 				minify = true;
 			}
 			else if( path.endsWith( CSS_EXTENSION ) )
-				zussName = name.substring( 0, name.length() - CSS_EXTENSION_LENGTH ) + ZUSS_EXTENSION;
+				lessName = name.substring( 0, name.length() - CSS_EXTENSION_LENGTH ) + LESS_EXTENSION;
 
-			if( zussName != null )
+			if( lessName != null )
 			{
 				long now = System.currentTimeMillis();
 				AtomicLong lastValidityCheckAtomic = getLastValidityCheck( path );
@@ -252,20 +246,20 @@ public class ZussFilter extends Filter implements Locator
 					{
 						for( File sourceDirectory : sourceDirectories )
 						{
-							File zussFile = findFile( zussName, sourceDirectory );
-							if( zussFile != null )
+							File lessFile = findFile( lessName, sourceDirectory );
+							if( lessFile != null )
 							{
-								String relativeDirectory = ScripturianUtil.getRelativeFile( zussFile, sourceDirectory ).getParent();
+								String relativeDirectory = ScripturianUtil.getRelativeFile( lessFile, sourceDirectory ).getParent();
 								File targetDirectory = relativeDirectory == null ? this.targetDirectory : new File( this.targetDirectory, relativeDirectory );
 								File cssFile = new File( targetDirectory, name );
-								translate( zussFile, cssFile, minify );
+								translate( lessFile, cssFile, minify );
 								break;
 							}
 						}
 
-						// ZUSS file was not found, so don't keep the entry for
+						// LESS file was not found, so don't keep the entry for
 						// it
-						this.lastValidityChecks.remove( zussName );
+						this.lastValidityChecks.remove( lessName );
 					}
 				}
 			}
@@ -277,18 +271,6 @@ public class ZussFilter extends Filter implements Locator
 		}
 
 		return Filter.CONTINUE;
-	}
-
-	//
-	// Locator
-	//
-
-	public Reader getResource( String name ) throws IOException
-	{
-		File file = findFile( name );
-		if( file != null )
-			return new BufferedReader( new FileReader( file ) );
-		throw new FileNotFoundException( name );
 	}
 
 	//
@@ -312,7 +294,12 @@ public class ZussFilter extends Filter implements Locator
 
 	private static final int CSS_EXTENSION_LENGTH = CSS_EXTENSION.length();
 
-	private static final String ZUSS_EXTENSION = ".zuss";
+	private static final String LESS_EXTENSION = ".less";
+
+	/**
+	 * The LESS compiler.
+	 */
+	private final LessCompiler lessCompiler;
 
 	/**
 	 * The directory into which CSS results should be written.
@@ -330,11 +317,6 @@ public class ZussFilter extends Filter implements Locator
 	private volatile long minimumTimeBetweenValidityChecks;
 
 	/**
-	 * The ZUSS resolver.
-	 */
-	private final Resolver resolver;
-
-	/**
 	 * See {@link #getMinimumTimeBetweenValidityChecks()}
 	 */
 	private final ConcurrentHashMap<String, AtomicLong> lastValidityChecks = new ConcurrentHashMap<String, AtomicLong>();
@@ -347,18 +329,7 @@ public class ZussFilter extends Filter implements Locator
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
 		setName( getClass().getSimpleName() );
-		setDescription( "A filter that automatically translates ZUSS source files to CSS" );
-	}
-
-	private File findFile( String name )
-	{
-		for( File sourceDirectory : sourceDirectories )
-		{
-			File file = findFile( name, sourceDirectory );
-			if( file != null )
-				return file;
-		}
-		return null;
+		setDescription( "A filter that automatically translates LESS source files to CSS" );
 	}
 
 	private static File findFile( String name, File dir )

@@ -1,10 +1,10 @@
-/***********************
- *  Soft Cricket 1.14  *
- *                     *
- *    By: Tal Liron    *
- **********************/
+// ************************
+// *  Soft Cricket 1.1.0  *
+// *                      *
+// *    By: Tal Liron     *
+// ************************
 
-@include three-crickets/soft-cricket/_common.zuss; 
+@import '_common'; 
 
 @fringe: #ffd8d0;
 @paper: #ffe0d9;
@@ -20,13 +20,13 @@
 @navigation-link: #333;
 @navigation-link-hover: #ffffa0;
 
-/**********
- * Layout *
- **********/
+//
+// Layout
+//
 
 body {
-	margin: 0px 8px; /* To counteract Ext JS css */
-	background: url(../../../media/three-crickets/soft-cricket/background.png); /* From: http://www.eosdev.com/Backgrounds/Back_Tilework/EosTilework2h.htm */
+	margin: 0px 8px; // To counteract Ext JS css
+	background: url(../../../media/three-crickets/soft-cricket/background.png); // From: http://www.eosdev.com/Backgrounds/Back_Tilework/EosTilework2h.htm
 	font-family: @sans-serif !important;
 	font-size: @font-size !important;
 }
@@ -43,7 +43,7 @@ div#main-content {
 
 table.soft {
 	border-spacing: 0px;
-	border-collapse: separate; /* To counteract Ext JS css */
+	border-collapse: separate; // To counteract Ext JS css
 	> tbody {
 		> tr {
 			> td {
@@ -53,12 +53,12 @@ table.soft {
 	}
 }
 
-/*************
- * Main Text *
- *************/
+//
+// Main Text
+//
 
 p {
-	margin: 12px 0px; /* To counteract Ext JS css */
+	margin: 12px 0px; // To counteract Ext JS css
 }
 p, ul, li, div.Indented, div.Unindented, blockquote.Quote {
 	font-size: @font-size;
@@ -68,7 +68,7 @@ div.Indented + div.Indented, div.Unindented + div.Indented, div.Indented + div.U
 	margin-top: 14px;
 }
 
-/* To counteract Ext JS css */
+// To counteract Ext JS css
 div#main-content {
 	ol {
 		-moz-padding-start: 40px;
@@ -86,9 +86,9 @@ div#main-content {
 	}
 }
 
-/***********
- * Headers *
- ***********/
+//
+// Headers
+//
 
 h1 {
 	font-family: @serif;
@@ -100,7 +100,7 @@ h2 {
 	font-family: @serif;
 	font-size: @font-size + 10px;
 	margin-top: 42px;
-	margin-bottom: 18px; /* To counteract Ext JS css */
+	margin-bottom: 18px; // To counteract Ext JS css
 }
 
 h3 {
@@ -108,7 +108,7 @@ h3 {
 	font-style: italic;
 	font-size: @font-size + 2px;
 	margin-top: 28px;
-	margin-bottom: 14px; /* To counteract Ext JS css */
+	margin-bottom: 14px; // To counteract Ext JS css
 }
 
 h4, div.Paragraph {
@@ -117,13 +117,13 @@ h4, div.Paragraph {
 	margin-bottom: 6px;
 }
 
-/***************
- * Text Blocks *
- ***************/
+//
+// Text Blocks
+//
 
 pre {
-	@pre();
-	@tab-size(4);
+	.pre();
+	.tab-size(4);
 	border: 1px dashed black;
 	background-color: white;
 	line-height: 140%;
@@ -139,15 +139,15 @@ pre {
 }
 
 .result {
-	@pre();
-	@tab-size(4);
+	.pre();
+	.tab-size(4);
 	width: 200px;
 	overflow: auto;
 }
 
-/**********
- * Breaks *
- **********/
+//
+// Breaks
+//
 
 div.hr {
 	height: 57px;
@@ -159,9 +159,9 @@ div.hr {
 	}
 }
 
-/*********
- * Links *
- *********/
+//
+// Links
+//
 
 a {
 	text-decoration: none;
@@ -192,9 +192,9 @@ a.neutral {
 	}
 }
 
-/****************
- * Floating TOC *
- ****************/
+//
+// Floating TOC
+//
 
 div#toc {
 	position: absolute;
@@ -216,5 +216,5 @@ div#toc {
 	}
 }
 
-@include three-crickets/soft-cricket/_navigation.zuss;
-@include three-crickets/soft-cricket/_forms.zuss;
+@import '_navigation';
+@import '_forms';
