@@ -153,7 +153,7 @@ public class DelegatedFilter extends Filter
 	@Override
 	protected int beforeHandle( Request request, Response response )
 	{
-		Object r = delegatedHandler.handle( entryPointNameForBefore );
+		Object r = delegatedHandler.handleWithConversation( entryPointNameForBefore );
 
 		if( r instanceof Number )
 			// Returned number
@@ -189,7 +189,7 @@ public class DelegatedFilter extends Filter
 	@Override
 	protected void afterHandle( Request request, Response response )
 	{
-		delegatedHandler.handle( entryPointNameForAfter );
+		delegatedHandler.handleWithConversation( entryPointNameForAfter );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

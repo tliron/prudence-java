@@ -76,7 +76,7 @@ public class DelegatedCachingKeyTemplatePlugin extends DelegatedHandler
 	 */
 	public void handleInterpolation( String[] variables )
 	{
-		handle( entryPointNameForHandleInterpolation, (Object) variables );
+		handleWithConversation( entryPointNameForHandleInterpolation, (Object) variables );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

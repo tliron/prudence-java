@@ -431,7 +431,7 @@ common.log
 To quit Prudence, press CTRL+C.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Further Exploration
 \end_layout
 
@@ -1271,7 +1271,7 @@ URL would be identical
  You'll see us constantly ending our URIs in slashes.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Further Exploration
 \end_layout
 
@@ -1866,54 +1866,6 @@ Further Exploration
 \end_layout
 
 \begin_layout Itemize
-For a real wiki you would probably want to store the wiki content in a database.
- Check out the 
-\begin_inset CommandInset href
-LatexCommand href
-name "MongoDB driver for JVM languages"
-target "http://code.google.com/p/mongodb-jvm/"
-
-\end_inset
-
-, designed to work with Sincerity/Prudence: it's especially natural to use
- 
-\begin_inset CommandInset href
-LatexCommand href
-name "MongoDB"
-target "http://www.mongodb.org/"
-
-\end_inset
-
- from JavaScript.
- And of course there's 
-\begin_inset CommandInset href
-LatexCommand href
-name "Diligence"
-target "http://threecrickets.com/diligence/"
-
-\end_inset
-
-, a comprehensive framework based on Prudence and MongoDB.
- Otherwise, relational (SQL) databases are easy to access using 
-\begin_inset CommandInset href
-LatexCommand href
-name "JDBC"
-target "http://www.oracle.com/technetwork/java/javase/jdbc/"
-
-\end_inset
-
-, which is included in the JVM platform: for a complete example, see 
-\begin_inset CommandInset href
-LatexCommand href
-name "Stickstick"
-target "http://threecrickets.com/prudence/download/#stickstick"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
 Read more about 
 \bar under
 HTML forms (page 
@@ -1993,6 +1945,337 @@ reference "mvc"
 \end_layout
 
 \begin_layout Subsection
+A Persistent Wiki
+\end_layout
+
+\begin_layout Standard
+So far in this tutorial, we've been storing the wiki data in RAM.
+ To store the data on disk, we have a vast array of options: you can use
+ any JVM database driver directly from Prudence.
+\end_layout
+
+\begin_layout Standard
+For this tutorial, we'll be using 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+: a document-oriented database with many useful features, such as atomic
+ operations, aggregation and map/reduce, and support for flexible horizontal
+ scalability configurations.
+ It uses JavaScript internally, and thus is a natural fit for web programming
+ in Prudence: you can use JavaScript on the server, JavaScript on the client,
+ and JavaScript in the database.
+ This combo is so popular that we've gone so far as to add especially nice
+ integration with Sincerity/Prudence.
+\end_layout
+
+\begin_layout Standard
+You'll need to install a MongoDB server yourself for this section of the
+ tutorial.
+ If you can't do that right now, don't worry: the rest of the tutorial will
+ work just fine using the in-memory storage we've been using so far, and
+ you can just read through this part.
+\end_layout
+
+\begin_layout Standard
+Let's install the 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB driver"
+target "http://code.google.com/p/mongodb-jvm/"
+
+\end_inset
+
+ into our container using a Sincerity command:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add mongodb.javascript : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can configure the driver by editing our application's settings.js, and
+ adding a section similar to this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	mongoDb: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultUris: 'localhost:27017',
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultDb: 'wiki'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can provide full 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB connection string URIs"
+target "http://docs.mongodb.org/manual/reference/connection-string/"
+
+\end_inset
+
+, either a single one or an array if you are connecting to a replicaset.
+ The driver will automatically create a thread-safe connection pool upon
+ first use using these settings.
+\end_layout
+
+\begin_layout Standard
+Our new MongoDB-enabled scriptlet:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/prudence/resources/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/mongo-db/')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var id = 'page.' + conversation.wildcard
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.duration = 60000
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.tags.add(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.onlyGet = true
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var collection = new MongoDB.Collection('pages')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (conversation.request.method.name == 'POST') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+\end_layout
+
+\begin_layout Plain Layout
+
+	var content = form.content
+\end_layout
+
+\begin_layout Plain Layout
+
+	collection.upsert({_id: id}, {$set: {content: content}})
+\end_layout
+
+\begin_layout Plain Layout
+
+	document.cache.invalidate(id)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+else {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var doc = collection.findOne({_id: id})
+\end_layout
+
+\begin_layout Plain Layout
+
+	var content = doc ? doc.content : 'This page is empty.'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Restart Prudence, and check out your new persistent wiki.
+\end_layout
+
+\begin_layout Standard
+Our usage of the MongoDB API is quite trivial here, but in case you're new
+ to it, read up about the 
+\begin_inset CommandInset href
+LatexCommand href
+name "$set operation"
+target "http://docs.mongodb.org/manual/reference/operator/update/set/"
+
+\end_inset
+
+: it guarantees an atomic update of particular fields in our document.
+\end_layout
+
+\begin_layout Standard
+For the rest of this tutorial, we'll continue to use in-memory storage in
+ our examples, but feel free to adapt them to use MongoDB if you already
+ have it set up!
+\end_layout
+
+\begin_layout Subsubsection*
+Further Exploration
+\end_layout
+
+\begin_layout Itemize
+Relational (SQL) databases are quite easy to access using 
+\begin_inset CommandInset href
+LatexCommand href
+name "JDBC drivers"
+target "http://www.oracle.com/technetwork/java/javase/jdbc/"
+
+\end_inset
+
+.
+ For a complete Prudence example, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "Stickstick"
+target "http://threecrickets.com/prudence/download/#stickstick"
+
+\end_inset
+
+.
+ And there are countless frameworks that build abstractions on top of JDBC.
+\end_layout
+
+\begin_layout Itemize
+You can easily administer MongoDB by installing 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoVision"
+target "http://code.google.com/p/mongo-vision/"
+
+\end_inset
+
+ into your Prudence container.
+\end_layout
+
+\begin_layout Itemize
+If MongoDB is your cup of tea, check out 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence"
+target "http://threecrickets.com/diligence/"
+
+\end_inset
+
+, a comprehensive web framework based on Prudence and MongoDB.
+ Especially useful for wikis, Diligence features a 
+\begin_inset CommandInset href
+LatexCommand href
+name "documents service"
+target "http://threecrickets.com/diligence/manual/service/documents/"
+
+\end_inset
+
+, which features versioning and site-wide snapshots.
+\end_layout
+
+\begin_layout Subsection
 A Scalable Wiki
 \end_layout
 
@@ -2001,22 +2284,29 @@ Caching
 \end_layout
 
 \begin_layout Standard
-In this tutorial, we're storing the wiki page content in in-process memory,
- so it's all quite fast.
- However, if we were fetching data from a database server, authenticating
- users, and doing other sorts of heavy lifting, our page would not generate
- so fast.
- By smartly caching our pages we can ensure that heavy lifting would be
- done only when necessary.
+As long as we're storing our wiki content in MongoDB or in memory, page
+ rendering will be very fast and light.
+ However, if we were to do more heavy lifting per page---for example, multiple
+ database lookups---then performance would drop accordingly.
+ By smartly caching our pages we can ensure that pages would be rendered
+ only when necessary, allowing for the best possible performance.
 \end_layout
 
 \begin_layout Standard
-Actually, talking about speed is a shorthand for the real issue: even pulling
- data from a database is usually very fast.
- The real issue is scalability: increased load on the database per user
- request can limit your ability to support many users.
- Obviously, it's most efficient to do work only when you need it: and that
- simple principle is the most important tool you have for increasing scalability.
+Actually, talking about performance is a shorthand for the real issue: even
+ pulling data from a database is usually very fast.
+ The real issue is 
+\emph on
+scalability
+\emph default
+: increased load on the database per user request can limit your ability
+ to support many users.
+ Obviously, it's most efficient to do work 
+\emph on
+only
+\emph default
+ when you need it: and that simple principle is the most important tool
+ you have for increasing scalability.
 \end_layout
 
 \begin_layout Standard
@@ -2034,10 +2324,7 @@ advanced
 \end_inset
 
  topic, it's a crucial one, and worth going over in this tutorial.
-\end_layout
-
-\begin_layout Standard
-It's also easy to do:
+ It's also easy:
 \end_layout
 
 \begin_layout Standard
@@ -2495,7 +2782,7 @@ curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Further Exploration
 \end_layout
 
@@ -3215,7 +3502,7 @@ calhost:8080/wiki/api/test/
 
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Further Exploration
 \end_layout
 
@@ -3517,7 +3804,7 @@ status open
 \end_layout
 
 \begin_layout Subsubsection
-Markup Languages
+HTML Markup Languages
 \end_layout
 
 \begin_layout Standard
@@ -3656,114 +3943,6 @@ And a subtitle
 \end_inset
 
 
-\end_layout
-
-\begin_layout Paragraph
-Markup Scriptlets
-\end_layout
-
-\begin_layout Standard
-Actually, there's another nice trick we can do with markup languages: once
- the library is installed, Prudence will allow you to write scriptlets in
- markup.
- Here's a complete page you can try, saved as 
-\begin_inset Quotes eld
-\end_inset
-
-/resources/markup.t.html
-\begin_inset Quotes erd
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-<html>
-\end_layout
-
-\begin_layout Plain Layout
-
-<body>
-\end_layout
-
-\begin_layout Plain Layout
-
-<%md
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-My Todo List
-\end_layout
-
-\begin_layout Plain Layout
-
-============
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-* The first item of business
-\end_layout
-
-\begin_layout Plain Layout
-
-* The second item of business
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-%>
-\end_layout
-
-\begin_layout Plain Layout
-
-</body>
-\end_layout
-
-\begin_layout Plain Layout
-
-</html>
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Browse to 
-\begin_inset CommandInset href
-LatexCommand href
-name "http://localhost:8080/wiki/markup/"
-target "http://localhost:8080/wiki/markup/"
-
-\end_inset
-
- to see it.
-\end_layout
-
-\begin_layout Standard
-This nifty feature works with Markdown, Confluence, MediaWiki, Twiki, Trac
- and Textile.
 \end_layout
 
 \begin_layout Subsubsection
@@ -4005,7 +4184,7 @@ reference "avoiding-serialization-for-internal-requests"
 .
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Further Exploration
 \end_layout
 
@@ -4026,10 +4205,7 @@ reference "static-resources-javascript-and-css-optimization"
 )
 \bar default
 .
-\end_layout
-
-\begin_layout Itemize
-Read the 
+ Also, you may want to read the 
 \bar under
 FAQ (page 
 \begin_inset CommandInset ref
@@ -4041,6 +4217,21 @@ reference "why-less"
 )
 \bar default
  as to why Prudence supports LESS but not SASS.
+\end_layout
+
+\begin_layout Itemize
+You can use markup languages 
+\bar under
+in scriptlets (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "html-markup-languages"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Itemize
@@ -4642,7 +4833,7 @@ target "http://localhost:8080/wiki/hi/"
  to see it.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Further Exploration
 \end_layout
 
@@ -10822,6 +11013,32 @@ reference "app-errors"
 \end_layout
 
 \begin_layout Itemize
+Your source code is parsed/compiled on-the-fly 
+\emph on
+only when necessary
+\emph default
+.
+ A reparsing/recompilation is triggered when the file is modified, or when
+ any of its dependent files are modified.
+ To keep track of dependencies at any distance, Prudence internally maintains
+ a dependency tree for each document.
+ Note that checking for file modification dates involves an operating system
+ API call: the call is usually cached by the OS and very fast, however you
+ can configure the 
+\bar under
+minimum time between validity checks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+ if necessary.
+\end_layout
+
+\begin_layout Itemize
 If you've captured a 
 \bar under
 URI template (page 
@@ -11027,6 +11244,82 @@ manual
 \end_inset
 
  pre-extension.
+ Here is the above configuration with all the defaults fleshed out:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+		root: 'resources',
+\end_layout
+
+\begin_layout Plain Layout
+
+		passThroughs: [],
+\end_layout
+
+\begin_layout Plain Layout
+
+		preExtension: 'm',
+\end_layout
+
+\begin_layout Plain Layout
+
+		trailingSlashRequired: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		internalUri: '/_manual/',
+\end_layout
+
+\begin_layout Plain Layout
+
+		clientCachingMode: 'conditional',
+\end_layout
+
+\begin_layout Plain Layout
+
+		maxClientCachingDuration: -1,
+\end_layout
+
+\begin_layout Plain Layout
+
+		compress: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -11602,8 +11895,8 @@ created
 
 ) status if indeed the resource was created, and also return the full representa
 tion.
- If you cannot handle the operation at the moment, it is correct to return
- a 202 (
+ If you cannot handle the operation at the moment, you should return a 202
+ (
 \begin_inset Quotes eld
 \end_inset
 
@@ -11731,8 +12024,8 @@ created
 
 ) status if indeed the resource was created, and also return the full representa
 tion.
- If you cannot handle the operation at the moment, it is correct to return
- a 202 (
+ If you cannot handle the operation at the moment, you should return a 202
+ (
 \begin_inset Quotes eld
 \end_inset
 
@@ -11783,42 +12076,7 @@ silently succeed.
 
 \begin_layout Standard
 What you'll usually do here is make sure the identified resource exists,
- and if it does, remove or mark it somehow as deleted.
- See the “
-\bar under
-conversation” API documentation (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation"
-
-\end_inset
-
-)
-\bar default
- for a complete reference.
- Note especially that if you've 
-\bar under
-captured URI segments (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../routing/|static-capturing"
-
-\end_inset
-
-)
-\bar default
-, they'll be available in 
-\bar under
-conversation.locals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "conversation-locals"
-
-\end_inset
-
-)
-\bar default
-.
+ and if it does, remove or mark it somehow as deleted
 \end_layout
 
 \begin_layout Standard
@@ -11858,8 +12116,8 @@ explicitly
 \end_layout
 
 \begin_layout Standard
-If you cannot handle the operation at the moment, it is correct to return
- a 202 (
+If you cannot handle the operation at the moment, you should return a 202
+ (
 \begin_inset Quotes eld
 \end_inset
 
@@ -11932,7 +12190,7 @@ be called.
 \end_layout
 
 \begin_layout Standard
-This use of handleGetInfo discussed in detail in the 
+The use of handleGetInfo discussed in detail in the 
 \bar under
 caching chapter (page 
 \begin_inset CommandInset ref
@@ -11944,7 +12202,8 @@ reference "client-side-caching-handle-get-info"
 )
 \bar default
 .
- However, here's a reference of the supported return types:
+ However, for the sake of completion, here's a reference of the supported
+ return types:
 \end_layout
 
 \begin_layout Itemize
@@ -12047,6 +12306,82 @@ name "template-resources"
 
 \end_layout
 
+\begin_layout Standard
+Though especially suitable for web pages (HTML), template resources can
+ be used for any kind of textual asset.
+ They are indeed intended and optimized for arbitrary textual formats: HTML,
+ XML, plain text, etc.
+ The design goal is to make it as easy as possible to generate the text
+ dynamically, by allowing developers and designers to mix static elements
+ with dynamic elements into a single file.
+\end_layout
+
+\begin_layout Standard
+Using the default 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlets
+\begin_inset Quotes erd
+\end_inset
+
+ parser, this means that the file is static text optionally embedded with
+ delimited programming source code---these are the scriptlets.
+ There are a few built-in shortcut scriptlets for common tasks, and it's
+ also easy to write plugins to implement your own custom shortcuts.
+\end_layout
+
+\begin_layout Quote
+The 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlets
+\begin_inset Quotes erd
+\end_inset
+
+ parser is intended to be as straightforward and flexible as possible, mimicking
+ the familiar paradigm of PHP/ASP/JSP, which allows for raw code that is
+ executed in-place.
+ However, it's possible to replace this parser with your own should you
+ desire.
+ For example, you might prefer declarative rather than procedural templates
+ (mimicking the structure of HTML/XML), and rather than have opaquely delimited
+ areas, you might prefer structural parsing of XML attributes.
+ The parser system is pluggable and easy to extend.
+\end_layout
+
+\begin_layout Standard
+Whatever parser you use, it will compile the whole file into one or more
+ 
+\begin_inset Quotes eld
+\end_inset
+
+programs
+\begin_inset Quotes erd
+\end_inset
+
+ that are executed in sequence.
+ Thus, unlike manual resources, template resources have no 
+\begin_inset Quotes eld
+\end_inset
+
+entry points,
+\begin_inset Quotes erd
+\end_inset
+
+ and work in quite a different execution environment, and indeed each 
+\begin_inset Quotes eld
+\end_inset
+
+program
+\begin_inset Quotes erd
+\end_inset
+
+ can be in a different programming language, allowing for mixed-language
+ templates.
+\end_layout
+
 \begin_layout Subsubsection
 Configuration
 \end_layout
@@ -12125,6 +12460,92 @@ templates
 \end_inset
 
  pre-extension.
+ Here is the above configuration with all the defaults fleshed out:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'templates',
+\end_layout
+
+\begin_layout Plain Layout
+
+		root: 'resources',
+\end_layout
+
+\begin_layout Plain Layout
+
+		includeRoot: ['libraries', 'includes'],
+\end_layout
+
+\begin_layout Plain Layout
+
+		passThroughs: [],
+\end_layout
+
+\begin_layout Plain Layout
+
+		preExtension: 't',
+\end_layout
+
+\begin_layout Plain Layout
+
+		trailingSlashRequired: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultDocumentName: 'index',
+\end_layout
+
+\begin_layout Plain Layout
+
+		defaultExtension: 'html',
+\end_layout
+
+\begin_layout Plain Layout
+
+		clientCachingMode: 'conditional',
+\end_layout
+
+\begin_layout Plain Layout
+
+		maxClientCachingDuration: -1,
+\end_layout
+
+\begin_layout Plain Layout
+
+		compress: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -12145,6 +12566,81 @@ code (page
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+MIME Types and Compression
+\begin_inset CommandInset label
+LatexCommand label
+name "template-resources-mime-types-and-compression"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence will handle HTTP content negotiation for your template resources,
+ and will assume a single MIME type per resource.
+ That MIME type is determined by the filename extension.
+ For example, a resource named 
+\begin_inset Quotes eld
+\end_inset
+
+profile.t.html
+\begin_inset Quotes erd
+\end_inset
+
+ will have the 
+\begin_inset Quotes eld
+\end_inset
+
+text/html
+\begin_inset Quotes erd
+\end_inset
+
+ MIME type.
+\end_layout
+
+\begin_layout Standard
+Prudence recognizes many common file types by default, but you can add your
+ own mappings in you application's settings.js, using 
+\bar under
+app.settings.mediaTypes (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-media-types"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+When 
+\begin_inset Quotes eld
+\end_inset
+
+compress
+\begin_inset Quotes erd
+\end_inset
+
+ is true, Prudence will negotiate the best compression format (gzip and
+ zip are supported) and compress on the fly.
+ Compression can be 
+\bar under
+configured in settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-compression"
 
 \end_inset
 
@@ -12286,13 +12782,91 @@ reference "mvc"
  for a complete discussion.
 \end_layout
 
-\begin_layout Subsubsection
-Shortcuts
+\begin_layout Standard
+You can specify the language of the scriptlet in its opening delimiter:
 \end_layout
 
 \begin_layout Standard
-There are also a few useful shortcut scriptlets.
- For example, to output an expression:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%ruby print 1 + 2 %>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Full language names are supported, as above, as well as shortcuts that are
+ usually the common filename extensions for that language: 
+\begin_inset Quotes eld
+\end_inset
+
+rb
+\begin_inset Quotes erd
+\end_inset
+
+ for Ruby, 
+\begin_inset Quotes eld
+\end_inset
+
+py
+\begin_inset Quotes erd
+\end_inset
+
+ for Python, 
+\begin_inset Quotes eld
+\end_inset
+
+js
+\begin_inset Quotes erd
+\end_inset
+
+ for JavaScript, etc.
+\end_layout
+
+\begin_layout Standard
+If the language of a scriptlet is not specified, it will default to the
+ language of the previous scriptlet, so that you only need to specify the
+ language if you are changing languages.
+ If the first scriptlet does not specify a language, it will use the 
+\begin_inset Quotes eld
+\end_inset
+
+defaultLanguageTag
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\bar under
+setting (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-code"
+
+\end_inset
+
+)
+\bar default
+.
+ The default for that is JavaScript.
+\end_layout
+
+\begin_layout Subsubsection
+Built-In Shortcuts
+\end_layout
+
+\begin_layout Standard
+Shortcuts use a special marker after the scriptlet's opening delimiter.
+\end_layout
+
+\begin_layout Standard
+To output an expression:
 \end_layout
 
 \begin_layout Standard
@@ -12330,7 +12904,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-Also useful is the inclusion scriptlet:
+To include another template:
 \end_layout
 
 \begin_layout Standard
@@ -12395,15 +12969,76 @@ status open
 \end_layout
 
 \begin_layout Standard
-A few other special scriptlets are introduced below, under 
-\begin_inset Quotes eld
+Scriptlet comments can be used for human-readable explanations, or to temporaril
+y disable scriptlets:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%# This scriptlet will be ignored by the parser.
+ %>
+\end_layout
+
 \end_inset
 
-inheritance.
-\begin_inset Quotes erd
+
+\end_layout
+
+\begin_layout Standard
+All the above shortcuts work for all supported programming languages, generating
+ source code in that language.
+ To combine a language specification with a shortcut symbol, put the shortcut
+ symbol 
+\emph on
+first
+\emph default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%=rb x*2 %>
+\end_layout
+
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+A few other built-in shortcuts are introduced under 
+\bar under
+inheritance (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources-blocks-and-Inheritance"
+
+\end_inset
+
+)
+\bar default
+, and it's also possible 
+\bar under
+create your own shortcuts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-plugins"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -12434,15 +13069,7 @@ fragments
 \begin_inset Quotes erd
 \end_inset
 
- directory, and then including them in other templates using the 
-\begin_inset CommandInset href
-LatexCommand href
-name "document.include API"
-target "http://threecrickets.com/api/javascript/?namespace=document&item=document.include"
-
-\end_inset
-
- or the 
+ directory, and then including them in other templates using the the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -12451,7 +13078,15 @@ target "http://threecrickets.com/api/javascript/?namespace=document&item=documen
 \begin_inset Quotes erd
 \end_inset
 
- shortcut.
+ shortcut (or the 
+\begin_inset CommandInset href
+LatexCommand href
+name "document.include API"
+target "http://threecrickets.com/api/javascript/?namespace=document&item=document.include"
+
+\end_inset
+
+ directly).
  For example, we can create this fragment in 
 \begin_inset Quotes eld
 \end_inset
@@ -12540,6 +13175,31 @@ reference "external-requests-timeout"
 .
 \end_layout
 
+\begin_layout Standard
+To share fragments with 
+\emph on
+all 
+\emph default
+applications, put them in your container's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/prudence-includes/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ Files in your application's 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/includes/
+\begin_inset Quotes erd
+\end_inset
+
+ will always override the shared versions.
+\end_layout
+
 \begin_layout Subsubsection
 Blocks and Inheritance
 \begin_inset CommandInset label
@@ -12562,7 +13222,11 @@ This feature is related to fragments, and can be understood as its inverse:
 \begin_inset Quotes erd
 \end_inset
 
-, you define blocks that will be inserted into a template.
+, you define blocks that will 
+\emph on
+only later
+\emph default
+ be inserted into a template.
 \end_layout
 
 \begin_layout Standard
@@ -12618,8 +13282,9 @@ The block is enclosed in
 \begin_inset Quotes erd
 \end_inset
 
- scriptlets.
- In the opening scriptlet, you must provide the block's name.
+ scriptlets: instead of being printed out to the page, it will be saved
+ for later use.
+ Indeed, the template above generates no actual output in itself.
 \end_layout
 
 \begin_layout Standard
@@ -12679,7 +13344,7 @@ The
 \begin_inset Quotes erd
 \end_inset
 
- scriptlet is a a shortcut to print any 
+ scriptlet is a shortcut to print any 
 \begin_inset CommandInset href
 LatexCommand href
 name "conversation.local"
@@ -12739,7 +13404,17 @@ status open
 
 \begin_layout Plain Layout
 
-<%[ title %><h1>Default Title<%]%>
+<%[ title %>
+\end_layout
+
+\begin_layout Plain Layout
+
+	<h1>Default Title</h1>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%]%>
 \end_layout
 
 \begin_layout Plain Layout
@@ -12775,8 +13450,20 @@ The
 \begin_inset Quotes erd
 \end_inset
 
- scriptlets also define blocks, except that they are conditional: the code
- between them will not be executed if the conversation.local is already defined.
+ scriptlets are like a conditional 
+\begin_inset Quotes eld
+\end_inset
+
+<%==\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+: the code between them will 
+\emph on
+not
+\emph default
+ be executed if the conversation.local is already defined.
  If it 
 \emph on
 is
@@ -12818,16 +13505,7 @@ inherit
 \begin_inset Quotes erd
 \end_inset
 
- while overriding any of its blocks, by defining them before inclusion of
- the template.
-\end_layout
-
-\begin_layout Subsubsection
-Choice of Programming Language
-\end_layout
-
-\begin_layout Standard
-TODO
+ simple by overriding any of its blocks before including it in your page.
 \end_layout
 
 \begin_layout Subsubsection
@@ -12842,14 +13520,97 @@ name "templating-languages"
 \end_layout
 
 \begin_layout Standard
-TODO
+Scriptlets can be used not only with programming languages, but also with
+ templating languages.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Succinct"
+target "http://threecrickets.com/succinct/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Velocity"
+target "http://velocity.apache.org/"
+
+\end_inset
+
+ are both supported.
+ For example, here's an example using Velocity and JavaScript together:
 \end_layout
 
-\begin_layout Subsubsection
-Markup Languages
-\begin_inset CommandInset label
-LatexCommand label
-name "markup-languages"
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%js
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.locals.put('test', 'TEST')
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%velocity
+\end_layout
+
+\begin_layout Plain Layout
+
+#macro(hello $name)
+\end_layout
+
+\begin_layout Plain Layout
+
+	<div>Hello, $name!</div>
+\end_layout
+
+\begin_layout Plain Layout
+
+#end
+\end_layout
+
+\begin_layout Plain Layout
+
+<div>
+\end_layout
+
+\begin_layout Plain Layout
+
+	#hello('Mozart')
+\end_layout
+
+\begin_layout Plain Layout
+
+	#hello('Bach')
+\end_layout
+
+\begin_layout Plain Layout
+
+	Here is a conversation local: $!conversation.locals.test
+\end_layout
+
+\begin_layout Plain Layout
+
+</div>
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
 
 \end_inset
 
@@ -12857,23 +13618,549 @@ name "markup-languages"
 \end_layout
 
 \begin_layout Standard
-TODO
-\end_layout
-
-\begin_layout Subsubsection
-Controlling the Format
+As with programming languages, you will need to install the engine first:
 \end_layout
 
 \begin_layout Standard
-Rely on the filename extension (see static resources) or change it in code.
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add velocity : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You might prefer to use templating engines independently of template resources,
+ as MVC 
+\begin_inset Quotes eld
+\end_inset
+
+views.
+\begin_inset Quotes erd
+\end_inset
+
+ See the 
+\bar under
+MVC chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "mvc-views"
+
+\end_inset
+
+)
+\bar default
+ for a guide.
 \end_layout
 
 \begin_layout Subsubsection
-Server-Side Caching
+HTML Markup Languages
+\begin_inset CommandInset label
+LatexCommand label
+name "html-markup-languages"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can also render the following HTML markup language via scriptlets: Markdown,
+ Confluence, MediaWiki, TWiki, Trac and Textile.
+ Here's a Markdown example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html>
+\end_layout
+
+\begin_layout Plain Layout
+
+<body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%md
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Our Conference
+\end_layout
+
+\begin_layout Plain Layout
+
+==============
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+* The first item of business
+\end_layout
+
+\begin_layout Plain Layout
+
+* The second item of business
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body>
+\end_layout
+
+\begin_layout Plain Layout
+
+</html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As with programming languages, you will need to install the engine first:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add org.pegdown pegdown : install
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Here's a list of package identifiers for all supported languages:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Language
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Identifier
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "Markdown"
+target "http://daringfireball.net/projects/markdown/syntax"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+org.pegdown pegdown
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "Confluence"
+target "https://confluence.atlassian.com/display/DOC/Confluence+Wiki+Markup"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+org.eclipse.mylyn wikitext-confluence
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "MediaWiki"
+target "http://www.mediawiki.org/wiki/Markup_spec"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+org.eclipse.mylyn wikitext-mediawiki
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "TWiki"
+target "http://twiki.org/cgi-bin/view/TWiki/TextFormattingRules"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+org.eclipse.mylyn wikitext-twiki
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "Trac"
+target "http://trac.edgewall.org/wiki/WikiFormatting"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+org.eclipse.mylyn wikitext-trac
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "Textile"
+target "http://redcloth.org/textile"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+org.eclipse.mylyn wikitext-textile
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-Client-Side Caching
+PHP
+\end_layout
+
+\begin_layout Standard
+Of all the supported programming languages, PHP is special in that it already
+ has a scriptlet parser.
+ In Prudence, PHP code will work pretty much as is, as it mimics the PHP
+ format.
+ You actually have the choice of using the standard PHP-style delimiters,
+ 
+\begin_inset Quotes eld
+\end_inset
+
+<?\SpecialChar \ldots{}
+?>
+\begin_inset Quotes erd
+\end_inset
+
+, or the ASP/JSP-style delimiters instead: 
+\begin_inset Quotes eld
+\end_inset
+
+<%\SpecialChar \ldots{}
+%>
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<?php
+\end_layout
+
+\begin_layout Plain Layout
+
+for($i = 0; $i < 10; $i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	print '<p>' .
+ $i .
+ '</p>';
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+?>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PHP is special also in that it is designed for server-side web programming.
+ Thus, though you can use all of Prudence's APIs in PHP, Prudence also explicitl
+y supports many of PHP's 
+\begin_inset CommandInset href
+LatexCommand href
+name "predefined variables"
+target "http://www.php.net/manual/en/reserved.variables.php"
+
+\end_inset
+
+ as a more standard alternative:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<?php
+\end_layout
+
+\begin_layout Plain Layout
+
+print $_GET['id']
+\end_layout
+
+\begin_layout Plain Layout
+
+?>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The convention when programming in PHP is to use 
+\begin_inset Quotes eld
+\end_inset
+
+.php
+\begin_inset Quotes erd
+\end_inset
+
+ extensions for files, even though the MIME type is 
+\begin_inset Quotes eld
+\end_inset
+
+text/html
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is easy to achieve in Prudence by using a 
+\begin_inset Quotes eld
+\end_inset
+
+.t.php
+\begin_inset Quotes erd
+\end_inset
+
+ for your files, while also mapping the extension to the MIME type in your
+ 
+\bar under
+settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-media-types"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaTypes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		php: 'text/html'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -12885,6 +14172,408 @@ name "scriptlet-plugins"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The default 
+\begin_inset Quotes eld
+\end_inset
+
+scriptlets
+\begin_inset Quotes erd
+\end_inset
+
+ parser comes with various useful shortcuts, but it's easy to create your
+ own.
+\end_layout
+
+\begin_layout Standard
+Configure your scriptlet plugins in 
+\bar under
+settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-templates"
+
+\end_inset
+
+)
+\bar default
+ using a dict that maps the shortcut codes to the library that will handle
+ them.
+ For this tutorial, we'll define two shortcuts in the same library:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	templates: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		plugins: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			'_': '/plugins/custom/',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'&?': '/plugins/custom/'
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+ shortcut will be used to print out localized text strings.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+&?
+\begin_inset Quotes erd
+\end_inset
+
+ shortcut will be a conditional include.
+ Let's now implement them in 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/plugins/custom.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleGetScriptlet(code, languageAdapter, content) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (code == '_') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return "print(application.globals.get('text.' + conversation.locals.get('locale')
+ + '." + content.trim() + "'));"
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	else if (code == '&?') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return "if(conversation.locals.get('include')===true) { document.include("
+ + content + ") }"
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return ''
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As you can see, the 
+\begin_inset Quotes eld
+\end_inset
+
+handleGetScriptlet
+\begin_inset Quotes erd
+\end_inset
+
+ function returns JavaScript source code that will be embedded into the
+ generated program.
+ You can optionally use the content of the scriptlet via the 
+\begin_inset Quotes eld
+\end_inset
+
+content
+\begin_inset Quotes erd
+\end_inset
+
+ param.
+ If you wish to support multiple programming languages, you can test for
+ them using 
+\begin_inset Quotes eld
+\end_inset
+
+languageAdapter.attributes.get('language.name')
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let's now use our shortcuts in a template resource:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.locals.put('locale', 'en')
+\end_layout
+
+\begin_layout Plain Layout
+
+conversation.locals.put('include', false)
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	How to say "hello" in your language: <%_ basic.hello %>
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\begin_layout Plain Layout
+
+<p>
+\end_layout
+
+\begin_layout Plain Layout
+
+	This fragment will not be included: <%&? '/hello/' %>
+\end_layout
+
+\begin_layout Plain Layout
+
+</p>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Our 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+ shortcut expects certain application.global definitions, so let's define
+ them in our 
+\bar under
+settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-globals"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.globals = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	text: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		en: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			basic: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				hello: 'Hi!'
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		es: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			basic: {
+\end_layout
+
+\begin_layout Plain Layout
+
+				hello: '¡Hola!'
+\end_layout
+
+\begin_layout Plain Layout
+
+			}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+Some things to note about scriptlet plugins:
+\end_layout
+
+\begin_layout Itemize
+It's up to you, of course, to make sure that the code you generate is compilable.
+\end_layout
+
+\begin_layout Itemize
+Plugins are tested for 
+\emph on
+before
+\emph default
+ the built-in shortcuts, allowing you to override the built-in ones.
+\end_layout
+
+\begin_layout Itemize
+If you change your plugin code, it will 
+\emph on
+not
+\emph default
+ cause all template resources that use it to recompile.
+ To force a recompile, you will need to change the modification date of
+ those files, possibly by using the 
+\begin_inset Quotes eld
+\end_inset
+
+touch
+\begin_inset Quotes erd
+\end_inset
+
+ tool (on *nix).
 \end_layout
 
 \begin_layout Subsection
@@ -14599,9 +16288,9 @@ reference "execute-route-type"
 )
 \bar default
 .
- This powerful (and dangerous) resource executes all POST payloads as if
- they were template resources in the application, and is very useful for
- 
+ This powerful---and dangerous---resource executes all POST payloads as
+ if they were template resources in the application, and is very useful
+ for 
 \bar under
 debugging (page 
 \begin_inset CommandInset ref
@@ -14661,7 +16350,7 @@ app.routes = {
 \begin_layout Quote
 Because it allows execution of arbitrary code, you very likely do not want
  its URL publicly exposed.
- If you use it, make sure to protect its URL on publicly available machines!
+ Make sure to protect its URL on publicly available machines!
 \end_layout
 
 \begin_layout Standard
@@ -21677,6 +23366,7 @@ reference "app-preheat"
 )
 \bar default
 .
+ The default value for this setting is true.
 \end_layout
 
 \begin_layout Itemize
@@ -21692,6 +23382,7 @@ minimumTimeBetweenValidityChecks
  systems.
  This value allows you to enforce a delay between these checks.
  It's a good idea to set it to anything greater than zero.
+ The default value for this setting is 1 second.
 \end_layout
 
 \begin_layout Itemize
@@ -33911,7 +35602,7 @@ reference "templating-languages"
 HTML markup languages (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "markup-languages"
+reference "html-markup-languages"
 
 \end_inset
 

@@ -222,19 +222,7 @@ public class DelegatedHandler
 				throw new NoSuchMethodException( entryPointName );
 
 			// Enter!
-			Object r;
-			if( arguments != null )
-			{
-				ArrayList<Object> argumentList = new ArrayList<Object>( arguments.length + 1 );
-				argumentList.add( new ConversationService( attributes.getFileUploadSizeThreshold(), attributes.getFileUploadDirectory() ) );
-				for( Object argument : arguments )
-					argumentList.add( argument );
-				r = executable.enter( enteringKey, entryPointName, argumentList.toArray() );
-			}
-			else
-				r = executable.enter( enteringKey, entryPointName, new ConversationService( attributes.getFileUploadSizeThreshold(), attributes.getFileUploadDirectory() ) );
-
-			return r;
+			return executable.enter( enteringKey, entryPointName, arguments );
 		}
 		catch( DocumentNotFoundException x )
 		{
@@ -285,6 +273,33 @@ public class DelegatedHandler
 			{
 			}
 		}
+	}
+
+	/**
+	 * Enters the executable with a conversation service as the first argument.
+	 * 
+	 * @param entryPointName
+	 *        Name of entry point
+	 * @param arguments
+	 *        Extra arguments to add to entry point
+	 * @return The result of the entry
+	 * @throws ResourceException
+	 *         In case of a handling error
+	 * @see Executable#enter(Object, String, Object...)
+	 */
+	public Object handleWithConversation( String entryPointName, Object... arguments )
+	{
+		ConversationService conversationService = new ConversationService( attributes.getFileUploadSizeThreshold(), attributes.getFileUploadDirectory() );
+		if( arguments != null )
+		{
+			ArrayList<Object> argumentList = new ArrayList<Object>( arguments.length + 1 );
+			argumentList.add( conversationService );
+			for( Object argument : arguments )
+				argumentList.add( argument );
+			return handle( entryPointName, argumentList.toArray() );
+		}
+		else
+			return handle( entryPointName, conversationService );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
