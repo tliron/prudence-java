@@ -22,7 +22,7 @@ var Prudence = Prudence || {}
 
 /**
  * A flexible, JavaScript-friendly wrapper over JVM loggers.
- * Integrates with Savory templates for easy use of string templates in
+ * Integrates with Sincerity templates for easy use of string templates in
  * log messages.
  * <p>
  * An important note about performance: If you need to do some complex processing in order to create

@@ -6968,7 +6968,7 @@ reference "conversation-locals"
 )
 \bar default
 , but otherwise has no effect on the conversation.
- This is useful for Inversion of Control (IoC): you can use these conversation.lo
+ This is useful for inversion of control (IoC): you can use these conversation.lo
 cals to alter the behavior of nested route types directly in your routing.js.
  Handled by the 
 \begin_inset CommandInset href
@@ -9229,7 +9229,7 @@ Object-oriented inheritance is one useful way to reuse code while allowing
  for special implementations.
  Additionally, Prudence allows for a straightforward 
 \bar under
-Inversion of Control mechanism (page 
+inversion of control mechanism (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "ioc"
@@ -11084,8 +11084,18 @@ name "manual-resources"
 \end_layout
 
 \begin_layout Standard
-These are implemented as a set of encapsulated entry points in any of the
- supported programming languages.
+These are implemented as a set of encapsulated 
+\bar under
+entry points (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-entry-points"
+
+\end_inset
+
+)
+\bar default
+ in any of the supported programming languages.
  The entry points all receive the current 
 \begin_inset CommandInset href
 LatexCommand href
@@ -16659,8 +16669,7 @@ drop down
 
 \begin_layout Itemize
 Prudence's manual resources are not merely dynamic-language implementations
- of ServerResource, but they also provide extra features, such as integrated
- 
+ of ServerResource, but also provide extra features such as integrated 
 \bar under
 server-side caching (page 
 \begin_inset CommandInset ref
@@ -16886,7 +16895,7 @@ Filename Pre-extension
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+n/a
 \end_layout
 
 \end_inset
@@ -16926,7 +16935,7 @@ Determined by scriptlet tags (multiple languages possible per resource)
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+n/a
 \end_layout
 
 \end_inset
@@ -16948,7 +16957,8 @@ Content Negotiation
 \begin_inset Text
 
 \begin_layout Plain Layout
-Manually determined in handleInit; multiple MIME types possible
+Manually determined in handleInit; multiple MIME types possible; multiple
+ compression types automatically supported and cached
 \end_layout
 
 \end_inset
@@ -16999,7 +17009,7 @@ Manual (via API)
 \begin_inset Text
 
 \begin_layout Plain Layout
-Automatic (handled by Prudence)
+Automatic (determined by server-side caching)
 \end_layout
 
 \end_inset
@@ -24345,6 +24355,32 @@ var driver = application.globals.get('database.driver')
 
 \end_layout
 
+\begin_layout Standard
+To set 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ you can use a 
+\bar under
+custom service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-services"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
 \begin_layout Subsubsection
 Lazy Initialization
 \begin_inset CommandInset label
@@ -24924,19 +24960,1040 @@ very
 Programming
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Standard
+Prudence, and the underlying Sincerity bootstrapping tool, allow you to
+ use your choice among several different programming languages on top of
+ the JVM, and moreover they provide you with context-specific, well-documented
+ APIs per relevant execution environment.
+\end_layout
+
+\begin_layout Standard
+Your current programming skills should transfer readily enough, however
+ some principles might be new to you:
+\end_layout
+
+\begin_layout Itemize
+The main execution environments you will be working with in Prudence are
+ inherently multi-threaded, meaning that you must have some basic knowledge
+ of concurrent programming.
+ The API does its best to help you, but it's still crucial that you understand
+ it.
+\end_layout
+
+\begin_layout Itemize
+If you've never used the programming language on the JVM before, you'll
+ might find some pitfalls in terms of interaction with the Prudence and
+ JVM APIs, and these vary per programming language engine.
+ Usually, this has to do with differences in types: strings, numbers, arrays/lis
+ts, etc.
+ Additionally, some JVM implementations differ in small but important ways
+ from the reference implementations.
+ Usually, things will work as expected: if not, you should refer to the
+ documentation for the specific language engine.
+\end_layout
+
+\begin_layout Paragraph
 Powered by Scripturian
 \end_layout
 
-\begin_layout Subsection
-JavaScript
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Scripturian"
+target "http://threecrickets.com/scripturian/"
+
+\end_inset
+
+ is the magical library that enables much of Prudence and Sincerity: it
+ abstracts away the specifics of the programming language you're using,
+ thus allowing you to transparently switch between programming languages
+ and engines.
+ It compiles your changes on the fly, caches the bytecode, parses templates
+ into code, provides access to the environment's APIs, and does it all while
+ optimizing for high-performance concurrency.
+\end_layout
+
+\begin_layout Standard
+You don't have to understand how Scripturian works to use Prudence, however
+ it's useful to remember that usually Prudence is ignorant as to what programmin
+g language you're using: that's all handles by Scripturian.
 \end_layout
 
 \begin_layout Subsection
-Other Languages
+APIs
+\end_layout
+
+\begin_layout Standard
+Prudence provides you with an especially rich set of APIs.
+ They come in three categories:
+\end_layout
+
+\begin_layout Itemize
+The 
+\series bold
+Prudence Core APIs
+\series default
+ are multilingual: they are implemented via standard JVM classes that can
+ be called from all supported programming languages: JavaScript, Python,
+ Ruby, PHP, Lua, Groovy and Clojure.
+ Indeed, the entire JVM standard APIs can be access in this manner, in addition
+ to any JVM library installed in your container (under 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/jars/
+\begin_inset Quotes erd
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Prudence JavaScript APIs
+\series default
+: these JavaScript wrappers over the Prudence Core APIs make using them
+ a bit easier with JavaScript.
+ Future versions of Prudence may provide similar friendly wrappers for the
+ other supported languages (please contribute!).
+ Until then, non-JavaScript programmers shouldn't be too jealous: there's
+ nothing that these wrappers can do that you can't do with the core APIs,
+ and it's easy to look into the source code in case you want to duplicate
+ the same functionality in your language of choice.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Sincerity JavaScript APIs
+\series default
+: most of the supported programming languages have rich standard libraries
+ as well as an ecology of external libraries.
+ JavaScript, however, stands out for having a very meager standard library.
+ To fill in this gap, Sincerity comes with a useful set of JavaScript libraries.
+ Some of these are written pure JavaScript, offering new and useful functionalit
+y, while others provide JavaScript-friendly wrappers over standard JVM libraries.
+\end_layout
+
+\begin_layout Standard
+For the sake of coherence and convenience all these APIs are 
+\begin_inset CommandInset href
+LatexCommand href
+name "documented together online"
+target "http://threecrickets.com/api/javascript/"
+
+\end_inset
+
+, with direct links to the source code.
+ The entire documentation uses the JavaScript calling convention, even for
+ the multlingual APIs, however it should be trivial to use the 
+\bar under
+calling convention (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-calling-conventions"
+
+\end_inset
+
+)
+\bar default
+ of your language of choice.
+\end_layout
+
+\begin_layout Standard
+You may be further interested in looking up Prudence's low-level API, which
+ is also 
+\begin_inset CommandInset href
+LatexCommand href
+name "fully documented online"
+target "http://threecrickets.com/api/java/prudence/"
+
+\end_inset
+
+.
+ Also, sometimes the best documentation is the 
+\begin_inset CommandInset href
+LatexCommand href
+name "source code itself"
+target "http://code.google.com/p/prudence/source/browse/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Quote
+The development team spends a lot of time meticulously documenting the APIs.
+ Please send us a 
+\begin_inset CommandInset href
+LatexCommand href
+name "bug report"
+target "http://code.google.com/p/prudence/issues/list"
+
+\end_inset
+
+ if you find a mistake, or think that the documentation can be improved!
 \end_layout
 
 \begin_layout Subsubsection
+Prudence Core APIs
+\end_layout
+
+\begin_layout Standard
+These core APIs can be used by any supported programming language.
+ See 
+\bar under
+calling conventions (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-calling-conventions"
+
+\end_inset
+
+)
+\bar default
+ for instructions on how to use these APIs from your language of choice.
+\end_layout
+
+\begin_layout Standard
+The APIs consist of four namespaces (objects) that are defined as global
+ variables:
+\end_layout
+
+\begin_layout Itemize
+
+\series medium
+\begin_inset CommandInset href
+LatexCommand href
+name "application"
+target "http://threecrickets.com/api/javascript/?namespace=application"
+
+\end_inset
+
+: general application services, such as global state, logging and background
+ tasks
+\end_layout
+
+\begin_layout Itemize
+
+\series medium
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation"
+target "http://threecrickets.com/api/javascript/?namespace=conversation"
+
+\end_inset
+
+: services related to the current request-and-response; available for manual
+ and template resources, and also for filters
+\end_layout
+
+\begin_layout Itemize
+
+\series medium
+\begin_inset CommandInset href
+LatexCommand href
+name "document"
+target "http://threecrickets.com/api/javascript/?namespace=document"
+
+\end_inset
+
+: actually incorporates two kinds of services:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+access to 
+\emph on
+other
+\emph default
+ documents, such as executing or requesting them
+\end_layout
+
+\begin_layout Itemize
+low-level access to the 
+\emph on
+current
+\emph default
+ document
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "executable"
+target "http://threecrickets.com/api/javascript/?namespace=executable"
+
+\end_inset
+
+: rarely used, low-level access to Scripturian
+\end_layout
+
+\begin_layout Subsubsection
+JavaScript Libraries
+\end_layout
+
+\begin_layout Standard
+The APIs are 
+\emph on
+only
+\emph default
+ available for JavaScript.
+\end_layout
+
+\begin_layout Standard
+To use them, you must 
+\begin_inset Quotes eld
+\end_inset
+
+document.require
+\begin_inset Quotes erd
+\end_inset
+
+ them according to their URI, and then via their namespaces.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/sincerity/json/',
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/prudence/tasks/)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+println(Sincerity.JSON.to({hello: 'world'}))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can find their source code in the 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scripturian/
+\begin_inset Quotes erd
+\end_inset
+
+ directory of your container.
+\end_layout
+
+\begin_layout Paragraph
+Sincerity JavaScript Library
+\end_layout
+
+\begin_layout Standard
+These libraries are intended to fill in for the lack of a rich standard
+ library for the JavaScript language.
+ They are general-purpose and not specific to Prudence.
+ If you've installed Prudence using Sincerity, then you will find them in
+ your Sincerity installation rather than in your Prudence container (under
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/scripturian/
+\begin_inset Quotes erd
+\end_inset
+
+ directory).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/calendar/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Calendar"
+
+\end_inset
+
+: useful helpers for JavaScript Date objects
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/classes/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Classes"
+
+\end_inset
+
+: a rich and powerful object-oriented programming (OOP) facility, supporting
+ inheritance, private data and methods, and automatic constructors
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/cryptography/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Cryptography"
+
+\end_inset
+
+: JavaScript-friendly wrappers over the JVM's strong cryptographic libraries,
+ allowing for digests/hashing, encryption/decryption, and cryptographically-stro
+ng random number generation
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/files/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Files"
+
+\end_inset
+
+: high-performance reading/writing of files, as well as filesystem operations
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/iterators/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Iterators"
+
+\end_inset
+
+: standardized access to streaming data structures, with plenty of utility
+ classes for stream manipulation
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/json/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.JSON"
+
+\end_inset
+
+: high-performance, extensible JSON/JavaScript conversion
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/jvm/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.JVM"
+
+\end_inset
+
+: conversions between JavaScript and JVM data types
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/localization/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Localization"
+
+\end_inset
+
+: unit conversions and human-readable formatting of dates and times
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/lucene/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Lucene"
+
+\end_inset
+
+: JavaScript-friendly wrappers over the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Lucene search engine"
+target "http://lucene.apache.org/"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/mail/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Mail"
+
+\end_inset
+
+: send emails using JavaScript-friendly wrappers over 
+\begin_inset CommandInset href
+LatexCommand href
+name "JavaMail"
+target "http://www.oracle.com/technetwork/java/javamail/"
+
+\end_inset
+
+ with support for message templates
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/objects/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Objects"
+
+\end_inset
+
+: many important enhancements to and utilities for working with standard
+ JavaScript objects, such as dicts, arrays and strings
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/platform/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Platform"
+
+\end_inset
+
+: utilities specific to the underlying JavaScript engine (Nashorn or Rhino)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/templates/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Templates"
+
+\end_inset
+
+: straightforward and powerful string interpolation
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/xml/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.XML"
+
+\end_inset
+
+: parsing and generation of XML
+\end_layout
+
+\begin_layout Paragraph
+Prudence JavaScript Library
+\end_layout
+
+\begin_layout Standard
+These are JavaScript-friendly wrappers over the Prudence Core APIs, as well
+ as other special uses for JavaScript.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/prudence/logging/"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Logging"
+
+\end_inset
+
+: adds automatic support for string interpolation, exception logging, conditiona
+l logging, and other convenient utilities; see 
+\bar under
+logging (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "logging"
+
+\end_inset
+
+)
+\bar default
+ for more details
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/prudence/resources/"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources"
+
+\end_inset
+
+: a rich set of utilities for generated and parsing 
+\bar under
+web data (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "web-data"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/prudence/tasks/"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Tasks"
+
+\end_inset
+
+: JavaScript-friendly spawning and scheduling of 
+\bar under
+background tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Paragraph
+Libraries for Bootstrap and Configuration
+\end_layout
+
+\begin_layout Standard
+We're listing these libraries separately, because they are specifically
+ meant to be used for application configuration.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/annotations/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Annotations"
+
+\end_inset
+
+: allows you to easily gather specially marked annotations in text files,
+ which can include your source code and templates; specially designed to
+ integrate well with scriptlet comments
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/container/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Containter"
+
+\end_inset
+
+: access to the Sincerity container into which Prudence has been installed
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/prudence/lazy/"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Lazy"
+
+\end_inset
+
+: see 
+\bar under
+lazy initialization (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "lazy-initialization"
+
+\end_inset
+
+)
+\bar default
+ for more details
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "/prudence/setup/"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup"
+
+\end_inset
+
+: handles the parsing of 
+\bar under
+routing.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-uri-space"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Subsubsection
+Calling Conventions by Language
+\begin_inset CommandInset label
+LatexCommand label
+name "programming-calling-conventions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+JavaScript
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.onlyGet = true
+\end_layout
+
+\begin_layout Plain Layout
+
+application.globals.put('name', 'example') // Nashorn: application.globals['name']
+ = 'example'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you're using JVM 8, with Nashorn as your JavaScript engine, then you
+ can treat JVM maps as dictionaries: 
+\begin_inset Quotes eld
+\end_inset
+
+application.globals['myapp.data.name']
+\begin_inset Quotes erd
+\end_inset
+
+.
+ However, for JVM 7 and Rhino you must use the get- and put- notation: 
+\begin_inset Quotes eld
+\end_inset
+
+application.globals.get('myapp.data.name')
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In order to support both engines properly, we recommend using the more
+ cumbersome format used by Rhino.
+\end_layout
+
+\begin_layout Paragraph
+Python
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.onlyGet = True // Jepp: caching.setOnlyGet(True)
+\end_layout
+
+\begin_layout Plain Layout
+
+application.globals['name'] = 'example' // Jepp: application.getGlobals().put('name
+', 'example')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you're using the Jepp engine, rather than the default Jython engine,
+ you will need to use get- and set- notation to access attributes.
+ For example, use 
+\begin_inset Quotes eld
+\end_inset
+
+application.getArguments()
+\begin_inset Quotes erd
+\end_inset
+
+ to access 
+\begin_inset Quotes eld
+\end_inset
+
+application.arguments
+\begin_inset Quotes erd
+\end_inset
+
+ in Jepp.
+\end_layout
+
+\begin_layout Paragraph
+Ruby
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$conversation.redirect_see_other 'http://newsite.org/'
+\end_layout
+
+\begin_layout Plain Layout
+
+$caching.only_get = true
+\end_layout
+
+\begin_layout Plain Layout
+
+$application.globals['name'] = 'example'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence's Ruby engine, JRuby, conveniently lets you use the Ruby naming
+ style for API calls.
+ For example, you can use 
+\begin_inset Quotes eld
+\end_inset
+
+$application.get_global
+\begin_inset Quotes erd
+\end_inset
+
+ instead of 
+\begin_inset Quotes eld
+\end_inset
+
+$application.getGlobal
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+PHP
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$conversation->redirectSeeOther('http://newsite.org/');
+\end_layout
+
+\begin_layout Plain Layout
+
+$cahing->onlyGet = TRUE;
+\end_layout
+
+\begin_layout Plain Layout
+
+$application->globals['name'] = 'example';
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Lua
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation:redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+caching:setOnlyGet(true)
+\end_layout
+
+\begin_layout Plain Layout
+
+application:getGlobals():put('name', 'example')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You will need to use the get- and set- notation to access attributes.
+ For example, you must use 
+\begin_inset Quotes eld
+\end_inset
+
+conversation:getEntity()
+\begin_inset Quotes erd
+\end_inset
+
+ to access 
+\begin_inset Quotes eld
+\end_inset
+
+conversation.entity
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Groovy
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.redirectSeeOther('http://newsite.org/')
+\end_layout
+
+\begin_layout Plain Layout
+
+caching.onlyGet = true
+\end_layout
+
+\begin_layout Plain Layout
+
+application.globals['name'] = 'example'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Clojure
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(..
+ conversation redirectSeeOther "http://newsite.org/")
+\end_layout
+
+\begin_layout Plain Layout
+
+(.setOnlyGet caching true)
+\end_layout
+
+\begin_layout Plain Layout
+
+(..
+ application getGlobals (put "name" "example"))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You will need to use get- and set- notation to access attributes.
+ For example, use 
+\begin_inset Quotes eld
+\end_inset
+
+(.getArguments application)
+\begin_inset Quotes erd
+\end_inset
+
+ to access 
+\begin_inset Quotes eld
+\end_inset
+
+application.arguments
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can also use Clojure's bean form, for example 
+\begin_inset Quotes eld
+\end_inset
+
+(bean application)
+\begin_inset Quotes erd
+\end_inset
+
+, to create a read-only representation of Prudence's API services.
+\end_layout
+
+\begin_layout Subsection
 Entry Points
 \begin_inset CommandInset label
 LatexCommand label
@@ -24947,82 +26004,30 @@ name "programming-entry-points"
 
 \end_layout
 
-\begin_layout Itemize
-Python uses global functions, using the lowercase-with-underscores naming
- convention:
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-def handle_get(conversation):
-\end_layout
-
-\begin_layout Plain Layout
-
-	return 'Hello, world!'
-\end_layout
-
+\begin_layout Standard
+Prudence sometimes treats your code as 
+\emph on
+its
+\emph default
+ API: for this, it requires you to implement specific 
+\begin_inset Quotes eld
 \end_inset
 
-
-\end_layout
-
-\begin_layout Itemize
-Ruby uses global methods, using the lowercase-with-underscores naming convention
-:
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-def handle_get conversation
-\end_layout
-
-\begin_layout Plain Layout
-
-	return 'Hello, world!'
-\end_layout
-
-\begin_layout Plain Layout
-
-end
-\end_layout
-
+entry points
+\begin_inset Quotes erd
 \end_inset
 
-
+ in your code.
+ What these are, exactly, differs per programming language, as detailed
+ below.
 \end_layout
 
-\begin_layout Itemize
-Clojure uses functions in the current namespace, using the lowercase-with-dashes
- naming convention:
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-(defn handle-get [conversation]
+\begin_layout Paragraph
+JavaScript
 \end_layout
 
-\begin_layout Plain Layout
-
-	'Hello, World!')
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-JavaScript uses global functions, using camel-case:
+\begin_layout Standard
+Uses global functions, with the camel-case naming convention:
 \begin_inset listings
 lstparams "breaklines=true"
 inline false
@@ -25048,9 +26053,69 @@ function handleGet(conversation) {
 
 \end_layout
 
-\begin_layout Itemize
-PHP uses global functions, using the lowercase-with-underscores naming conventio
-n:
+\begin_layout Paragraph
+Python
+\end_layout
+
+\begin_layout Standard
+Uses global functions, with the lowercase-with-underscores naming convention:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def handle_get(conversation):
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, world!'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Ruby
+\end_layout
+
+\begin_layout Standard
+Uses global methods, with the lowercase-with-underscores naming convention:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+def handle_get conversation
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, world!'
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+PHP
+\end_layout
+
+\begin_layout Standard
+Uses global functions, with the lowercase-with-underscores naming convention:
 \begin_inset listings
 lstparams "breaklines=true"
 inline false
@@ -25063,7 +26128,7 @@ function handle_get($conversation) {
 
 \begin_layout Plain Layout
 
-	return 'Hello, World!';
+	return 'Hello, world!';
 \end_layout
 
 \begin_layout Plain Layout
@@ -25076,9 +26141,44 @@ function handle_get($conversation) {
 
 \end_layout
 
-\begin_layout Itemize
-Groovy uses closures tied to global variables (there are no global methods
- in Groovy), using camel-case:
+\begin_layout Paragraph
+Lua
+\end_layout
+
+\begin_layout Standard
+Uses global functions, with the lowercase-with-underscores naming convention:
+ 
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handle_get (conversation)
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'Hello, world!'
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Groovy
+\end_layout
+
+\begin_layout Standard
+Uses closures tied to global variables (there are no global methods in Groovy),
+ with the camel-case naming convention:
 \begin_inset listings
 lstparams "breaklines=true"
 inline false
@@ -25091,7 +26191,7 @@ handleGet = { conversation ->
 
 \begin_layout Plain Layout
 
-	return 'Hello, World!'
+	return 'Hello, world!'
 \end_layout
 
 \begin_layout Plain Layout
@@ -25104,15 +26204,41 @@ handleGet = { conversation ->
 
 \end_layout
 
+\begin_layout Paragraph
+Clojure
+\end_layout
+
+\begin_layout Standard
+Uses functions in the current namespace, with the lowercase-with-dashes
+ naming convention:
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(defn handle-get [conversation]
+\end_layout
+
+\begin_layout Plain Layout
+
+	"Hello, world!")
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 State
 \end_layout
 
 \begin_layout Standard
-Prudence is designed to allow massive concurrency and scalability while
+Prudence is designed to allow for high concurrency and scalability, while
  at the same time shielding you from the gorier details.
- However, when it comes to sharing state between different parts of your
- code, it's critical that you understand Prudence's state services.
+ However, it's critical that you understand how to manage state with Prudence.
 \end_layout
 
 \begin_layout Subsubsection
@@ -25127,11 +26253,94 @@ name "application-globals"
 \end_layout
 
 \begin_layout Standard
-TODO
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.globals"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.globals"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getGlobal"
+
+\end_inset
+
+ APIs are essential for sharing state across the application: 
+\emph on
+all
+\emph default
+ application code can access it using the same API, whether it's a 
+\bar under
+manual resource (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+, a 
+\bar under
+template resource (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources"
+
+\end_inset
+
+)
+\bar default
+, a 
+\bar under
+filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filters"
+
+\end_inset
+
+)
+\bar default
+ or a 
+\bar under
+background task (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+.
+ Because this means that application.globals may be accessed simultaneous
+ by multiple threads, it's important that you understand how to use them
+ 
+\bar under
+concurrently (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "concurrency"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Paragraph
+For Configuration
 \end_layout
 
 \begin_layout Standard
-See 
+Another important use for application.globals is configuration: you can specify
+ configuration settings as 
 \bar under
 app.globals (page 
 \begin_inset CommandInset ref
@@ -25142,7 +26351,390 @@ reference "app-globals"
 
 )
 \bar default
+ in your settings.js, and then easily access them as application.globals one
+ the application is running.
+\end_layout
+
+\begin_layout Paragraph
+application.globals vs.
+ Global Variables
+\begin_inset CommandInset label
+LatexCommand label
+name "global-variables"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Be 
+\emph on
+very careful
+\emph default
+ with global variables in Prudence: their scope is more limited and more
+ temporary than you might think.
+\end_layout
+
+\begin_layout Standard
+Their behavior is actually a very different depending on the execution environme
+nt of your code:
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+filters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filters"
+
+\end_inset
+
+)
+\bar default
+: Your global values will persist 
+\emph on
+as long as the code is not recompiled
+\emph default
 .
+ Anything that will trigger recompilation of your code will also involve
+ recreating a new global context for it, discarding all previously used
+ globals.
+ In between these recompilations, your globals will persist, but it's important
+ to remember that they will be shared between all threads, and as thus should
+ be accessed with 
+\bar under
+concurrency techniques (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "concurrency"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Template resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources"
+
+\end_inset
+
+)
+\bar default
+: These are made of programs executed from beginning to end, and as such
+ 
+\emph on
+every execution uses its own global context
+\emph default
+.
+ This means that globals are really 
+\begin_inset Quotes eld
+\end_inset
+
+local
+\begin_inset Quotes erd
+\end_inset
+
+ to the request, like 
+\bar under
+conversation.locals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "conversation-locals"
+
+\end_inset
+
+)
+\bar default
+.
+ But it also means that you don't have to worry about concurrency when using
+ them.
+\end_layout
+
+\begin_layout Standard
+A good rule of thumb is to assume that global variables 
+\emph on
+never persist beyond a request
+\emph default
+, and to use application.globals whenever persistence is required.
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Note for Clojure
+\series default
+: Clojure doesn't have true global variables: instead all Vars are bound
+ to a particular namespace.
+ On the other hand, all namespaces are global to JVM: there are no thread-limite
+d scopes.
+ In order to allow for threads to have separate global scopes, Scripturian
+ creates on-the-fly namespaces when necessary (this is very lightweight),
+ each with a unique name.
+ Thus, Vars in Clojure end up behaving exactly the same as those in other
+ programming languages.
+\end_layout
+
+\begin_layout Subsubsection
+application.sharedGlobals
+\begin_inset CommandInset label
+LatexCommand label
+name "application-shared-globals"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.sharedGlobals"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.sharedGlobals"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getSharedGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getSharedGlobal"
+
+\end_inset
+
+ APIs have the same scope as 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+, except they are shared between all running applications.
+\end_layout
+
+\begin_layout Standard
+Generally, it's not such a good idea to create interdependencies between
+ applications, however there are cases where it is useful:
+\end_layout
+
+\begin_layout Itemize
+If all running applications are connecting to the same database (or another
+ external resource), it can be a good idea to have them share the same connectio
+n pool.
+ This allows you to centrally manage the connections on the JVM.
+\end_layout
+
+\begin_layout Itemize
+You can use shared globals to pass messages between running applications:
+ the shared value can be a 
+\begin_inset CommandInset href
+LatexCommand href
+name "LinkedBlockingQueue"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/LinkedBlockingQueue.html"
+
+\end_inset
+
+ or other thread-safe message-passing mechanism.
+\end_layout
+
+\begin_layout Itemize
+Shared globals can be used for system-wide configuration settings.
+\end_layout
+
+\begin_layout Standard
+A good way to set shared globals is via a 
+\bar under
+custom service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-shared-globals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+If you find yourself using application.sharedGlobals a lot, ask yourself
+ if your code would be better off encapsulated as a single application:
+ remember that Prudence has powerful URI routing, support for 
+\bar under
+virtual hosting (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-hosts"
+
+\end_inset
+
+)
+\bar default
+, etc., letting you easily have one application work in several sites simultaneou
+sly.
+ In short, there might be a better architecture for what you're trying to
+ do.
+\end_layout
+
+\begin_layout Quote
+
+\series bold
+Note for Clojure
+\series default
+: Actually, Clojure namespaces are identical in scope to application.sharedGlobal
+s (all Prudence applications share the same Clojure namespaces), so you
+ might prefer to use them because they are more idiomatic.
+ Still, application.sharedGlobals can be useful if you want to share globals
+ with other programming languages.
+\end_layout
+
+\begin_layout Subsubsection
+application.distributedGlobals
+\begin_inset CommandInset label
+LatexCommand label
+name "application-distributed-globals"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedGlobals"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedGlobals"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getDistributedGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getDistributedGlobal"
+
+\end_inset
+
+ APIs work similarly to 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+, except that they are shared between all members of a 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+.
+ Their use is discussed in greater length in the clusters chapter.
+\end_layout
+
+\begin_layout Standard
+Note that there is no distributed equivalent of 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+: distributed state is always accessible to 
+\emph on
+all 
+\emph default
+applications.
+\end_layout
+
+\begin_layout Subsubsection
+executable.globals
+\begin_inset CommandInset label
+LatexCommand label
+name "executable-globals"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "executable.globals"
+target "http://threecrickets.com/api/javascript/?namespace=executable&item=executable.globals"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "executable.getGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=executable&item=executable.getGlobal"
+
+\end_inset
+
+ APIs have a similar scope to 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+, except that they can be accessed by any code running on the JVM using
+ Scripturian's 
+\begin_inset CommandInset href
+LatexCommand href
+name "GlobalScope API"
+target "http://threecrickets.com/api/java/scripturian/index.html?com/threecrickets/scripturian/GlobalScope.html"
+
+\end_inset
+
+.
+ It's thus useful if you need to share state with non-Prudence code.
 \end_layout
 
 \begin_layout Subsubsection
@@ -25157,334 +26749,242 @@ name "conversation-locals"
 \end_layout
 
 \begin_layout Standard
-These are not “local” in the same way that code scope locals are.
- The term “local” here should be read as “local to the conversation.” They
- are “global” in the sense that they can be accessed by any function in
- your code, but are “local” in the sense that they persist only for the
- duration of the user request.
- (Compare with “thread locals” in the JVM, which are also “local” in a specific
- sense.)
-\end_layout
-
-\begin_layout Standard
-You may ask, then, why you wouldn't want to just use your language globals,
- which have similar scope and life.
- conversation.locals have three main uses in Prudence:
-\end_layout
-
-\begin_layout Enumerate
-To easily share conversation-scope state between scriptlets written in different
- languages.
-\end_layout
-
-\begin_layout Enumerate
-To share state for deferred conversations---see 
-\bar under
-conversation.defer (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|conversation-defer"
-
-\end_inset
-
-)
-\bar default
-.
- In such cases, your language's globals would not persist across the thread
- boundaries.
-\end_layout
-
-\begin_layout Enumerate
-They are Prudence's general mechanism for sending state to your code in
- a conversation.
- For example, 
-\bar under
-captured URI segments are stored here (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../routing/|static-capturing"
-
-\end_inset
-
-)
-\bar default
- as well as 
-\bar under
-document.cacheKeyTemplate (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|document-cache-key-pattern"
-
-\end_inset
-
-)
-\bar default
- variables.
-\end_layout
-
-\begin_layout Subsubsection
-Global Variables
-\begin_inset CommandInset label
-LatexCommand label
-name "global-variables"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-You know how local variables work in your programming language: they exist
- only for the duration of a function call, after which their state is discarded.
- If you want state to persist beyond the function call, you use a global
- variable (or a “static” local, which is really a global).
-\end_layout
-
-\begin_layout Standard
-
-\emph on
-But in Prudence, you cannot expect global variables to persist beyond a
- user request.
-
-\emph default
- To put it another way, you should consider every single user request as
- a separate “program” with its own global state.
- See the “life” sections for 
-\bar under
-generating HTML (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../generating-html/|life"
-
-\end_inset
-
-)
-\bar default
- and 
-\bar under
-resources (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../resources/|life"
-
-\end_inset
-
-)
-\bar default
- for more information on when this global state is created and discarded.
- If you need global variables to persist, you must use 
-\bar under
-application.globals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "application-globals"
-
-\end_inset
-
-)
-\bar default
-, 
-\bar under
-application.sharedGlobals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|application-shared-globals"
-
-\end_inset
-
-)
-\bar default
- or even 
-\bar under
-application.distributedGlobals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|application-distributed-globals"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-Why does Prudence discard your language's globals? This has to do with allowing
- for concurrency while shielding you from the complexity of having to guarantee
- the thread-safety of your code.
- By making each user request a separate “program,” you don't have to worry
- about overlapping shared state, coordinating thread access, etc., for every
- use of a variable.
-\end_layout
-
-\begin_layout Quote
-The exception to this is code in /resources/, in which language globals
- 
-\emph on
-might
-\emph default
- persist.
- To improve performance, Prudence caches the global context for these in
- memory, with the side effect that your language globals persist beyond
- a single user request.
- For various reasons, however, Prudence may reset this global context.
- You should not rely on this side effect, and instead always use 
-\bar under
-application.globals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "application-globals"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Subsubsection
-application.globals vs.
- application.sharedGlobals
-\end_layout
-
-\begin_layout Standard
-The rule of thumb is to always prefer to use
-\bar under
- application.globals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "application-globals"
-
-\end_inset
-
-)
-\bar default
-.
- By doing so, you'll minimize interdependencies between applications, and
- help make each application deployable on its own.
-\end_layout
-
-\begin_layout Standard
-Use for 
-\bar under
-application.sharedGlobals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|application-shared-globals"
-
-\end_inset
-
-)
-\bar default
- (and possibly 
-\bar under
-application.distributedGlobals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|application-distributed-globals"
-
-\end_inset
-
-)
-\bar default
----similar concerns apply to it) only when you explicitly need a bridge
- 
-\emph on
-between 
-\emph default
-applications.
- Examples:
-\end_layout
-
-\begin_layout Enumerate
-To save resources.
- For example, if an application detects that a database connection has already
- been opened by another application in the Prudence instance, and stored
- in application.sharedGlobals, then it could use that connection rather than
- create a new one.
- This would only work, of course, if a few applications share the same database,
- which is common in many deployments.
-\end_layout
-
-\begin_layout Enumerate
-To send messages between applications.
- This would be necessary if operations in one application could affect another.
- For example, you could place a task queue in application.sharedGlobals,
- where applications could queue required operations.
- A thread in another application would consume these and act accordingly.
- Of course, you will have to plan for asynchronous behavior, and especially
- allow for failure.
- What happens if the consumer application is down? It may make more sense
- in these cases to use a persistent storage, such as a database, for the
- queue.
-\end_layout
-
-\begin_layout Standard
-Generally, if you find yourself having to rely on application.sharedGlobals,
- ask yourself if your code would be better off encapsulated as a single
- application.
- Remember that Prudence has powerful URL routing, support for virtual hosting,
- etc., letting you easily have one application work in several sites simultaneous
-ly.
-\end_layout
-
-\begin_layout Quote
-Note for Clojure flavor: 
-\emph on
-All
-\emph default
- Clojure vars are VM-wide globals equivalent in scope to executable.globals.
- You usually work with namespaces that Prudence creates on the fly, so they
- do not persist beyond the execution.
- However, if you explicitly define a namespace, then you can use it as a
- place for shared state.
- It will then be up to you to make sure that your namespace doesn't collide
- with that of another application installed in the Prudence instance.
- Though this approach might seem to break our rule of thumb here, of preferring
- application.globals to application.sharedGlobals, it is more idiomatic to
- Clojure and Lisps generally.
-\end_layout
-
-\begin_layout Subsubsection
-application.sharedGlobals vs.
- executable.globals
-\end_layout
-
-\begin_layout Standard
-
-\bar under
-executable.globals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|executable-globals"
-
-\end_inset
-
-)
-\bar default
- are in practice identical to 
-\bar under
-application.sharedGlobals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "../api/|application-shared-globals"
-
-\end_inset
-
-)
-\bar default
-.
- The latter is simply reserved for Prudence applications.
- If you are running non-Prudence 
+The 
 \begin_inset CommandInset href
 LatexCommand href
-name "Scripturian"
-target "http://threecrickets.com/scripturian/"
+name "conversation.locals"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.locals"
 
 \end_inset
 
- code on the same VM, and need to share state with Prudence, then executable.glob
-als are available for you.
+ are not “local” in the same way that code scope locals are.
+ The term “local” here should be read as “local to the conversation.” They
+ are indeed “global” in the sense that they can be accessed by any function
+ in your code, but are “local” in the sense that they persist only for the
+ duration of the user request.
+ (Compare with 
+\begin_inset CommandInset href
+LatexCommand href
+name "thread locals"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/ThreadLocal.html"
+
+\end_inset
+
+, which are also “local” in a specific sense.)
+\end_layout
+
+\begin_layout Standard
+Their primary use is for sharing state among code 
+\emph on
+along the route
+\emph default
+: for example, both your resource code and 
+\bar under
+filters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filters"
+
+\end_inset
+
+)
+\bar default
+ will have access to the same conversation.locals per request.
+ It's this essential feature that leads them to being used in many ways
+ throughout Prudence:
+\end_layout
+
+\begin_layout Itemize
+URI template variables are 
+\bar under
+captured (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "uri-templates"
+
+\end_inset
+
+)
+\bar default
+ into conversation.locals.
+\end_layout
+
+\begin_layout Itemize
+They can be 
+\bar under
+interpolated (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "interpolation-conversation-locals"
+
+\end_inset
+
+)
+\bar default
+ into target URIs
+\end_layout
+
+\begin_layout Itemize
+They are used for 
+\bar under
+inversion of control (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "resource-dispatching-ioc"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+They are used to inject custom values into 
+\bar under
+cache keys (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template-plugins"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+Template blocks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources-blocks-and-Inheritance"
+
+\end_inset
+
+)
+\bar default
+ are captured into conversation.locals
+\end_layout
+
+\begin_layout Paragraph
+conversation.locals vs.
+ Global Variables
+\end_layout
+
+\begin_layout Standard
+Sometimes, your language's global variables function identically to conversation.
+locals.
+ Consider this 
+\bar under
+template resource (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<html><body>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% var name = 'Rambo'; %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%& '/hello/ %>
+\end_layout
+
+\begin_layout Plain Layout
+
+</body></html>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Our 
+\begin_inset Quotes eld
+\end_inset
+
+/libraries/includes/hello.t.html
+\begin_inset Quotes erd
+\end_inset
+
+ can look like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<p>Hello, <%= name %>!</p>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As you can see, the global variable 
+\begin_inset Quotes eld
+\end_inset
+
+name
+\begin_inset Quotes erd
+\end_inset
+
+ is indeed shared between these two fragments, and there's no advantage
+ to using conversation.locals instead.
+\end_layout
+
+\begin_layout Standard
+But you might have to use conversation.locals if:
+\end_layout
+
+\begin_layout Itemize
+your need to share state with a 
+\bar under
+filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filters"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+you are mixing scriptlets written in 
+\bar under
+different languages (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "templating-languages"
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Subsubsection
@@ -25504,7 +27004,7 @@ Though
 application.globals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-globals"
+reference "application-globals"
 
 \end_inset
 
@@ -25515,7 +27015,7 @@ reference "../api/|application-globals"
 application.sharedGlobals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-shared-globals"
+reference "application-shared-globals"
 
 \end_inset
 
@@ -25526,7 +27026,7 @@ reference "../api/|application-shared-globals"
 application.distributedGlobals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|application-distributed-globals"
+reference "application-distributed-globals"
 
 \end_inset
 
@@ -25537,7 +27037,7 @@ reference "../api/|application-distributed-globals"
 executable.globals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "../api/|executable-globals"
+reference "executable-globals"
 
 \end_inset
 
@@ -25547,14 +27047,21 @@ reference "../api/|executable-globals"
 \end_layout
 
 \begin_layout Quote
-Note for Clojure flavor: Though Clojure goes a long way towards simplifying
- concurrent programming, it does not solve the problem of concurrent access
- to global state.
+
+\series bold
+Note for Clojure
+\series default
+: Though Clojure goes a long way towards simplifying concurrent programming,
+ it does not solve the problem of concurrent access to application.globals.
  You still need to read this section!
 \end_layout
 
+\begin_layout Paragraph
+The Problem
+\end_layout
+
 \begin_layout Standard
-For example, this code (Python flavor) is broken:
+This code might seem OK to you, but it's subtly broken:
 \end_layout
 
 \begin_layout Standard
@@ -25565,32 +27072,42 @@ status open
 
 \begin_layout Plain Layout
 
-def get_connection()
+function getConnection() {
 \end_layout
 
 \begin_layout Plain Layout
 
-	data_source = application.globals['myapp.data.source']
+	var connectionPool = application.globals.get('database.pool')
 \end_layout
 
 \begin_layout Plain Layout
 
-	if data_source is None:
+	if (!Sincerity.Objects.exists(connectionPool)) {
 \end_layout
 
 \begin_layout Plain Layout
 
-		data_source = data_source_factory.create()
+		connectionPool = createPool()
 \end_layout
 
 \begin_layout Plain Layout
 
-		application.globals['myapp.data.source'] = data_source
+		application.globals.put('database.pool', connectionPool)
 \end_layout
 
 \begin_layout Plain Layout
 
-	return data_source.get_connection()
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return connectionPool.getConnection()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \end_inset
@@ -25602,23 +27119,42 @@ def get_connection()
 The problem is that in the short interval between comparing the value in
  the “if” statement and setting the global value in the “then” statement,
  another thread may have already set the value.
- Thus, the “data_source” instance you are referring to in the current thread
- would be different from the “myapp.data.source” global used by other threads.
- The value is not truly shared! In some cases, this would only result in
- a few extra, unnecessary resources being created.
+ Thus, the “connectionPool” instance you are referring to in the 
+\emph on
+current
+\emph default
+ thread would be different from the “database.pool” application.global used
+ by other threads.
+ The valye is thus not truly shared! In some cases, this would only result
+ in a few extra, unnecessary connection pools being created.
  But in some cases, when you rely on the uniqueness of the global, this
- can lead to subtle bugs.
+ can lead to subtle bugs that will appear only under high concurrency.
 \end_layout
 
 \begin_layout Quote
-This may seem like a very rare occurrence to you: another thread would have
- to set the value 
+Newcomers to concurrent programming tend to think that these kinds of bugs
+ are very rare: another thread would have to set the value 
 \emph on
 exactly
 \emph default
- between our comparison and our set.
- If your application has many concurrent users, and your machine has many
- CPU cores, it can actually happen quite frequently.
+ between our 
+\begin_inset Quotes eld
+\end_inset
+
+if
+\begin_inset Quotes erd
+\end_inset
+
+ and our 
+\begin_inset Quotes eld
+\end_inset
+
+then.
+\begin_inset Quotes erd
+\end_inset
+
+ This is wrong: if your application has many concurrent users, and your
+ machine has many CPU cores, it can actually happen quite frequently.
  And, even if rare, your application has a chance of breaking if 
 \emph on
 just two users use it at the same time
@@ -25627,71 +27163,12 @@ just two users use it at the same time
  This is not a problem you can gloss over, even for simple applications.
 \end_layout
 
-\begin_layout Standard
-Use this code instead:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-def get_connection()
-\end_layout
-
-\begin_layout Plain Layout
-
-	data_source = application.globals['myapp.data.source']
-\end_layout
-
-\begin_layout Plain Layout
-
-	if data_source is None:
-\end_layout
-
-\begin_layout Plain Layout
-
-		data_source = data_source_factory.create()
-\end_layout
-
-\begin_layout Plain Layout
-
-		data_source = application.getGlobal('myapp.data.source', data_source)
-\end_layout
-
-\begin_layout Plain Layout
-
-	return data_source.get_connection()
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The getGlobal call is an atomic compare-and-set operation.
- It guarantees that the returned value is the unique one.
-\end_layout
-
 \begin_layout Paragraph
-Optimizing for Performance
+A Solution
 \end_layout
 
 \begin_layout Standard
-You may have noticed, in the code above, that if another thread had already
- set the global value, then our created data source would be discarded.
- If data source creation is heavy and slow, then this could affect our performan
-ce.
- The only way to guarantee that this would not happen would be to make the
- entire operation atomic, by synchronizing it with a lock:
-\end_layout
-
-\begin_layout Standard
-Here's an example:
+Here's a fixed, concurrently safe version of the above code:
 \end_layout
 
 \begin_layout Standard
@@ -25702,57 +27179,17 @@ status open
 
 \begin_layout Plain Layout
 
-def get_connection()
+function getConnection() {
 \end_layout
 
 \begin_layout Plain Layout
 
-	lock = application.getGlobal('myapp.data.source.lock', RLock())
+	return application.getGlobal('database.pool', createPool()).getConnection()
 \end_layout
 
 \begin_layout Plain Layout
 
-	lock.acquire()
-\end_layout
-
-\begin_layout Plain Layout
-
-	try:
-\end_layout
-
-\begin_layout Plain Layout
-
-		data_source = application.globals['myapp.data.source']
-\end_layout
-
-\begin_layout Plain Layout
-
-		if data_source is None:
-\end_layout
-
-\begin_layout Plain Layout
-
-			data_source = data_source_factory.create()
-\end_layout
-
-\begin_layout Plain Layout
-
-			application.globals['myapp.data.source'] = data_source
-\end_layout
-
-\begin_layout Plain Layout
-
-		return data_source.get_connection()
-\end_layout
-
-\begin_layout Plain Layout
-
-	finally:
-\end_layout
-
-\begin_layout Plain Layout
-
-		lock.release()
+}
 \end_layout
 
 \end_inset
@@ -25761,26 +27198,78 @@ def get_connection()
 \end_layout
 
 \begin_layout Standard
-Note that we have to store our RLock as a unique global, too.
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getGlobal"
+
+\end_inset
+
+ call is an 
+\emph on
+atomic compare-and-set operation
+\emph default
+, which 
+\emph on
+guarantees
+\emph default
+ that the returned value is a unique instance.
 \end_layout
 
 \begin_layout Standard
-Not only is the code above complicated, but synchronization has its own
- performance penalties, which 
+There are two things worth noting:
+\end_layout
+
+\begin_layout Itemize
+The fixed code is 
+\emph on
+much 
+\emph default
+shorter than the broken code! This is due to the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getGlobal API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getGlobal"
+
+\end_inset
+
+, which internally actually does several operations for you.
+\end_layout
+
+\begin_layout Itemize
+You can see that createPool is 
+\emph on
+always
+\emph default
+ called, even if the internal compare-and-set of 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getGlobal"
+
+\end_inset
+
+ fails.
+ This means that in some cases we will be creating a database connection
+ pool and then immediately discarding it.
+ This is a waste, but it's also a security issue: under very high concurrency,
+ we might be creating a lot of these unnecessary connection pools, which
+ could in fact lead to an overload on our database server.
+ We thus 
 \emph on
 might
 \emph default
- make this apparent optimization actually perform worse.
- It's definitely not a good idea to blindly apply this technique: attempt
- it only if you are experiencing a problem with resource use or performance,
- and then make sure that you're not making things worse with synchronization.
+ be vulnerable to denial of service (DoS) attacks.
+\end_layout
+
+\begin_layout Paragraph
+A Better Solution
 \end_layout
 
 \begin_layout Standard
-Here's a final version of our get_connection function that lets you control
- whether to lock access.
- This can help you more easily compare which technique works better for
- your application:
+We can significantly reduce the number of times createPool is called by
+ checking to see if the application.global is already set:
 \end_layout
 
 \begin_layout Standard
@@ -25791,82 +27280,37 @@ status open
 
 \begin_layout Plain Layout
 
-def get_connection(lock_access=False)
+function getConnection() {
 \end_layout
 
 \begin_layout Plain Layout
 
-	if lock_access:
+	var connectionPool = application.globals.get('database.pool')
 \end_layout
 
 \begin_layout Plain Layout
 
-		lock = application.getGlobal('myapp.data.source.lock', RLock())
+	if (!Sincerity.Objects.exists(connectionPool)) {
 \end_layout
 
 \begin_layout Plain Layout
 
-		lock.acquire()
+		connectionPool = application.getGlobal('database.pool', createPool())
 \end_layout
 
 \begin_layout Plain Layout
 
-	try:
+	}
 \end_layout
 
 \begin_layout Plain Layout
 
-		data_source = application.globals['myapp.data.source']
+	return connectionPool.getConnection()
 \end_layout
 
 \begin_layout Plain Layout
 
-		if data_source is None:
-\end_layout
-
-\begin_layout Plain Layout
-
-			data_source = data_source_factory.create()
-\end_layout
-
-\begin_layout Plain Layout
-
-			if lock_access:
-\end_layout
-
-\begin_layout Plain Layout
-
-				application.globals['myapp.data.source'] = data_source
-\end_layout
-
-\begin_layout Plain Layout
-
-			else:
-\end_layout
-
-\begin_layout Plain Layout
-
-				data_source = application.getGlobal('myapp.data.source', data_source)
-\end_layout
-
-\begin_layout Plain Layout
-
-		return data_source.get_connection()
-\end_layout
-
-\begin_layout Plain Layout
-
-	finally:
-\end_layout
-
-\begin_layout Plain Layout
-
-		if lock_access:
-\end_layout
-
-\begin_layout Plain Layout
-
-			lock.release()
+}
 \end_layout
 
 \end_inset
@@ -25875,135 +27319,109 @@ def get_connection(lock_access=False)
 \end_layout
 
 \begin_layout Standard
-Complicated, isn't it? Unfortunately, complicated code and fine-tuning is
- the price you must pay in order to support concurrent access, which is
- the key to Prudence's scalability.
+With this code, we might still have createPool called multiple times if
+ the function is called concurrently while the application.global is still
+ unset.
+ The problem will disappear as soon as the application.global is set, but
+ until then we still have a window of vulnerability.
+\end_layout
+
+\begin_layout Paragraph
+Yet Another Solution
 \end_layout
 
 \begin_layout Standard
-But, don't be discouraged.
- The standard protocol for using Prudence's globals will likely be good
- enough for the vast majority of your state-sharing needs.
-\end_layout
-
-\begin_layout Subsection
-APIs
-\end_layout
-
-\begin_layout Standard
-Prudence provides you with an especially rich set of APIs.
-\end_layout
-
-\begin_layout Standard
-The core APIs required for using Prudence are multilingual, in that they
- are implemented via standard JVM classes that can be called from all supported
- programming languages: JavaScript, Python, Ruby, PHP, Lua, Groovy and Clojure.
- Indeed, the entire JVM standard APIs can be access in this manner, in addition
- to any JVM library installed in your container (under 
-\begin_inset Quotes eld
-\end_inset
-
-/libraries/jars/
-\begin_inset Quotes erd
-\end_inset
-
-).
-\end_layout
-
-\begin_layout Standard
-Most of these languages additionally have a rich standard API of their own
- which you can use, as well as an ecology of libraries.
- JavaScript, however, stands out for having a very meager standard API.
- To fill in this gap, Sincerity comes with a useful set of JavaScript Libraries,
- which you are free to use.
- Some of these are written pure JavaScript, offering new and useful functionalit
-y, while others provide JavaScript-friendly wrappers over standard JVM libraries.
-\end_layout
-
-\begin_layout Standard
-Furthermore, Prudence comes with JavaScript-friendly wrappers over the core
- Prudence APIs.
- Future versions of Prudence may provide similar friendly wrappers for the
- other supported languages (please contribute!).
- Until then, there's nothing that these wrappers can do that you can't do
- with the core APIs.
-\end_layout
-
-\begin_layout Subsubsection
-Using the Documentation
-\end_layout
-
-\begin_layout Quote
-The Prudence team has spent a great amount of time on meticulously documenting
- the APIs.
- Please send us a 
-\begin_inset CommandInset href
-LatexCommand href
-name "bug report"
-target "http://code.google.com/p/prudence/issues/list"
-
-\end_inset
-
- if you find a mistake, or think that the documentation can use some clarificati
-on!
-\end_layout
-
-\begin_layout Standard
-For the sake of coherence all these APIs are 
-\begin_inset CommandInset href
-LatexCommand href
-name "documented together online"
-target "http://threecrickets.com/api/javascript/"
-
-\end_inset
-
- in their JavaScript format.
- This includes both the multilingual as well as the JavaScript-specific
- APIs.
- For the multilingual APIs, just make sure to call the APIs using the appropriat
-e syntax for the programming language you are using.
- For example, here is the same API call in all supported languages:
+The only way to 
+\emph on
+guarantee
+\emph default
+ that createPool is not called more than once is make the entire operation
+ atomic by synchronizing it with a lock:
 \end_layout
 
 \begin_layout Standard
 \begin_inset listings
+lstparams "breaklines=true"
 inline false
 status open
 
 \begin_layout Plain Layout
 
-JavaScript: conversation.redirectSeeOther('http://newsite.org/')
+importClass(java.util.concurrent.locks.ReentrantLock)
 \end_layout
 
 \begin_layout Plain Layout
 
-Python:     conversation.redirectSeeOther('http://newsite.org/')
 \end_layout
 
 \begin_layout Plain Layout
 
-Ruby:       $conversation.redirect_see_other 'http://newsite.org/'
+function getConnection() {
 \end_layout
 
 \begin_layout Plain Layout
 
-PHP:        $conversation->redirectSeeOther('http://newsite.org/');
+	var lock = application.getGlobal('database.pool.lock', new ReentrantLock())
 \end_layout
 
 \begin_layout Plain Layout
 
-Lua:        conversation:redirectSeeOther('http://newsite.org/')
+	lock.lock()
 \end_layout
 
 \begin_layout Plain Layout
 
-Groovy:     conversation.redirectSeeOther('http://newsite.org/')
+	try {
 \end_layout
 
 \begin_layout Plain Layout
 
-Clojure:    (..
- conversation redirectSeeOther "http://newsite.org/")
+		var connectionPool = application.globals.get('database.pool')
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (!Sincerity.Objects.exists(connectionPool)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			connectionPool = application.getGlobal('database.pool', createPool())
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		return connectionPool.getConnection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+		lock.unlock()
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \end_inset
@@ -26012,528 +27430,562 @@ Clojure:    (..
 \end_layout
 
 \begin_layout Standard
-The APIs are not fully documented here, but rather summarized to give you
- a global view of what's available, with links to the full documentation
- available online.
- The documentation also lets you view the complete JavaScript source code.
+Note our use of try/finally: it's in order to 
+\emph on
+guarantee 
+\emph default
+that the lock is released, even if an exception is thrown from our code.
+ Unreleased locks will cause your threads to hang.
 \end_layout
 
 \begin_layout Standard
-You may be further interested in Prudence's low-level API, which is also
- 
-\begin_inset CommandInset href
-LatexCommand href
-name "fully documented online"
-target "http://threecrickets.com/api/java/prudence/"
-
-\end_inset
-
-.
- As a final resort, sometimes the best documentation is the 
-\begin_inset CommandInset href
-LatexCommand href
-name "source code itself"
-target "http://code.google.com/p/prudence/source/browse/"
-
-\end_inset
-
-.
+Not only is the code above complicated, but synchronization introduces performan
+ce penalties.
+ It's definitely not a good idea to blindly apply this solution.
 \end_layout
 
 \begin_layout Standard
-A few more language-specific notes:
-\end_layout
-
-\begin_layout Paragraph
-JavaScript
-\end_layout
-
-\begin_layout Standard
-Prudence's current JavaScript engine, Rhino, does not provide dictionary
- access to maps, so you must use get- and put- notation to access map attributes.
- For example, use 
-\begin_inset Quotes eld
-\end_inset
-
-application.globals.get('myapp.data.name')
-\begin_inset Quotes erd
-\end_inset
-
- rather than 
-\begin_inset Quotes eld
-\end_inset
-
-application.globals['myapp.data.name']
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph
-Python
+Concurrent programming is non-trivial and always involves weighing the pros
+ and cons of various solutions for specific situations.
+ So, hybrid approaches are sometimes the best: choose the right solution
+ according to the context.
 \end_layout
 
 \begin_layout Standard
-If you're using the Jepp engine, rather than the default Jython engine,
- you will need to use get- and set- notation to access attributes.
- For example, use 
-\begin_inset Quotes eld
-\end_inset
-
-application.getArguments()
-\begin_inset Quotes erd
-\end_inset
-
- to access application.arguments in Jepp.
-\end_layout
-
-\begin_layout Paragraph
-Ruby
+Finally, then, here's a version of the above code that will allow us to
+ select if we want to use the lock or not:
 \end_layout
 
 \begin_layout Standard
-Prudence's Ruby engine, JRuby, conveniently lets you use the Ruby naming
- style for API calls.
- For example, you can use $application.get_global instead of $application.getGloba
-l.
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+importClass(java.util.concurrent.locks.ReentrantLock)
 \end_layout
 
-\begin_layout Paragraph
-Lua
-\end_layout
-
-\begin_layout Standard
-You will need to use the get- and set- notation to access attributes.
- For example, you must use 
-\begin_inset Quotes eld
-\end_inset
-
-conversation:getEntity()
-\begin_inset Quotes erd
-\end_inset
-
- to access conversation.entity.
-\end_layout
-
-\begin_layout Paragraph
-Clojure
-\end_layout
-
-\begin_layout Standard
-You will need to use get- and set- notation to access attributes.
- For example, use 
-\begin_inset Quotes eld
-\end_inset
-
-(.getArguments application)
-\begin_inset Quotes erd
-\end_inset
-
- to access application.arguments.
- You can also use Clojure's bean form, for example 
-\begin_inset Quotes eld
-\end_inset
-
-(bean application)
-\begin_inset Quotes erd
-\end_inset
-
-, to create a read-only representation of Prudence services.
-\end_layout
-
-\begin_layout Subsubsection
-Prudence APIs
-\end_layout
-
-\begin_layout Standard
-These core APIs are implemented by the JVM and can be used by any support
- programming language.
- The APIs consist of three namespaces that are defined as global variables.
-\end_layout
-
-\begin_layout Paragraph
-\begin_inset CommandInset href
-LatexCommand href
-name "application"
-target "http://threecrickets.com/api/javascript/?namespace=application"
-
-\end_inset
-
+\begin_layout Plain Layout
 
 \end_layout
 
-\begin_layout Paragraph
-\begin_inset CommandInset href
-LatexCommand href
-name "document"
-target "http://threecrickets.com/api/javascript/?namespace=document"
+\begin_layout Plain Layout
 
-\end_inset
-
-
+function getConnection(safe) {
 \end_layout
 
-\begin_layout Paragraph
-\begin_inset CommandInset href
-LatexCommand href
-name "conversation"
-target "http://threecrickets.com/api/javascript/?namespace=conversation"
+\begin_layout Plain Layout
 
-\end_inset
-
-
+	if (safe) {
 \end_layout
 
-\begin_layout Subsubsection
-Scripturian API
+\begin_layout Plain Layout
+
+		var lock = application.getGlobal('database.pool.lock', new ReentrantLock())
 \end_layout
 
-\begin_layout Paragraph
-\begin_inset CommandInset href
-LatexCommand href
-name "executable"
-target "http://threecrickets.com/api/javascript/?namespace=executable"
+\begin_layout Plain Layout
 
-\end_inset
-
-
+		lock.lock()
 \end_layout
 
-\begin_layout Subsubsection
-JavaScript Libraries
+\begin_layout Plain Layout
+
+	}
 \end_layout
 
-\begin_layout Standard
-The APIs are only available for JavaScript running within Scripturian.
+\begin_layout Plain Layout
+
+	try {
 \end_layout
 
-\begin_layout Paragraph
-Sincerity JavaScript Library
+\begin_layout Plain Layout
+
+		var connectionPool = application.globals.get('database.pool')
 \end_layout
 
-\begin_layout Itemize
-/sincerity/calendar/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Calendar"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Calendar"
+\begin_layout Plain Layout
+
+		if (!Sincerity.Objects.exists(connectionPool)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			connectionPool = application.getGlobal('database.pool', createPool())
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+		return connectionPool.getConnection()
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (safe) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			lock.unlock()
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Itemize
-/sincerity/classes/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Classes"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Classes"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/cryptography/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Cryptography"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Cryptography"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/files/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Files"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Files"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/iterators/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Iterators"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Iterators"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/json/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.JSON"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.JSON"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/jvm/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.JVM"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.JVM"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/localization/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Localization"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Localization"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/lucene/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Lucene"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Lucene"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/mail/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Mail"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Mail"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/objects/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Objects"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Objects"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/rhino/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Rhino"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Rhino"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/templates/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Templates"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Templates"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/xml/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.XML"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.XML"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph
-Prudence JavaScript Library
-\end_layout
-
-\begin_layout Itemize
-/prudence/blocks/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Blocks"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Blocks"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/prudence/lazy/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Lazy"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Lazy"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/prudence/logging/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Logging"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Logging"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/prudence/resources/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Resources"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Resources"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/prudence/tasks/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Prudence.Tasks"
-target "http://threecrickets.com/api/javascript/?namespace=Prudence.Tasks"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph
-Libraries for Bootstrap and Configuration
-\end_layout
-
-\begin_layout Itemize
-/sincerity/annotations/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Annotations"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Annotations"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/sincerity/container/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Container"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Containter"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/prudence/setup/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Routing"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Routing"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-/prudence/lazy/: 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity.Lazy"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Lazy"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph
-Diligence
 \end_layout
 
 \begin_layout Subsection
 Execution Environments
 \end_layout
 
+\begin_layout Standard
+This section serves as a summary for advanced programmers who are curious
+ about the differences between the many Scripturian-based execution environments
+ available in Prudence.
+\end_layout
+
 \begin_layout Subsubsection
-Bootstrap
+Programs vs.
+ Entry Points
 \end_layout
 
 \begin_layout Standard
-Straightforward beginning-to-end script
+These two types of execution environment are very different in terms of
+ programming, scopes and threads.
+\end_layout
+
+\begin_layout Paragraph
+Programming
 \end_layout
 
 \begin_layout Standard
-Except for initialization tasks
-\end_layout
-
-\begin_layout Subsubsection
-Manual Resources and Handlers
-\end_layout
-
-\begin_layout Subsubsection
-Template Resources
-\end_layout
-
-\begin_layout Subsubsection
-Execute Resource
-\end_layout
-
-\begin_layout Subsubsection
-Cron Tasks
+Program code is executed from beginning to end, like a script.
+ The programmer has the choice of defining functions, classes, etc., but
+ does not have to.
+ Programs can be merely a sequence of statements.
 \end_layout
 
 \begin_layout Standard
-Two options!
+Entry point code is 
+\emph on
+also 
+\emph default
+executed 
+\emph on
+once 
+\emph default
+from beginning to end, however its intended use is within the defined 
+\bar under
+entry points (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-entry-points"
+
+\end_inset
+
+)
+\bar default
+.
+ So, while you 
+\emph on
+can 
+\emph default
+include statements, just like in a program, it would be problematic if they
+ had any side effects other than setting up the entry points.
+ To understand why, see below.
+\end_layout
+
+\begin_layout Paragraph
+Scopes and Threads
+\end_layout
+
+\begin_layout Standard
+Programs get they own unique global scope every time they are executed,
+ which is discarded when the program ends.
+ In the case of configuration scripts, this is rather trivial: those scripts
+ are all run in a single thread, once, and thus always use a single global
+ scope.
+ However, in a threaded environment---
+\bar under
+template resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources"
+
+\end_inset
+
+)
+\bar default
+---you may have many of these global scopes existing at the same for your
+ the same code.
+ To share state between the threads, you would thus need to use 
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\bar default
+ or similar mechanisms.
+\end_layout
+
+\begin_layout Standard
+Entry point code works very differently: the code always uses a 
+\emph on
+single 
+\emph default
+global scope shared by 
+\emph on
+all 
+\emph default
+threads, and indeed the code is executed from beginning to end only when
+ initialized.
+ However, if a recompilation is triggered (say, if the source code has been
+ modified), then a new global scope will be created, and the code will be
+ executed from beginning to end 
+\emph on
+again
+\emph default
+.
+ The implications of this are discussed above in 
+\bar under
+application.globals vs.
+ global variables (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "global-variables"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Paragraph
+Performance Considerations
+\begin_inset CommandInset label
+LatexCommand label
+name "execution-environments-performance"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As you may conclude from the above, in threaded environments entry point
+ code is executed from beginning to end much less frequently than program
+ code.
+ This means that if performance is crucial, you should prefer to use entry
+ points over programs.
+ However, there are usually a lot of other factors involved, and indeed
+ the differences between these two execution environment types may not be
+ the important once.
+ For example, even though manual resources are implemented as entry points,
+ there will likely be no performance advantage in using them instead of
+ template resources, even though the latter involves a new global scope
+ per each request.
+ Creating a global scopes is very lightweight for most programming language
+ engines: the differences in performance depend more strongly on what kind
+ of code you chose to execute in the program.
+\end_layout
+
+\begin_layout Standard
+The only Prudence feature that offers a clear choice between these two types
+ is background tasks 
+\bar under
+spawned via API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "task-apis"
+
+\end_inset
+
+)
+\bar default
+.
+ There, you can decide as to whether you want to use a program or an entry
+ point.
+\end_layout
+
+\begin_layout Subsubsection
+Comparison Table
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Feature
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Type
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Configuration scripts (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+programs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+entry points
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Template resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "template-resources"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+programs
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Background tasks (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+programs or entry points
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Filters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "filters"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+entry points
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Cache key template plugins (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "caching-key-template-plugins"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+entry points
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\bar under
+Scriptlet plugins (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scriptlet-plugins"
+
+\end_inset
+
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+entry points
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -26553,6 +28005,13 @@ TODO
 
 \begin_layout Subsection
 Logging
+\begin_inset CommandInset label
+LatexCommand label
+name "logging"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -27762,8 +29221,7 @@ target "http://threecrickets.com/api/javascript/?namespace=document&item=documen
 \end_inset
 
 .
- Implement your task as a program if it is supposed to run only once in
- a while.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -27817,7 +29275,7 @@ context
 
  will be provided as an entry point argument.
  Additionally, entry points allow you to return a value to the caller.
- Implement your task as an entry point if it is frequently used.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -27867,6 +29325,35 @@ function myEntryPoint(context) {
 \end_inset
 
 
+\end_layout
+
+\begin_layout Paragraph
+Performance Considerations
+\end_layout
+
+\begin_layout Standard
+Generally, tasks implemented as entry points will be spawned 
+\bar under
+faster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "execution-environments-performance"
+
+\end_inset
+
+)
+\bar default
+.
+ So, the rule of thumb should be:
+\end_layout
+
+\begin_layout Itemize
+Implement your task as a program if it is supposed to run only once in a
+ while.
+\end_layout
+
+\begin_layout Itemize
+Implement your task as an entry point if it is frequently used.
 \end_layout
 
 \begin_layout Subsection
@@ -29629,7 +31116,18 @@ Now let's create the actual filter in
 \end_inset
 
 .
- We'll start with a trivial handleAfter implementation:
+ We'll start with a trivial implementation of the handleAfter 
+\bar under
+entry point (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "programming-entry-points"
+
+\end_inset
+
+)
+\bar default
+:
 \end_layout
 
 \begin_layout Standard
@@ -30292,7 +31790,7 @@ reference "app-globals"
 )
 \bar default
 .
- Globals,of course, affect the entire application.
+ Globals, of course, affect the entire application.
  However, you may sometimes need 
 \emph on
 local 
@@ -31583,7 +33081,18 @@ id
 \begin_layout Standard
 But you can also do the opposite: interpolate the values that were extracted
  from the matched URI template.
- An example of redirection that both extracts and interpolates:
+ An example of 
+\bar under
+redirection (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "redirection"
+
+\end_inset
+
+)
+\bar default
+ that both extracts and interpolates:
 \end_layout
 
 \begin_layout Standard
@@ -32363,7 +33872,121 @@ The Prudence component is bootstrapped here.
 \end_layout
 
 \begin_layout Subsubsection
+sharedGlobals
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-shared-globals"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In all the 
+\begin_inset Quotes eld
+\end_inset
+
+/component/
+\begin_inset Quotes erd
+\end_inset
+
+ configuration files, you have access to a global 
+\begin_inset Quotes eld
+\end_inset
+
+sharedGlobals
+\begin_inset Quotes erd
+\end_inset
+
+ JavaScript dict.
+ Values you set here will become 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ once the component is started.
+ This dict works similarly to 
+\bar under
+app.globals in settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "app-globals"
+
+\end_inset
+
+)
+\bar default
+: it is likewise 
+\begin_inset Quotes eld
+\end_inset
+
+flattened.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For an example, here we set a database connection pool as a shared global,
+ using a 
+\bar under
+custom service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-services"
+
+\end_inset
+
+)
+\bar default
+ defined in 
+\begin_inset Quotes eld
+\end_inset
+
+/component/services/database/default.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sharedGlobals.database = sharedGlobals.database || {}
+\end_layout
+
+\begin_layout Plain Layout
+
+sharedGlobals.database.pool = createPool()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
 Initializers
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-initializers"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -32792,8 +34415,18 @@ Less memory use than running multiple JVMs.
 \end_layout
 
 \begin_layout Enumerate
-Shared memory: you can use application.sharedGlobals to share state between
- applications.
+Shared memory: you can use 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ to share state between applications.
 \end_layout
 
 \begin_layout Paragraph
@@ -33765,6 +35398,13 @@ Will be used if no other connector is installed.
 
 \begin_layout Subsection
 /component/services/
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-services"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -33780,6 +35420,48 @@ before
  Several services are required to support various Prudence features, but
  you may freely add your own subdirectories here, to support your own features
  and subsystems.
+\end_layout
+
+\begin_layout Standard
+Remember that your custom services have access to 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+sharedGlobals
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+initializers
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-initializers"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection

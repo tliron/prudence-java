@@ -44,7 +44,9 @@ var Prudence = {}
  * <p>
  * Names can be any string, but the convention is to use "." paths to allow for unique "namespaces"
  * that would not overlap with future extensions, expansions or third-party libraries. For example,
- * use "myapp.data.sourceName" rather than "dataSourceName" to avoid conflict.
+ * use "myapp.data.sourceName" rather than "dataSourceName", to avoid conflict.
+ * <p>
+ * The {@link application#getGlobal} API is a useful for concurrent access. 
  * <p>
  * Implementation note: Prudence's application globals are identical to Restlet application attributes.
  * 
@@ -54,8 +56,26 @@ var Prudence = {}
  */
 
 /**
+ * Gets a value from {@link application#globals}, or else sets it if not already set.
+ * <p>
+ * Crucially, this is an <i>atomic compare-and-set operation</i>, guaranteeing that the global will
+ * be set once and only once.
+ * <p>
+ * The effect is identical to calling
+ * <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html#putIfAbsent(K,%20V)">putIfAbsent</a>
+ * on {@link application#globals}.
+ * 
+ * @name application.getGlobal
+ * @function
+ * @param {String} name The name of the global
+ * @param value The default value to set if the global is not set
+ */
+
+/**
  * These are similar to {@link application#globals}, but are shared by all Prudence applications
  * running in the component.
+ * <p>
+ * The {@link application#getSharedGlobal} API is a useful for concurrent access. 
  * <p>
  * Implementation note: Prudence's application globals are identical to Restlet component attributes.
  * Note that some secure Prudence deployments may disable sharing between applications, in which case there
@@ -63,13 +83,31 @@ var Prudence = {}
  * 
  * @name application.sharedGlobals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
- * @see application#distributionGlobals
+ * @see application#distributedGlobals
  * @see executable#globals
  */
- 
+
+/**
+ * Gets a value from {@link application#sharedGlobals}, or else sets it if not already set.
+ * <p>
+ * Crucially, this is an <i>atomic compare-and-set operation</i>, guaranteeing that the shared global will
+ * be set once and only once.
+ * <p>
+ * The effect is identical to calling
+ * <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html#putIfAbsent(K,%20V)">putIfAbsent</a>
+ * on {@link application#sharedGlobals}.
+ * 
+ * @name application.getSharedGlobal
+ * @function
+ * @param {String} name The name of the shared global
+ * @param value The default value to set if the shared global is not set
+ */
+
 /**
  * These are similar to {@link application#sharedGlobals}, but are shared by all members of the Prudence
  * cluster to which we belong.
+ * <p>
+ * The {@link application#getDistributedGlobal} API is a useful for concurrent access. 
  * <p>
  * Note that values stored here <i>must be serializable</i>. Depending on your
  * object implementation, this may mean having to manually serialize/deserialize the value into a string
@@ -84,6 +122,22 @@ var Prudence = {}
  *
  * @name application.distributedGlobals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ */
+
+/**
+ * Gets a value from {@link application#distributedGlobals}, or else sets it if not already set.
+ * <p>
+ * Crucially, this is an <i>atomic compare-and-set operation</i>, guaranteeing that the distributed global will
+ * be set once and only once.
+ * <p>
+ * The effect is identical to calling
+ * <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html#putIfAbsent(K,%20V)">putIfAbsent</a>
+ * on {@link application#distributedGlobals}.
+ * 
+ * @name application.getDistributedGlobal
+ * @function
+ * @param {String} name The name of the distributed global
+ * @param value The default value to set if the distributed global is not set
  */
 
 /**
@@ -396,9 +450,9 @@ var Prudence = {}
  */
 
 /**
- * The "document" namespace has two distinct uses. First, it represents the file you are in: this document. This is where you can
- * access the document's attributes and possibly change them. Many of these attributes have to do with caching. The second use of
- * this namespace is for accessing <i>any</i> document, e.g. {@link document#executeOnce}, {@link document#markExecuted}.
+ * The "document" namespace has two distinct uses. First, 
+ * this namespace is used for accessing <i>other</i> documents, e.g. {@link document#require}, {@link document#markExecuted}.
+ * The second use is for accessing the document you are currently in: <i>this</i> document.
  * Prudence combines these two uses into one semantic namespace, but it's useful to understand that they are functionally separate.
  * <p>
  * Note that in the case of scriptlet resources, the term "this document" is meant include all scriptlets on the page, even if they are
@@ -1673,6 +1727,22 @@ var Prudence = {}
  * 
  * @name executable.globals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ */
+
+/**
+ * Gets a value from {@link executable#globals}, or else sets it if not already set.
+ * <p>
+ * Crucially, this is an <i>atomic compare-and-set operation</i>, guaranteeing that the executable global will
+ * be set once and only once.
+ * <p>
+ * The effect is identical to calling
+ * <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html#putIfAbsent(K,%20V)">putIfAbsent</a>
+ * on {@link executable#globals}.
+ * 
+ * @name executable.getGlobal
+ * @function
+ * @param {String} name The name of the executable global
+ * @param value The default value to set if the executable global is not set
  */
 
 /**

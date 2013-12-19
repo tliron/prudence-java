@@ -50,10 +50,6 @@ import com.threecrickets.prudence.util.FormWithFiles;
 public class ConversationService
 {
 	//
-	// Constants
-	//
-
-	//
 	// Construction
 	//
 
