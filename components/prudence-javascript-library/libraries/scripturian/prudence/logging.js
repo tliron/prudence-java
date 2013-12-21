@@ -225,6 +225,10 @@ Prudence.Logging = Prudence.Logging || function() {
 		 * @returns {Prudence.Logging.Logger} This logger
 		 */
 	    Public.dumpShort = function(obj, description, level) {
+			if (Sincerity.Objects.isString(level)) {
+				level = levels[level.toLowerCase()]
+			}
+			
 			level = level || java.util.logging.Level.INFO
 			if (this.logger.isLoggable(level)) {
 				var dump = Sincerity.Objects.isObject(obj) ? Sincerity.JSON.to(obj) : String(obj)
@@ -247,6 +251,10 @@ Prudence.Logging = Prudence.Logging || function() {
 		 * @returns {Prudence.Logging.Logger} This logger
 		 */
 	    Public.dumpLong = function(obj, description, level) {
+			if (Sincerity.Objects.isString(level)) {
+				level = levels[level.toLowerCase()]
+			}
+			
 			level = level || java.util.logging.Level.INFO
 			if (this.logger.isLoggable(level)) {
 				var dump = Sincerity.Objects.isObject(obj) ? Sincerity.JSON.to(obj, true) : String(obj)
@@ -272,6 +280,10 @@ Prudence.Logging = Prudence.Logging || function() {
 		 * @returns {Prudence.Logging.Logger} This logger
 		 */
 	    Public.time = function(description, fn, scope, level) {
+			if (Sincerity.Objects.isString(level)) {
+				level = levels[level.toLowerCase()]
+			}
+			
 			level = level || java.util.logging.Level.INFO
 			if (!this.logger.isLoggable(level)) {
 				fn.call(scope)

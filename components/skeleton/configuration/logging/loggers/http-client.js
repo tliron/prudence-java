@@ -1,2 +1,5 @@
 
-repository.getLogger('org.apache.http').level = Level.INFO
+configuration.logger({
+	name: 'org.apache.http',
+	level: 'info'
+})

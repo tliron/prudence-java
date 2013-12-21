@@ -1,2 +1,5 @@
 
-repository.getLogger('prudence').level = Level.INFO
+configuration.logger({
+	name: 'prudence',
+	level: 'info'
+})

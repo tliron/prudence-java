@@ -413,7 +413,15 @@ target "http://en.wikipedia.org/wiki/Common_Log_Format"
 \end_inset
 
  log of all web requests.
- By default, 
+ Logs prefixed with 
+\begin_inset Quotes eld
+\end_inset
+
+prudence-
+\begin_inset Quotes erd
+\end_inset
+
+ are created per application, and 
 \begin_inset Quotes eld
 \end_inset
 
@@ -421,10 +429,9 @@ common.log
 \begin_inset Quotes erd
 \end_inset
 
- is used for everything else: your own applications as well as Prudence's
- subsystems.
- The logs will automatically roll, so don't worry about them filling your
- storage.
+ is used for everything else.
+ The logs will automatically roll, so don't worry about them overflowing
+ your storage.
 \end_layout
 
 \begin_layout Standard
@@ -462,29 +469,35 @@ target "http://threecrickets.com/sincerity/manual/tutorial/"
 
 \begin_layout Itemize
 Of course, you should not run Prudence in a terminal for deployed systems.
- Instead, install Sincerity's powerful 
-\begin_inset CommandInset href
-LatexCommand href
-name "service plugin"
-target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+ Instead, you can run Prudence as a robustly monitored 
+\bar under
+system service/daemon (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "daemon"
 
 \end_inset
 
- to run Prudence as a robustly monitored system daemon.
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Itemize
-Logging uses Sincerity's 
-\begin_inset CommandInset href
-LatexCommand href
-name "logging plugin"
-target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+The 
+\bar under
+logging system (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "logging"
 
 \end_inset
 
-, which is fully configurable.
- You can also use it to centralize logging for your cluster, and even log
- directly to a database, such as MongoDB.
+)
+\bar default
+ is especially robust.
+ You can use it to centralize logging for your cluster, and even log directly
+ to a database, such as MongoDB.
 \end_layout
 
 \begin_layout Subsection
@@ -23026,7 +23039,12 @@ app.settings = {
 
 \begin_layout Plain Layout
 
-	}
+	},
+\end_layout
+
+\begin_layout Plain Layout
+
+	logger: 'myapp'
 \end_layout
 
 \begin_layout Plain Layout
@@ -24179,6 +24197,46 @@ reference "configuration-distributed"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsection
+app.settings.logger
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-logger"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Set this string to override the default logger name.
+ If not set, it will be the name of the application's subdirectory.
+ The actual logger name will be this value prefixed with 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+See the 
+\bar under
+logging chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "logging"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
 \end_layout
 
 \begin_layout Subsection
@@ -26606,8 +26664,8 @@ sly.
 Note for Clojure
 \series default
 : Actually, Clojure namespaces are identical in scope to application.sharedGlobal
-s (all Prudence applications share the same Clojure namespaces), so you
- might prefer to use them because they are more idiomatic.
+s (all Prudence applications running in the same JVM share the same Clojure
+ namespaces), so you might prefer to use them because they are more idiomatic.
  Still, application.sharedGlobals can be useful if you want to share globals
  with other programming languages.
 \end_layout
@@ -26962,7 +27020,8 @@ But you might have to use conversation.locals if:
 \end_layout
 
 \begin_layout Itemize
-your need to share state with a 
+\SpecialChar \ldots{}
+you need to share state with a 
 \bar under
 filter (page 
 \begin_inset CommandInset ref
@@ -26975,6 +27034,7 @@ reference "filters"
 \end_layout
 
 \begin_layout Itemize
+\SpecialChar \ldots{}
 you are mixing scriptlets written in 
 \bar under
 different languages (page 
@@ -28000,7 +28060,12 @@ name "debugging"
 \end_layout
 
 \begin_layout Standard
-TODO
+Let's start by admitting that the debugging facilities for dynamic languages
+ on the JVM are lacking: breakpoints are not supported and there are no
+ language-specific runtime inspection tools.
+ However, there are enough other options for debugging in Prudence that
+ you should be able to find all your bugs.
+ Squashing them is up to you!
 \end_layout
 
 \begin_layout Subsection
@@ -28014,24 +28079,1263 @@ name "logging"
 
 \end_layout
 
-\begin_layout Subsubsection
-application.logger
-\end_layout
-
-\begin_layout Subsubsection
-application.getSubLogger
-\end_layout
-
-\begin_layout Subsubsection
-Configuring Logging
+\begin_layout Standard
+Logging is by far the most useful weapon in your debugging arsenal.
+ Learn it and use it well.
 \end_layout
 
 \begin_layout Standard
+Some programming languages---Python and Ruby---have their own standard logging
+ mechanisms, which you are welcome to use if you prefer.
+ However, consider using Prudence's (actually Sincerity's) logging system
+ instead: it is especially powerful and flexible, and moreover is shared
+ by all programming languages running in Prudence.
+\end_layout
+
+\begin_layout Standard
+The default 
+\bar under
+logging configuration (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "logging-configuration"
+
+\end_inset
+
+)
+\bar default
+ is production-ready: it will use the following rolling log files under
+ your container's 
+\begin_inset Quotes eld
+\end_inset
+
+/logs/
+\begin_inset Quotes erd
+\end_inset
+
+ directory:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+common.log
+\begin_inset Quotes erd
+\end_inset
+
+: The log file shared by all applications and libraries.
+ If they don't specify their own, it will default to this (it's configured
+ as attached to the root logger.)
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+prudence-[name].log
+\begin_inset Quotes erd
+\end_inset
+
+: A log file per Prudence application, where 
+\begin_inset Quotes eld
+\end_inset
+
+[name]
+\begin_inset Quotes erd
+\end_inset
+
+ is the application's subdirectory name.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+web.log
+\begin_inset Quotes erd
+\end_inset
+
+: A log of all incoming HTTP requests in 
+\begin_inset CommandInset href
+LatexCommand href
+name "NCSA-style"
+target "http://en.wikipedia.org/wiki/Common_Log_Format"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+service-prudence.log
+\begin_inset Quotes erd
+\end_inset
+
+: This will be available if you're 
+\bar under
+running Prudence as a service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "daemon"
+
+\end_inset
+
+)
+\bar default
+.
+ Note that it is configured separately.
+\end_layout
+
+\begin_layout Subsubsection
+Introduction
+\end_layout
+
+\begin_layout Standard
+It's important to understand that there's a clear separation of concerns
+ between 
+\emph on
+what
+\emph default
+ to log and 
+\emph on
+how
+\emph default
+ to log it.
+ Programming should be concerned only with the 
+\emph on
+what
+\emph default
+: the use of the API during runtime and the content of messages.
+ Administration should be concerned only with the 
+\emph on
+how
+\emph default
+: configuration of the logging system, which occurs during bootstrap.
+\end_layout
+
+\begin_layout Standard
+From a programming perspective, you only care about 
+\begin_inset Quotes eld
+\end_inset
+
+loggers,
+\begin_inset Quotes erd
+\end_inset
+
+ the entities through which you send log messages.
+ The programmer doesn't actually know where the log messages are going.
+ (While it 
+\emph on
+is
+\emph default
+ possible to change the logging configuration via API during runtime, it
+ is not a common practice.)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Appenders
+\begin_inset Quotes erd
+\end_inset
+
+ are the mechanisms that actually write/store/send the messages somewhere,
+ whether it's to a file, to a database, or over the network.
+ 
+\emph on
+The API is entirely ignorant as to what appenders are attached to which
+ loggers
+\emph default
+: appenders are purely a matter of configuration.
+\end_layout
+
+\begin_layout Subsubsection
+API
+\end_layout
+
+\begin_layout Standard
+Loggers are identified by a unique name in your container, and are configured
+ globally.
+\end_layout
+
+\begin_layout Standard
+The logger names are hierarchical, whereby the hierarchy is specified using
+ 
+\begin_inset Quotes eld
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+.
+ For example, 
+\begin_inset Quotes eld
+\end_inset
+
+myApp.system.mail
+\begin_inset Quotes erd
+\end_inset
+
+ is a child logger of 
+\begin_inset Quotes eld
+\end_inset
+
+myApp.system
+\begin_inset Quotes erd
+\end_inset
+
+.
+ A child logger inherits its parent's configuration, which it can then override.
+ Parents inherit from their parents, etc., up to what is called the 
+\begin_inset Quotes eld
+\end_inset
+
+root logger,
+\begin_inset Quotes erd
+\end_inset
+
+ which is the logger with an empty string name.
+\end_layout
+
+\begin_layout Standard
+Every log message you send has a 
+\begin_inset Quotes eld
+\end_inset
+
+log level.
+\begin_inset Quotes erd
+\end_inset
+
+ The lower the level, the more specific the message.
+ Loggers are configured with a minimum level: they will log only messages
+ 
+\emph on
+equal to or above
+\emph default
+ it.
+ So, the lower the minimum log level configured for the logger, the more
+ chatter you should get.
+ The following levels are supported:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+severe
+\series default
+ (1000): These are 
+\emph on
+very important
+\emph default
+ messages, usually about errors or other problems.
+ You'd likely want all loggers to include this level.
+ You should use this level sparingly.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+warning
+\series default
+ (900): These are important, but not crucial.
+ Usually used for temporary errors or for problems that do not cause failure.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+config
+\series default
+ (800): These express change of state (configuration), and as such probably
+ don't happen that often.
+ They most likely appear during the initial bootstrapping, but can happen
+ while the application runs if something causes a subsystem to restart or
+ reconfigure itself.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+info
+\series default
+ (700): These informational messages are used for keeping track of the applicati
+on's runtime health: they don't specify a problem or a change, only report
+ normal activity.
+ This is the most commonly used message.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+fine
+\series default
+ (500): This and the following two levels should be reserved for debugging:
+ you normally won't go beyond 
+\begin_inset Quotes eld
+\end_inset
+
+info
+\begin_inset Quotes erd
+\end_inset
+
+ unless you're specifically trying to debug a problem, as this would cause
+ a lot of chatter in your logs.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+finer
+\series default
+ (400): More minute debugging.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+finest
+\series default
+ (300): Most minute debugging.
+\end_layout
+
+\begin_layout Paragraph
+application.logger and application.getSubLogger
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "application.logger"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.logger"
+
+\end_inset
+
+ gives you access to a unique 
+\begin_inset CommandInset href
+LatexCommand href
+name "Logger"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/logging/Logger.html"
+
+\end_inset
+
+ for the application, with the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.
+\begin_inset Quotes erd
+\end_inset
+
+ prefix.
+ The name of the logger can be configured in 
+\bar under
+settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-logger"
+
+\end_inset
+
+)
+\bar default
+, and defaults to the name of the application's subdirectory.
+\end_layout
+
+\begin_layout Standard
+The easiest way to use this API is via the methods named after the log levels:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.logger.info('An info-level message')
+\end_layout
+
+\begin_layout Plain Layout
+
+application.logger.warning('Something bad happened!')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getSubLogger"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getSubLogger"
+
+\end_inset
+
+ can be used to easily access child loggers of the application.logger:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+application.getSubLogger('email').info('An info-level message')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If your application logger name is 
+\begin_inset Quotes eld
+\end_inset
+
+wiki
+\begin_inset Quotes erd
+\end_inset
+
+, then the above logger name would be 
+\begin_inset Quotes eld
+\end_inset
+
+prudence.wiki.email
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Other Loggers
+\end_layout
+
+\begin_layout Standard
+Instead of using application.logger and application.getSubLogger, you can
+ access the logging API directly to retrieve a logger with any name:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+importClass(java.util.logging.Logger)
+\end_layout
+
+\begin_layout Plain Layout
+
+var logger = Logger.getLogger('myApp.system.mail')
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.info('My logger!')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+/prudence/logging/
+\end_layout
+
+\begin_layout Standard
+If you're using JavaScript, it's recommend that you use this 
+\begin_inset CommandInset href
+LatexCommand href
+name "friendly wrapper"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Logging"
+
+\end_inset
+
+, which adds many convenient additions over the raw logging API.
+\end_layout
+
+\begin_layout Standard
+Here are examples of simple logging, where you can refer to the log levels
+ using simple strings, or use dedicated methods named after the log levels:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/logging/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var logger = new Prudence.Logging.Logger()
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.log('info', 'An informational message')
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.fine('A fine message')
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.warning('A warning')
+\end_layout
+
+\begin_layout Plain Layout
+
+new Prudence.Logging.Logger('email').info('Hello from the Email subsystem')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+String interpolation is supported for all methods, using 
+\begin_inset CommandInset href
+LatexCommand href
+name "/sincerity/templates/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Templates"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+logger.severe('Hi, {0} and {1}!', 'mom', 'dad')
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.info('Hi, {name}!', {name: 'mom'})
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.finest('Hi, {name}!', function(original, key) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	if (key == 'name') {
+\end_layout
+
+\begin_layout Plain Layout
+
+		return 'mom'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+	return null
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Quick JSON dump, in short form (single line, condensed) or long form (multi-line
+, indented):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var x = {test: 'hello', more: [1, 2, 3]}
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.dumpShort(x, 'Our object in short form')
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.dumpLong(x, 'Our object in long form')
+\end_layout
+
+\begin_layout Plain Layout
+
+logger.dump(x, 'This is an alias for dumpShort')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Log exceptions using full or partial stack trace (supports both JavaScript
+ and JVM exceptions):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+try {
+\end_layout
+
+\begin_layout Plain Layout
+
+	nothing()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+catch (e) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	logger.exception(e)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Also very useful is automatic timing of sections of code, which will emit
+ a message when the function starts, when it ends with the execution duration
+ (either due to successful completion or due to a uncaught exception):
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+logger.time('The loop', function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var x = 1
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (var i = 0; i < 100000; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		x /= 2
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Performance Considerations
+\end_layout
+
+\begin_layout Standard
+Log messages will not be written if they are configured to be filtered out.
+ However, your code is still constructing the message and sending it to
+ the logging system, which may involve a performance hit.
+\end_layout
+
+\begin_layout Standard
+The easiest way to optimize is to check for the log level before constructing
+ the message:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if (logger.isLoggable(java.util.logging.Level.FINE)) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = heavyFetchFromDatabase()
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'This function was called because the "fine" log level is permitted'
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you're using 
+\begin_inset Quotes eld
+\end_inset
+
+/prudence/logging/
+\begin_inset Quotes erd
+\end_inset
+
+, as a shortcut you can send an anonymous function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+logger.fine(function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var data = heavyFetchFromDatabase()
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 'This function was called because the "fine" log level is permitted'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Obviously, this is cumbersome, and is best done only if constructing the
+ message indeed involves heavy lifting.
+\end_layout
+
+\begin_layout Subsubsection
+Configuration
+\begin_inset CommandInset label
+LatexCommand label
+name "logging-configuration"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You configure all your loggers and appenders under your container's 
+\begin_inset Quotes eld
+\end_inset
+
 /configuration/logging/
+\begin_inset Quotes erd
+\end_inset
+
+ directory, which is handled by Sincerity's 
+\begin_inset CommandInset href
+LatexCommand href
+name "logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+, so it's recommended you read the documentation there.
+ The plugin has useful add-ons for centralizing logging, for example to
+ a dedicated log4j server, or directly to MongoDB.
 \end_layout
 
 \begin_layout Standard
-See Sincerity Manual
+The best way to learn how to configure logging is to go through the default
+ logging configuration.
+ As usual, Prudence and Sincerity use 
+\begin_inset Quotes eld
+\end_inset
+
+configuration by script,
+\begin_inset Quotes erd
+\end_inset
+
+ so in fact you'll be calling the 
+\begin_inset CommandInset href
+LatexCommand href
+name "log4j API"
+target "http://logging.apache.org/log4j/2.x/javadoc.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Configuration Log Levels
+\end_layout
+
+\begin_layout Standard
+In order to maintain conformity, the API used throughout Prudence is the
+ standard JVM logging API (often called JULI: 
+\begin_inset Quotes eld
+\end_inset
+
+java.util.logging Interface
+\begin_inset Quotes erd
+\end_inset
+
+).
+
+\emph on
+ However
+\emph default
+, the logging system used by default in Prudence is Sincerity's 
+\begin_inset CommandInset href
+LatexCommand href
+name "logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+, which funnels several different logging APIs into 
+\begin_inset CommandInset href
+LatexCommand href
+name "Apache log4j"
+target "http://logging.apache.org/log4j/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Quote
+Unfortunately, until the JVM finally included a logging standard, there
+ were already other popular logging APIs.
+ Also unfortunately, the introduced standard is simply not as powerful as
+ log4j, and we did not want to compromise on power.
+ Fortunately, the 
+\begin_inset CommandInset href
+LatexCommand href
+name "SLF4J"
+target "http://www.slf4j.org/"
+
+\end_inset
+
+ library allows Sincerity to mimic all these various APIs while implementing
+ them in log4j, so you get the best of all worlds as well as a uniform system.
+\end_layout
+
+\begin_layout Standard
+The outcome of this is slightly annoying: the log level names used in the
+ configuration files (log4j) are different from those used in the API (JULI),
+ and indeed the configuration is slightly coarser than the API.
+ Here's how they match up:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Configuration Log Level
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+API Log Level
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FATAL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ERROR
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+severe
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+WARN
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+warning
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+config
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+INFO
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+info
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+DEBUG
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+fine
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+finer
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+TRACE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+finest
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+So, configuring a logger's level to 
+\begin_inset Quotes eld
+\end_inset
+
+WARN
+\begin_inset Quotes erd
+\end_inset
+
+ will mean that it will log the following API levels: 
+\begin_inset Quotes eld
+\end_inset
+
+warning,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+config,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+info,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+fine,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+finer,
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+finest.
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+The NCSA web.log
+\end_layout
+
+\begin_layout Paragraph
+Other Loggers
+\end_layout
+
+\begin_layout Standard
+Restlet
+\end_layout
+
+\begin_layout Standard
+application.application.logger = org.restlet.Application.name
+\end_layout
+
+\begin_layout Standard
+Jetty
+\end_layout
+
+\begin_layout Standard
+Hazelcast
+\end_layout
+
+\begin_layout Subsubsection
+Quick-and-Dirty Logging to the Console
+\end_layout
+
+\begin_layout Standard
+Sometimes, in the midst of heavy debugging, setting up proper logging is
+ just too time consuming.
+ It would also be wasteful, because you know you will quickly delete the
+ logging message once you find the bug.
+\end_layout
+
+\begin_layout Standard
+In such situations the most straightforward solution is to output your message
+ to the console.
+ Since often Prudence captures standard output (for example, in template
+ resources), you may need to override any captures and go straight to the
+ console:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+java.lang.System.out.println('Desperate times call for desperate measures!')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if you're running Prudence as a 
+\bar under
+service/daemon (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "daemon"
+
+\end_inset
+
+)
+\bar default
+ there is no console (it is captured to the wrapper log).
+ In those cases you either want to switch to running Prudence from the console,
+ or use the logging API instead.
 \end_layout
 
 \begin_layout Subsection
@@ -28069,6 +29373,10 @@ reference "on-the-fly-resources"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsection
+Monitoring
 \end_layout
 
 \begin_layout Section
@@ -40635,10 +41943,21 @@ Sincerity Standalone
 
 \begin_layout Subsection
 Operating System Service
+\begin_inset CommandInset label
+LatexCommand label
+name "daemon"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 See Sincerity Manual
+\end_layout
+
+\begin_layout Standard
+Logging configuration
 \end_layout
 
 \begin_layout Subsection
