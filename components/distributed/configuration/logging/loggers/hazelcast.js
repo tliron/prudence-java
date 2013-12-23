@@ -1,5 +1,20 @@
 
-repository.getLogger('com.hazelcast').level = Level.INFO
-repository.getLogger('com.hazelcast.config').level = Level.INFO
-repository.getLogger('com.hazelcast.system').level = Level.INFO
-repository.getLogger('com.hazelcast.impl').level = Level.INFO
+configuration.logger({
+	name: 'com.hazelcast',
+	level: 'info'
+})
+
+configuration.logger({
+	name: 'com.hazelcast.config',
+	level: 'info'
+})
+
+configuration.logger({
+	name: 'com.hazelcast.system',
+	level: 'info'
+})
+
+configuration.logger({
+	name: 'com.hazelcast.impl',
+	level: 'info'
+})

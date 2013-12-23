@@ -16,5 +16,12 @@ if (applicationsFile.exists()) {
 			appenders: 'file:application.' + name,
 			additivity: false
 		})
+
+		configuration.logger({
+			name: 'org.restlet.Application.' + name,
+			level: 'warn',
+			appenders: 'file:application.' + name,
+			additivity: false
+		})
 	}
 }

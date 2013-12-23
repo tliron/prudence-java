@@ -24,8 +24,8 @@ if (applicationsFile.exists()) {
 				size: '5MB'
 			},
 			strategy: {
-				minIndex: '1',
-				maxIndex: '9'
+				min: '1',
+				max: '9'
 			}
 		})
 	}

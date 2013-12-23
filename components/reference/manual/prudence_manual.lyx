@@ -28124,7 +28124,7 @@ common.log
 \begin_inset Quotes erd
 \end_inset
 
-: The log file shared by all applications and libraries.
+: The rolling log file shared by all applications and libraries.
  If they don't specify their own, it will default to this (it's configured
  as attached to the root logger.)
 \end_layout
@@ -28133,11 +28133,11 @@ common.log
 \begin_inset Quotes eld
 \end_inset
 
-prudence-[name].log
+application-[name].log
 \begin_inset Quotes erd
 \end_inset
 
-: A log file per Prudence application, where 
+: A rolling log file per Prudence application, where 
 \begin_inset Quotes eld
 \end_inset
 
@@ -28156,7 +28156,7 @@ web.log
 \begin_inset Quotes erd
 \end_inset
 
-: A log of all incoming HTTP requests in 
+: A rolling log file of all incoming HTTP requests in 
 \begin_inset CommandInset href
 LatexCommand href
 name "NCSA-style"
@@ -28187,7 +28187,7 @@ reference "daemon"
 )
 \bar default
 .
- Note that it is configured separately.
+ Note that it is configured separately, and does not in fact use JVM logging.
 \end_layout
 
 \begin_layout Subsubsection
@@ -28846,15 +28846,8 @@ if (logger.isLoggable(java.util.logging.Level.FINE)) {
 \end_layout
 
 \begin_layout Standard
-If you're using 
-\begin_inset Quotes eld
-\end_inset
-
-/prudence/logging/
-\begin_inset Quotes erd
-\end_inset
-
-, as a shortcut you can send an anonymous function:
+If you're using the /prudence/logging/ library, as a shortcut you can send
+ an anonymous function:
 \end_layout
 
 \begin_layout Standard
@@ -28888,8 +28881,8 @@ logger.fine(function() {
 \end_layout
 
 \begin_layout Standard
-Obviously, this is cumbersome, and is best done only if constructing the
- message indeed involves heavy lifting.
+Obviously, this is cumbersome to always follow this format, so it's best
+ used only if constructing the message indeed involves heavy lifting.
 \end_layout
 
 \begin_layout Subsubsection
@@ -28936,15 +28929,15 @@ configuration by script,
 \begin_inset Quotes erd
 \end_inset
 
- so in fact you'll be calling the 
+ so in fact you'll be using the 
 \begin_inset CommandInset href
 LatexCommand href
-name "log4j API"
-target "http://logging.apache.org/log4j/2.x/javadoc.html"
+name "/sincerity/log4j/"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Log4j"
 
 \end_inset
 
-.
+ library.
 \end_layout
 
 \begin_layout Paragraph
@@ -28966,15 +28959,8 @@ java.util.logging Interface
 \emph on
  However
 \emph default
-, the logging system used by default in Prudence is Sincerity's 
-\begin_inset CommandInset href
-LatexCommand href
-name "logging plugin"
-target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
-
-\end_inset
-
-, which funnels several different logging APIs into 
+, the logging system used by default in Prudence is Sincerity's logging
+ plugin funnels several different logging APIs into 
 \begin_inset CommandInset href
 LatexCommand href
 name "Apache log4j"
@@ -29044,7 +29030,7 @@ API Log Level
 \begin_inset Text
 
 \begin_layout Plain Layout
-FATAL
+fatal
 \end_layout
 
 \end_inset
@@ -29064,7 +29050,7 @@ FATAL
 \begin_inset Text
 
 \begin_layout Plain Layout
-ERROR
+error
 \end_layout
 
 \end_inset
@@ -29084,7 +29070,7 @@ severe
 \begin_inset Text
 
 \begin_layout Plain Layout
-WARN
+warn
 \end_layout
 
 \end_inset
@@ -29124,7 +29110,7 @@ config
 \begin_inset Text
 
 \begin_layout Plain Layout
-INFO
+info
 \end_layout
 
 \end_inset
@@ -29144,7 +29130,7 @@ info
 \begin_inset Text
 
 \begin_layout Plain Layout
-DEBUG
+debug
 \end_layout
 
 \end_inset
@@ -29184,7 +29170,7 @@ finer
 \begin_inset Text
 
 \begin_layout Plain Layout
-TRACE
+trace
 \end_layout
 
 \end_inset
@@ -29211,7 +29197,7 @@ So, configuring a logger's level to
 \begin_inset Quotes eld
 \end_inset
 
-WARN
+warn
 \begin_inset Quotes erd
 \end_inset
 
@@ -29267,7 +29253,23 @@ finest.
 \end_layout
 
 \begin_layout Paragraph
-The NCSA web.log
+web.log
+\end_layout
+
+\begin_layout Standard
+To learn how to configure the message format for this special logger, see
+ 
+\bar under
+the log service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-log"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -29275,19 +29277,44 @@ Other Loggers
 \end_layout
 
 \begin_layout Standard
-Restlet
+Various subsystems within Prudence use their own loggers.
+ The default configuration files set these to reasonable defaults, which
+ you can modify:
 \end_layout
 
-\begin_layout Standard
-application.application.logger = org.restlet.Application.name
+\begin_layout Itemize
+Restlet logs its internal application events to 
+\begin_inset Quotes eld
+\end_inset
+
+org.restlet.Application.[name]
+\begin_inset Quotes erd
+\end_inset
+
+.
+ You can access this logger in your code using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.application.logger API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.application"
+
+\end_inset
+
+.
+ By default, it is attached to the application's appender and set to level
+ 
+\begin_inset Quotes eld
+\end_inset
+
+warn
+\begin_inset Quotes erd
+\end_inset
+
+.
 \end_layout
 
-\begin_layout Standard
-Jetty
-\end_layout
-
-\begin_layout Standard
-Hazelcast
+\begin_layout Itemize
+Jetty and Hazelcast both feature robust event logging.
 \end_layout
 
 \begin_layout Subsubsection
@@ -29295,8 +29322,8 @@ Quick-and-Dirty Logging to the Console
 \end_layout
 
 \begin_layout Standard
-Sometimes, in the midst of heavy debugging, setting up proper logging is
- just too time consuming.
+Sometimes, in the midst of intensive debugging, setting up proper logging
+ is just too time consuming.
  It would also be wasteful, because you know you will quickly delete the
  logging message once you find the bug.
 \end_layout
@@ -29336,6 +29363,80 @@ reference "daemon"
  there is no console (it is captured to the wrapper log).
  In those cases you either want to switch to running Prudence from the console,
  or use the logging API instead.
+\end_layout
+
+\begin_layout Subsubsection
+Best Practices
+\end_layout
+
+\begin_layout Standard
+There are many different styles of logging, but here are some good rules
+ of thumb:
+\end_layout
+
+\begin_layout Itemize
+Remember that 
+\emph on
+people
+\emph default
+ read the logs! This can mean other developers in your team, but it can
+ also be you in the future, at a time when you may forget why you added
+ a particular log message.
+ This means that you 
+\emph on
+always want the log messages to be clear in themselves
+\emph default
+.
+ For example, if you're dumping the contents of a variable, prefix it with
+ the name of the variable, as well as the name of the function or file from
+ which it is logged.
+ Otherwise, it would be impossible for others to find out where the dump
+ is coming from and how to disable it.
+\end_layout
+
+\begin_layout Itemize
+Use log levels wisely: if you're adding a logging message purely for debugging,
+ don't set it to 
+\begin_inset Quotes eld
+\end_inset
+
+info
+\begin_inset Quotes erd
+\end_inset
+
+, otherwise it will remain as distracting chatter during normal operations.
+ Use 
+\begin_inset Quotes eld
+\end_inset
+
+fine
+\begin_inset Quotes erd
+\end_inset
+
+ instead.
+\end_layout
+
+\begin_layout Itemize
+Some log messages are very specific, and added during debugging, but would
+ be distracting once the bug is solved.
+ In that case make sure to disable the message when you're dong debugging
+ by either switching it to the 
+\begin_inset Quotes eld
+\end_inset
+
+finest
+\begin_inset Quotes erd
+\end_inset
+
+ level, commenting out the code, or just deleting it.
+ 
+\emph on
+Make sure not to commit code that outputs distracting log messages.
+\end_layout
+
+\begin_layout Itemize
+A good, clear log is an invaluable debugging tool.
+ A confusing, messy log is worthless!
 \end_layout
 
 \begin_layout Subsection
@@ -33995,7 +34096,15 @@ ethod (in HTTP, it would be “GET,” “POST,” “PUT,” “DELETE,” etc.
 \bar under
 d
 \bar default
-ate (as a Unix timestamp)
+ate (in the 
+\begin_inset CommandInset href
+LatexCommand href
+name "RFC1123"
+target "http://www.ietf.org/rfc/rfc1123.txt"
+
+\end_inset
+
+ format used by HTTP)
 \end_layout
 
 \begin_layout Subsection
@@ -36820,8 +36929,43 @@ component.logService.loggerName = 'web'
 \end_layout
 
 \begin_layout Standard
-You may also further configure the log format as well as other parameters.
- See the 
+You may also further configure the log format using the 
+\bar under
+string interpolation variables (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "string-interpolation"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+component.logService.responseLogFormat = '{d}
+\backslash
+t{cia}
+\backslash
+t{ri}
+\backslash
+t{S}'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See the 
 \begin_inset CommandInset href
 LatexCommand href
 name "Restlet documentation"
@@ -36833,8 +36977,8 @@ target "http://restlet.org/learn/javadocs/snapshot/jse/api/index.html?org/restle
 \end_layout
 
 \begin_layout Standard
-To learn how configure this logger connect it to an appender, refer to the
- documentation for Sincerity's 
+To learn how configure this logger and connect it to an appender, refer
+ to the documentation for Sincerity's 
 \begin_inset CommandInset href
 LatexCommand href
 name "logging plugin"
