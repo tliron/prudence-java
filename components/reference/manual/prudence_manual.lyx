@@ -29160,7 +29160,7 @@ target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-pl
 
 , so it's recommended you read the documentation there.
  The plugin has useful add-ons for centralizing logging, for example to
- a dedicated log4j server, or directly to MongoDB.
+ a dedicated Log4j server, or directly to MongoDB.
 \end_layout
 
 \begin_layout Standard
@@ -29178,7 +29178,7 @@ configuration by script,
 \begin_inset CommandInset href
 LatexCommand href
 name "/sincerity/log4j/"
-target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Log4j"
+target "http://threecrickets.com/api/javascript/?namespace=Sincerity.Log4j.Configuration"
 
 \end_inset
 
@@ -29208,7 +29208,7 @@ java.util.logging Interface
  plugin funnels several different logging APIs into 
 \begin_inset CommandInset href
 LatexCommand href
-name "Apache log4j"
+name "Apache Log4j"
 target "http://logging.apache.org/log4j/"
 
 \end_inset
@@ -29220,7 +29220,7 @@ target "http://logging.apache.org/log4j/"
 Unfortunately, until the JVM finally included a logging standard, there
  were already other popular logging APIs.
  Also unfortunately, the introduced standard is simply not as powerful as
- log4j, and we did not want to compromise on power.
+ Log4j, and we did not want to compromise on power.
  Fortunately, the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -29230,12 +29230,12 @@ target "http://www.slf4j.org/"
 \end_inset
 
  library allows Sincerity to mimic all these various APIs while implementing
- them in log4j, so you get the best of all worlds as well as a uniform system.
+ them in Log4j, so you get the best of all worlds as well as a uniform system.
 \end_layout
 
 \begin_layout Standard
 The outcome of this is slightly annoying: the log level names used in the
- configuration files (log4j) are different from those used in the API (JULI),
+ configuration files (Log4j) are different from those used in the API (JULI),
  and indeed the configuration is slightly coarser than the API.
  Here's how they match up:
 \end_layout
@@ -29627,9 +29627,9 @@ people
  read the logs! This can mean other developers in your team, but it can
  also be you in the future, at a time when you may forget why you added
  a particular log message.
- This means that you 
+ Because of this, you 
 \emph on
-always want the log messages to be clear in themselves
+always want every log message to be clear in and of itself
 \emph default
 .
  For example, if you're dumping the contents of a variable, prefix it with
@@ -29905,6 +29905,18 @@ hz: Hazelcast
 \end_layout
 
 \begin_layout Itemize
+Wrapper: The 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity service plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+ wrapper
+\end_layout
+
+\begin_layout Itemize
 JXM and RMI: These are used by JMX itself
 \end_layout
 
@@ -29940,8 +29952,8 @@ target "http://visualvm.java.net/mbeans_tab.html"
 
 \begin_layout Itemize
 java.lang: General JVM tools, such as operating system information as well
- as class loader, memory, compilation and threading statistics.
- Use the 
+ as class loader, memory, compilation and threading statistics; use the
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -29957,23 +29969,81 @@ Memory
 \begin_inset Quotes erd
 \end_inset
 
- type to cause immediate garbage collection.
+ type to cause immediate garbage collection
 \end_layout
 
 \begin_layout Itemize
-java.nio: Some I/O statistics.
+java.nio: Some useful I/O statistics
 \end_layout
 
 \begin_layout Itemize
-java.util.logging: The operations allow you to query the JULI API.
+java.util.logging: Allows you to query the JULI API
 \end_layout
 
 \begin_layout Itemize
+org.apache.logging.log4j2: Available when you are using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
 
+\end_inset
+
+; access to the logging implementation; note that you can also install a
+ dedicated GUI using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "JConsole plugin"
+target "http://visualvm.java.net/jconsole_plugin_wrapper_tab.html"
+
+\end_inset
+
+: see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Log4j management documentation"
+target "http://logging.apache.org/log4j/2.x/manual/jmx.html"
+
+\end_inset
+
+ for more information
+\end_layout
+
+\begin_layout Itemize
+org.tanukisoftware.wrapper: Available when you are using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity service plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+; operations allows you to stop/restart the service
 \end_layout
 
 \begin_layout Subsubsection
-Remote Monitoring
+Remote JMX
+\end_layout
+
+\begin_layout Standard
+Connecting to a running Prudence JVM over TCP/IP is not so trivial.
+ See the 
+\begin_inset Quotes eld
+\end_inset
+
+extras
+\begin_inset Quotes erd
+\end_inset
+
+ section in the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity service plugin documentation"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+ for a guide.
 \end_layout
 
 \begin_layout Section
