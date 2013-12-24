@@ -16290,8 +16290,8 @@ name "on-the-fly-resources"
 \end_layout
 
 \begin_layout Standard
-You can add support for on-the-fly template resources to your application
- via the 
+You can add support for on-the-fly resources to your application via the
+ 
 \bar under
 
 \begin_inset Quotes eld
@@ -16325,6 +16325,29 @@ reference "live-execution"
 )
 \bar default
  and maintenance.
+\end_layout
+
+\begin_layout Standard
+Another possibly exciting use case is to allow an especially rich API: instead
+ of exposing your facilities via a RESTful API, you can allow certain clients
+ full access to, well, everything.
+ It's hard to recommend this usage for most applications due to its severe
+ security risks, as well as limitations to scalability, but for some internally
+ running applications it could prove extremely useful.
+\end_layout
+
+\begin_layout Quote
+Diligence comes with the 
+\begin_inset CommandInset href
+LatexCommand href
+name "console feature"
+target "http://threecrickets.com/diligence/manual/feature/console/"
+
+\end_inset
+
+, which offers a user-friendly variation of this functionality: it's a web-based
+ mini-IDE that features persistent programs, JavaScript syntax coloring,
+ and log tailing/filtering.
 \end_layout
 
 \begin_layout Standard
@@ -16395,7 +16418,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl --verbose --data '<% println(1+2) %>' http://localhost:8080/myapp/execute/
+curl --data '<% println(1+2) %>' http://localhost:8080/myapp/execute/
 \end_layout
 
 \end_inset
@@ -16415,7 +16438,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl --verbose --data-binary @myscriptfile http://localhost:8080/myapp/execute/
+curl --data-binary @myscriptfile http://localhost:8080/myapp/execute/
 \end_layout
 
 \end_inset
@@ -16516,8 +16539,8 @@ status open
 
 \begin_layout Plain Layout
 
-curl --verbose --data-binary @myscriptfile 'http://localhost:8080/myapp/execute/
-?name=Richard'
+curl --data-binary @myscriptfile 'http://localhost:8080/myapp/execute/?name=Rich
+ard'
 \end_layout
 
 \end_inset
@@ -28069,6 +28092,228 @@ Let's start by admitting that the debugging facilities for dynamic languages
 \end_layout
 
 \begin_layout Subsection
+Live Execution
+\begin_inset CommandInset label
+LatexCommand label
+name "live-execution"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This 
+\bar under
+immensely powerful (and potentially dangerous) tool  (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "on-the-fly-resources"
+
+\end_inset
+
+)
+\bar default
+ allows you to execute arbitrary code in live running applications.
+ There are, of course, endless ways in which you can use this feature for
+ debugging.
+ Below are a few common examples.
+\end_layout
+
+\begin_layout Subsubsection
+Dumping Values
+\end_layout
+
+\begin_layout Standard
+Anything you print to standard output will be returned to you:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --data '<% println(application.globals.get("db.connection")) %>' http://localh
+ost:8080/myapp/execute/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can also dump values to 
+\bar under
+the log (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "logging"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --data '<% application.logger.info(application.globals.get("db.connection"))
+ %>' http://localhost:8080/myapp/execute/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Scheduling Background Tasks
+\end_layout
+
+\begin_layout Standard
+Here's an example of dumping a value to the log every 5 seconds using a
+ 
+\bar under
+background task (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+.
+ First let's create 
+\begin_inset Quotes eld
+\end_inset
+
+program.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%
+\end_layout
+
+\begin_layout Plain Layout
+
+document.require('/prudence/tasks/')
+\end_layout
+
+\begin_layout Plain Layout
+
+Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	fn: function() {
+\end_layout
+
+\begin_layout Plain Layout
+
+		application.logger.info(application.globals.get('db.connection'))
+\end_layout
+
+\begin_layout Plain Layout
+
+	},
+\end_layout
+
+\begin_layout Plain Layout
+
+	repeatEvery: '5s'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\begin_layout Plain Layout
+
+%>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then execute it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --data-binary @program.js http://localhost:8080/myapp/execute/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Debug Page
+\end_layout
+
+\begin_layout Standard
+The 
+\bar under
+debug page (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "debug-page"
+
+\end_inset
+
+)
+\bar default
+ contains a lot of useful debugging information.
+ It's easy to get it just by causing an exception on purpose:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+curl --data '<% throw null %>' http://localhost:8080/myapp/execute/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Logging
 \begin_inset CommandInset label
 LatexCommand label
@@ -28081,7 +28326,7 @@ name "logging"
 
 \begin_layout Standard
 Logging is by far the most useful weapon in your debugging arsenal.
- Learn it and use it well.
+ Learn how to use it and use it well.
 \end_layout
 
 \begin_layout Standard
@@ -29450,34 +29695,285 @@ name "debug-page"
 
 \end_layout
 
-\begin_layout Subsection
-Live Execution
-\begin_inset CommandInset label
-LatexCommand label
-name "live-execution"
+\begin_layout Standard
+Uncaught exceptions will cause Prudence to generate a 500 
+\begin_inset Quotes eld
+\end_inset
+
+internal error
+\begin_inset Quotes erd
+\end_inset
+
+ HTTP status.
+ When 
+\bar under
+debug mode (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-errors"
 
 \end_inset
 
-
+) 
+\bar default
+is enabled, this will come with a generated HTML page full of useful debugging
+ information:
 \end_layout
 
-\begin_layout Standard
-See the 
+\begin_layout Itemize
+Error stack trace, with links to the source code
+\end_layout
+
+\begin_layout Itemize
+HTTP request warnings
+\end_layout
+
+\begin_layout Itemize
+HTTP request information, including all headers parsed and organized:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+URIs
+\end_layout
+
+\begin_layout Itemize
+Query params
+\end_layout
+
+\begin_layout Itemize
+Media preferences for content negotiation
+\end_layout
+
+\begin_layout Itemize
+Conditions for content negotiation
+\end_layout
+
+\begin_layout Itemize
+Caching directives
+\end_layout
+
+\begin_layout Itemize
+Client identification
+\end_layout
+
+\begin_layout Itemize
+Cookies
+\end_layout
+
+\begin_layout Itemize
+Payload
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
 \bar under
-on-the-fly template resources (page 
+conversations.locals (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "on-the-fly-resources"
+reference "conversation-locals"
 
 \end_inset
 
 )
-\bar default
-.
+\end_layout
+
+\begin_layout Itemize
+HTTP response attributes
+\end_layout
+
+\begin_layout Itemize
+Application information:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\bar under
+application.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-globals"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+
+\bar under
+executable.globals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "executable-globals"
+
+\end_inset
+
+)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Scripturian:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Executable attributes
+\end_layout
+
+\begin_layout Itemize
+Execution context attributes
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Low-level JVM stack trace
+\end_layout
+
+\begin_layout Standard
+Obviously, this information may include private data, so you'll want to
+ turn this debug page off for production deployments.
 \end_layout
 
 \begin_layout Subsection
 Monitoring
+\end_layout
+
+\begin_layout Standard
+One of the advantages of having Prudence running on the JVM is its powerful
+ built-in monitoring capabilities based on 
+\begin_inset CommandInset href
+LatexCommand href
+name "JMX"
+target "http://docs.oracle.com/javase/tutorial/jmx/"
+
+\end_inset
+
+ technology.
+ Using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "VisualVM"
+target "http://visualvm.java.net/"
+
+\end_inset
+
+ tool, you can get a comprehensive view of the JVM's memory use over time,
+ examine garbage collection, threading behavior and performance, and perform
+ basic profiling.
+ It's an invaluable tool for debugging memory leaks and performance bottlenecks.
+\end_layout
+
+\begin_layout Subsubsection
+Threads
+\end_layout
+
+\begin_layout Standard
+Here are a few common thread groups you will see for the Prudence's subsystems:
+\end_layout
+
+\begin_layout Itemize
+qtp: Jetty server's selectors and acceptors
+\end_layout
+
+\begin_layout Itemize
+HttpClient: Jetty client
+\end_layout
+
+\begin_layout Itemize
+cron4j: cron4j
+\end_layout
+
+\begin_layout Itemize
+hz: Hazelcast
+\end_layout
+
+\begin_layout Itemize
+JXM and RMI: These are used by JMX itself
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+thread dump
+\begin_inset Quotes erd
+\end_inset
+
+ button is very useful for getting a picture of what all threads are doing
+ at a particular moment.
+\end_layout
+
+\begin_layout Subsubsection
+Management Beans
+\end_layout
+
+\begin_layout Standard
+If you install the 
+\begin_inset CommandInset href
+LatexCommand href
+name "MBeans plugin"
+target "http://visualvm.java.net/mbeans_tab.html"
+
+\end_inset
+
+, you will gain access to useful information and functionality exposed by
+ Prudence's subsystems:
+\end_layout
+
+\begin_layout Itemize
+java.lang: General JVM tools, such as operating system information as well
+ as class loader, memory, compilation and threading statistics.
+ Use the 
+\begin_inset Quotes eld
+\end_inset
+
+gc
+\begin_inset Quotes erd
+\end_inset
+
+ operation in the 
+\begin_inset Quotes eld
+\end_inset
+
+Memory
+\begin_inset Quotes erd
+\end_inset
+
+ type to cause immediate garbage collection.
+\end_layout
+
+\begin_layout Itemize
+java.nio: Some I/O statistics.
+\end_layout
+
+\begin_layout Itemize
+java.util.logging: The operations allow you to query the JULI API.
+\end_layout
+
+\begin_layout Itemize
+
+\end_layout
+
+\begin_layout Subsubsection
+Remote Monitoring
 \end_layout
 
 \begin_layout Section

@@ -68,8 +68,8 @@ Prudence.Tasks = Prudence.Tasks || function() {
 	 *         library; implies params.json=false
 	 * @param {Number|String} [params.block=0] If greater than zero, will block for a maximum of duration in milliseconds
 	 *         waiting for task to finish execution
-	 * @param {Number} [params.delay=0] The delay in milliseconds before starting the task (ignored for distributed tasks)
-	 * @param {Number} [params.repeatEvery=0] How often in milliseconds to repeat the task (see params.fixedRepeat),
+	 * @param {Number|String} [params.delay=0] The delay in milliseconds before starting the task (ignored for distributed tasks)
+	 * @param {Number|String} [params.repeatEvery=0] How often in milliseconds to repeat the task (see params.fixedRepeat),
 	 *         zero means the task is executed only once (ignored for distributed tasks)
 	 * @param {Boolean} [params.fixedRepeat=false] True if repetition should be fixed according to params.repeatEvery,
 	 *         otherwise the delay until the next repetition would begin only when the task finishes an
@@ -131,8 +131,8 @@ Prudence.Tasks = Prudence.Tasks || function() {
 			}
 		}
 		else {
-			params.delay = params.delay || 0
-			params.repeatEvery = params.repeatEvery || 0
+			params.delay = Sincerity.Objects.exists(params.delay) ? Sincerity.Localization.toMilliseconds(params.delay) : 0
+			params.repeatEvery = Sincerity.Objects.exists(params.repeatEvery) ? Sincerity.Localization.toMilliseconds(params.repeatEvery) : 0
 			params.fixedRepeat = params.fixedRepeat || false
 			if (Sincerity.Objects.exists(params.code)) {
 				future = application.codeTask(params.application, params.code, params.context, params.delay, params.repeatEvery, params.fixedRepeat)
