@@ -15,6 +15,7 @@ import it.sauronsoftware.cron4j.Scheduler;
 
 import java.io.File;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import org.restlet.Application;
@@ -156,6 +158,52 @@ public class ApplicationService
 	}
 
 	/**
+	 * Get the locks for the current application.
+	 * 
+	 * @return The locks
+	 */
+	@SuppressWarnings("unchecked")
+	public ConcurrentMap<String, ReentrantLock> getLocks()
+	{
+		if( locks == null )
+		{
+			ConcurrentMap<String, Object> globals = getGlobals();
+			locks = (ConcurrentMap<String, ReentrantLock>) globals.get( LOCKS_ATTRIBUTE );
+			if( locks == null )
+			{
+				locks = new ConcurrentHashMap<String, ReentrantLock>();
+				ConcurrentMap<String, ReentrantLock> existing = (ConcurrentMap<String, ReentrantLock>) globals.putIfAbsent( LOCKS_ATTRIBUTE, locks );
+				if( existing != null )
+					locks = existing;
+			}
+		}
+
+		return locks;
+	}
+
+	/**
+	 * Gets a lock for the current application.
+	 * 
+	 * @param name
+	 *        The lock name
+	 * @return The lock
+	 */
+	public ReentrantLock getLock( String name )
+	{
+		ConcurrentMap<String, ReentrantLock> locks = getLocks();
+		ReentrantLock lock = locks.get( name );
+		if( lock == null )
+		{
+			lock = new ReentrantLock();
+			ReentrantLock existing = locks.putIfAbsent( name, lock );
+			if( existing != null )
+				lock = existing;
+		}
+
+		return lock;
+	}
+
+	/**
 	 * A map of all values global to all running applications.
 	 * <p>
 	 * Note that this could be null if shared globals are not set up.
@@ -171,6 +219,7 @@ public class ApplicationService
 			if( component != null )
 				sharedGlobals = component.getContext().getAttributes();
 		}
+
 		return sharedGlobals;
 	}
 
@@ -189,27 +238,77 @@ public class ApplicationService
 	 */
 	public Object getSharedGlobal( String name, Object defaultValue )
 	{
-		ConcurrentMap<String, Object> globals = getSharedGlobals();
+		ConcurrentMap<String, Object> sharedGlobals = getSharedGlobals();
 
-		if( globals == null )
+		if( sharedGlobals == null )
 			return null;
 
-		Object value = globals.get( name );
+		Object value = sharedGlobals.get( name );
 
 		if( value == null )
 		{
 			if( defaultValue != null )
 			{
 				value = defaultValue;
-				Object existing = globals.putIfAbsent( name, value );
+				Object existing = sharedGlobals.putIfAbsent( name, value );
 				if( existing != null )
 					value = existing;
 			}
 			else
-				globals.remove( name );
+				sharedGlobals.remove( name );
 		}
 
 		return value;
+	}
+
+	/**
+	 * Get the locks shared by all running applications.
+	 * 
+	 * @return The shared locks
+	 */
+	@SuppressWarnings("unchecked")
+	public ConcurrentMap<String, ReentrantLock> getSharedLocks()
+	{
+		if( sharedLocks == null )
+		{
+			ConcurrentMap<String, Object> sharedGlobals = getSharedGlobals();
+			if( sharedGlobals == null )
+				return null;
+			sharedLocks = (ConcurrentMap<String, ReentrantLock>) sharedGlobals.get( LOCKS_ATTRIBUTE );
+			if( sharedLocks == null )
+			{
+				sharedLocks = new ConcurrentHashMap<String, ReentrantLock>();
+				ConcurrentMap<String, ReentrantLock> existing = (ConcurrentMap<String, ReentrantLock>) sharedGlobals.putIfAbsent( LOCKS_ATTRIBUTE, sharedLocks );
+				if( existing != null )
+					sharedLocks = existing;
+			}
+		}
+
+		return sharedLocks;
+	}
+
+	/**
+	 * Gets a lock shared by all running applications.
+	 * 
+	 * @param name
+	 *        The shared lock name
+	 * @return The shared lock
+	 */
+	public ReentrantLock getSharedLock( String name )
+	{
+		ConcurrentMap<String, ReentrantLock> sharedLocks = getSharedLocks();
+		if( sharedLocks == null )
+			return null;
+		ReentrantLock lock = sharedLocks.get( name );
+		if( lock == null )
+		{
+			lock = new ReentrantLock();
+			ReentrantLock existing = sharedLocks.putIfAbsent( name, lock );
+			if( existing != null )
+				lock = existing;
+		}
+
+		return lock;
 	}
 
 	/**
@@ -456,6 +555,11 @@ public class ApplicationService
 	private static final String TASK_COLLECTOR_ATTRIBUTE = "com.threecrickets.prudence.taskCollector";
 
 	/**
+	 * The locks attribute in the application or the component's context.
+	 */
+	private static final String LOCKS_ATTRIBUTE = "com.threecrickets.prudence.locks";
+
+	/**
 	 * The application.
 	 */
 	private final Application application;
@@ -471,9 +575,19 @@ public class ApplicationService
 	private ConcurrentMap<String, Object> globals;
 
 	/**
+	 * The locks.
+	 */
+	private ConcurrentMap<String, ReentrantLock> locks;
+
+	/**
 	 * The shared globals.
 	 */
 	private ConcurrentMap<String, Object> sharedGlobals;
+
+	/**
+	 * The shared locks.
+	 */
+	private ConcurrentMap<String, ReentrantLock> sharedLocks;
 
 	/**
 	 * The executor service.

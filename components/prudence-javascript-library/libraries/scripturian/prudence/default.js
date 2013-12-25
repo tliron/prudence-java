@@ -53,6 +53,9 @@ var Prudence = {}
  * @name application.globals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
  * @see application#sharedGlobals
+ * @see application#distributedGlobals
+ * @see application#distributedSharedGlobals
+ * @see executable#globals
  */
 
 /**
@@ -72,6 +75,33 @@ var Prudence = {}
  */
 
 /**
+ * Application locks are general purpose locks accessible by any code in the application.
+ * <p>
+ * Names can be any string, but the convention is to use "." paths to allow for unique "namespaces"
+ * that would not overlap with future extensions, expansions or third-party libraries. For example,
+ * use "myapp.data.sourceName" rather than "dataSourceName", to avoid conflict.
+ * <p>
+ * You can access all the application's locks via {@link application#locks}.
+ * 
+ * @name application.getLock
+ * @function
+ * @param {String} name The name of the lock
+ * @returns {<a href="<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/locks/ReentrantLock.html">ReentrantLock</a>">java.util.concurrent.locks.ReentrantLock</a>}
+ * @see application#getSharedLock
+ * @see application#getDistributedSharedLock
+ */
+
+/**
+ * See {@link application#getLock}.
+ * <p>
+ * Implementation note: Prudence's application locks are stored as 'com.threecrickets.prudence.Locks'
+ * in {@link application#globals}.
+ * 
+ * @name application.locks
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/locks/ReentrantLock.html">ReentrantLock</a>&gt;
+ */
+
+/**
  * These are similar to {@link application#globals}, but are shared by all Prudence applications
  * running in the component.
  * <p>
@@ -83,7 +113,9 @@ var Prudence = {}
  * 
  * @name application.sharedGlobals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @see application#globals
  * @see application#distributedGlobals
+ * @see application#distributedSharedGlobals
  * @see executable#globals
  */
 
@@ -104,7 +136,31 @@ var Prudence = {}
  */
 
 /**
- * These are similar to {@link application#sharedGlobals}, but are shared by all members of the Prudence
+ * Similar to {@link application#getLock}, but the lock is shared by all Prudence applications
+ * running in the component.
+ * <p>
+ * You can access all the shared locks via {@link application#sharedLocks}.
+ * 
+ * @name application.getSharedLock
+ * @function
+ * @param {String} name The name of the shared lock
+ * @returns {<a href="<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/locks/ReentrantLock.html">ReentrantLock</a>">java.util.concurrent.locks.ReentrantLock</a>}
+ * @see application#getLock
+ * @see application#getDistributedSharedLock
+ */
+
+/**
+ * See {@link application#getSharedLock}.
+ * <p>
+ * Implementation note: Prudence's shared locks are stored as 'com.threecrickets.prudence.Locks'
+ * in {@link application#sharedGlobals}.
+ * 
+ * @name application.sharedLocks
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/locks/ReentrantLock.html">ReentrantLock</a>&gt;
+ */
+
+/**
+ * These are similar to {@link application#globals}, but are shared by all members of the Prudence
  * cluster to which we belong.
  * <p>
  * The {@link application#getDistributedGlobal} API is a useful for concurrent access. 
@@ -115,13 +171,17 @@ var Prudence = {}
  * it as a distributed global.
  * <p>
  * Implementation note: Prudence's distributed globals are identical to a Hazelcast map named
- * "com.threecrickets.prudence.distributedGlobals", which you can configure in
- * "/configuration/hazelcast/prudence/default.js".
+ * "com.threecrickets.prudence.distributedGlobals.[name]", where 'name' is the application's subdirectory name,
+ * and which you can configure in "/configuration/hazelcast/prudence/default.js".
  * <p>
  * <i>Availability: only available if Prudence's distributed component is installed.</i>
  *
  * @name application.distributedGlobals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @see application#globals
+ * @see application#sharedGlobals
+ * @see application#distributedSharedGlobals
+ * @see executable#globals
  */
 
 /**
@@ -138,6 +198,61 @@ var Prudence = {}
  * @function
  * @param {String} name The name of the distributed global
  * @param value The default value to set if the distributed global is not set
+ */
+
+/**
+ * These are similar to {@link application#sharedGlobals}, but are shared by all members of the Prudence
+ * cluster to which we belong.
+ * <p>
+ * The {@link application#getDistributedSharedGlobal} API is a useful for concurrent access. 
+ * <p>
+ * Note that values stored here <i>must be serializable</i>. Depending on your
+ * object implementation, this may mean having to manually serialize/deserialize the value into a string
+ * (see {@link Sincerity.JSON} and {@link Sincerity.XML}) or another serializable format in order to store
+ * it as a distributed shared global.
+ * <p>
+ * Implementation note: Prudence's distributed shared globals are identical to a Hazelcast map named
+ * "com.threecrickets.prudence.distributedGlobals", which you can configure in
+ * "/configuration/hazelcast/prudence/default.js".
+ * <p>
+ * <i>Availability: only available if Prudence's distributed component is installed.</i>
+ *
+ * @name application.distributedSharedGlobals
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @see application#globals
+ * @see application#sharedGlobals
+ * @see application#distributedGlobals
+ * @see executable#globals
+ */
+
+/**
+ * Gets a value from {@link application#distributedSharedGlobals}, or else sets it if not already set.
+ * <p>
+ * Crucially, this is an <i>atomic compare-and-set operation</i>, guaranteeing that the distributed global will
+ * be set once and only once.
+ * <p>
+ * The effect is identical to calling
+ * <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html#putIfAbsent(K,%20V)">putIfAbsent</a>
+ * on {@link application#distributedSharedGlobals}.
+ * 
+ * @name application.getDistributedSharedGlobal
+ * @function
+ * @param {String} name The name of the distributed shared global
+ * @param value The default value to set if the distributed shared global is not set
+ */
+
+/**
+ * Similar to {@link application#getSharedLock}, but the lock is shared by all members of the Prudence
+ * cluster to which we belong.
+ * <p>
+ * Note that unlike other locks, distributed locks will automatically be discarded when not used.
+ * 
+ * @name application.getDistributedSharedLock
+ * @function
+ * @param {String} name The name of the distributed shared lock
+ * @returns {<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/ILock.html">com.hazelcast.core.ILock</a>}
+ * @see application#getLock
+ * @see application#getSharedLock
  */
 
 /**
@@ -1727,6 +1842,9 @@ var Prudence = {}
  * 
  * @name executable.globals
  * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/ConcurrentMap.html">java.util.concurrent.ConcurrentMap</a>&lt;String, Object&gt;
+ * @see application#globals
+ * @see application#sharedGlobals
+ * @see application#distributedGlobals
  */
 
 /**

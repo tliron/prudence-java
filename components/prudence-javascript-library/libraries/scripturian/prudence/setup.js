@@ -128,7 +128,8 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * 
 	 * @property {Object} [settings.distributed] Distributed settings
 	 * @property {String} [settings.distributed.instance='com.threecrickets.prudence'] Hazelcast instance name
-	 * @property {String} [settings.distributed.map='com.threecrickets.prudence.distributedGlobals'] Hazelcast distributed globals map name
+	 * @property {String} [settings.distributed.globals='com.threecrickets.prudence.distributedGlobals.[root.name]'] Hazelcast distributed globals map name
+	 * @property {String} [settings.distributed.sharedGlobals='com.threecrickets.prudence.distributedSharedGlobals'] Hazelcast distributed shared globals map name
 	 * @property {String} [settings.distributed.executor='default'] Hazelcast executor name
 	 * 
 	 * @property {String} [settings.logger=root.name]
@@ -196,7 +197,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				java.util.concurrent.ConcurrentHashMap,
 				java.util.concurrent.CopyOnWriteArrayList,
 				java.io.File)
-					
+
 			this.component = component
 
 			// Flatten globals
@@ -222,7 +223,8 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.caching.defaultKeyTemplate = Sincerity.Objects.ensure(this.settings.caching.defaultKeyTemplate, '{ri}|{dn}|{nmt}|{nl}|{ne}')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
 			this.settings.distributed.instance = Sincerity.Objects.ensure(this.settings.distributed.instance, 'com.threecrickets.prudence')
-			this.settings.distributed.map = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedGlobals')
+			this.settings.distributed.globals = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedGlobals.' + this.root.name)
+			this.settings.distributed.sharedGlobals = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedSharedGlobals')
 			this.settings.distributed.executor = Sincerity.Objects.ensure(this.settings.distributed.executor, 'default')
 			this.settings.templates.parser = Sincerity.Objects.ensure(this.settings.templates.parser, 'scriptlets')
 
@@ -248,9 +250,10 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.compression.sizeThreshold = Sincerity.Localization.toBytes(this.settings.compression.sizeThreshold)
 
 			// Hazelcast
-			this.globals['com.threecrickets.prudence.hazelcastInstanceName'] = this.settings.distributed.instance
-			this.globals['com.threecrickets.prudence.hazelcastMapName'] = this.settings.distributed.map
-			this.globals['com.threecrickets.prudence.hazelcastExecutorName'] = this.settings.distributed.executor
+			this.globals['com.threecrickets.prudence.hazelcast.instanceName'] = this.settings.distributed.instance
+			this.globals['com.threecrickets.prudence.hazelcast.distributedGlobalsMapName'] = this.settings.distributed.globals
+			this.globals['com.threecrickets.prudence.hazelcast.distributedSharedGlobalsMapName'] = this.settings.distributed.sharedGlobals
+			this.globals['com.threecrickets.prudence.hazelcast.executorName'] = this.settings.distributed.executor
 
 			// Create instance
 			this.context = component.context.createChildContext()

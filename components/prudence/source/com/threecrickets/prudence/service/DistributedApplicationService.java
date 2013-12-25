@@ -22,6 +22,7 @@ import org.restlet.Application;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IExecutorService;
+import com.hazelcast.core.ILock;
 import com.hazelcast.core.Member;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.GeneratedTextResource;
@@ -44,17 +45,23 @@ public class DistributedApplicationService extends ApplicationService
 	/**
 	 * Hazelcast instance name attribute for an {@link Application}.
 	 */
-	public static final String HAZELCAST_INSTANCE_NAME = "com.threecrickets.prudence.hazelcastInstanceName";
+	public static final String HAZELCAST_INSTANCE_NAME = "com.threecrickets.prudence.hazelcast.instanceName";
 
 	/**
-	 * Hazelcast instance name attribute for an {@link Application}.
+	 * Hazelcast distributed globals name attribute for an {@link Application}.
 	 */
-	public static final String HAZELCAST_MAP_NAME = "com.threecrickets.prudence.hazelcastMapName";
+	public static final String HAZELCAST_DISTRIBUTED_GLOBALS_MAP_NAME = "com.threecrickets.prudence.hazelcast.distributedGlobalsMapName";
 
 	/**
-	 * Hazelcast instance name attribute for an {@link Application}.
+	 * Hazelcast shared distributed globals name attribute for an
+	 * {@link Application}.
 	 */
-	public static final String HAZELCAST_EXECUTOR_NAME = "com.threecrickets.prudence.hazelcastExecutorName";
+	public static final String HAZELCAST_DISTRIBUTED_SHARED_GLOBALS_MAP_NAME = "com.threecrickets.prudence.hazelcast.distributedSharedGlobalsMapName";
+
+	/**
+	 * Hazelcast executor name attribute for an {@link Application}.
+	 */
+	public static final String HAZELCAST_EXECUTOR_NAME = "com.threecrickets.prudence.hazelcast.executorName";
 
 	//
 	// Construction
@@ -99,7 +106,7 @@ public class DistributedApplicationService extends ApplicationService
 	 * The Hazelcast executor service.
 	 * <p>
 	 * The name can be configured via the
-	 * "com.threecrickets.prudence.hazelcastExecutorName" application context
+	 * "com.threecrickets.prudence.hazelcast.executorName" application context
 	 * attribute, and defaults to "default".
 	 * 
 	 * @return The Hazelcast executor service
@@ -116,18 +123,39 @@ public class DistributedApplicationService extends ApplicationService
 	}
 
 	/**
-	 * A map of all values global to the Prudence Hazelcast cluster.
+	 * A map of all values global to the Prudence Hazelcast cluster for this
+	 * application.
 	 * <p>
 	 * This is a Hazelcast distributed map, the name of which can be configured
-	 * via the "com.threecrickets.prudence.hazelcastMapName" application context
-	 * attribute, and defaults to
+	 * via the "com.threecrickets.prudence.hazelcast.distributedGlobalsMapName"
+	 * application context attribute, and defaults to
 	 * "com.threecrickets.prudence.distributedGlobals".
 	 * 
 	 * @return The distributed globals or null
 	 */
 	public ConcurrentMap<String, Object> getDistributedGlobals()
 	{
-		String hazelcastMapName = getHazelcastMapName();
+		String hazelcastMapName = getDistributedGlobalsHazelcastMapName();
+		ConcurrentMap<String, Object> map = getHazelcast().getMap( hazelcastMapName );
+		if( map == null )
+			throw new RuntimeException( "Cannot find a Hazelcast map named \"" + hazelcastMapName + "\"" );
+		return map;
+	}
+
+	/**
+	 * A map of all values global to the Prudence Hazelcast cluster.
+	 * <p>
+	 * This is a Hazelcast distributed map, the name of which can be configured
+	 * via the
+	 * "com.threecrickets.prudence.hazelcast.distributedSharedGlobalsMapName"
+	 * application context attribute, and defaults to
+	 * "com.threecrickets.prudence.distributedGlobals".
+	 * 
+	 * @return The distributed globals or null
+	 */
+	public ConcurrentMap<String, Object> getDistributedSharedGlobals()
+	{
+		String hazelcastMapName = getDistributedSharedGlobalsHazelcastMapName();
 		ConcurrentMap<String, Object> map = getHazelcast().getMap( hazelcastMapName );
 		if( map == null )
 			throw new RuntimeException( "Cannot find a Hazelcast map named \"" + hazelcastMapName + "\"" );
@@ -165,6 +193,54 @@ public class DistributedApplicationService extends ApplicationService
 		}
 
 		return value;
+	}
+
+	/**
+	 * Gets a value global to the Prudence Hazelcast cluster, atomically setting
+	 * it to a default value if it doesn't exist.
+	 * <p>
+	 * If distributed shared globals are not set up, does nothing and returns
+	 * null.
+	 * 
+	 * @param name
+	 *        The name of the distributed shared global
+	 * @param defaultValue
+	 *        The default value
+	 * @return The distributed shared global's current value
+	 */
+	public Object getDistributedSharedGlobal( String name, Object defaultValue )
+	{
+		ConcurrentMap<String, Object> sharedGlobals = getDistributedSharedGlobals();
+		Object value = sharedGlobals.get( name );
+
+		if( value == null )
+		{
+			if( defaultValue != null )
+			{
+				value = defaultValue;
+				Object existing = sharedGlobals.putIfAbsent( name, value );
+				if( existing != null )
+					value = existing;
+			}
+			else
+				sharedGlobals.remove( name );
+		}
+
+		return value;
+	}
+
+	/**
+	 * Gets a cluster-wide lock.
+	 * <p>
+	 * These locks are evicted automatically.
+	 * 
+	 * @param name
+	 *        The distributed shared lock name
+	 * @return The distributed shared lock
+	 */
+	public ILock getDistributedSharedLock( String name )
+	{
+		return getHazelcast().getLock( name );
 	}
 
 	//
@@ -261,14 +337,26 @@ public class DistributedApplicationService extends ApplicationService
 		return hazelcastInstanceName;
 	}
 
-	private String getHazelcastMapName()
+	private String getDistributedGlobalsHazelcastMapName()
 	{
 		ConcurrentMap<String, Object> globals = getGlobals();
 		if( hazelcastMapName == null )
 		{
-			hazelcastMapName = (String) globals.get( HAZELCAST_MAP_NAME );
+			hazelcastMapName = (String) globals.get( HAZELCAST_DISTRIBUTED_GLOBALS_MAP_NAME );
 			if( hazelcastMapName == null )
 				hazelcastMapName = "com.threecrickets.prudence.distributedGlobals";
+		}
+		return hazelcastMapName;
+	}
+
+	private String getDistributedSharedGlobalsHazelcastMapName()
+	{
+		ConcurrentMap<String, Object> globals = getGlobals();
+		if( hazelcastMapName == null )
+		{
+			hazelcastMapName = (String) globals.get( HAZELCAST_DISTRIBUTED_SHARED_GLOBALS_MAP_NAME );
+			if( hazelcastMapName == null )
+				hazelcastMapName = "com.threecrickets.prudence.distributedSharedGlobals";
 		}
 		return hazelcastMapName;
 	}

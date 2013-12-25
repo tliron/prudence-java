@@ -496,8 +496,18 @@ reference "logging"
 )
 \bar default
  is especially robust.
- You can use it to centralize logging for your cluster, and even log directly
- to a database, such as MongoDB.
+ You can use it to centralize logging for your 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+, and even log directly to a database, such as MongoDB.
 \end_layout
 
 \begin_layout Subsection
@@ -24152,22 +24162,61 @@ com.threecrickets.prudence
 \begin_layout Itemize
 
 \series bold
-map
+globals
 \series default
 : The name of the Hazelcast map used for the 
-\begin_inset CommandInset href
-LatexCommand href
-name "application.distributedGlobals API"
-target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedGlobals"
+\bar under
+application.distributedGlobals API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-distributed-globals"
 
 \end_inset
 
+)
+\bar default
 .
  Defaults to 
 \begin_inset Quotes eld
 \end_inset
 
-com.threecrickets.prudence.distributedGlobals
+com.threecrickets.prudence.distributedGlobals.[name]
+\begin_inset Quotes erd
+\end_inset
+
+, where 
+\begin_inset Quotes eld
+\end_inset
+
+name
+\begin_inset Quotes erd
+\end_inset
+
+ is the application's subdirectory name.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+sharedGlobals
+\series default
+: The name of the Hazelcast map used for the 
+\bar under
+application.distributedSharedGlobals API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-distributed-globals"
+
+\end_inset
+
+)
+\bar default
+.
+ Defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence.distributedSharedGlobals
 \begin_inset Quotes erd
 \end_inset
 
@@ -24180,22 +24229,17 @@ com.threecrickets.prudence.distributedGlobals
 executor
 \series default
 : The name of the Hazelcast executor used for the 
-\begin_inset CommandInset href
-LatexCommand href
-name "application.distributedExecuteTask"
-target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedExecuteTask"
+\bar under
+distributed task APIs (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tasks-distributed"
 
 \end_inset
 
- and 
-\begin_inset CommandInset href
-LatexCommand href
-name "application.distributedCodeTask"
-target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedCodeTask"
-
-\end_inset
-
- APIs.
+)
+\bar default
+.
  Defaults to 
 \begin_inset Quotes eld
 \end_inset
@@ -24208,12 +24252,12 @@ default
 \end_layout
 
 \begin_layout Standard
-To configure general Hazelcast settings, see the 
+To learn how to configure general Hazelcast settings, see the 
 \bar under
 configuration guide (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "configuration-distributed"
+reference "configuration-hazelcast"
 
 \end_inset
 
@@ -26313,13 +26357,14 @@ status open
 \end_layout
 
 \begin_layout Subsection
-State
+State and Scope
 \end_layout
 
 \begin_layout Standard
 Prudence is designed to allow for high concurrency and scalability, while
  at the same time shielding you from the gorier details.
- However, it's critical that you understand how to manage state with Prudence.
+ However, it's critical that you understand how to access and manage state
+ and scope with Prudence.
 \end_layout
 
 \begin_layout Subsubsection
@@ -26644,10 +26689,7 @@ target "http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent
 
 \begin_layout Itemize
 Shared globals can be used for system-wide configuration settings.
-\end_layout
-
-\begin_layout Standard
-A good way to set shared globals is via a 
+ A good way to set shared globals is via a 
 \bar under
 custom service (page 
 \begin_inset CommandInset ref
@@ -26694,7 +26736,7 @@ s (all Prudence applications running in the same JVM share the same Clojure
 \end_layout
 
 \begin_layout Subsubsection
-application.distributedGlobals
+application.distributedGlobals and application.distributedSharedGlobals
 \begin_inset CommandInset label
 LatexCommand label
 name "application-distributed-globals"
@@ -26713,7 +26755,7 @@ target "http://threecrickets.com/api/javascript/?namespace=application&item=appl
 
 \end_inset
 
- and 
+, 
 \begin_inset CommandInset href
 LatexCommand href
 name "application.getDistributedGlobal"
@@ -26721,34 +26763,23 @@ target "http://threecrickets.com/api/javascript/?namespace=application&item=appl
 
 \end_inset
 
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.distributedSharedGlobals"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.distributedSharedGlobals"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getDistributedSharedGlobal"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getDistributedSharedGlobal"
+
+\end_inset
+
  APIs work similarly to 
-\bar under
-application.sharedGlobals (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "application-shared-globals"
-
-\end_inset
-
-)
-\bar default
-, except that they are shared between all members of a 
-\bar under
-cluster (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "clusters"
-
-\end_inset
-
-)
-\bar default
-.
- Their use is discussed in greater length in the clusters chapter.
-\end_layout
-
-\begin_layout Standard
-Note that there is no distributed equivalent of 
 \bar under
 application.globals (page 
 \begin_inset CommandInset ref
@@ -26759,11 +26790,33 @@ reference "application-globals"
 
 )
 \bar default
-: distributed state is always accessible to 
-\emph on
-all 
-\emph default
-applications.
+ and 
+\bar under
+application.sharedGlobals (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+, except that they are shared between all members of a cluster.
+\end_layout
+
+\begin_layout Standard
+See the 
+\bar under
+clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+ chapter for more information.
 \end_layout
 
 \begin_layout Subsubsection
@@ -26815,7 +26868,7 @@ target "http://threecrickets.com/api/java/scripturian/index.html?com/threecricke
 \end_inset
 
 .
- It's thus useful if you need to share state with non-Prudence code.
+ They're useful if you need to share state with non-Prudence code.
 \end_layout
 
 \begin_layout Subsubsection
@@ -27068,6 +27121,158 @@ reference "templating-languages"
 \end_inset
 
 )
+\end_layout
+
+\begin_layout Subsubsection
+Synchronization
+\begin_inset CommandInset label
+LatexCommand label
+name "synchronization"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Sometimes efficient techniques for 
+\bar under
+handling concurrency (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "concurrency"
+
+\end_inset
+
+)
+\bar default
+, detailed below, can't be implemented, and the only solution is to ensure
+ single-thread access via synchronization.
+\end_layout
+
+\begin_layout Quote
+Synchronization is 
+\emph on
+very bad for scalability
+\emph default
+: it works against many of the advantages of using multiple threads, processes
+ and nodes.
+ However, in some situations it may be preferable to the alternatives.
+ Use it responsibly.
+\end_layout
+
+\begin_layout Standard
+Prudence makes synchronization easy via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getLock"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getLock"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getSharedLock"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getSharedLock"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.getDistributedSharedLock"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.getDistributedSharedLock"
+
+\end_inset
+
+ family of APIs.
+ Here's an example of how to use them:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var lock = application.getLock('services.remote')
+\end_layout
+
+\begin_layout Plain Layout
+
+lock.lock()
+\end_layout
+
+\begin_layout Plain Layout
+
+try {
+\end_layout
+
+\begin_layout Plain Layout
+
+	doSomethingAtomicallyWithRemoteService()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+	lock.unlock()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note our use of try/finally: it's in order to 
+\emph on
+guarantee 
+\emph default
+that the lock is released, even if an exception is thrown from our code.
+ Unreleased locks will cause your threads to hang.
+\end_layout
+
+\begin_layout Standard
+Also note that locks will stay in memory, 
+\emph on
+unless they are distributed
+\emph default
+.
+ They take very little memory, but if for some reason you are generating
+ many locks over time, you may want to cull them via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.locks"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.locks"
+
+\end_inset
+
+ or 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.sharedLocks"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.sharedLocks"
+
+\end_inset
+
+ APIs.
 \end_layout
 
 \begin_layout Subsubsection
@@ -27419,7 +27624,18 @@ The only way to
 guarantee
 \emph default
  that createPool is not called more than once is make the entire operation
- atomic by synchronizing it with a lock:
+ atomic by 
+\bar under
+synchronizing it (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "synchronization"
+
+\end_inset
+
+)
+\bar default
+:
 \end_layout
 
 \begin_layout Standard
@@ -27430,21 +27646,12 @@ status open
 
 \begin_layout Plain Layout
 
-importClass(java.util.concurrent.locks.ReentrantLock)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
 function getConnection() {
 \end_layout
 
 \begin_layout Plain Layout
 
-	var lock = application.getGlobal('database.pool.lock', new ReentrantLock())
+	var lock = application.getLock('database.pool')
 \end_layout
 
 \begin_layout Plain Layout
@@ -27513,15 +27720,6 @@ function getConnection() {
 \end_layout
 
 \begin_layout Standard
-Note our use of try/finally: it's in order to 
-\emph on
-guarantee 
-\emph default
-that the lock is released, even if an exception is thrown from our code.
- Unreleased locks will cause your threads to hang.
-\end_layout
-
-\begin_layout Standard
 Not only is the code above complicated, but synchronization introduces performan
 ce penalties.
  It's definitely not a good idea to blindly apply this solution.
@@ -27547,15 +27745,6 @@ status open
 
 \begin_layout Plain Layout
 
-importClass(java.util.concurrent.locks.ReentrantLock)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
 function getConnection(safe) {
 \end_layout
 
@@ -27566,7 +27755,7 @@ function getConnection(safe) {
 
 \begin_layout Plain Layout
 
-		var lock = application.getGlobal('database.pool.lock', new ReentrantLock())
+		var lock = application.getLock('database.pool')
 \end_layout
 
 \begin_layout Plain Layout
@@ -31101,7 +31290,18 @@ farmed out
 \begin_inset Quotes erd
 \end_inset
 
- in the cluster.
+ in the 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -31774,6 +31974,13 @@ target "http://threecrickets.com/diligence/manual/service/progress/"
 
 \begin_layout Subsubsection
 Distributed Task APIs
+\begin_inset CommandInset label
+LatexCommand label
+name "tasks-distributed"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -35130,7 +35337,18 @@ both
  locally and over the wire.
  This useful feature gives you considerable deployment flexibility: you
  can easily export a whole API layer to another running instance in the
- cluster.
+ 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+.
  For an example of this, see the 
 \bar under
 MVC chapter (page 
@@ -35811,6 +36029,13 @@ target "http://threecrickets.com/sincerity/manual/tutorial/#working-with-a-vcs_s
 
 \begin_layout Subsection
 /configuration/hazelcast/
+\begin_inset CommandInset label
+LatexCommand label
+name "configuration-hazelcast"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -35822,8 +36047,19 @@ target "http://www.hazelcast.com/"
 
 \end_inset
 
- here, if you have it installed.
- See the 
+ here, if you are running in a 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+.
+ Note that the configuration is actually loaded by the 
 \bar under
 distributed service (page 
 \begin_inset CommandInset ref
@@ -35834,7 +36070,117 @@ reference "configuration-distributed"
 
 )
 \bar default
- for details.
+.
+\end_layout
+
+\begin_layout Standard
+You have two options for configuration:
+\end_layout
+
+\begin_layout Itemize
+By script, at 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is the default method, and is recommended.
+\end_layout
+
+\begin_layout Itemize
+By standard XML file, at 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast.conf
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This method is provided for compatibility, and it's generally preferable
+ to use the by-script configuration.
+ An example file is provided for you at 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast.alt.conf
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If you rename this file to 
+\begin_inset Quotes eld
+\end_inset
+
+hazelcast.conf
+\begin_inset Quotes erd
+\end_inset
+
+, then it will be used 
+\emph on
+instead
+\emph default
+ of the by-script configuration.
+\end_layout
+
+\begin_layout Standard
+The by-script configuration allows for multiple Hazelcast instances: each
+ instance is a file under the 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/
+\begin_inset Quotes erd
+\end_inset
+
+ directory.
+ By default, Prudence needs just one instance, configured at 
+\begin_inset Quotes eld
+\end_inset
+
+/hazelcast/prudence/default.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+ However, you also have control per application as to which Hazelcast instance
+ it uses, as well as the map names therein.
+ You may configure these in 
+\bar under
+the application's settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-distributed"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+For your convenience, the entire 
+\begin_inset CommandInset href
+LatexCommand href
+name "com.hazelcast.config package"
+target "http://www.hazelcast.com/javadoc/index.html?com/hazelcast/config/package-summary.html"
+
+\end_inset
+
+ is already imported for configuration-by-script.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast configuration guide"
+target "http://hazelcast.com/docs/latest/manual/multi_html/ch14.html"
+
+\end_inset
+
+ for a general overview.
 \end_layout
 
 \begin_layout Subsection
@@ -35906,7 +36252,7 @@ reference "app-globals"
 
 )
 \bar default
-: it is likewise 
+; it is likewise 
 \begin_inset Quotes eld
 \end_inset
 
@@ -38378,252 +38724,19 @@ name "configuration-distributed"
 \end_layout
 
 \begin_layout Standard
-This service is only available if you've installed the distributed Prudence
- module: see the 
+This service's job is to load the 
 \bar under
-clusters chapter (page 
+Hazelcast configuration (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "clusters"
+reference "configuration-hazelcast"
 
 \end_inset
 
 )
 \bar default
 .
-\end_layout
-
-\begin_layout Standard
-Its job is load the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Hazelcast"
-target "http://www.hazelcast.com/"
-
-\end_inset
-
- configuration.
- You have two options to configure Hazelcast:
-\end_layout
-
-\begin_layout Itemize
-By script, at 
-\begin_inset Quotes eld
-\end_inset
-
-/configuration/hazelcast/
-\begin_inset Quotes erd
-\end_inset
-
-.
- This is the default method, and is recommended.
-\end_layout
-
-\begin_layout Itemize
-By standard XML file, at 
-\begin_inset Quotes eld
-\end_inset
-
-/configuration/hazelcast.conf
-\begin_inset Quotes erd
-\end_inset
-
-.
- This method is provided for compatibility, and it's generally preferable
- to use the by-script configuration.
- An example file is provided for you at 
-\begin_inset Quotes eld
-\end_inset
-
-/configuration/hazelcast.alt.conf
-\begin_inset Quotes erd
-\end_inset
-
-.
- If you rename this file to 
-\begin_inset Quotes eld
-\end_inset
-
-hazelcast.conf
-\begin_inset Quotes erd
-\end_inset
-
-, then it will be used 
-\emph on
-instead
-\emph default
- of the by-script configuration.
-\end_layout
-
-\begin_layout Standard
-The by-script configuration allows for multiple Hazelcast instances: each
- instance is a file under the 
-\begin_inset Quotes eld
-\end_inset
-
-/configuration/hazelcast/
-\begin_inset Quotes erd
-\end_inset
-
- directory.
- By default, Prudence needs just one instance, configured at 
-\begin_inset Quotes eld
-\end_inset
-
-/hazelcast/prudence/default.js
-\begin_inset Quotes erd
-\end_inset
-
-.
- Here are the default settings for it:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-config.instanceName = 'com.threecrickets.prudence'
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-var map = new MapConfig()
-\end_layout
-
-\begin_layout Plain Layout
-
-map.name = 'com.threecrickets.prudence.cache'
-\end_layout
-
-\begin_layout Plain Layout
-
-map.backupCount = 1
-\end_layout
-
-\begin_layout Plain Layout
-
-map.evictionPolicy = MapConfig.EvictionPolicy.LFU
-\end_layout
-
-\begin_layout Plain Layout
-
-map.evictionPercentage = 25
-\end_layout
-
-\begin_layout Plain Layout
-
-config.addMapConfig(map)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-map = new MapConfig()
-\end_layout
-
-\begin_layout Plain Layout
-
-map.name = 'com.threecrickets.prudence.cacheTagMap'
-\end_layout
-
-\begin_layout Plain Layout
-
-map.backupCount = 1
-\end_layout
-
-\begin_layout Plain Layout
-
-config.addMapConfig(map)
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-map = new MapConfig()
-\end_layout
-
-\begin_layout Plain Layout
-
-map.name = 'com.threecrickets.prudence.distributedGlobals'
-\end_layout
-
-\begin_layout Plain Layout
-
-map.backupCount = 1
-\end_layout
-
-\begin_layout Plain Layout
-
-map.evictionPolicy = MapConfig.EvictionPolicy.LFU
-\end_layout
-
-\begin_layout Plain Layout
-
-map.evictionPercentage = 25
-\end_layout
-
-\begin_layout Plain Layout
-
-config.addMapConfig(map)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-However, you have control per application as to which Hazelcast instance
- it uses, as well as the map names therein.
- You may configure these in 
-\bar under
-the application's settings.js (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "settings-distributed"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-For your convenience, the entire 
-\begin_inset CommandInset href
-LatexCommand href
-name "com.hazelcast.config package"
-target "http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/config/package-summary.html"
-
-\end_inset
-
- is already imported for configuration-by-script.
-\end_layout
-
-\begin_layout Standard
-Also see the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Hazelcast configuration guide"
-target "http://www.hazelcast.com/docs/3.1/manual/multi_html/ch14.html"
-
-\end_inset
-
- for a general overview.
+ 
 \end_layout
 
 \begin_layout Subsubsection
@@ -42561,19 +42674,351 @@ name "clusters"
 \end_layout
 
 \begin_layout Standard
-TODO
+Multiple JVMs running Prudence, on several machines or on a single one,
+ may share certain resources.
+ The running instances do not have to be identical (
+\begin_inset Quotes eld
+\end_inset
+
+redundant
+\begin_inset Quotes erd
+\end_inset
+
+), though in some 
+\bar under
+deployment scenarios (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "deployment"
+
+\end_inset
+
+)
+\bar default
+ they should be.
 \end_layout
 
 \begin_layout Standard
-Not only for horizontal scaling, but also for isolation.
+Many of these features in Prudence rely on the excellent 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+ library: Hazelcast allows Prudence nodes to to share state and locks and
+ to run tasks remotely.
+ Its zero-configuration auto-discovery feature is especially useful for
+ flexible cloud deployments.
+ You don't have to dig deep into Hazelcast: the core features work out-of-the-bo
+x with Prudence, and are fully explained in this chapter.
+ However, if you're serious about clustering, it's a good idea to study
+ Hazelcast and see what more, perhaps, it can do for you.
+ Especially, you may want to tweak the 
+\bar under
+default configuration (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-hazelcast"
+
+\end_inset
+
+)
+\bar default
+, for example to add backups, change eviction policies, etc.
 \end_layout
 
 \begin_layout Subsection
-Distributed Globals
+Sharing State
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters-globals"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Easily share in-memory data between all nodes and applications in the cluster
+ using the 
+\bar under
+application.distributedGlobals and application.distributedSharedGlobals API
+ family (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-distributed-globals"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+Serializability
+\end_layout
+
+\begin_layout Standard
+Distributed globals 
+\emph on
+must be serializable
+\emph default
+.
+ If they aren't, you will get an exception when Hazelcast attempts to move
+ the data between nodes.
+\end_layout
+
+\begin_layout Standard
+If you're using JavaScript, this unfortunately means that you are limited
+ to primitive types.
+ One easy way to get around this is to serialize via JSON:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/json/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var person = {name: 'Linus', role: 'boss'}
+\end_layout
+
+\begin_layout Plain Layout
+
+application.distributedGlobals.put('person', Sincerity.JSON.to(person))
+\end_layout
+
+\begin_layout Plain Layout
+
+person = Sincerity.JSON.from(application.distributedGlobals.get('person'))
+\end_layout
+
+\begin_layout Plain Layout
+
+println(person.name)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Concurrency
+\end_layout
+
+\begin_layout Standard
+Like the other globals, distributed globals support 
+\bar under
+concurrently atomic operations (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "concurrency"
+
+\end_inset
+
+)
+\bar default
+.
+ In the following example, we make sure that the default value is only ever
+ set once:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var defaultPerson = {name: 'Linus', role: 'boss'}
+\end_layout
+
+\begin_layout Plain Layout
+
+var person =
+\end_layout
+
+\begin_layout Plain Layout
+
+	Sincerity.JSON.from(application.getDistributedGlobal('person', Sincerity.JSON.to(def
+aultPerson)))
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Configuration
+\end_layout
+
+\begin_layout Standard
+You can configure the distributed globals in 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-hazelcast"
+
+\end_inset
+
+)
+\bar default
+, as a map named 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence.distributedGlobals.[name]
+\begin_inset Quotes erd
+\end_inset
+
+.
+ In particular, you might want to change the the number of backups.
+\end_layout
+
+\begin_layout Standard
+Actually, you can change the name of the map used by the API, too, in the
+ application's 
+\bar under
+setting.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-distributed"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsection
-Task Farming
+Cluster-Wide Synchronization
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters-locks"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use the 
+\bar under
+application.getDistributedSharedLock API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "synchronization"
+
+\end_inset
+
+)
+\bar default
+ to synchronize access to resources for all threads in the cluster:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var lock = application.getDistributedSharedLock('services.remote')
+\end_layout
+
+\begin_layout Plain Layout
+
+lock.lock()
+\end_layout
+
+\begin_layout Plain Layout
+
+try {
+\end_layout
+
+\begin_layout Plain Layout
+
+	doSomethingAtomicallyWithRemoteService()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\begin_layout Plain Layout
+
+finally {
+\end_layout
+
+\begin_layout Plain Layout
+
+	lock.unlock()
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Farming Out Background Tasks
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters-tasks"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Sharing Cache Backends
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters-cache"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Centralized Logging
+\begin_inset CommandInset label
+LatexCommand label
+name "clusters-logging"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section

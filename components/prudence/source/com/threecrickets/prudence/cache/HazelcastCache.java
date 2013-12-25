@@ -13,11 +13,11 @@ package com.threecrickets.prudence.cache;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
 import com.hazelcast.core.MultiMap;
 
 /**
@@ -88,7 +88,7 @@ public class HazelcastCache implements Cache
 	{
 		logger.fine( "Store: " + key );
 
-		ConcurrentMap<String, CacheEntry> cache = getCache();
+		IMap<String, CacheEntry> cache = getCache();
 		cache.put( key, entry );
 
 		String[] tags = entry.getTags();
@@ -102,7 +102,7 @@ public class HazelcastCache implements Cache
 
 	public CacheEntry fetch( String key )
 	{
-		ConcurrentMap<String, CacheEntry> cache = getCache();
+		IMap<String, CacheEntry> cache = getCache();
 		CacheEntry entry = cache.get( key );
 		if( entry != null )
 		{
@@ -127,7 +127,7 @@ public class HazelcastCache implements Cache
 		Collection<String> tagged = tagMap.remove( tag );
 		if( tagged != null )
 		{
-			ConcurrentMap<String, CacheEntry> cache = getCache();
+			IMap<String, CacheEntry> cache = getCache();
 			for( String key : tagged )
 			{
 				logger.fine( "Invalidate " + tag + ": " + key );
@@ -178,7 +178,7 @@ public class HazelcastCache implements Cache
 	 * 
 	 * @return The cache
 	 */
-	private ConcurrentMap<String, CacheEntry> getCache()
+	private IMap<String, CacheEntry> getCache()
 	{
 		return hazelcast.getMap( cacheName );
 	}

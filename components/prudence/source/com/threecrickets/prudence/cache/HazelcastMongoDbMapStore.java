@@ -37,8 +37,8 @@ import com.threecrickets.prudence.util.IoUtil;
  * href="http://www.mongodb.org/">MongoDB</a>.
  * <p>
  * The MongoDB client must be stored as
- * "com.threecrickets.prudence.HazelcastCache.mongoDb" in the {@link Component}
- * 's context.
+ * "com.threecrickets.prudence.cache.HazelcastMongoDbMapStore.mongoDb" in the
+ * {@link Component} 's context.
  * <p>
  * The MongoDB database will be "prudence".
  * 
