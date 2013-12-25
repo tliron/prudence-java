@@ -7,23 +7,18 @@
 document.require('/sincerity/container/')
 
 // Try "/configuration/hazelcast.conf" if it exists
-var config = sincerity.container.getConfigurationFile('hazelcast.conf')
-if (config.exists()) {
-	importClass(
-		com.hazelcast.config.FileSystemXmlConfig,
-		com.hazelcast.core.Hazelcast)
-
-	config = new FileSystemXmlConfig(config)
-	Hazelcast.newHazelcastInstance(config)
+var configFile = sincerity.container.getConfigurationFile('hazelcast.conf')
+if (configFile.exists()) {
+	com.hazelcast.core.Hazelcast.newHazelcastInstance(new com.hazelcast.config.FileSystemXmlConfig(configFile))
 }
 else {
-	// Execute the "/configuration/hazelcast/" script
+	// Configuration by script
+	importClass(
+		com.hazelcast.core.Hazelcast,
+		com.hazelcast.client.HazelcastClient)
+
 	importPackage(com.hazelcast.config)
-	importClass(com.hazelcast.core.Hazelcast)
-	
-	config = new Config()
-	
+	importPackage(com.hazelcast.client.config)
+
 	Sincerity.Container.executeAll(sincerity.container.getConfigurationFile('hazelcast'))
-	
-	Hazelcast.newHazelcastInstance(config)
 }

@@ -61,7 +61,7 @@ public class HazelcastCache implements Cache
 	 * 
 	 * @param hazelcast
 	 *        The Hazelcast instance or null to use the instance named
-	 *        "com.threecrickets.prudence"
+	 *        "com.threecrickets.prudence.application"
 	 * @param cacheName
 	 *        The Hazelcast map name for the cache
 	 * @param cacheTagsName
@@ -73,9 +73,9 @@ public class HazelcastCache implements Cache
 		this.cacheTagsName = cacheTagsName;
 		if( hazelcast == null )
 		{
-			hazelcast = Hazelcast.getHazelcastInstanceByName( "com.threecrickets.prudence" );
+			hazelcast = Hazelcast.getHazelcastInstanceByName( "com.threecrickets.prudence.application" );
 			if( hazelcast == null )
-				throw new RuntimeException( "Cannot find a Hazelcast instance named \"com.threecrickets.prudence\"" );
+				throw new RuntimeException( "Can't find a Hazelcast instance named \"com.threecrickets.prudence.application\"" );
 		}
 		this.hazelcast = hazelcast;
 	}

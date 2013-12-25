@@ -27159,6 +27159,19 @@ very bad for scalability
  and nodes.
  However, in some situations it may be preferable to the alternatives.
  Use it responsibly.
+ Especially, you want to avoid using it in request threads: it makes a bit
+ more sense for 
+\bar under
+background task threads (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "background-tasks"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -36167,7 +36180,7 @@ For your convenience, the entire
 \begin_inset CommandInset href
 LatexCommand href
 name "com.hazelcast.config package"
-target "http://www.hazelcast.com/javadoc/index.html?com/hazelcast/config/package-summary.html"
+target "http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/config/package-summary.html"
 
 \end_inset
 
@@ -42726,7 +42739,8 @@ reference "configuration-hazelcast"
 
 )
 \bar default
-, for example to add backups, change eviction policies, etc.
+, for example to add backups, change eviction policies, create node groups,
+ enable SSL, encryption, etc.
 \end_layout
 
 \begin_layout Subsection
@@ -42988,8 +43002,12 @@ finally {
 
 \end_layout
 
+\begin_layout Standard
+Just make sure you understand how truly awful this could be for scalability!
+\end_layout
+
 \begin_layout Subsection
-Farming Out Background Tasks
+Farming Out Tasks
 \begin_inset CommandInset label
 LatexCommand label
 name "clusters-tasks"
@@ -42999,8 +43017,177 @@ name "clusters-tasks"
 
 \end_layout
 
+\begin_layout Standard
+The 
+\bar under
+distributed task APIs (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tasks-distributed"
+
+\end_inset
+
+)
+\bar default
+ let you spawn tasks anywhere, everywhere, or on specific nodes in the cluster.
+\end_layout
+
+\begin_layout Standard
+This powerful feature is only really useful in a heterogeneous cluster:
+ if you all your nodes are the same, and all of them are answering user
+ requests behind a load balancer, then it's hard to see what advantage you
+ would get by spawning background tasks on a node other than the one that
+ answered the request.
+ However, if you have a separate set of nodes specifically tuned to tasks,
+ or even multiple sets dedicated to tasks of different kinds, then you gain
+ considerable control over your deployment strategies.
+ You can scale out your 
+\begin_inset Quotes eld
+\end_inset
+
+web nodes
+\begin_inset Quotes erd
+\end_inset
+
+ if you need to handle more user requests, and do the same and separately
+ for 
+\begin_inset Quotes eld
+\end_inset
+
+task nodes,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+database nodes,
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cache nodes,
+\begin_inset Quotes erd
+\end_inset
+
+ etc.
+\end_layout
+
+\begin_layout Standard
+This is accomplished very easily using Hazelcast's ability to separate your
+ cluster into groups of nodes.
+ The default configuration associates all nodes with the 
+\begin_inset Quotes eld
+\end_inset
+
+state
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+tasks
+\begin_inset Quotes erd
+\end_inset
+
+ groups, but if remove your web nodes from the 
+\begin_inset Quotes eld
+\end_inset
+
+tasks
+\begin_inset Quotes erd
+\end_inset
+
+ group, then tasks won't be executed there.
+\end_layout
+
+\begin_layout Standard
+The default configuration associates all instances with the 
+\begin_inset Quotes eld
+\end_inset
+
+prudence
+\begin_inset Quotes erd
+\end_inset
+
+ group, but you can change 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/prudence-tasks.js
+\begin_inset Quotes erd
+\end_inset
+
+ to use a separate group:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+config.groupConfig.name = 'task'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The tasks API will spawn in that group:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/reencode-video/,
+\end_layout
+
+\begin_layout Plain Layout
+
+	context: {file: 'movie.avi', resolution: {w: 600, h: 400}},
+\end_layout
+
+\begin_layout Plain Layout
+
+	json: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	distributed: true
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
-Sharing Cache Backends
+Sharing Caches
 \begin_inset CommandInset label
 LatexCommand label
 name "clusters-cache"

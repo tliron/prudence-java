@@ -1,12 +1,17 @@
 
-config.instanceName = 'com.threecrickets.prudence'
+/*
+ * These are used by the application.distributedGlobals and
+ * application.distributedSharedGlobals APIs in Prudence.
+ */
 
-// Distributed globals
+// Distributed shared globals
 
 map = new MapConfig()
 map.name = 'com.threecrickets.prudence.distributedSharedGlobals'
 map.backupCount = 1
 config.addMapConfig(map)
+
+// Distributed globals
 
 var applicationsFile = sincerity.container.getFile('component', 'applications')
 if (applicationsFile.exists()) {
@@ -25,21 +30,3 @@ if (applicationsFile.exists()) {
 		config.addMapConfig(map)
 	}
 }
-
-// Caching backend
-
-var map = new MapConfig()
-var nearCache = new NearCacheConfig()
-map.name = 'com.threecrickets.prudence.cache'
-nearCache.maxSize = 5000
-nearCache.evictionPolicy = 'LRU'
-nearCache.timeToLiveSeconds = 0
-nearCache.maxIdleSeconds = 0
-nearCache.invalidateOnChange = true
-map.nearCacheConfig = nearCache
-config.addMapConfig(map)
-
-var multiMap = new MultiMapConfig()
-multiMap.name = 'com.threecrickets.prudence.cacheTagMap'
-multiMap.valueCollectionType = 'SET'
-config.addMultiMapConfig(multiMap)
