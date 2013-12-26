@@ -5,16 +5,21 @@ configuration.logger({
 })
 
 configuration.logger({
-	name: 'com.hazelcast.config',
-	level: 'info'
-})
-
-configuration.logger({
 	name: 'com.hazelcast.system',
 	level: 'info'
 })
 
 configuration.logger({
-	name: 'com.hazelcast.impl',
+	name: 'com.hazelcast.instance',
+	level: 'warn'
+})
+
+configuration.logger({
+	name: 'com.hazelcast.core',
+	level: 'warn'
+})
+
+configuration.logger({
+	name: 'com.hazelcast.cluster',
 	level: 'info'
 })

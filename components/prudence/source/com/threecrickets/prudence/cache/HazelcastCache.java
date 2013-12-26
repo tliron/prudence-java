@@ -49,7 +49,7 @@ public class HazelcastCache implements Cache
 	 * 
 	 * @param hazelcast
 	 *        The hazelcast instance or null to use the instance named
-	 *        "com.threecrickets.prudence"
+	 *        "com.threecrickets.prudence.application"
 	 */
 	public HazelcastCache( HazelcastInstance hazelcast )
 	{
