@@ -24145,15 +24145,32 @@ target "http://www.hazelcast.com/"
 \begin_layout Itemize
 
 \series bold
-instance
+applicationInstance
 \series default
-: The name of the Hazelcast instance.
+: The name of the Hazelcast 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ instance.
  Defaults to 
 \begin_inset Quotes eld
 \end_inset
 
-com.threecrickets.prudence
+com.threecrickets.prudence.application
 \begin_inset Quotes erd
+\end_inset
+
+.
+ Can be accessed at runtime via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.hazelcastApplicationInstance API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.hazelcastApplicationInstance"
+
 \end_inset
 
 .
@@ -24226,9 +24243,71 @@ com.threecrickets.prudence.distributedSharedGlobals
 \begin_layout Itemize
 
 \series bold
-executor
+taskInstanceSharedGlobal
 \series default
-: The name of the Hazelcast executor used for the 
+: The name of the 
+\bar under
+application.sharedGlobal (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-shared-globals"
+
+\end_inset
+
+)
+\bar default
+ in which the Hazelcast 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ instance is stored.
+ If there is nothing in that shared global, then the 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ instance will be identical to the 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ instance.
+ Defaults to 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence.hazelcast.taskInstance
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Can be accessed at runtime via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.hazelcastTaskInstance API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.hazelcastTaskInstance"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+executorService
+\series default
+: The name of the Hazelcast executor service used for the 
 \bar under
 distributed task APIs (page 
 \begin_inset CommandInset ref
@@ -24246,6 +24325,15 @@ reference "tasks-distributed"
 
 default
 \begin_inset Quotes erd
+\end_inset
+
+.
+ Can be accessed at runtime via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "application.hazelcastExecutorService API"
+target "http://threecrickets.com/api/javascript/?namespace=application&item=application.hazelcastExecutorService"
+
 \end_inset
 
 .
@@ -32009,10 +32097,22 @@ reference "clusters"
 )
 \bar default
 , you can spawn tasks on other nodes in the cluster.
+ This feature enables you to easily create specialized 
+\bar under
+task farms (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters-task-farms"
+
+\end_inset
+
+)
+\bar default
+ for flexible, scalable deployments.
 \end_layout
 
 \begin_layout Standard
-The above two APIs have distributed versions: 
+The task APIs have distributed versions: 
 \begin_inset CommandInset href
 LatexCommand href
 name "application.distributedExecuteTask"
@@ -36140,42 +36240,6 @@ instead
 \end_layout
 
 \begin_layout Standard
-The by-script configuration allows for multiple Hazelcast instances: each
- instance is a file under the 
-\begin_inset Quotes eld
-\end_inset
-
-/configuration/hazelcast/
-\begin_inset Quotes erd
-\end_inset
-
- directory.
- By default, Prudence needs just one instance, configured at 
-\begin_inset Quotes eld
-\end_inset
-
-/hazelcast/prudence/default.js
-\begin_inset Quotes erd
-\end_inset
-
-.
- However, you also have control per application as to which Hazelcast instance
- it uses, as well as the map names therein.
- You may configure these in 
-\bar under
-the application's settings.js (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "settings-distributed"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
 For your convenience, the entire 
 \begin_inset CommandInset href
 LatexCommand href
@@ -36194,6 +36258,105 @@ target "http://hazelcast.com/docs/latest/manual/multi_html/ch14.html"
 \end_inset
 
  for a general overview.
+\end_layout
+
+\begin_layout Standard
+The default configuration creates a single Hazelcast instance belonging
+ to an 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ cluster, and the default configuration of applications points them to use
+ this instance, though each application gets its own Hazelcast map to handles
+ it 
+\bar under
+application.distributedGlobals API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "application-distributed-globals"
+
+\end_inset
+
+)
+\bar default
+.
+ However, you can configure applications to use any Hazelcast instance,
+ as well as change which shared objects to use, in 
+\bar under
+their settings.js (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-distributed"
+
+\end_inset
+
+)
+\bar default
+.
+ This allows each application to belong to a different Hazelcast cluster.
+\end_layout
+
+\begin_layout Standard
+Likewise, if you are using 
+\bar under
+Hazelcast as a cache backend (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-caching"
+
+\end_inset
+
+)
+\bar default
+, it will default to use the Hazelcast 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ instance.
+ However, you can set the cache backend to use its own Hazelcast instance
+ in its constructor.
+\end_layout
+
+\begin_layout Standard
+There are good reasons why you might want a more complex configuration:
+ for example, if you're doing 
+\bar under
+task farming (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters-task-farms"
+
+\end_inset
+
+)
+\bar default
+, you might want the 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ nodes to be separate from the 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ nodes.
+ A commented-out suggested configuration for this is included---see the
+ clusters chapter for a detailed explanation.
 \end_layout
 
 \begin_layout Subsection
@@ -38029,7 +38192,7 @@ reference "caching"
 
 )
 \bar default
- backend here.
+ backends here.
 \end_layout
 
 \begin_layout Standard
@@ -42744,10 +42907,10 @@ reference "configuration-hazelcast"
 \end_layout
 
 \begin_layout Subsection
-Sharing State
+Shared State
 \begin_inset CommandInset label
 LatexCommand label
-name "clusters-globals"
+name "clusters-state"
 
 \end_inset
 
@@ -42769,6 +42932,54 @@ reference "application-distributed-globals"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsubsection
+Concurrency
+\end_layout
+
+\begin_layout Standard
+Like the other globals, distributed globals support 
+\bar under
+concurrently atomic operations (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "concurrency"
+
+\end_inset
+
+)
+\bar default
+.
+ In the following example, we make sure that the default value is only ever
+ set once:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var defaultPerson = {name: 'Linus', role: 'boss'}
+\end_layout
+
+\begin_layout Plain Layout
+
+var person =
+\end_layout
+
+\begin_layout Plain Layout
+
+	Sincerity.JSON.from(application.getDistributedGlobal('person', Sincerity.JSON.to(def
+aultPerson)))
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -42827,54 +43038,6 @@ println(person.name)
 \end_layout
 
 \begin_layout Subsubsection
-Concurrency
-\end_layout
-
-\begin_layout Standard
-Like the other globals, distributed globals support 
-\bar under
-concurrently atomic operations (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "concurrency"
-
-\end_inset
-
-)
-\bar default
-.
- In the following example, we make sure that the default value is only ever
- set once:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-lstparams "breaklines=true"
-inline false
-status open
-
-\begin_layout Plain Layout
-
-var defaultPerson = {name: 'Linus', role: 'boss'}
-\end_layout
-
-\begin_layout Plain Layout
-
-var person =
-\end_layout
-
-\begin_layout Plain Layout
-
-	Sincerity.JSON.from(application.getDistributedGlobal('person', Sincerity.JSON.to(def
-aultPerson)))
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
 Configuration
 \end_layout
 
@@ -42885,7 +43048,7 @@ You can configure the distributed globals in
 \begin_inset Quotes eld
 \end_inset
 
-/configuration/hazelcast
+/configuration/hazelcast/application/globals.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -42911,8 +43074,8 @@ com.threecrickets.prudence.distributedGlobals.[name]
 \end_layout
 
 \begin_layout Standard
-Actually, you can change the name of the map used by the API, too, in the
- application's 
+You can also configure which Hazelcast maps each application uses in its
+ 
 \bar under
 setting.js (page 
 \begin_inset CommandInset ref
@@ -42930,7 +43093,7 @@ reference "settings-distributed"
 Cluster-Wide Synchronization
 \begin_inset CommandInset label
 LatexCommand label
-name "clusters-locks"
+name "clusters-synchronization"
 
 \end_inset
 
@@ -42949,7 +43112,7 @@ reference "synchronization"
 
 )
 \bar default
- to synchronize access to resources for all threads in the cluster:
+ to synchronize access to resources for the entire cluster:
 \end_layout
 
 \begin_layout Standard
@@ -43003,14 +43166,39 @@ finally {
 \end_layout
 
 \begin_layout Standard
-Just make sure you understand how truly awful this could be for scalability!
+This apparently simple tool offers a reliable and thus powerful guarantee
+ for atomicity across entire deployments, even very large ones.
+ It can replace the need to use a separate, dedicated synchronization tool,
+ such as is provided 
+\begin_inset CommandInset href
+LatexCommand href
+name "Apache ZooKeeper"
+target "http://zookeeper.apache.org/"
+
+\end_inset
+
+.
+ Just make sure you understand the detrimental effect its use could have
+ for your scalability.
+\end_layout
+
+\begin_layout Standard
+See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast documentation"
+target "http://hazelcast.com/docs/latest/manual/multi_html/ch02s07.html"
+
+\end_inset
+
+ for more information on distributed locks.
 \end_layout
 
 \begin_layout Subsection
-Farming Out Tasks
+Task Farms
 \begin_inset CommandInset label
 LatexCommand label
-name "clusters-tasks"
+name "clusters-task-farms"
 
 \end_inset
 
@@ -43034,13 +43222,27 @@ reference "tasks-distributed"
 
 \begin_layout Standard
 This powerful feature is only really useful in a heterogeneous cluster:
- if you all your nodes are the same, and all of them are answering user
- requests behind a load balancer, then it's hard to see what advantage you
- would get by spawning background tasks on a node other than the one that
- answered the request.
- However, if you have a separate set of nodes specifically tuned to tasks,
- or even multiple sets dedicated to tasks of different kinds, then you gain
- considerable control over your deployment strategies.
+ if all your nodes are the same, and all of them are answering user requests
+ behind a 
+\bar under
+load balancer (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "loadbalancing"
+
+\end_inset
+
+)
+\bar default
+, then it's hard to see what advantage you would get by spawning background
+ tasks on a node other than the one that answered the request.
+ However, if you have a 
+\emph on
+separate
+\emph default
+ set of nodes specifically designated to running tasks, or even multiple
+ sets dedicated to tasks of different kinds, then you gain considerable
+ control over your deployment strategies.
  You can scale out your 
 \begin_inset Quotes eld
 \end_inset
@@ -43049,8 +43251,8 @@ web nodes
 \begin_inset Quotes erd
 \end_inset
 
- if you need to handle more user requests, and do the same and separately
- for 
+ if you need to handle more user requests, and separately scale out your
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -43062,7 +43264,7 @@ task nodes,
 \begin_inset Quotes eld
 \end_inset
 
-database nodes,
+cache nodes,
 \begin_inset Quotes erd
 \end_inset
 
@@ -43070,21 +43272,151 @@ database nodes,
 \begin_inset Quotes eld
 \end_inset
 
-cache nodes,
+database nodes,
 \begin_inset Quotes erd
 \end_inset
 
  etc.
+ This deployment strategy is key to cost-efficient use of your resources.
 \end_layout
 
 \begin_layout Standard
-This is accomplished very easily using Hazelcast's ability to separate your
- cluster into groups of nodes.
- The default configuration associates all nodes with the 
+Prudence explicitly supports this scenario by allowing you to use a separate
+ Hazelcast instance for the distributed task APIs: though by default they
+ will use the 
 \begin_inset Quotes eld
 \end_inset
 
-state
+application
+\begin_inset Quotes erd
+\end_inset
+
+ instance, you can explicitly override it and provide a separate 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ instance.
+ Each instance would then belong to a different cluster using Hazelcast's
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "grouping feature"
+target "http://hazelcast.com/docs/latest/manual/multi_html/ch14.html#ConfigGroup"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To enable this scenario, Prudence comes with commented-out 
+\bar under
+configurations (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-hazelcast"
+
+\end_inset
+
+)
+\bar default
+ for both the 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ nodes and for the nodes that will be spawning the tasks:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/task/1-server.js
+\begin_inset Quotes erd
+\end_inset
+
+: Enable this if you want this node to be a full member of the 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ cluster, which means it will be able to accept and run distributed tasks.
+ Note that the node would still be a member of the 
+\begin_inset Quotes eld
+\end_inset
+
+application
+\begin_inset Quotes erd
+\end_inset
+
+ cluster (unless you disable its configuration explicitly), meaning it will
+ be able to 
+\bar under
+share state (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters-state"
+
+\end_inset
+
+)
+\bar default
+ with the application nodes.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/task/2-client.js
+\begin_inset Quotes erd
+\end_inset
+
+: Enable this if you want this node to be able to spawn tasks in the 
+\begin_inset Quotes eld
+\end_inset
+
+task
+\begin_inset Quotes erd
+\end_inset
+
+ cluster.
+ This creates a lightweight 
+\begin_inset CommandInset href
+LatexCommand href
+name "HazelcastClient"
+target "http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/client/HazelcastClient.html"
+
+\end_inset
+
+ for the 
+\begin_inset Quotes eld
+\end_inset
+
+tasks
+\begin_inset Quotes erd
+\end_inset
+
+ cluster, which is not an actual member.
+\end_layout
+
+\begin_layout Standard
+It normally doesn't make sense to have both 
+\begin_inset Quotes eld
+\end_inset
+
+1-server.js
 \begin_inset Quotes erd
 \end_inset
 
@@ -43092,58 +43424,26 @@ state
 \begin_inset Quotes eld
 \end_inset
 
-tasks
+2-client.js
 \begin_inset Quotes erd
 \end_inset
 
- groups, but if remove your web nodes from the 
-\begin_inset Quotes eld
-\end_inset
-
-tasks
-\begin_inset Quotes erd
-\end_inset
-
- group, then tasks won't be executed there.
+ enabled on the same node: a server is already a full member, and doesn't
+ have to also be a lightweight client.
+ However, it can be useful to enable both for the purpose of testing the
+ complete loop in a single container: it 
+\emph on
+will
+\emph default
+ work.
+ (That's why there are numeric prefixes for the filenames: this makes sure
+ they are initialized in the correct order if both are enabled.)
 \end_layout
 
 \begin_layout Standard
-The default configuration associates all instances with the 
-\begin_inset Quotes eld
-\end_inset
-
-prudence
-\begin_inset Quotes erd
-\end_inset
-
- group, but you can change 
-\begin_inset Quotes eld
-\end_inset
-
-/configuration/hazelcast/prudence-tasks.js
-\begin_inset Quotes erd
-\end_inset
-
- to use a separate group:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-config.groupConfig.name = 'task'
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The tasks API will spawn in that group:
+Once configured, you can use the task APIs as usual on both the client and
+ server nodes, but the tasks will only run on the server nodes.
+ For example:
 \end_layout
 
 \begin_layout Standard
@@ -43163,7 +43463,7 @@ Prudence.Tasks.task({
 
 \begin_layout Plain Layout
 
-	context: {file: 'movie.avi', resolution: {w: 600, h: 400}},
+	context: {filename: 'great_movie.avi', resolution: {w: 600, h: 400}},
 \end_layout
 
 \begin_layout Plain Layout
@@ -43187,7 +43487,7 @@ Prudence.Tasks.task({
 \end_layout
 
 \begin_layout Subsection
-Sharing Caches
+Shared Cache
 \begin_inset CommandInset label
 LatexCommand label
 name "clusters-cache"
@@ -43195,6 +43495,23 @@ name "clusters-cache"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Obviously, in a cluster you want to use a shared cache backend, and even
+ implement a tiered caching strategy.
+ The 
+\bar under
+configuration chapter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-caching"
+
+\end_inset
+
+)
+\bar default
+ details your many built-in options.
 \end_layout
 
 \begin_layout Subsection
@@ -43206,6 +43523,92 @@ name "clusters-logging"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+There are four possible strategies for handling logging in a cluster, each
+ with its own advantages:
+\end_layout
+
+\begin_layout Itemize
+Let every node keep its own log files, which is the default configuration
+ in Prudence.
+ This makes it easier to debug problems specific to each node.
+ However, in a 
+\bar under
+loadbalancing scenario (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "loadbalancing"
+
+\end_inset
+
+)
+\bar default
+ it can be very hard to follow user activities over time, because each request
+ might be logged on a different node.
+\end_layout
+
+\begin_layout Itemize
+Centralize all logging.
+ There are actually two ways to achieve this in Prudence:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Log to a database.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity's logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+ comes with powerful support for logging to 
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Run a dedicated logging node (a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Apache Log4j"
+target "http://logging.apache.org/log4j/"
+
+\end_inset
+
+ server).
+ This is again explicitly supported by 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity's logging plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#logging-plugin"
+
+\end_inset
+
+: it allows all your nodes to send their log messages to the logging node
+ over the network.
+ The logging node will be doing the actual message writing.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+It's easy to log both locally and centrally, immediately giving you the
+ benefits of both worlds, at the cost of some wasted resources due to the
+ duplication.
+\end_layout
+
+\begin_layout Itemize
+A hybrid approach can be the best idea: some loggers might be stored locally,
+ others might write to the central log.
 \end_layout
 
 \begin_layout Section
@@ -43391,6 +43794,13 @@ Deploying Clusters
 
 \begin_layout Subsubsection
 Loadbalancing
+\begin_inset CommandInset label
+LatexCommand label
+name "loadbalancing"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

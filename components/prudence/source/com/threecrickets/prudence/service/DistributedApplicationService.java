@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 
 import org.restlet.Application;
-import org.restlet.Component;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -49,9 +48,10 @@ public class DistributedApplicationService extends ApplicationService
 	public static final String HAZELCAST_APPLICATION_INSTANCE_NAME = "com.threecrickets.prudence.hazelcast.applicationInstanceName";
 
 	/**
-	 * Hazelcast task instance attribute for a {@link Component}.
+	 * Hazelcast task instance attribute name attribute for an
+	 * {@link Application}.
 	 */
-	public static final String HAZELCAST_TASK_INSTANCE = "com.threecrickets.prudence.hazelcast.taskInstance";
+	public static final String HAZELCAST_TASK_INSTANCE_ATTRIBUTE_NAME = "com.threecrickets.prudence.hazelcast.taskInstanceAttributeName";
 
 	/**
 	 * Hazelcast distributed globals name attribute for an {@link Application}.
@@ -65,9 +65,9 @@ public class DistributedApplicationService extends ApplicationService
 	public static final String HAZELCAST_DISTRIBUTED_SHARED_GLOBALS_MAP_NAME = "com.threecrickets.prudence.hazelcast.distributedSharedGlobalsMapName";
 
 	/**
-	 * Hazelcast executor name attribute for an {@link Application}.
+	 * Hazelcast executor service name attribute for an {@link Application}.
 	 */
-	public static final String HAZELCAST_EXECUTOR_NAME = "com.threecrickets.prudence.hazelcast.executorName";
+	public static final String HAZELCAST_EXECUTOR_SERVICE_NAME = "com.threecrickets.prudence.hazelcast.executorServiceName";
 
 	//
 	// Construction
@@ -104,7 +104,7 @@ public class DistributedApplicationService extends ApplicationService
 	{
 		if( applicationInstance == null )
 		{
-			String name = getInstanceName();
+			String name = getApplicationInstanceName();
 			applicationInstance = Hazelcast.getHazelcastInstanceByName( name );
 			if( applicationInstance == null )
 				throw new RuntimeException( "Can't find a Hazelcast instance named \"" + name + "\"" );
@@ -113,12 +113,33 @@ public class DistributedApplicationService extends ApplicationService
 		return applicationInstance;
 	}
 
+	/**
+	 * The Hazelcast task instance.
+	 * <p>
+	 * The instance can be set as a component context attribute, which is named
+	 * according to the application context attribute
+	 * "com.threecrickets.prudence.hazelcast.taskInstanceAttributeName". This
+	 * value defaults to "com.threecrickets.prudence.hazelcast.taskInstance".
+	 * <p>
+	 * If the instance has not been explicitly set, will default to the value of
+	 * {@link #getHazelcastApplicationInstance()}.
+	 * 
+	 * @return The Hazelcast task instance
+	 * @throws RuntimeException
+	 *         If the Hazelcast application instance has not been initialized
+	 */
 	public HazelcastInstance getHazelcastTaskInstance()
 	{
 		if( taskInstance == null )
 		{
-			ConcurrentMap<String, Object> globals = getSharedGlobals();
-			taskInstance = (HazelcastInstance) globals.get( HAZELCAST_TASK_INSTANCE );
+			ConcurrentMap<String, Object> globals = getGlobals();
+			String name = (String) globals.get( HAZELCAST_TASK_INSTANCE_ATTRIBUTE_NAME );
+			if( name == null )
+				name = "com.threecrickets.prudence.hazelcast.taskInstance";
+
+			globals = getSharedGlobals();
+			taskInstance = (HazelcastInstance) globals.get( name );
+
 			if( taskInstance == null )
 				taskInstance = getHazelcastApplicationInstance();
 		}
@@ -136,10 +157,11 @@ public class DistributedApplicationService extends ApplicationService
 	 * @return The Hazelcast executor service
 	 * @throws RuntimeException
 	 *         If the Hazelcast executor service has not been found
+	 * @see #getHazelcastTaskInstance()
 	 */
 	public IExecutorService getHazelcastExecutorService()
 	{
-		String name = getExecutorName();
+		String name = getExecutorServiceName();
 		IExecutorService executor = getHazelcastTaskInstance().getExecutorService( name );
 		if( executor == null )
 			throw new RuntimeException( "Cannot find a Hazelcast executor service named \"" + name + "\"" );
@@ -354,7 +376,7 @@ public class DistributedApplicationService extends ApplicationService
 
 	private volatile String executorName;
 
-	private String getInstanceName()
+	private String getApplicationInstanceName()
 	{
 		if( instanceName == null )
 		{
@@ -390,12 +412,12 @@ public class DistributedApplicationService extends ApplicationService
 		return distributedSharedGlobalsMapName;
 	}
 
-	private String getExecutorName()
+	private String getExecutorServiceName()
 	{
 		if( executorName == null )
 		{
 			ConcurrentMap<String, Object> globals = getGlobals();
-			executorName = (String) globals.get( HAZELCAST_EXECUTOR_NAME );
+			executorName = (String) globals.get( HAZELCAST_EXECUTOR_SERVICE_NAME );
 			if( executorName == null )
 				executorName = "default";
 		}
@@ -403,7 +425,7 @@ public class DistributedApplicationService extends ApplicationService
 	}
 
 	/**
-	 * Submits a task on the Hazelcast cluster.
+	 * Submits a task on the Hazelcast task cluster.
 	 * 
 	 * @param task
 	 *        The task
@@ -426,7 +448,7 @@ public class DistributedApplicationService extends ApplicationService
 	}
 
 	/**
-	 * Submits a task on multiple members of the Hazelcast cluster.
+	 * Submits a task on multiple members of the Hazelcast task cluster.
 	 * 
 	 * @param task
 	 *        The task

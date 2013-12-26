@@ -250,7 +250,7 @@ var Prudence = {}
  * @name application.getDistributedSharedLock
  * @function
  * @param {String} name The name of the distributed shared lock
- * @returns {<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/ILock.html">com.hazelcast.core.ILock</a>}
+ * @returns {<a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/ILock.html">com.hazelcast.core.ILock</a>}
  * @see application#getLock
  * @see application#getSharedLock
  */
@@ -490,7 +490,7 @@ var Prudence = {}
  * @param {String} documentName The document URI relative to the application's "/libraries/" subdirectory
  * @param {String} entryPointName The function to call in the document, or null to run the entire document
  * @param {Object} context The context made available to the task (must be serializable), or null
- * @param {String|<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
+ * @param {String|<a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
  * @param {Boolean} multi Whether the task should be executed on all members in the cluster; only used if "where" is an Iterable
  * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
  */
@@ -521,21 +521,43 @@ var Prudence = {}
  * @param {String} code The code to execute
  * @param {String} entryPointName The function to call in the document, or null to run the entire document
  * @param {Object} context The context made available to the task (must be serializable), or null
- * @param {String|<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
+ * @param {String|<a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/Iterable.html">java.lang.Iterable</a>&lt;<a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/Member.html">com.hazelcast.core.Member</a>&gt;} where Where in the cluster to run the task, or null to let Halzecast decide
  * @param {Boolean} multi Whether the task should be executed on all members in the cluster; only used if "where" is an Iterable
  * @returns {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/concurrent/Future.html">java.util.concurrent.Future</a>} A placeholder for the task's status
  */
 
 /**
- * Provides low-level access to the current Hazelcast instance.
+ * Provides low-level access to the current Hazelcast "application" instance.
  * <p>
  * Useful for leveraging Hazelcast features beyond what Prudence automatically provides.
- * For example, you can define your own distrubuted maps, multi-maps, queues, locks, etc.
+ * For example, you can define your own distributed maps, multi-maps, queues, locks, etc.
  * <p>
  * Hazelcast configuration is in "/configuration/hazelcast/prudence/default.js".
  * 
- * @name application.hazelcast
- * @type <a href="http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/HazelcastInstance.html">com.hazelcast.core.HazelcastInstance</a>
+ * @name application.hazelcastApplicationInstance
+ * @type <a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/HazelcastInstance.html">com.hazelcast.core.HazelcastInstance</a>
+ */
+
+/**
+ * Provides low-level access to the current Hazelcast "task" instance.
+ * <p>
+ * The instance is stored in {@link application#sharedGlobals} with a name configured by
+ * 'com.threecrickets.prudence.hazelcast.taskInstanceAttributeName' in {@link application@globals}.
+ * <p>
+ * Unless this instance has been explicitly created, it will default to the same value
+ * as {@link application#hazelcastApplicationInstance}.
+ * 
+ * @name application.hazelcastTaskInstance
+ * @type <a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/HazelcastInstance.html">com.hazelcast.core.HazelcastInstance</a>
+ */
+
+/**
+ * Provides low-level access to the current Hazelcast executor service.
+ * <p>
+ * Belongs to {@link application#application.hazelcastTaskInstance}.
+ * 
+ * @name application.hazelcastExecutorService
+ * @type <a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/IExecutorService.html">com.hazelcast.core.IExecutorService</a>
  */
 
 /**

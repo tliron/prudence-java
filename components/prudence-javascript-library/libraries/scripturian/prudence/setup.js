@@ -127,10 +127,11 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @property {Object} [settings.mediaTypes] A dict matching filename extensions to media (MIME) types
 	 * 
 	 * @property {Object} [settings.distributed] Distributed settings
-	 * @property {String} [settings.distributed.instance='com.threecrickets.prudence'] Hazelcast instance name
+	 * @property {String} [settings.distributed.applicationInstance='com.threecrickets.prudence'] Hazelcast application instance name
 	 * @property {String} [settings.distributed.globals='com.threecrickets.prudence.distributedGlobals.[root.name]'] Hazelcast distributed globals map name
 	 * @property {String} [settings.distributed.sharedGlobals='com.threecrickets.prudence.distributedSharedGlobals'] Hazelcast distributed shared globals map name
-	 * @property {String} [settings.distributed.executor='default'] Hazelcast executor name
+	 * @property {String} [settings.distributed.taskInstanceSharedGlobal='com.threecrickets.prudence.hazelcast.taskInstance'] The name of the shared global in which the Hazelcast task instance is stored
+	 * @property {String} [settings.distributed.executorService='default'] Hazelcast executor service name
 	 * 
 	 * @property {String} [settings.logger=root.name]
 	 * 
@@ -222,10 +223,11 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.code.sourceViewer = Sincerity.Objects.ensure(this.settings.code.sourceViewer, '/source-code/')
 			this.settings.caching.defaultKeyTemplate = Sincerity.Objects.ensure(this.settings.caching.defaultKeyTemplate, '{ri}|{dn}|{nmt}|{nl}|{ne}')
 			this.settings.logger = Sincerity.Objects.ensure(this.settings.logger, this.root.name)
-			this.settings.distributed.instance = Sincerity.Objects.ensure(this.settings.distributed.instance, 'com.threecrickets.prudence')
-			this.settings.distributed.globals = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedGlobals.' + this.root.name)
-			this.settings.distributed.sharedGlobals = Sincerity.Objects.ensure(this.settings.distributed.map, 'com.threecrickets.prudence.distributedSharedGlobals')
-			this.settings.distributed.executor = Sincerity.Objects.ensure(this.settings.distributed.executor, 'default')
+			this.settings.distributed.applicationInstance = Sincerity.Objects.ensure(this.settings.distributed.applicationInstance, 'com.threecrickets.prudence.application')
+			this.settings.distributed.globals = Sincerity.Objects.ensure(this.settings.distributed.globals, 'com.threecrickets.prudence.distributedGlobals.' + this.root.name)
+			this.settings.distributed.sharedGlobals = Sincerity.Objects.ensure(this.settings.distributed.sharedGlobals, 'com.threecrickets.prudence.distributedSharedGlobals')
+			this.settings.distributed.taskInstanceSharedGlobal = Sincerity.Objects.ensure(this.settings.distributed.taskInstanceSharedGlobal, 'com.threecrickets.prudence.hazelcast.taskInstance')
+			this.settings.distributed.executorService = Sincerity.Objects.ensure(this.settings.distributed.executorService, 'default')
 			this.settings.templates.parser = Sincerity.Objects.ensure(this.settings.templates.parser, 'scriptlets')
 
 			var prudenceScriptletPlugin = new PrudenceScriptletPlugin()
@@ -250,10 +252,11 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.compression.sizeThreshold = Sincerity.Localization.toBytes(this.settings.compression.sizeThreshold)
 
 			// Hazelcast
-			this.globals['com.threecrickets.prudence.hazelcast.instanceName'] = this.settings.distributed.instance
+			this.globals['com.threecrickets.prudence.hazelcast.applicationInstanceName'] = this.settings.distributed.applicationInstance
 			this.globals['com.threecrickets.prudence.hazelcast.distributedGlobalsMapName'] = this.settings.distributed.globals
 			this.globals['com.threecrickets.prudence.hazelcast.distributedSharedGlobalsMapName'] = this.settings.distributed.sharedGlobals
-			this.globals['com.threecrickets.prudence.hazelcast.executorName'] = this.settings.distributed.executor
+			this.globals['com.threecrickets.prudence.hazelcast.taskInstanceAttributeName'] = this.settings.distributed.taskInstanceSharedGlobal
+			this.globals['com.threecrickets.prudence.hazelcast.executorServiceName'] = this.settings.distributed.executorService
 
 			// Create instance
 			this.context = component.context.createChildContext()

@@ -11,11 +11,12 @@
  * For the other nodes that are to spawn tasks in this cluster, enable the 
  * "2-client.js" file.
  * 
- * It doesn't make sense to have both "1-server.js" and "1-client.js" enabled
+ * It doesn't make sense to have both "1-server.js" and "2-client.js" enabled
  * on the same node: a server is already a full member, and doesn't have to
  * also be a client. 
  */
 
+/*
 var config = new Config()
 
 config.instanceName = 'com.threecrickets.prudence.task'
@@ -23,8 +24,8 @@ config.groupConfig.name = 'com.threecrickets.prudence.task'
 config.groupConfig.password = 'prudence'
 
 try {
-	importClass(org.apache.log4j.Logger)
-	config.setProperty('hazelcast.logging.type', 'log4j')
+	importClass(org.slf4j.Logger)
+	config.setProperty('hazelcast.logging.type', 'slf4j')
 }
 catch(x) {}
 
@@ -36,3 +37,4 @@ executor.name = 'default'
 config.addExecutorConfig(executor)
 
 Hazelcast.newHazelcastInstance(config)
+*/

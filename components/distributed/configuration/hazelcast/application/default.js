@@ -12,8 +12,8 @@ config.groupConfig.name = 'com.threecrickets.prudence.application'
 config.groupConfig.password = 'prudence'
 
 try {
-	importClass(org.apache.log4j.Logger)
-	config.setProperty('hazelcast.logging.type', 'log4j')
+	importClass(org.slf4j.Logger)
+	config.setProperty('hazelcast.logging.type', 'slf4j')
 }
 catch(x) {}
 	
