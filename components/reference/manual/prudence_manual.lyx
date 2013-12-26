@@ -29526,7 +29526,7 @@ target "http://www.slf4j.org/"
 \begin_layout Standard
 The outcome of this is slightly annoying: the log level names used in the
  configuration files (Log4j) are different from those used in the API (JULI),
- and indeed the configuration is slightly coarser than the API.
+ and indeed the configuration is coarser than the API.
  Here's how they match up:
 \end_layout
 
@@ -29868,7 +29868,15 @@ In such situations the most straightforward solution is to output your message
  to the console.
  Since often Prudence captures standard output (for example, in template
  resources), you may need to override any captures and go straight to the
- console:
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "console"
+target "http://docs.oracle.com/javase/6/docs/api/index.html?java/lang/System.html"
+
+\end_inset
+
+:
 \begin_inset listings
 inline false
 status open
@@ -29884,7 +29892,7 @@ java.lang.System.out.println('Desperate times call for desperate measures!')
 \end_layout
 
 \begin_layout Standard
-Note that if you're running Prudence as a 
+Note that there is no console if you're running Prudence as a 
 \bar under
 service/daemon (page 
 \begin_inset CommandInset ref
@@ -29895,7 +29903,7 @@ reference "daemon"
 
 )
 \bar default
- there is no console (it is captured to the wrapper log).
+ (it is captured to the wrapper log).
  In those cases you either want to switch to running Prudence from the console,
  or use the logging API instead.
 \end_layout
@@ -43622,8 +43630,1275 @@ name "deployment"
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+Deployment
+\begin_inset Quotes erd
+\end_inset
+
+ here refers to getting your Prudence applications running so that users
+ can, well, use them.
+ The challenge is that the development environment is often quite different
+ from the production, staging and testing environments, and indeed it's
+ the point where development work must integrate with systems administration
+ and operations.
+\end_layout
+
+\begin_layout Standard
+Approaching deployment can quickly mire you into a comparison of ideologies
+ of project management: some prefer Continuous Integration (CI) and agile
+ methods, others prefer more careful deployment by humans according to step-by-s
+tep plans.
+ We'll bypass the ideological discussion here, and deal specifically with
+ the technical possibilities and tools.
+ It's up to you to decide which deployment technologies fit best with or
+ best enable your project management ideology.
+\end_layout
+
 \begin_layout Subsection
-The Joys of Sincerity
+Deployment Strategies
+\end_layout
+
+\begin_layout Subsubsection
+File Synchronization
+\end_layout
+
+\begin_layout Standard
+Sometimes the best strategies are the most straightforward.
+\end_layout
+
+\begin_layout Standard
+Because your entire Prudence installation is contained in one directory,
+ you can simply copy it from your development environment to your deployment
+ environments.
+ Even better, you can use a synchronization tool like 
+\begin_inset CommandInset href
+LatexCommand href
+name "rsync"
+target "http://rsync.samba.org/"
+
+\end_inset
+
+, which will efficiently copy only the updated/new files.
+ Best of all, you can use a two-way synchronization tool like 
+\begin_inset CommandInset href
+LatexCommand href
+name "Unison"
+target "http://www.cis.upenn.edu/~bcpierce/unison/"
+
+\end_inset
+
+, which allows on-the-fly changes you make at the deployment environment
+ to synchronize back to your development environment.
+ Both tools mentioned use compression and batch transfers for speed and
+ can run over SSH for security.
+\end_layout
+
+\begin_layout Standard
+Actually, the deployment origin does not have to be a single programmer's
+ development environment: you can create a dedicated deploying environment
+ from which to deploy to all nodes and have it shared among a team of programmer
+s.
+\end_layout
+
+\begin_layout Paragraph
+Example
+\end_layout
+
+\begin_layout Standard
+Let's see how this is done using Unison.
+ First, let's create a profile in our development environment.
+ We'll store it in 
+\begin_inset Quotes eld
+\end_inset
+
+~/.unison/production.prf
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+root = /path/to/prudence
+\end_layout
+
+\begin_layout Plain Layout
+
+root = ssh://node1.mysite.org//path/to/prudence
+\end_layout
+
+\begin_layout Plain Layout
+
+root = ssh://node2.mysite.org//path/to/prudence
+\end_layout
+
+\begin_layout Plain Layout
+
+ignore = Path cache
+\end_layout
+
+\begin_layout Plain Layout
+
+ignore = Path logs
+\end_layout
+
+\begin_layout Plain Layout
+
+ignore = Path component/applications/stickstick/data
+\end_layout
+
+\begin_layout Plain Layout
+
+ignore = Path .git 
+\end_layout
+
+\begin_layout Plain Layout
+
+ignore = Path .gitignore
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note how easy it is to include several nodes in a single profile.
+ Also note that likely want to exclude syncing a few localized directories:
+ in this example, we're ignoring an extra data path and also files used
+ by our version control system, 
+\begin_inset CommandInset href
+LatexCommand href
+name "Git"
+target "http://git-scm.com/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To synchronize with the above profile, run this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+unison production -batch
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Of course, you can create additional profiles, for example 
+\begin_inset Quotes eld
+\end_inset
+
+staging.prf
+\begin_inset Quotes erd
+\end_inset
+
+ for your staging environment.
+\end_layout
+
+\begin_layout Subsubsection
+Version Control Systems (VCS)
+\end_layout
+
+\begin_layout Standard
+If you're already using a VCS, why not use it to deploy your applications,
+ too? In many ways, this is as straightforward as file synchronization,
+ though there are a few important advantages and disadvantages:
+\end_layout
+
+\begin_layout Itemize
+You don't need a deploying origin: every node can update itself.
+\end_layout
+
+\begin_layout Itemize
+You can automatically upgrade/downgrade simply by checking out a revision,
+ tag or branch.
+\end_layout
+
+\begin_layout Itemize
+Distributed VCSs (such as Git and Mercurial) normally require a clone of
+ the entire repository, including its history.
+ This can be quite heavy and redundant.
+ One solution is to do a 
+\begin_inset Quotes eld
+\end_inset
+
+shallow clone,
+\begin_inset Quotes erd
+\end_inset
+
+ which avoids the history.
+ However, shallow clones have several limitations that might make them difficult
+ to use.
+\end_layout
+
+\begin_layout Itemize
+VCSs don't deal well with large binary files.
+ For development work, there are good solutions, such as 
+\begin_inset CommandInset href
+LatexCommand href
+name "git-annex"
+target "http://git-annex.branchable.com/"
+
+\end_inset
+
+ for Git.
+ However, these solutions don't solve the problem for deployment: you still
+ need to get those binaries to your deployed environment somehow.
+\end_layout
+
+\begin_layout Itemize
+Allowing VCS access from your deployed environment might be an unacceptable
+ security risk.
+\end_layout
+
+\begin_layout Standard
+You can also adopt a hybrid strategy: use VCS to deploy the main application
+ code, and install the other parts of it (including Prudence itself) via
+ some other means.
+\end_layout
+
+\begin_layout Standard
+Be sure to read the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity tutorial"
+target "http://threecrickets.com/sincerity/manual/tutorial/#working-with-a-vcs"
+
+\end_inset
+
+, which gives you a few suggestions to using a VCS with Prudence, which
+ apply to development as well as to deployment.
+\end_layout
+
+\begin_layout Subsubsection
+Packaging
+\end_layout
+
+\begin_layout Standard
+You can encapsulate your entire Prudence container, or individual applications
+ and services, into deployable, versioned, interdependent, signed packages.
+\end_layout
+
+\begin_layout Standard
+Though configuring and creating the packages is the hard part, deploying
+ them is often very easy.
+ Packaging's big advantage in how easy and safe it makes uninstalling, upgrading
+ and downgrading processes.
+ The strategy indeed reveals many of its advantages when it is used modularly:
+ it makes it possible to install/upgrade/downgrade only specific applications
+ or services, while leaving the rest of the deployment intact.
+ Different types of nodes could thus be installed as assemblages (meta-packages)
+ of particular packages.
+ Finally, careful management of dependencies can be used to ensure that
+ the package has everything it needs to run properly.
+\end_layout
+
+\begin_layout Standard
+Modularity has a huge cost in terms of project management complexity, which
+ should not be underestimated.
+ However, if you're already managing your project as separate modules, with
+ their own roadmaps and version progression, it can make a lot of sense
+ to deploy it that way, too.
+\end_layout
+
+\begin_layout Standard
+There are many packaging standards and tools out there, but we'll mention
+ a few that you are especially likely to use with Prudence.
+\end_layout
+
+\begin_layout Paragraph
+The Maven Standard
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Apache Maven"
+target "http://maven.apache.org/"
+
+\end_inset
+
+ is a comprehensive (and highly complex) project management tool for the
+ JVM, especially targeted at the Java language and related technologies.
+ Whether or not you use the Maven tool itself, its repository format (also
+ known as iBiblio) has become the 
+\emph on
+de facto
+\emph default
+ standard for JVM packaging.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity tool"
+target "http://threecrickets.com/sincerity/"
+
+\end_inset
+
+, on which Prudence is itself distributed, uses the Maven repository format,
+ but adds a few important (and optional) features to its package format,
+ namely the ability to unpack archives into the container, and to run install/un
+install hooks for each package.
+ We recommend Sincerity for Maven-type package deployment: it will handle
+ not only your packages, but also Prudence itself, as well as other Sincerity
+ plugins and add-ons.
+\end_layout
+
+\begin_layout Standard
+You can use tools like 
+\begin_inset CommandInset href
+LatexCommand href
+name "Gradle"
+target "http://www.gradle.org/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Ivy"
+target "http://ant.apache.org/ivy/"
+
+\end_inset
+
+ to create and publish your Maven-type packages.
+ However, it's easy enough to use Maven itself: the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity packaging documentation"
+target "http://threecrickets.com/sincerity/manual/packaging/"
+
+\end_inset
+
+ includes a template configuration for Maven, which you can easily modify
+ for your own packages (and bypass Maven's notorious learning curve).
+ It also shows you to make use of Sincerity's extra features in your packages,
+ should you desire.
+\end_layout
+
+\begin_layout Standard
+Maintaining and managing the repository is easy.
+ At its most straightforward, you can simply host the repository's filesystem
+ via a web server.
+ However, there are also several powerful tools and hosted solutions offering
+ many useful features, such as proxying of other repositories.
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sonatype's Nexus"
+target "http://www.sonatype.org/nexus/"
+
+\end_inset
+
+ is especially easy to install and get running 
+\begin_inset CommandInset href
+LatexCommand href
+name "using Sincerity"
+target "http://threecrickets.com/sincerity/ecosystem/skeletons/#nexus"
+
+\end_inset
+
+.
+ Another great option is 
+\begin_inset CommandInset href
+LatexCommand href
+name "JFrog's Artifactory"
+target "http://www.jfrog.com/home/v_artifactory_opensource_overview"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Debian and RPM
+\end_layout
+
+\begin_layout Standard
+If you are deploying to nodes based on a Linux-based operating system, then
+ you're are likely already using a packaging system: either Debian or RPM.
+ Using the native packaging system for your own deployment gives you the
+ very useful advantage of allowing for dependencies to OS packages, as well
+ as having a single, unified packaging system for 
+\emph on
+everything
+\emph default
+.
+ At the very least, for example, you'll want your Prudence packages to depend
+ on a JVM.
+ By creating a meta-package for each node type, you can then install and
+ upgrade entire nodes, starting from a freshly installed operating system,
+ by simply installing a single package.
+\end_layout
+
+\begin_layout Standard
+Debian is the the more complex of the two standards: it's actually not just
+ a file format, but part of a comprehensive, integrated operating system
+ build system, requiring several highly specific configuration files per
+ package.
+ It might be easier to use more minimal tools for packaging your Prudence
+ applications: we recommend 
+\begin_inset CommandInset href
+LatexCommand href
+name "jdeb"
+target "https://github.com/tcurdt/jdeb"
+
+\end_inset
+
+ for Debian and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Redline"
+target "http://redline-rpm.org/"
+
+\end_inset
+
+ for RPM, which both run on the JVM and can be integrated into 
+\begin_inset CommandInset href
+LatexCommand href
+name "Ant"
+target "http://ant.apache.org/"
+
+\end_inset
+
+ builds.
+\end_layout
+
+\begin_layout Standard
+Another important advantage of using Debian or RPM is that you can integrate
+ your Prudence packages into comprehensive infrastructure management and
+ orchestration tools.
+ There is a great variety among these: some are tied to specific operating
+ systems, some are hosted, some proprietary.
+ If you're using Ubuntu, you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Juju"
+target "https://juju.ubuntu.com/"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "Landscape"
+target "https://landscape.canonical.com/"
+
+\end_inset
+
+.
+ For RedHat and CentOS, you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "YADT"
+target "http://www.yadt-project.org/"
+
+\end_inset
+
+, which can also be used for your build process.
+\end_layout
+
+\begin_layout Subsection
+Deployment Architectures
+\end_layout
+
+\begin_layout Subsubsection
+Loadbalancing
+\begin_inset CommandInset label
+LatexCommand label
+name "loadbalancing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One of the great advantages of 
+\bar under
+REST architectures (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+ is that they're trivial, in an architectural sense, to scale horizontally:
+ any number of identical nodes can sit comfortably behind a loadbalancer.
+ Because each REST request is self-contained, it doesn't matter which node
+ handles which request.
+ Well, that's the ideal: actually, requests are not themselves identical:
+ they have to access shared resources, such as databases and 
+\bar under
+task farms (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters-task-farms"
+
+\end_inset
+
+)
+\bar default
+, and in complex applications it may make sense to have different kinds
+ of nodes answering different kinds of requests, or at the very least it
+ may be important to route certain requests to certain nodes that would
+ do a better job at servicing the request (for example, if they are nearer
+ to the specific resources the request needs).
+ See a more comprehensive discussion of this in the 
+\bar under
+scaling tips article (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "scaling-tips-backend-partitioning"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+Nevertheless, for simpler applications loadbalancing is easy.
+\end_layout
+
+\begin_layout Quote
+Who should handle SSL? Prudence can handle SSL 
+\bar under
+perfectly fine on its own (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "secure-servers"
+
+\end_inset
+
+)
+\bar default
+.
+ However, when using a loadbalancer, you may have the option of 
+\begin_inset Quotes eld
+\end_inset
+
+terminating
+\begin_inset Quotes erd
+\end_inset
+
+ SSL there.
+ The problem with terminating SSL early is that you have unencrypted packets
+ moving between the loadbalancer and your nodes, which is a security risk.
+ You definitely want SSL going all the way to Prudence if you're deployed
+ in an environment you can't trust.
+ Otherwise, terminating early is often recommended, as it can offer better
+ utilization of your application node resources as well as simpler deployments.
+\end_layout
+
+\begin_layout Standard
+It should be mentioned that you 
+\emph on
+don't 
+\emph default
+have to enable 
+\bar under
+clusters (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+ in order to create a loadbalanced Prudence deployment.
+ However, you can use the cluster features to allow for powerful cooperation
+ between nodes.
+\end_layout
+
+\begin_layout Standard
+In particular, take a look at the 
+\bar under
+task farming (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters-task-farms"
+
+\end_inset
+
+)
+\bar default
+ feature: you can run a separate task farm without the application nodes
+ forming a cluster themselves.
+\end_layout
+
+\begin_layout Paragraph
+Choices
+\end_layout
+
+\begin_layout Standard
+Good loadbalancers do more than just scale: they allow for robustness by
+ removing problematic nodes from the pool, either because of errors or because
+ of poor performance.
+ Often, you can configure the various thresholds and the behavior of the
+ back-off algorithms.
+\end_layout
+
+\begin_layout Standard
+If you're deploying to a hosted 
+\begin_inset Quotes eld
+\end_inset
+
+cloud
+\begin_inset Quotes erd
+\end_inset
+
+ environment, it could be that your host provides a loadbalancing solution.
+ It's often a good choice: these loadbalancers will likely perform better
+ and be more reliable than those running inside a virtual host.
+ However, they may not be flexible (or trustworthy) enough for your needs.
+ It's easy enough to install your own loadbalancer using a wide range of
+ products: we'll provide examples for using two popular solutions below.
+ Both examples demonstrate how to terminate SSL at the loadbalancer.
+\end_layout
+
+\begin_layout Paragraph
+Nginx
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Nginx"
+target "http://wiki.nginx.org/Main"
+
+\end_inset
+
+ is a popular general-purpose web server, which has several high-quality
+ modules.
+ It's a good choice if you need other features in addition to loadbalancing,
+ but also works fine as a standalone loadbalancer.
+ Refer to the documentation for the 
+\begin_inset CommandInset href
+LatexCommand href
+name "proxy"
+target "http://nginx.org/en/docs/http/ngx_http_proxy_module.html"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "upstream"
+target "http://nginx.org/en/docs/http/ngx_http_upstream_module.html"
+
+\end_inset
+
+ modules for a complete reference.
+\end_layout
+
+\begin_layout Standard
+Here's a simple configuration:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+http {
+\end_layout
+
+\begin_layout Plain Layout
+
+  server {
+\end_layout
+
+\begin_layout Plain Layout
+
+    listen 80;
+\end_layout
+
+\begin_layout Plain Layout
+
+    location / {
+\end_layout
+
+\begin_layout Plain Layout
+
+      proxy_pass http://prudence;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  server {
+\end_layout
+
+\begin_layout Plain Layout
+
+    listen 443;
+\end_layout
+
+\begin_layout Plain Layout
+
+    keepalive_timeout 70;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl on;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_certificate_key /etc/ssl/server.key;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_certificate /etc/ssl/server.crt;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_ciphers AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_session_cache shared:SSL:10m;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_session_timeout 10m;
+\end_layout
+
+\begin_layout Plain Layout
+
+    location / {
+\end_layout
+
+\begin_layout Plain Layout
+
+      proxy_pass http://secure_prudence;
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  upstream prudence {
+\end_layout
+
+\begin_layout Plain Layout
+
+    server node1.myapp.org:8080;
+\end_layout
+
+\begin_layout Plain Layout
+
+    server node2.myapp.org:8080;
+\end_layout
+
+\begin_layout Plain Layout
+
+    server node3.myapp.org:8080;
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+  upstream secure_prudence {
+\end_layout
+
+\begin_layout Plain Layout
+
+    server node1.myapp.org:8081;
+\end_layout
+
+\begin_layout Plain Layout
+
+    server node2.myapp.org:8081;
+\end_layout
+
+\begin_layout Plain Layout
+
+    server node3.myapp.org:8081;
+\end_layout
+
+\begin_layout Plain Layout
+
+  }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Nginx offers some useful routing features.
+ You can gives nodes 
+\begin_inset Quotes eld
+\end_inset
+
+weights,
+\begin_inset Quotes erd
+\end_inset
+
+ where a higher weight means that more requests will be sent to that node:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+upstream prudence {
+\end_layout
+
+\begin_layout Plain Layout
+
+  ip_hash;
+\end_layout
+
+\begin_layout Plain Layout
+
+  server node1.myapp.org:8080 weight=1;
+\end_layout
+
+\begin_layout Plain Layout
+
+  server node2.myapp.org:8080 weight=2;
+\end_layout
+
+\begin_layout Plain Layout
+
+  server node3.myapp.org:8080 weight=4;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alternatively, you can enable client IP-based routing, so that requests
+ from a particular client will always go to the same node:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+upstream prudence {
+\end_layout
+
+\begin_layout Plain Layout
+
+  ip_hash;
+\end_layout
+
+\begin_layout Plain Layout
+
+  server node1.myapp.org:8080;
+\end_layout
+
+\begin_layout Plain Layout
+
+  server node2.myapp.org:8080;
+\end_layout
+
+\begin_layout Plain Layout
+
+  server node3.myapp.org:8080;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Perlbal
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset href
+LatexCommand href
+name "Perlbal"
+target "https://github.com/perlbal/Perlbal"
+
+\end_inset
+
+ is a minimalist web server dedicated solely to loadbalancing.
+ It offers very few configuration options, but is eminently hackable due
+ to being written in crisp Perl.
+ It is recommended for users who don't like fiddling with knobs and appreciate
+ single-purpose tools.
+\end_layout
+
+\begin_layout Standard
+Here's an example 
+\begin_inset Quotes eld
+\end_inset
+
+perlbal.conf
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+CREATE POOL pool
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET nodefile = /etc/perlbal/nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+CREATE POOL secure_pool
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET nodefile = /etc/perlbal/secure_nodes
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# HTTP
+\end_layout
+
+\begin_layout Plain Layout
+
+CREATE SERVICE balancer
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET listen          = 0.0.0.0:80
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET role            = reverse_proxy
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET pool            = pool
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET verify_backend  = on
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# HTTPS
+\end_layout
+
+\begin_layout Plain Layout
+
+CREATE SERVICE secure_balancer
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET listen          = 0.0.0.0:443
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET role            = reverse_proxy
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET pool            = secure_pool
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET verify_backend  = on
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET enable_ssl      = on
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET ssl_key_file    = /etc/ssl/server.key
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET ssl_cert_file   = /etc/ssl/server.crt
+\end_layout
+
+\begin_layout Plain Layout
+
+  # The following is recommended to work around a bug in older versions
+ of IE
+\end_layout
+
+\begin_layout Plain Layout
+
+  # (the default is ALL:!LOW:!EXP)
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET ssl_cipher_list = ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EX
+P:+eNULL
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# Internal management port
+\end_layout
+
+\begin_layout Plain Layout
+
+CREATE SERVICE mgmt
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET role   = management
+\end_layout
+
+\begin_layout Plain Layout
+
+  SET listen = 127.0.0.1:60000
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ENABLE balancer
+\end_layout
+
+\begin_layout Plain Layout
+
+ENABLE secure_balancer
+\end_layout
+
+\begin_layout Plain Layout
+
+ENABLE mgmt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+nodes
+\begin_inset Quotes erd
+\end_inset
+
+ file is a list of IP addresses (not hostnames!) with ports.
+ We'll add three Prudence instances running at the default server port:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+192.168.1.10:8080
+\end_layout
+
+\begin_layout Plain Layout
+
+192.168.1.11:8080
+\end_layout
+
+\begin_layout Plain Layout
+
+192.168.1.12:8080
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+secure_nodes
+\begin_inset Quotes erd
+\end_inset
+
+ file is the same for SSL connections.
+ Let's have our Prudence instances run a separate server at port 8081 for
+ secure requests:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+192.168.1.10:8081
+\end_layout
+
+\begin_layout Plain Layout
+
+192.168.1.11:8081
+\end_layout
+
+\begin_layout Plain Layout
+
+192.168.1.12:8081
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the node files are edited, Perlbal will pick up their changes on the
+ fly.
+\end_layout
+
+\begin_layout Subsection
+Adaptable Configuration
 \end_layout
 
 \begin_layout Subsubsection
@@ -43632,50 +44907,6 @@ Configuration-by-Script
 
 \begin_layout Subsubsection
 Plugins
-\end_layout
-
-\begin_layout Subsection
-Deployment Strategies
-\end_layout
-
-\begin_layout Subsubsection
-Synchronization
-\end_layout
-
-\begin_layout Standard
-Unison, rsync
-\end_layout
-
-\begin_layout Subsubsection
-Packaging
-\end_layout
-
-\begin_layout Paragraph
-Maven
-\end_layout
-
-\begin_layout Standard
-Using your own repository (Nexus)
-\end_layout
-
-\begin_layout Paragraph
-Debian/RPM
-\end_layout
-
-\begin_layout Subsubsection
-Version Control
-\end_layout
-
-\begin_layout Paragraph
-Subversion
-\end_layout
-
-\begin_layout Paragraph
-Git
-\end_layout
-
-\begin_layout Standard
-What to ignore
 \end_layout
 
 \begin_layout Subsection
@@ -43754,7 +44985,7 @@ Database and other services
 \end_layout
 
 \begin_layout Subsection
-Proxying
+Frontends and Reverse-Proxies
 \begin_inset CommandInset label
 LatexCommand label
 name "proxying"
@@ -43786,45 +45017,6 @@ Host
 
 \begin_layout Standard
 conversation.request.hostRef
-\end_layout
-
-\begin_layout Subsection
-Deploying Clusters
-\end_layout
-
-\begin_layout Subsubsection
-Loadbalancing
-\begin_inset CommandInset label
-LatexCommand label
-name "loadbalancing"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Perlbal
-\end_layout
-
-\begin_layout Subsubsection
-Security Concerns
-\end_layout
-
-\begin_layout Subsubsection
-Configuring Hazelcast
-\end_layout
-
-\begin_layout Standard
-/configuration/hazelcast/prudence/
-\end_layout
-
-\begin_layout Standard
-or
-\end_layout
-
-\begin_layout Standard
-/configuration/hazelcast.alt.conf
 \end_layout
 
 \begin_layout Subsection
