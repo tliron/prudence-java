@@ -3669,8 +3669,19 @@ http://localhost:8080/wiki/page/one/two/three/
 
 .
  This frees us from having to hardcode complete URI paths, and guarantees
- portability even if we move the application to a different URI, or attach
- it to multiple virtual hosts.
+ portability even if we move the application to a different URI, attach
+ it to multiple virtual hosts, or run it behind a 
+\bar under
+reverse-proxy (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "load-balancing"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -36949,7 +36960,18 @@ Advantages of Using Multiple Containers
 \begin_layout Enumerate
 Possibly simpler deployment: several base directories can mean separate
  code/distribution repositories, which might be easier for you.
- Configuration will be at your web frontend (reverse proxy).
+ You'll configure routing between them at your 
+\bar under
+load balancer (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "load-balancing"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Enumerate
@@ -37138,6 +37160,40 @@ target "http://restlet.org/learn/javadocs/2.2/jse/ext/index.html?org/restlet/ext
  if you are using Jetty 8 on JVM 6.)
 \end_layout
 
+\begin_layout Paragraph
+Load Balancing
+\end_layout
+
+\begin_layout Standard
+Are your server running behind a load balancer? See the explanation 
+\bar under
+here (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "load-balancing-x-forwarded-for"
+
+\end_inset
+
+)
+\bar default
+ as to why you would want to add this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('useForwardedForHeader', 'true')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Secure Servers (HTTPS)
 \begin_inset CommandInset label
@@ -37152,10 +37208,10 @@ name "secure-servers"
 \begin_layout Standard
 If you are using a 
 \bar under
-load balancer or another kind of frontend proxy (page 
+load balancer (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "proxying"
+reference "load-balancing"
 
 \end_inset
 
@@ -37217,20 +37273,6 @@ server.context.parameters.set('keystorePassword', 'mykeystorepassword')
 \begin_layout Plain Layout
 
 //server.context.parameters.set('keyPassword', 'mykeypassword')
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-// Add support for the X-FORWARDED-FOR header used by proxies
-\end_layout
-
-\begin_layout Plain Layout
-
-server.context.parameters.set('useForwardedForHeader', 'true')
 \end_layout
 
 \end_inset
@@ -37362,7 +37404,7 @@ must
 \end_layout
 
 \begin_layout Paragraph
-Handling HTTPS
+API
 \end_layout
 
 \begin_layout Standard
@@ -37410,7 +37452,7 @@ status open
 
 \begin_layout Plain Layout
 
-if (conversation.reference.schemeProtocol.name == 'HTTPS') {
+if (conversation.reference.scheme == 'https') {
 \end_layout
 
 \begin_layout Plain Layout
@@ -43236,7 +43278,7 @@ This powerful feature is only really useful in a heterogeneous cluster:
 load balancer (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "loadbalancing"
+reference "load-balancing"
 
 \end_inset
 
@@ -43544,10 +43586,10 @@ Let every node keep its own log files, which is the default configuration
  This makes it easier to debug problems specific to each node.
  However, in a 
 \bar under
-loadbalancing scenario (page 
+load-balancing scenario (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
-reference "loadbalancing"
+reference "load-balancing"
 
 \end_inset
 
@@ -43929,7 +43971,7 @@ There are many packaging standards and tools out there, but we'll mention
 \end_layout
 
 \begin_layout Paragraph
-The Maven Standard
+Maven
 \end_layout
 
 \begin_layout Standard
@@ -43960,16 +44002,33 @@ target "http://threecrickets.com/sincerity/"
 \end_inset
 
 , on which Prudence is itself distributed, uses the Maven repository format,
- but adds a few important (and optional) features to its package format,
- namely the ability to unpack archives into the container, and to run install/un
-install hooks for each package.
+ but adds a few 
+\begin_inset CommandInset href
+LatexCommand href
+name "important (and optional) features"
+target "http://threecrickets.com/sincerity/manual/specifications/#sincerity-packages"
+
+\end_inset
+
+ to its packaging specification, namely the ability to unpack archives into
+ the container, and to run install/uninstall hooks for each package.
  We recommend Sincerity for Maven-type package deployment: it will handle
- not only your packages, but also Prudence itself, as well as other Sincerity
- plugins and add-ons.
+ not only your own packages, but also Prudence itself, as well as other
+ Sincerity plugins and add-ons.
 \end_layout
 
 \begin_layout Standard
-You can use tools like 
+You can package and publish your packages using the Maven tool: the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity packaging documentation"
+target "http://threecrickets.com/sincerity/manual/packaging/"
+
+\end_inset
+
+ includes a template configuration for Maven, which you can easily modify
+ for your own packages (and bypass Maven's notorious learning curve).
+ Alternatively, you can use easier tools like 
 \begin_inset CommandInset href
 LatexCommand href
 name "Gradle"
@@ -43985,23 +44044,11 @@ target "http://ant.apache.org/ivy/"
 
 \end_inset
 
- to create and publish your Maven-type packages.
- However, it's easy enough to use Maven itself: the 
-\begin_inset CommandInset href
-LatexCommand href
-name "Sincerity packaging documentation"
-target "http://threecrickets.com/sincerity/manual/packaging/"
-
-\end_inset
-
- includes a template configuration for Maven, which you can easily modify
- for your own packages (and bypass Maven's notorious learning curve).
- It also shows you to make use of Sincerity's extra features in your packages,
- should you desire.
+.
 \end_layout
 
 \begin_layout Standard
-Maintaining and managing the repository is easy.
+Maintaining and managing the repository is easy enough.
  At its most straightforward, you can simply host the repository's filesystem
  via a web server.
  However, there are also several powerful tools and hosted solutions offering
@@ -44123,14 +44170,10 @@ target "http://www.yadt-project.org/"
 \end_layout
 
 \begin_layout Subsection
-Deployment Architectures
-\end_layout
-
-\begin_layout Subsubsection
-Loadbalancing
+Load Balancing
 \begin_inset CommandInset label
 LatexCommand label
-name "loadbalancing"
+name "load-balancing"
 
 \end_inset
 
@@ -44150,11 +44193,15 @@ reference "the-cast-for-rest"
 )
 \bar default
  is that they're trivial, in an architectural sense, to scale horizontally:
- any number of identical nodes can sit comfortably behind a loadbalancer.
+ any number of identical nodes can sit comfortably behind a load balancer.
  Because each REST request is self-contained, it doesn't matter which node
  handles which request.
- Well, that's the ideal: actually, requests are not themselves identical:
- they have to access shared resources, such as databases and 
+\end_layout
+
+\begin_layout Quote
+Well, that's a bit idealized.
+ Actually, requests are not themselves identical: some might need access
+ shared resources, such as databases and 
 \bar under
 task farms (page 
 \begin_inset CommandInset ref
@@ -44170,7 +44217,16 @@ reference "clusters-task-farms"
  may be important to route certain requests to certain nodes that would
  do a better job at servicing the request (for example, if they are nearer
  to the specific resources the request needs).
- See a more comprehensive discussion of this in the 
+ Your routing needs might be quite sophisticated.
+ See a more comprehensive discussion of the 
+\begin_inset Quotes eld
+\end_inset
+
+partitioning
+\begin_inset Quotes erd
+\end_inset
+
+ problem in the 
 \bar under
 scaling tips article (page 
 \begin_inset CommandInset ref
@@ -44182,48 +44238,20 @@ reference "scaling-tips-backend-partitioning"
 )
 \bar default
 .
+ Nevertheless, for simpler applications load balancing is indeed trivial,
+ and ready-made products, services and algorithms will fit most use cases.
+\end_layout
+
+\begin_layout Subsubsection
+Clusters
 \end_layout
 
 \begin_layout Standard
-Nevertheless, for simpler applications loadbalancing is easy.
-\end_layout
-
-\begin_layout Quote
-Who should handle SSL? Prudence can handle SSL 
-\bar under
-perfectly fine on its own (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "secure-servers"
-
-\end_inset
-
-)
-\bar default
-.
- However, when using a loadbalancer, you may have the option of 
-\begin_inset Quotes eld
-\end_inset
-
-terminating
-\begin_inset Quotes erd
-\end_inset
-
- SSL there.
- The problem with terminating SSL early is that you have unencrypted packets
- moving between the loadbalancer and your nodes, which is a security risk.
- You definitely want SSL going all the way to Prudence if you're deployed
- in an environment you can't trust.
- Otherwise, terminating early is often recommended, as it can offer better
- utilization of your application node resources as well as simpler deployments.
-\end_layout
-
-\begin_layout Standard
-It should be mentioned that you 
+You don't
 \emph on
-don't 
+ have to
 \emph default
-have to enable 
+ enable 
 \bar under
 clusters (page 
 \begin_inset CommandInset ref
@@ -44234,9 +44262,12 @@ reference "clusters"
 
 )
 \bar default
- in order to create a loadbalanced Prudence deployment.
- However, you can use the cluster features to allow for powerful cooperation
- between nodes.
+ in order to create a load-balanced Prudence deployment.
+ However, you 
+\emph on
+can
+\emph default
+ use the cluster features to allow for powerful cooperation between nodes.
 \end_layout
 
 \begin_layout Standard
@@ -44251,16 +44282,16 @@ reference "clusters-task-farms"
 
 )
 \bar default
- feature: you can run a separate task farm without the application nodes
- forming a cluster themselves.
+ feature: you can run a separate task farm cluster without the application
+ nodes forming a cluster themselves.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Choices
 \end_layout
 
 \begin_layout Standard
-Good loadbalancers do more than just scale: they allow for robustness by
+Good load balancers do more than just scale: they allow for robustness by
  removing problematic nodes from the pool, either because of errors or because
  of poor performance.
  Often, you can configure the various thresholds and the behavior of the
@@ -44276,16 +44307,47 @@ cloud
 \begin_inset Quotes erd
 \end_inset
 
- environment, it could be that your host provides a loadbalancing solution.
- It's often a good choice: these loadbalancers will likely perform better
+ environment, it could be that your host provides a load-balancing solution.
+ It's often a good choice: these load balancers will likely perform better
  and be more reliable than those running inside a virtual host.
  However, they may not be flexible (or trustworthy) enough for your needs.
- It's easy enough to install your own loadbalancer using a wide range of
+ It's easy enough to install your own load balancer using a wide range of
  products: we'll provide examples for using two popular solutions below.
- Both examples demonstrate how to terminate SSL at the loadbalancer.
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Quote
+Who should handle SSL? Prudence can handle SSL 
+\bar under
+perfectly fine on its own (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "secure-servers"
+
+\end_inset
+
+)
+\bar default
+.
+ However, when using a load balancer, you may have the option of 
+\begin_inset Quotes eld
+\end_inset
+
+terminating
+\begin_inset Quotes erd
+\end_inset
+
+ SSL there.
+ The problem with terminating SSL early is that you have unencrypted packets
+ moving between the load balancer and your nodes, which is a security risk.
+ You definitely want SSL going all the way to Prudence if you're deployed
+ in an environment you can't trust.
+ Otherwise, terminating early is often recommended, as it can offer better
+ utilization of your application node resources, and allow for simpler deploymen
+ts.
+ Both examples below demonstrate how to terminate SSL at the load balancer.
+\end_layout
+
+\begin_layout Subsubsection
 Nginx
 \end_layout
 
@@ -44299,8 +44361,8 @@ target "http://wiki.nginx.org/Main"
 
  is a popular general-purpose web server, which has several high-quality
  modules.
- It's a good choice if you need other features in addition to loadbalancing,
- but also works fine as a standalone loadbalancer.
+ It's a good choice if you need other features in addition to load balancing,
+ but also works fine as a standalone load balancer.
  Refer to the documentation for the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -44508,7 +44570,7 @@ http {
 
 \begin_layout Standard
 Nginx offers some useful routing features.
- You can gives nodes 
+ For example, you can gives nodes 
 \begin_inset Quotes eld
 \end_inset
 
@@ -44560,8 +44622,8 @@ upstream prudence {
 \end_layout
 
 \begin_layout Standard
-Alternatively, you can enable client IP-based routing, so that requests
- from a particular client will always go to the same node:
+Or you can enable client IP-based routing, so that requests from a particular
+ client will always go to the same node:
 \end_layout
 
 \begin_layout Standard
@@ -44604,7 +44666,7 @@ upstream prudence {
 
 \end_layout
 
-\begin_layout Paragraph
+\begin_layout Subsubsection
 Perlbal
 \end_layout
 
@@ -44616,11 +44678,11 @@ target "https://github.com/perlbal/Perlbal"
 
 \end_inset
 
- is a minimalist web server dedicated solely to loadbalancing.
+ is a minimalist web server dedicated solely to load balancing.
  It offers very few configuration options, but is eminently hackable due
  to being written in crisp Perl.
- It is recommended for users who don't like fiddling with knobs and appreciate
- single-purpose tools.
+ It is recommended for users who don't like fiddling with knobs or who appreciat
+e single-purpose tools.
 \end_layout
 
 \begin_layout Standard
@@ -44861,9 +44923,7 @@ secure_nodes
 \begin_inset Quotes erd
 \end_inset
 
- file is the same for SSL connections.
- Let's have our Prudence instances run a separate server at port 8081 for
- secure requests:
+ file is the same, but uses our separate server port:
 \end_layout
 
 \begin_layout Standard
@@ -44897,28 +44957,751 @@ If the node files are edited, Perlbal will pick up their changes on the
  fly.
 \end_layout
 
-\begin_layout Subsection
-Adaptable Configuration
-\end_layout
-
 \begin_layout Subsubsection
-Configuration-by-Script
+Web Data
 \end_layout
 
-\begin_layout Subsubsection
-Plugins
+\begin_layout Standard
+The load balancer handles user requests 
+\emph on
+instead 
+\emph default
+of your Prudence instances.
+ (This is sometimes, annoyingly from the client's perspective, called a
+ 
+\begin_inset Quotes eld
+\end_inset
+
+reverse
+\begin_inset Quotes erd
+\end_inset
+
+ proxy.) This means that request headers might be modified 
+\emph on
+before
+\emph default
+ they reach you, and response headers 
+\emph on
+after
+\emph default
+ they leave you.
+\end_layout
+
+\begin_layout Paragraph
+Your Host
+\end_layout
+
+\begin_layout Standard
+One thorny issue is that the host and port you get are different from those
+ the client sent.
+ For example, the client might have made a request to 
+\begin_inset Quotes eld
+\end_inset
+
+https://myapp.org/myapp/
+\begin_inset Quotes erd
+\end_inset
+
+ (at port 443), but it reaches your node as 
+\begin_inset Quotes eld
+\end_inset
+
+http://192.168.1.10:8081/myapp/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In terms of routing your URI-space, this is not a problem: Prudence always
+ uses the URL in the original request.
+ However, you might care about which node 
+\emph on
+you
+\emph default
+ are on, for example if you need to access local services.
+ Usefully, the standard HTTP/1.1 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ header is meant just for this use case: your load balancer will likely
+ override the header sent by the client, and instead set it to the URL it
+ uses to access you.
+ In Prudence, you can access its parsed value via the 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.request.hostRef API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.request"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var hostRef = conversation.request.hostRef
+\end_layout
+
+\begin_layout Plain Layout
+
+var host = hostRef.hostDomain // '192.168.1.10'
+\end_layout
+
+\begin_layout Plain Layout
+
+var port = hostRef.hostPort // 8081
+\end_layout
+
+\begin_layout Plain Layout
+
+var protocol = hostRef.scheme // 'http'
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In some cases you might want the load balancer to work transparently, leaving
+ the original 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ header intact.
+ This is usually configurable.
+ For example, in Nginx:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+location / {
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_pass http://prudence;
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_set_header Host $http_host;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Client IP Address
+\begin_inset CommandInset label
+LatexCommand label
+name "load-balancing-x-forwarded-for"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Prudence's 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.client.upstreamAddress API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.client"
+
+\end_inset
+
+ identifies the request's client, however, in a load-balancing scenario,
+ the client is actually the load balancer itself.
+ This is tricky: there actually might be various components (load balancers,
+ caches, gateways) along the way, so how can the original IP address be
+ preserved?
+\end_layout
+
+\begin_layout Standard
+The short answer is that this will likely just work in Prudence with the
+ default configuration.
+\end_layout
+
+\begin_layout Standard
+The long answer is that although HTTP as of version 1.1 does not have a standard
+ solution for this, a 
+\emph on
+de facto
+\emph default
+ standard (which originated in 
+\begin_inset CommandInset href
+LatexCommand href
+name "Squid"
+target "http://www.squid-cache.org/"
+
+\end_inset
+
+) is widely supported, of using the 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-For
+\begin_inset Quotes erd
+\end_inset
+
+ header.
+ The value is a comma-separated list of all client IP addresses in order,
+ so each component along the way can append itself to before forwarding
+ onward.
+ The first IP address would thus be the original client.
+\end_layout
+
+\begin_layout Standard
+Because this is not yet truly standard, Restlet does not, by default, interpret
+ the header.
+ However, it does support it, and the default 
+\bar under
+server configuration (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-servers"
+
+\end_inset
+
+)
+\bar default
+ in Prudence enables it.
+ You can see this in 
+\begin_inset Quotes eld
+\end_inset
+
+/component/servers/http.js
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+server.context.parameters.set('useForwardedForHeader', 'true')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Without this, conversation.client.upstreamAddress would return only the last
+ client IP address.
+\end_layout
+
+\begin_layout Standard
+Remember that for this to work properly, your load balancer 
+\emph on
+must
+\emph default
+ set 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-For
+\begin_inset Quotes erd
+\end_inset
+
+.
+ When in doubt, check its documentation.
 \end_layout
 
 \begin_layout Subsection
-Directory Organization
+Adaptable Configurations
 \end_layout
 
-\begin_layout Subsubsection
-Sincerity Standalone
+\begin_layout Standard
+The Sincerity tool, which is used to bootstrap Prudence, gives you a lot
+ deployment power.
+\end_layout
+
+\begin_layout Standard
+In particular, the 
+\begin_inset CommandInset href
+LatexCommand href
+name "\"configuration-by-script\" principle"
+target "http://threecrickets.com/sincerity/manual/introduction/#lather-rinse-repeat_configuration-and-quotxml-hellquot"
+
+\end_inset
+
+ means that you don't have to create separate configuration files for different
+ deployment environments: you can use the same deployed files for development,
+ staging, testing and production.
+\end_layout
+
+\begin_layout Standard
+This depends on the scripts discovering in what environment they are running,
+ and performing the appropriate configuration.
+ Here are a few suggested discovery methods:
+\end_layout
+
+\begin_layout Paragraph
+By System Configuration File
+\end_layout
+
+\begin_layout Standard
+You can configure your node via a single file.
+ For example, let's create 
+\begin_inset Quotes eld
+\end_inset
+
+/etc/deployment
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+DEPLOYMENT=production
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In our Prudence bootstrapping scripts, we can parse the file safely like
+ so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/sincerity/jvm/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var deployment = 'staging'
+\end_layout
+
+\begin_layout Plain Layout
+
+try {
+\end_layout
+
+\begin_layout Plain Layout
+
+deployment = Sincerity.JVM.fromProperties(Sincerity.JVM.loadProperties('/etc/deploym
+ent')).DEPLOYMENT
+\end_layout
+
+\begin_layout Plain Layout
+
+} catch(x) {}
+\end_layout
+
+\begin_layout Plain Layout
+
+println('Deployment: ' + deployment)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if (deployment == 'development') {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that we are defaulting to 
+\begin_inset Quotes eld
+\end_inset
+
+staging
+\begin_inset Quotes erd
+\end_inset
+
+ in case the file doesn't exist.
+ Defaulting to 
+\begin_inset Quotes eld
+\end_inset
+
+development
+\begin_inset Quotes erd
+\end_inset
+
+ might be risky: development deployments usually reveal too much data, or
+ otherwise provide security overrides.
+\end_layout
+
+\begin_layout Standard
+The advantage of this file format is that it's very easy to parse in other
+ languages, so you can use it to configure non-Prudence components, too.
+ Here's an example in bash:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+if [ -f /etc/deployment ]; then
+\end_layout
+
+\begin_layout Plain Layout
+
+	.
+ /etc/deployment
+\end_layout
+
+\begin_layout Plain Layout
+
+	echo "Deployment: $DEPLOYMENT"
+\end_layout
+
+\begin_layout Plain Layout
+
+else
+\end_layout
+
+\begin_layout Plain Layout
+
+	DEPLOYMENT=staging
+\end_layout
+
+\begin_layout Plain Layout
+
+	echo "Deployment: staging (default)"
+\end_layout
+
+\begin_layout Plain Layout
+
+fi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+By IP Address
+\end_layout
+
+\begin_layout Standard
+Your deployment environment might be known according to the local IP address
+ or subnetwork.
+ It's possible to lookup the IP address in a table, or other parse parts
+ of it (the subnetwork).
+\end_layout
+
+\begin_layout Standard
+To retrieve it, the following 
+\emph on
+might 
+\emph default
+work:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var address = java.net.InetAddress.localHost.hostAddress
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This API won't work as expected in some local configurations, instead returning
+ the loopback address, 
+\begin_inset Quotes eld
+\end_inset
+
+127.0.0.1
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Also, some nodes may have multiple IP addresses.
+ To iterate 
+\emph on
+all
+\emph default
+ local IP addresses, use this code:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var addresses = []
+\end_layout
+
+\begin_layout Plain Layout
+
+for (var e = java.net.NetworkInterface.networkInterfaces; e.hasMoreElements();
+ ) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var interface = e.nextElement()
+\end_layout
+
+\begin_layout Plain Layout
+
+	for (var ee = interface.inetAddresses; ee.hasMoreElements(); ) {
+\end_layout
+
+\begin_layout Plain Layout
+
+		var address = ee.nextElement()
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (!address.loopbackAddress) {
+\end_layout
+
+\begin_layout Plain Layout
+
+			addresses.push(address.hostAddress)
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+By 
+\begin_inset Quotes eld
+\end_inset
+
+Cloud
+\begin_inset Quotes erd
+\end_inset
+
+ API
+\end_layout
+
+\begin_layout Standard
+If you're running in a 
+\begin_inset Quotes eld
+\end_inset
+
+cloud
+\begin_inset Quotes erd
+\end_inset
+
+ environment, your host likely provides you with an API service to discover
+ your node's name, group it belongs to, etc., making it easy to determine
+ your deployment environment.
+\end_layout
+
+\begin_layout Standard
+Many cloud environments support the 
+\begin_inset CommandInset href
+LatexCommand href
+name "OpenStack API"
+target "http://api.openstack.org/"
+
+\end_inset
+
+, which you can access easily directly via 
+\bar under
+RESTful requests (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "external-requests"
+
+\end_inset
+
+)
+\bar default
+ or a 
+\begin_inset CommandInset href
+LatexCommand href
+name "dedicated JVM wrapper"
+target "https://github.com/woorea/openstack-java-sdk"
+
+\end_inset
+
+.
+ Specifically, its 
+\begin_inset CommandInset href
+LatexCommand href
+name "identity service"
+target "http://docs.openstack.org/api/openstack-identity-service/2.0/content/index.html"
+
+\end_inset
+
+ can be used to retrieve information about the current node.
+\end_layout
+
+\begin_layout Standard
+For example, let's 
+\begin_inset CommandInset href
+LatexCommand href
+name "list the tenants"
+target "http://docs.openstack.org/api/openstack-identity-service/2.0/content/GET_listTenants_v2.0_tokens_tenants_.html"
+
+\end_inset
+
+ of our node:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+document.require('/prudence/resources/')
+\end_layout
+
+\begin_layout Plain Layout
+
+var openstackBaseUri = ...
+\end_layout
+
+\begin_layout Plain Layout
+
+var tenants = Prudence.Resources.request({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: openstackBaseUri + 'v2.0/tenants',
+\end_layout
+
+\begin_layout Plain Layout
+
+	mediaType: 'application/json'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\begin_layout Plain Layout
+
+for (var t in tenants) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	var tenant = tenants[t]
+\end_layout
+
+\begin_layout Plain Layout
+
+	println(tenant.name)
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that the above code will only work from a running Prudence application:
+ during bootstrapping, you will have to use a different method to make REST
+ requests, for example the dedicated JVM wrapper.
 \end_layout
 
 \begin_layout Subsection
-Operating System Service
+Operating System Service (Daemon)
 \begin_inset CommandInset label
 LatexCommand label
 name "daemon"
@@ -44929,31 +45712,153 @@ name "daemon"
 \end_layout
 
 \begin_layout Standard
-See Sincerity Manual
+In production environments it's recommend to have Prudence installed as
+ an operating system service (
+\begin_inset Quotes eld
+\end_inset
+
+daemon
+\begin_inset Quotes erd
+\end_inset
+
+), which allows you to use standard tools to start, stop and monitor its
+ status.
+ It will also guarantee that Prudence starts as quickly as possible when
+ the system starts, reducing downtime in the cases of restarts.
 \end_layout
 
 \begin_layout Standard
-Logging configuration
+In Prudence this is best handled by installing the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity service plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+, which adds a powerful native 
+\begin_inset CommandInset href
+LatexCommand href
+name "“wrapper” service"
+target "http://wrapper.tanukisoftware.com/"
+
+\end_inset
+
+ around the JVM.
+ The documentation there also provides you with examples of how to install
+ it in your operating system.
 \end_layout
 
-\begin_layout Subsection
-Monitoring
+\begin_layout Standard
+Note that the wrapper uses its own logging system, separate from the 
+\bar under
+one used by Prudence (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "logging"
+
+\end_inset
+
+)
+\bar default
+, though the default configurations of both will work well together.
 \end_layout
 
 \begin_layout Subsection
 Security
 \end_layout
 
-\begin_layout Subsubsection
-SSL
+\begin_layout Standard
+Securing your deployment is important whether you're running an Internet
+ site or a local intranet site.
+ Actually, 
+\begin_inset Quotes eld
+\end_inset
+
+security
+\begin_inset Quotes erd
+\end_inset
+
+ is an umbrella term for various aspects dealing with, ahem, unintended
+ use of your site:
+\end_layout
+
+\begin_layout Itemize
+You want to make sure that outsiders do not have access to your secret data.
+\end_layout
+
+\begin_layout Itemize
+You want to make sure that outsiders, and possibly even 
+\emph on
+you
+\emph default
+, don't have access to 
+\emph on
+other users'
+\emph default
+ data, for which you are the trusted caretaker.
+\end_layout
+
+\begin_layout Itemize
+You want to make sure that outsiders cannot take modify your site's operation,
+ essentially hijacking it for their own uses, while using your users' confidence
+ in you for their own purposes.
+\end_layout
+
+\begin_layout Itemize
+You want to make sure that outsiders cannot stop your site from operating.
+ This is often called a Denial of Service (DoS) attack.
 \end_layout
 
 \begin_layout Standard
-Howto
+It's crucial that you study this topic well or hire an expert to handle
+ it for you.
+ It's astounding how often big, 
+\begin_inset Quotes eld
+\end_inset
+
+trusted
+\begin_inset Quotes erd
+\end_inset
+
+ companies fail miserably in securing their applications.
+ Don't wait until the fire starts to put it out: prevent it from ever happening.
 \end_layout
 
-\begin_layout Subsubsection
-HTTP Authentication
+\begin_layout Standard
+Unfortunately, it's not a simple problem field: attacks are getting more
+ and more sophisticated, using sheer computational prowess to break through
+ encryption, 
+\begin_inset Quotes eld
+\end_inset
+
+rainbow
+\begin_inset Quotes erd
+\end_inset
+
+ attacks to uncover user passwords, and finding clever loopholes for injecting
+ code into your application or database runtime.
+ We definitely can't cover all aspects of security here, especially because
+ it's a moving target.
+ But we'll cover some essentials that are directly related to Prudence and
+ the deployment technologies mentioned in this chapter.
+\end_layout
+
+\begin_layout Quote
+Is Prudence less secure, as an open source product, than proprietary alternative
+s? To be honest, there's something scary about revealing all your cards
+ to the hackers.
+ At the same time, these cards are also seen by the community of users,
+ like you, who have an interest in plugging security holes as soon as they're
+ discovered.
+ With closed-source software, ignorance is bliss: you have to rely on indirect
+ knowledge to evaluate just how secure it is.
+ And if a loophole is discovered, you have to rely on others to fix it.
+ With Prudence, you don't have to wait for us: we've gone to great lengths
+ not only to share the code, but also to make it as easy as possible for
+ you to build your own patched-up Prudence.
+ When all the factors are considered, we believe that open source is the
+ better choice in the long run for those who care about security.
 \end_layout
 
 \begin_layout Subsubsection
@@ -44961,7 +45866,60 @@ Locked-Down User
 \end_layout
 
 \begin_layout Standard
-Service Plugin
+When applications are hacked, your only line of defense is the operating
+ system.
+ And let's put is plainly: all applications have exploits.
+ Thus, especially because it's so easy, there's no excuse not to implement
+ basic operating system security.
+\end_layout
+
+\begin_layout Standard
+The first thing you should do is create a special user that will spawn and
+ thus own the Prudence process.
+ If you're 
+\bar under
+running Prudence as a service (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "daemon"
+
+\end_inset
+
+)
+\bar default
+, then you should install that service via that user.
+\end_layout
+
+\begin_layout Standard
+Then, 
+\emph on
+lock that user down
+\emph default
+.
+ All operating systems let your control file access per user, so make sure
+ the user can only exact 
+\emph on
+only 
+\emph default
+the files it needs.
+ Most operating systems are too promiscuous by default, so make sure that
+ nothing important is readable by your designated user.
+\end_layout
+
+\begin_layout Standard
+But accessing the files is only the tip of the iceberg: you want Mandatory
+ Access Control (MAC), too, to limit the user's ability to execute processes
+ it shouldn't.
+ If you're deploying on Linux, consider using 
+\begin_inset CommandInset href
+LatexCommand href
+name "AppArmor"
+target "http://wiki.apparmor.net/"
+
+\end_inset
+
+, which allows for simple profiles to configure the use of Linux's many
+ security features.
 \end_layout
 
 \begin_layout Subsubsection
@@ -44969,58 +45927,254 @@ Firewall
 \end_layout
 
 \begin_layout Standard
-HTTP ports
-\end_layout
-
-\begin_layout Standard
-Hazelcast ports
-\end_layout
-
-\begin_layout Standard
-Cache backends
-\end_layout
-
-\begin_layout Standard
-Database and other services
-\end_layout
-
-\begin_layout Subsection
-Frontends and Reverse-Proxies
-\begin_inset CommandInset label
-LatexCommand label
-name "proxying"
+Whether you're running 
+\bar under
+a cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
 
 \end_inset
 
+)
+\bar default
+ or a single server, there's no reason unused ports should be open to the
+ world, and to mischief.
+ Get yourself a firewall.
+\end_layout
 
+\begin_layout Standard
+If you're deploying on Linux, iptables (a 
+\begin_inset CommandInset href
+LatexCommand href
+name "netfiler module"
+target "http://www.netfilter.org/projects/iptables/index.html"
+
+\end_inset
+
+) is the standard solution.
+ However, it can be quite daunting to manage directly, so consider using
+ a higher-level tool instead: we recommend the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Uncomplicated Firewall (UFW)"
+target "https://wiki.ubuntu.com/UncomplicatedFirewall"
+
+\end_inset
+
+, which allows for per-application profiles, and comes with sensible iptables
+ defaults.
+\end_layout
+
+\begin_layout Standard
+Which ports should you leave open?
+\end_layout
+
+\begin_layout Paragraph
+HTTP and HTTPS
+\end_layout
+
+\begin_layout Standard
+The standard and default Internet ports for these are 80 and 443 respectively.
+ Of course, you are free to use other ports for your deployment, for which
+ there might be security advantages.
+\end_layout
+
+\begin_layout Paragraph
+Cluster
+\end_layout
+
+\begin_layout Standard
+Are you running your nodes as a 
+\bar under
+cluster (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "clusters"
+
+\end_inset
+
+)
+\bar default
+? The default port used by Hazelcast is 5701, though it's 
+\begin_inset CommandInset href
+LatexCommand href
+name "easy to change it"
+target "http://www.hazelcast.com/docs/latest/manual/multi_html/ch14s02.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph
+Cache Backends
+\end_layout
+
+\begin_layout Standard
+Do you need access to a 
+\bar under
+shared cache backend (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-caching"
+
+\end_inset
+
+)
+\bar default
+?
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast"
+target "http://www.hazelcast.com/"
+
+\end_inset
+
+: See cluster, above: the default port is 5701.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "memcached"
+target "http://memcached.org/"
+
+\end_inset
+
+: The default port is 11211.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "MongoDB"
+target "http://www.mongodb.org/"
+
+\end_inset
+
+: The default port is 27018.
+\end_layout
+
+\begin_layout Itemize
+SQL: This varies, refer to your product's documentation.
 \end_layout
 
 \begin_layout Subsubsection
-Nginx
+HTTPS
 \end_layout
 
-\begin_layout Subsubsection
-Apache
+\begin_layout Standard
+To be clear, enabling encryption is usually much more about protecting your
+ user data than protecting your own.
+ And indeed, this service you provide to your users is costly in terms of
+ CPU cycles it requires and certification authorities you must pay for generally
+ trusted certificates.
 \end_layout
 
-\begin_layout Subsubsection
-The 
+\begin_layout Standard
+You have the option of handling SSL 
+\bar under
+directly in Prudence (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "secure-servers"
+
+\end_inset
+
+)
+\bar default
+ or 
 \begin_inset Quotes eld
 \end_inset
 
-Host
+terminating
 \begin_inset Quotes erd
 \end_inset
 
- Header
+ at the 
+\bar under
+load balancer (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "load-balancing"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Subsubsection
+HTTP Authentication
 \end_layout
 
 \begin_layout Standard
-conversation.request.hostRef
+Prudence supports 
+\bar under
+HTTP basic authentication (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "http-authentication"
+
+\end_inset
+
+)
+\bar default
+, which is supported by most web browsers and other clients.
+ Coupled with HTTPS (in order to ensure that the password is transferred
+ securely to you), it's actually not such a bad way to secure your resources.
+ Web browsers will cache user credentials for the duration of a 
+\begin_inset Quotes eld
+\end_inset
+
+session,
+\begin_inset Quotes erd
+\end_inset
+
+ which usually means until the web browser is closed.
 \end_layout
 
-\begin_layout Subsection
-Cache Backends
+\begin_layout Quote
+HTTP authentication is secure enough when coupled with HTTPS, but it's not
+ a scalable way to support many users and sessions.
+ If you need a comprehensive solution, consider 
+\begin_inset CommandInset href
+LatexCommand href
+name "Diligence's authentication service"
+target "http://threecrickets.com/diligence/manual/service/authentication/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Quarantine the Admins
+\end_layout
+
+\begin_layout Standard
+Many sites allow for 
+\begin_inset Quotes eld
+\end_inset
+
+administrative
+\begin_inset Quotes erd
+\end_inset
+
+ logins that have special privileges and abilities.
+ Probably, these abilities would be utterly destructive in the wrong hands.
+ It thus makes a lot of sense to quarantine these users and their needs
+ into separate security domains, where all defenses are up: HTTPS, a separate
+ cluster firewalled from the regular application nodes, and sharing 
+\emph on
+only 
+\emph default
+the resources that are absolutely necessary for admin functionality.
 \end_layout
 
 \begin_layout Section
@@ -45029,8 +46183,8 @@ Utilities for Restlet
 
 \begin_layout Standard
 If you are a Restlet Java programmer, Prudence may still be of use to you.
- Prudence is also available as a small standalone Jar, and in which it has
- several well-documented classes useful for any Java-written Restlet application.
+ The Prudence standalone Jar has several well-documented classes useful
+ for any Restlet application.
  They're all in the 
 \begin_inset Quotes eld
 \end_inset
@@ -45054,7 +46208,7 @@ target "http://threecrickets.com/sincerity/ecosystem/skeletons/#restlet-skeleton
  gives you all the benefits of JavaScript-based configuration and bootstrapping
  for your Java Restlet applications.
  Use Java where it matters, JavaScript where it doesn't: don't waste your
- time recompiling when all you need is some external, deployment-related
+ time recompiling Java when all you need is some external, deployment-related
  features.
  Edit your scripts on the fly, and you're done.
 \end_layout
