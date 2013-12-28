@@ -1,0 +1,10 @@
+<html>
+<body>
+	<p>These are the comments for user: {{username}}</p>
+	<table>
+{% for comment in comments %}
+		<tr><td>{{comment}}</td></tr>
+{% endfor %}
+	</table>
+</body>
+</html>

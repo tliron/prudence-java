@@ -1,0 +1,22 @@
+<%python
+import urllib
+from jinja2 import Environment, FileSystemLoader
+from jinja2.exceptions import TemplateNotFound
+from os import sep
+
+id = urllib.unquote(conversation.locals['id'])
+payload = conversation.entity.object
+context = payload['context']
+
+loader = application.globals['jinaj2.loader']
+if not loader:
+    loader = FileSystemLoader(application.root.path + sep + 'libraries' + sep + 'views')
+    loader = application.getGlobal('jinja2.loader', loader)
+env = Environment(loader=loader)
+
+try:
+    template = env.get_template(id)
+    print template.render(context)
+except TemplateNotFound:
+    conversation.statusCode = 404
+%>

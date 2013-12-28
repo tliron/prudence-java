@@ -4454,7 +4454,7 @@ else:
 
 \begin_layout Plain Layout
 
-	content = application.globals[id] or 'This page is empty.'
+    content = application.globals[id] or 'This page is empty.'
 \end_layout
 
 \begin_layout Plain Layout
@@ -7583,18 +7583,18 @@ Prudence.Setup.See = Sincerity.Classes.define(function() {
 
 \begin_layout Plain Layout
 
-			importClass(org.restlet.routing.Redirector)
+		importClass(org.restlet.routing.Redirector)
 \end_layout
 
 \begin_layout Plain Layout
 
-			var redirector = new Redirector(app.context, this.uri, Redirector.MODE_CLIENT_SE
-E_OTHER)
+		var redirector = new Redirector(app.context, this.uri, Redirector.MODE_CLIENT_SEE
+_OTHER)
 \end_layout
 
 \begin_layout Plain Layout
 
-			return redirector
+		return redirector
 \end_layout
 
 \begin_layout Plain Layout
@@ -11431,12 +11431,12 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-    conversation.addMediaTypeByName('application/json')
+	conversation.addMediaTypeByName('application/json')
 \end_layout
 
 \begin_layout Plain Layout
 
-    conversation.addMediaTypeByName('text/plain')
+	conversation.addMediaTypeByName('text/plain')
 \end_layout
 
 \begin_layout Plain Layout
@@ -11466,7 +11466,7 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-    conversation.addMediaTypeByNameWithLanguage('text/plain', 'en')
+	conversation.addMediaTypeByNameWithLanguage('text/plain', 'en')
 \end_layout
 
 \begin_layout Plain Layout
@@ -26295,7 +26295,7 @@ def handle_get(conversation):
 
 \begin_layout Plain Layout
 
-	return 'Hello, world!'
+    return 'Hello, world!'
 \end_layout
 
 \end_inset
@@ -26321,7 +26321,7 @@ def handle_get conversation
 
 \begin_layout Plain Layout
 
-	return 'Hello, world!'
+    return 'Hello, world!'
 \end_layout
 
 \begin_layout Plain Layout
@@ -39575,7 +39575,7 @@ Models.Messages = function() {
 
 \begin_layout Plain Layout
 
-	this.messages = []
+	this.messages = ['This is a test.', 'This is also a test.']
 \end_layout
 
 \begin_layout Plain Layout
@@ -40020,52 +40020,52 @@ function getView(view, context) {
 
 \begin_layout Plain Layout
 
-   var page = Prudence.Resources.request({
+	var page = Prudence.Resources.request({
 \end_layout
 
 \begin_layout Plain Layout
 
-        uri: '/views/' + view + '/',
+		uri: '/views/' + view + '/',
 \end_layout
 
 \begin_layout Plain Layout
 
-        internal: true,
+		internal: true,
 \end_layout
 
 \begin_layout Plain Layout
 
-        method: 'post',
+		method: 'post',
 \end_layout
 
 \begin_layout Plain Layout
 
-        mediaType: 'text/*',
+		mediaType: 'text/*',
 \end_layout
 
 \begin_layout Plain Layout
 
-        payload: {
+		payload: {
 \end_layout
 
 \begin_layout Plain Layout
 
-            type: 'object',
+			type: 'object',
 \end_layout
 
 \begin_layout Plain Layout
 
-            value: context
+			value: context
 \end_layout
 
 \begin_layout Plain Layout
 
-        }
+		}
 \end_layout
 
 \begin_layout Plain Layout
 
-    })
+	})
 \end_layout
 
 \begin_layout Plain Layout
@@ -40187,7 +40187,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/user/{name}/comments/': '/user/comments!'
+	'/user/{name}/comments/': '/user/comments/!'
 \end_layout
 
 \begin_layout Plain Layout
@@ -41148,7 +41148,7 @@ var person = Models.getPerson(name)
 
 \begin_layout Plain Layout
 
-return getView('comments', {
+return getView('user/comments', {
 \end_layout
 
 \begin_layout Plain Layout
@@ -41623,7 +41623,7 @@ if not loader:
 
 \begin_layout Plain Layout
 
-    loader = application.getGlobal('jinja2.loaded', loader)
+    loader = application.getGlobal('jinja2.loader', loader)
 \end_layout
 
 \begin_layout Plain Layout
@@ -41861,7 +41861,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-Finally, we need to make a small change to our 
+Finally, we need to make two changes to our 
 \bar under
 presenter (page 
 \begin_inset CommandInset ref
@@ -41872,8 +41872,9 @@ reference "mvc-presenters"
 
 )
 \bar default
- in order to send JSON payloads (if we were writing it in Python, we could
- optimize by sending 
+.
+ First, we need to isend JSON payloads (if we were writing it in Python,
+ we could optimize by sending 
 \begin_inset Quotes eld
 \end_inset
 
@@ -41891,57 +41892,81 @@ status open
 
 \begin_layout Plain Layout
 
+return getView('user/comments', {
+\end_layout
+
+\begin_layout Plain Layout
+
+	username: person.getUsername(),
+\end_layout
+
+\begin_layout Plain Layout
+
+	comments: person.getComments().get()
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
 function getView(view, context) {
 \end_layout
 
 \begin_layout Plain Layout
 
-   var page = Prudence.Resources.request({
+	var page = Prudence.Resources.request({
 \end_layout
 
 \begin_layout Plain Layout
 
-        uri: '/views/' + view + '/',
+		uri: '/views/' + view + '/',
 \end_layout
 
 \begin_layout Plain Layout
 
-        internal: true,
+		internal: true,
 \end_layout
 
 \begin_layout Plain Layout
 
-        method: 'post',
+		method: 'post',
 \end_layout
 
 \begin_layout Plain Layout
 
-        mediaType: 'text/*',
+		mediaType: 'text/*',
 \end_layout
 
 \begin_layout Plain Layout
 
-        payload: {
+		payload: {
 \end_layout
 
 \begin_layout Plain Layout
 
-            type: 'json',
+			type: 'json',
 \end_layout
 
 \begin_layout Plain Layout
 
-            value: context
+			value: context
 \end_layout
 
 \begin_layout Plain Layout
 
-        }
+		}
 \end_layout
 
 \begin_layout Plain Layout
 
-    })
+	})
 \end_layout
 
 \begin_layout Plain Layout
@@ -41952,6 +41977,58 @@ function getView(view, context) {
 \begin_layout Plain Layout
 
 }
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+And we have to 
+\begin_inset Quotes eld
+\end_inset
+
+flatten
+\begin_inset Quotes erd
+\end_inset
+
+ the model in order to make JSON-able:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var person = Models.getPerson(name)
+\end_layout
+
+\begin_layout Plain Layout
+
+...
+\end_layout
+
+\begin_layout Plain Layout
+
+return getView('user/comments', {
+\end_layout
+
+\begin_layout Plain Layout
+
+	username: person.getUsername(),
+\end_layout
+
+\begin_layout Plain Layout
+
+	comments: person.getComments().get()
+\end_layout
+
+\begin_layout Plain Layout
+
+})
 \end_layout
 
 \end_inset
@@ -42751,22 +42828,22 @@ function getModel(model) {
 
 \begin_layout Plain Layout
 
-   return Prudence.Resources.request({
+	return Prudence.Resources.request({
 \end_layout
 
 \begin_layout Plain Layout
 
-        uri: '/models/' + model + '/',
+		uri: '/models/' + model + '/',
 \end_layout
 
 \begin_layout Plain Layout
 
-        internal: true
+		internal: true
 \end_layout
 
 \begin_layout Plain Layout
 
-    })
+	})
 \end_layout
 
 \begin_layout Plain Layout
@@ -42785,47 +42862,47 @@ function postModel(model, payload) {
 
 \begin_layout Plain Layout
 
-   return Prudence.Resources.request({
+	return Prudence.Resources.request({
 \end_layout
 
 \begin_layout Plain Layout
 
-        uri: '/models/' + model + '/',
+		uri: '/models/' + model + '/',
 \end_layout
 
 \begin_layout Plain Layout
 
-        internal: true,
+		internal: true,
 \end_layout
 
 \begin_layout Plain Layout
 
-        method: 'post'
+		method: 'post'
 \end_layout
 
 \begin_layout Plain Layout
 
-        payload: {
+		payload: {
 \end_layout
 
 \begin_layout Plain Layout
 
-            type: 'object',
+			type: 'object',
 \end_layout
 
 \begin_layout Plain Layout
 
-            value: payload
+			value: payload
 \end_layout
 
 \begin_layout Plain Layout
 
-        }
+		}
 \end_layout
 
 \begin_layout Plain Layout
 
-    })
+	})
 \end_layout
 
 \begin_layout Plain Layout
@@ -46068,11 +46145,22 @@ HTTPS
 \end_layout
 
 \begin_layout Standard
-To be clear, enabling encryption is usually much more about protecting your
- user data than protecting your own.
+Enabling TLS/SSL encryption for HTTP is 
+\emph on
+usually
+\emph default
+ more about protecting your user data than protecting your own.
  And indeed, this service you provide to your users is costly in terms of
  CPU cycles it requires and certification authorities you must pay for generally
  trusted certificates.
+\end_layout
+
+\begin_layout Standard
+HTTPS also has an entirely different use case, specifically when it's used
+ with privately issued certificates: you gain a powerful authentication
+ barrier.
+ Only users who own the certificate would be able to access the protected
+ resources.
 \end_layout
 
 \begin_layout Standard
@@ -46125,7 +46213,7 @@ reference "http-authentication"
 
 )
 \bar default
-, which is supported by most web browsers and other clients.
+, which is in turn supported by most web browsers and other HTTP clients.
  Coupled with HTTPS (in order to ensure that the password is transferred
  securely to you), it's actually not such a bad way to secure your resources.
  Web browsers will cache user credentials for the duration of a 
@@ -46168,8 +46256,13 @@ administrative
 
  logins that have special privileges and abilities.
  Probably, these abilities would be utterly destructive in the wrong hands.
- It thus makes a lot of sense to quarantine these users and their needs
- into separate security domains, where all defenses are up: HTTPS, a separate
+\end_layout
+
+\begin_layout Standard
+It thus makes a lot of sense to quarantine these users and their needs into
+ a separate security domains: it should be harder for an admin to login
+ than for a regular user.
+ All defenses should be up: HTTPS with private certificates, a separate
  cluster firewalled from the regular application nodes, and sharing 
 \emph on
 only 
@@ -50469,17 +50562,17 @@ def get_blogger_profile(user_id):
 
 \begin_layout Plain Layout
 
-	connection = blogger_pool.get_connection()
+    connection = blogger_pool.get_connection()
 \end_layout
 
 \begin_layout Plain Layout
 
-	...
+    ...
 \end_layout
 
 \begin_layout Plain Layout
 
-	connection.close()
+    connection.close()
 \end_layout
 
 \begin_layout Plain Layout
@@ -50493,22 +50586,22 @@ def get_blog_post_and_comments(blog_post_id):
 
 \begin_layout Plain Layout
 
-	shard_id = object.id % 3
+    shard_id = object.id % 3
 \end_layout
 
 \begin_layout Plain Layout
 
-	connection = blog_pools[shard_id].get_connection()
+    connection = blog_pools[shard_id].get_connection()
 \end_layout
 
 \begin_layout Plain Layout
 
-	...
+    ...
 \end_layout
 
 \begin_layout Plain Layout
 
-	connection.close()
+    connection.close()
 \end_layout
 
 \end_inset
