@@ -1,0 +1,14 @@
+comments(username, comments) ::= <<
+<html>
+<body>
+	<p>These are the comments for user: $username$</p>
+	<table>
+		$comments:row()$
+	</table>
+</body>
+</html>
+>>
+
+row(content) ::= <<
+<tr><td>$content$</td></tr>
+>>

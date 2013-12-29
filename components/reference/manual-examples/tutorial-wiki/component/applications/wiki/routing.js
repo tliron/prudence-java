@@ -17,20 +17,10 @@ app.routes = {
 		}
 	],
 
-	// Presenters
-	'/user/{name}/comments/': '/user/comments/!',
-	
-	// Views
-	'/views/*': '@jinja:{rr}',
-	'/jinja-template/{id}/': '/jinja-template/!'
+	'/page/*': '/page/',
+	'/api/*': '/api/'
 }
 
 app.hosts = {
-	'default': '/jinja/'
-}
-
-app.dispatchers = {
-	jinja: {
-		dispatcher: '/dispatchers/jinja/'
-	}
+	'default': '/wiki/'
 }

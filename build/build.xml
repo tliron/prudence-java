@@ -201,7 +201,7 @@
 		<antcall target="manual-lyx" />
 		<antcall target="manual-elyxer" />
 	</target>
-
+	
 	<target name="css" description="Create CSS">
 		<mkdir dir="${cache.css}/dark-cricket" />
 		<less4j
@@ -302,7 +302,13 @@
 		</chmod>
 	</target>
 
-	<target name="package" depends="package-zip, package-platform-installers" description="Create all packages and installers" />
+	<target name="package-manual-examples" description="Examples to accompany the manual">
+		<zip destfile="${distribution}/${component}-manual-examples-${component.version}${component.version.postfix}.zip">
+			<zipfileset dir="${component.reference}/manual-examples" />
+		</zip>
+	</target>
+
+	<target name="package" depends="package-zip, package-platform-installers, package-manual-examples" description="Create all packages and installers" />
 
 	<target name="deploy-maven" if="maven" depends="components" description="Deploy to Maven repository">
 		<delete dir="${cache.maven.pom}" />

@@ -21,16 +21,15 @@ app.routes = {
 	'/user/{name}/comments/': '/user/comments/!',
 	
 	// Views
-	'/views/*': '@jinja:{rr}',
-	'/jinja-template/{id}/': '/jinja-template/!'
+	'/views/*': '@st:{rr}'	
 }
 
 app.hosts = {
-	'default': '/jinja/'
+	'default': '/st/'
 }
 
 app.dispatchers = {
-	jinja: {
-		dispatcher: '/dispatchers/jinja/'
+	st: {
+		dispatcher: '/dispatchers/st/'
 	}
 }

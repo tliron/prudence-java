@@ -1,8 +1,8 @@
 
 app.settings = {
 	description: {
-		name: 'Jinja2 Example',
-		description: 'Example of using Jinja2 templates as views, from the Prudence Manual',
+		name: 'StringTemplate Example',
+		description: 'Example of using StringTemplates as views, from the Prudence Manual',
 		author: 'Three Crickets',
 		owner: 'Prudence'
 	},

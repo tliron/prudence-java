@@ -84,7 +84,7 @@ Main text written by Tal Liron
 \begin_layout Standard
 \noindent
 \align center
-Copyright 2009-2013 by Three Crickets LLC.
+Copyright 2009-2014 by Three Crickets LLC.
 \begin_inset Newline newline
 \end_inset
 
@@ -133,6 +133,18 @@ name "tutorial"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Quote
+The source code for the examples in the tutorial is available for 
+\begin_inset CommandInset href
+LatexCommand href
+name "download"
+target "http://threecrickets.com/prudence/download/distribution/@VERSION@/manual-examples/"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -39065,6 +39077,18 @@ name "mvc"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Quote
+The source code for the examples in this chapter is available for 
+\begin_inset CommandInset href
+LatexCommand href
+name "download"
+target "http://threecrickets.com/prudence/download/distribution/@VERSION@/manual-examples/"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection

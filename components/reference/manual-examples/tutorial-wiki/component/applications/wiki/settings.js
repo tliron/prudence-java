@@ -1,8 +1,8 @@
 
 app.settings = {
 	description: {
-		name: 'Jinja2 Example',
-		description: 'Example of using Jinja2 templates as views, from the Prudence Manual',
+		name: 'Wiki',
+		description: 'A simple but functional wiki, from the Prudence tutorial',
 		author: 'Three Crickets',
 		owner: 'Prudence'
 	},

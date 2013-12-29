@@ -1,0 +1,31 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="<%.%>/style/site.css" />
+</head>
+<body>
+<%py
+from org.pegdown import PegDownProcessor
+
+id = 'page.' + conversation.wildcard
+caching.duration = 60000
+caching.tags.add(id)
+caching.onlyGet = True
+
+if conversation.request.method.name == 'POST':
+    content = conversation.form['content']
+    application.globals[id] = content
+    document.cache.invalidate(id)
+else:
+    content = application.globals[id] or 'This page is empty.'
+%>
+<div style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
+	<%= PegDownProcessor().markdownToHtml(content) %>
+</div>
+</div>
+<form method="post">
+	<p>Edit this page:</p>
+	<p><textarea name="content" cols="80" rows="20"><%= content %></textarea></p>
+	<p><button type="submit">Submit</button></p>
+</form>
+</body>
+</html>
