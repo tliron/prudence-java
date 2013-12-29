@@ -710,12 +710,24 @@ Prudence.Setup = Prudence.Setup || function() {
 			)
 		}
 		
-		Public.defrost = function(documentSource, parserName) {
-			importClass(
-				com.threecrickets.scripturian.util.DefrostTask)
-				
+		Public.defrost = function(documentSource, parserName, plugins) {
 			if (true == this.settings.code.defrost) {
-				var tasks = DefrostTask.forDocumentSource(documentSource, executable.languageManager, executable.parserManager, this.settings.code.defaultLanguageTag, parserName, true, this.settings.templates.debug ? true : false)
+				importClass(
+						com.threecrickets.scripturian.util.DefrostTask,
+						com.threecrickets.scripturian.ParsingContext)
+
+				var parsingContext = new ParsingContext()
+				parsingContext.documentSource = documentSource
+				parsingContext.languageManager = executable.languageManager
+				parsingContext.defaultLanguageTag = this.settings.code.defaultLanguageTag
+				parsingContext.parserManager = executable.parserManager
+				parsingContext.defaultParser = parserName
+				parsingContext.prepare = true
+				parsingContext.debug = this.settings.templates.debug ? true : false
+				if (Sincerity.Objects.exists(plugins)) {
+					parsingContext.attributes.put('com.threecrickets.scripturian.parser.ScriptletsParser.plugins', plugins)
+				}
+				var tasks = DefrostTask.createMany(parsingContext)
 				for (var t in tasks) {
 					startupTasks.push(tasks[t])
 				}
@@ -1264,7 +1276,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				}
 				
 				// Defrost
-				app.defrost(generatedTextResource.documentSource, app.settings.templates.parser)
+				app.defrost(generatedTextResource.documentSource, app.settings.templates.parser, generatedTextResource.scriptletPlugins)
 
 				// Merge globals
 				Sincerity.Objects.merge(app.globals, Sincerity.Objects.flatten({'com.threecrickets.prudence.GeneratedTextResource': generatedTextResource}))
