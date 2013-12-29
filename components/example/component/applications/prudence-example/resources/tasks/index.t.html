@@ -8,7 +8,7 @@
 <div class="hr"><hr /></div>
 	
 <%
-if (conversation.request.method == 'POST') {
+if (conversation.request.method.name == 'POST') {
 	application.executeTask(null, '/tasks/background/', 'run', null, 0, 0, false)
 %>
 <p>

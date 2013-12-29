@@ -12,7 +12,7 @@
 <div class="hr"><hr /></div>
 	
 <%
-if (conversation.request.method == 'POST') {
+if (conversation.request.method.name == 'POST') {
 	importClass(java.io.File)
 	
 	var name = conversation.form.get('name')

@@ -13,7 +13,7 @@ function handleBefore(conversation) {
 }
 
 function handleAfter(conversation) {
-	if (conversation.request.method == 'POST') {
+	if (conversation.request.method.name == 'POST') {
 		var counter = getCounter()
 		var count = counter.incrementAndGet()
 		logger.info('Counted {0} POSTs so far'.cast(count))

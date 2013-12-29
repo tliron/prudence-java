@@ -13,7 +13,7 @@
 <div class="hr"><hr /></div>
 
 <%
-if (conversation.request.method == 'POST') {
+if (conversation.request.method.name == 'POST') {
 	abcdefg()
 } else { %>
 	<form name="external" method="POST">
