@@ -24998,7 +24998,7 @@ app.globals = {
 
 \begin_layout Plain Layout
 
-				config: {smtp: 'localhost', origin: 'moderator@myapp.org'}
+				config: {smtp: 'localhost', origin: 'admin@myapp.org'}
 \end_layout
 
 \begin_layout Plain Layout
@@ -25009,6 +25009,51 @@ app.globals = {
 \begin_layout Plain Layout
 
 		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	},
+\end_layout
+
+\begin_layout Plain Layout
+
+	nodes: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		'...': [{
+\end_layout
+
+\begin_layout Plain Layout
+
+			dependencies: '/services/nodes', name: 'Node',
+\end_layout
+
+\begin_layout Plain Layout
+
+			config: {address: 'node1.myapp.org'}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}, {
+\end_layout
+
+\begin_layout Plain Layout
+
+			dependencies: '/services/nodes', name: 'Node',
+\end_layout
+
+\begin_layout Plain Layout
+
+			config: {address: 'node2.myapp.org'}
+\end_layout
+
+\begin_layout Plain Layout
+
+		}]
 \end_layout
 
 \begin_layout Plain Layout
@@ -25027,7 +25072,7 @@ app.globals = {
 \end_layout
 
 \begin_layout Standard
-To use it:
+To use them:
 \end_layout
 
 \begin_layout Standard
@@ -25071,6 +25116,30 @@ var emailServices = Prudence.Lazy.getGlobalMap(
 \begin_layout Plain Layout
 
 emailServices.moderator.send('test@myapp.org', 'Hello, this is a test message!')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+var nodes = Prudence.Lazy.getGlobalList(
+\end_layout
+
+\begin_layout Plain Layout
+
+	'nodes',
+\end_layout
+
+\begin_layout Plain Layout
+
+	null,
+\end_layout
+
+\begin_layout Plain Layout
+
+	function(c) { return eval(c)() })
 \end_layout
 
 \end_inset
