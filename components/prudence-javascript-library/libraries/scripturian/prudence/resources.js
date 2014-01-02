@@ -266,34 +266,36 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @param {String} [params.method='get'] The HTTP method: 'get', 'post', 'put', 'delete' or 'head'
 	 * @param {Boolean|String} [params.internal=false] True to use Prudence's document.internal API; a string here
 	 *		  specifies the internal application name to use
-	 * @param {String} [params.mediaType] Defaults to 'application/java' for internal=true, otherwise 'text/plain'
+	 * @param {String} [params.mediaType] Defaults to 'application/internal' for internal=true, otherwise 'text/plain'
 	 * @param [params.payload] The payload
 	 * @param {String} [params.payload.type] Supported payload types:
 	 *		<ul>
-	 *		<li>'object': as is (only for internal=true)</li>
 	 *		<li>'text': converted to string if not one already</li>
 	 *		<li>'json': see {@link Sincerity.JSON#to}</li>
 	 *		<li>'xml': see {@link Sincerity.XML#to}</li>
 	 *		<li>'web': see {@link Prudence.Resources#toWebPayload}</li>
 	 *		<li>'binary': an array of bytes</li>
+	 *		<li>'object': a JVM-serializable object</li>
+	 *		<li>'internal': as is (only for internal=true)</li>
 	 *		</ul>
 	 * @param {String} [params.payload.value] The payload value
 	 * @param {String} [params.payload.mediaType] The payload mediaType (overrides the default value)
 	 * @param [params.headers] A dict of custom headers to add to the request 
 	 * @param {String|Object} [params.result]
-	 *		Defaults to 'json' for JSON media types, 'xml' for XML media types, 'object' for 'application/java'
-	 *		and 'text' for everything else. Supported types:
+	 *		Defaults to 'json' for JSON media types, 'xml' for XML media types, 'object' for 'application/object', 
+	 *		'internal' for 'application/internal' and 'text' for everything else. Supported types:
 	 *		<ul>
 	 *		<li>'text': the default (for non-'head' methods)</li>
 	 *		<li>'entity': the Restlet Representation instance (make sure to release it!)</li>
 	 *		<li>'date': the Date from the response header</li>
-	 *		<li>'object': an arbitrary object (only useful for internal conversations)</li>
 	 *		<li>'json': see {@link Sincerity.JSON#from}</li>
 	 *		<li>'extendedJson': see {@link Sincerity.JSON#from}</li>
 	 *		<li>'xml': see {@link Sincerity.XML#from}</li>
 	 *		<li>'web': see {@link Prudence.Resources#fromQueryString}</li>
 	 *		<li>'binary': an array of bytes</li>
 	 *		<li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
+	 *		<li>'object': a JVM-serializable object</li>
+	 *		<li>'internal': an arbitrary object (only useful for internal conversations)</li>
 	 *		</ul>
 	 * @param {String|Object} [params.result.type] As params.result
 	 * @param {Boolean} [params.result.headers] If true, the result will be in the form of {headers:{}, representation:...}
@@ -311,7 +313,7 @@ Prudence.Resources = Prudence.Resources || function() {
 		if (!Sincerity.Objects.exists(params.internal) && Sincerity.Objects.exists(params.uri) && (params.uri[0] == '/')) {
 			params.internal = true
 		}
-		params.mediaType = params.mediaType || (params.internal ? 'application/java' : 'text/plain')
+		params.mediaType = params.mediaType || (params.internal ? 'application/internal' : 'text/plain')
 
 		var resultType
 		var resultHeaders
@@ -320,13 +322,16 @@ Prudence.Resources = Prudence.Resources || function() {
 			resultHeaders = params.result.headers
 		}
 		if (!Sincerity.Objects.exists(resultType)) {
-			if (params.mediaType.endsWith('/json') || params.mediaType.endsWith('+json')) {
+			if (params.mediaType == 'application/internal') {
+				resultType = 'internal'
+			}
+			else if (params.mediaType.endsWith('/json') || params.mediaType.endsWith('+json')) {
 				resultType = 'json'
 			}
 			else if (params.mediaType.endsWith('/xml') || params.mediaType.endsWith('+xml')) {
 				resultType = 'xml'
 			}
-			else if (params.mediaType == 'application/java') {
+			else if (params.mediaType == 'application/object') {
 				resultType = 'object'
 			}
 			else {
@@ -340,10 +345,14 @@ Prudence.Resources = Prudence.Resources || function() {
 		if (Sincerity.Objects.exists(params.payload) && params.payload.type) {
 			var mediaType = params.payload.mediaType
 			switch (String(params.payload.type)) {
+				case 'internal':
+					params.payload = new com.threecrickets.prudence.util.InternalRepresentation(params.payload.value)
+					break
+
 				case 'text':
 					// Payload is as is
 					break
-					
+
 				case 'json':
 					params.payload = Sincerity.JSON.to(params.payload.value)
 					mediaType = mediaType || 'application/json'
@@ -351,7 +360,7 @@ Prudence.Resources = Prudence.Resources || function() {
 						params.payload = new org.restlet.representation.StringRepresentation(params.payload, org.restlet.data.MediaType.valueOf(mediaType))
 					}
 					break
-					
+
 				case 'xml':
 					params.payload = Sincerity.XML.to(params.payload.value)
 					mediaType = mediaType || 'application/xml'
@@ -363,16 +372,16 @@ Prudence.Resources = Prudence.Resources || function() {
 				case 'web':
 					params.payload = Public.toWebPayload(params.payload.value)
 					break
-					
-				case 'object':
-					mediaType = mediaType || 'application/java'
-					params.payload = new org.restlet.representation.ObjectRepresentation(params.payload.value, org.restlet.data.MediaType.valueOf(mediaType))
-					break
-				
+
 				case 'binary':
 					params.payload = new org.restlet.representation.ByteArrayRepresentation(params.payload.value, Sincerity.Objects.exists(mediaType) ? org.restlet.data.MediaType.valueOf(mediaType) : null)
 					break
-					
+
+				case 'object':
+					mediaType = mediaType || 'application/object'
+					params.payload = new org.restlet.representation.ObjectRepresentation(params.payload.value, org.restlet.data.MediaType.valueOf(mediaType))
+					break
+
 				default:
 					Public.logger.warning('Unsupported payload type: ' + params.payload.type)
 					params.payload = null
@@ -649,7 +658,6 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @param representation The Restlet Representation
 	 * @param {String} type Supported types:
 	 * <ul>
-	 * <li>'object': an arbitrary object (only useful for internal conversations)</li>
 	 * <li>'text'</li>
 	 * <li>'json': see {@link Sincerity.JSON#from}</li>
 	 * <li>'extendedJson': see {@link Sincerity.JSON#from}</li>
@@ -657,12 +665,15 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * <li>'web': see {@link Prudence.Resources#fromQueryString}</li>
 	 * <li>'binary': an array of bytes</li>
 	 * <li>'properties': see {@link Prudence.Resources#fromPropertySheet} (using params.separator)</li>
+	 * <li>'object': a JVM-serializable object</li>
+	 * <li>'internal': an arbitrary object (only useful for internal conversations)</li>
 	 * </ul>
 	 * @param [params] Optional params for some conversions
 	 * @returns The representation
 	 */
 	Public.fromRepresentation = function(representation, type, params) {
 		switch (String(type)) {
+			case 'internal':
 			case 'object':
 				var object = representation.object
 				if (Sincerity.Objects.exists(object)) {

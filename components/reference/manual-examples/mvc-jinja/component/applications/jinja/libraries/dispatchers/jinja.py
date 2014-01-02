@@ -1,5 +1,5 @@
 import simplejson, urllib
-from org.restlet.representation import ObjectRepresentation
+from com.threecrickets.prudence.util import InternalRepresentation
 
 def handle_init(conversation):
     conversation.addMediaTypeByName('text/html')
@@ -13,13 +13,13 @@ def handle_post(conversation):
     id += '.html'
     context = {}
     if conversation.entity:
-        if conversation.entity.mediaType.name == 'application/java':
+        if conversation.entity.mediaType.name == 'application/internal':
             context = conversation.entity.object
         else:
             context = conversation.entity.text
             if context:
                 context = simplejson.loads(context)
-    payload = ObjectRepresentation({
+    payload = InternalRepresentation({
         'context': context,
         'uri': str(conversation.reference),
         'base_uri': str(conversation.reference.baseRef)})

@@ -13,7 +13,6 @@ package com.threecrickets.prudence;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.Writer;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,7 +30,6 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.data.Tag;
 import org.restlet.representation.CharacterRepresentation;
-import org.restlet.representation.ObjectRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.RepresentationInfo;
 import org.restlet.representation.StringRepresentation;
@@ -50,6 +48,7 @@ import com.threecrickets.prudence.service.DelegatedResourceCachingService;
 import com.threecrickets.prudence.service.DelegatedResourceConversationService;
 import com.threecrickets.prudence.service.DelegatedResourceDocumentService;
 import com.threecrickets.prudence.util.CapturingRedirector;
+import com.threecrickets.prudence.util.InternalRepresentation;
 import com.threecrickets.scripturian.Executable;
 import com.threecrickets.scripturian.ExecutionContext;
 import com.threecrickets.scripturian.ExecutionController;
@@ -660,10 +659,10 @@ public class DelegatedResource extends ServerResource
 		{
 			MediaType mediaType = conversationService.getMediaType();
 
-			if( MediaType.APPLICATION_JAVA.includes( mediaType ) )
+			if( InternalRepresentation.MEDIA_TYPE.includes( mediaType ) )
 			{
-				// Wrap in an object representation
-				representation = new ObjectRepresentation<Serializable>( (Serializable) object, mediaType );
+				// Wrap in an internal representation
+				representation = new InternalRepresentation( object );
 				Language language = conversationService.getLanguage();
 				if( language != null )
 					representation.getLanguages().add( language );

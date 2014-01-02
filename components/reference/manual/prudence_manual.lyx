@@ -11748,11 +11748,11 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 
 \end_inset
 
- is “application/java” then the value will be wrapped in an 
+ is “application/internal” then the value will be wrapped in an 
 \begin_inset CommandInset href
 LatexCommand href
-name "ObjectRepresentation instance"
-target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+name "InternalRepresentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/InternalRepresentation.html"
 
 \end_inset
 
@@ -19739,15 +19739,15 @@ When the MIME type is
 \begin_inset Quotes eld
 \end_inset
 
-application/java
+application/internal
 \begin_inset Quotes erd
 \end_inset
 
 , Prudence is actually wrapping your return value in an 
 \begin_inset CommandInset href
 LatexCommand href
-name "ObjectRepresentation"
-target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+name "InternalRepresentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/InternalRepresentation.html"
 
 \end_inset
 
@@ -19773,12 +19773,7 @@ status open
 
 \begin_layout Plain Layout
 
-return new org.restlet.representation.ObjectRepresentation(data,
-\end_layout
-
-\begin_layout Plain Layout
-
-	org.restlet.data.MediaType.APPLICATION_JAVA)
+return new com.threecrickets.prudence.util.InternalRepresentation(data)
 \end_layout
 
 \end_inset
@@ -19799,8 +19794,8 @@ target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/rep
 , Prudence will detect this and not wrap it again in an 
 \begin_inset CommandInset href
 LatexCommand href
-name "ObjectRepresentation"
-target "http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/ObjectRepresentation.html"
+name "InternalRepresentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/InternalRepresentation.html"
 
 \end_inset
 
@@ -35988,7 +35983,7 @@ This works using the special
 \begin_inset Quotes eld
 \end_inset
 
-application/java
+application/internal
 \begin_inset Quotes erd
 \end_inset
 
@@ -36037,7 +36032,7 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-		conversation.addMediaTypeByName('application/java')
+		conversation.addMediaTypeByName('application/internal')
 \end_layout
 
 \begin_layout Plain Layout
@@ -36066,7 +36061,7 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-	return conversation.mediaTypeName == 'application/java' ?
+	return conversation.mediaTypeName == 'application/internal' ?
 \end_layout
 
 \begin_layout Plain Layout
@@ -36089,7 +36084,7 @@ Note that we've added support for
 \begin_inset Quotes eld
 \end_inset
 
-application/java
+application/internal
 \begin_inset Quotes erd
 \end_inset
 
@@ -36106,7 +36101,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \begin_inset Quotes eld
 \end_inset
 
-application/java
+application/internal
 \begin_inset Quotes erd
 \end_inset
 
@@ -41422,7 +41417,7 @@ import simplejson, urllib
 
 \begin_layout Plain Layout
 
-from org.restlet.representation import ObjectRepresentation
+from com.threecrickets.prudence.util import InternalRepresentation
 \end_layout
 
 \begin_layout Plain Layout
@@ -41490,7 +41485,7 @@ def handle_post(conversation):
 
 \begin_layout Plain Layout
 
-        if conversation.entity.mediaType.name == 'application/java':
+        if conversation.entity.mediaType.name == 'application/internal':
 \end_layout
 
 \begin_layout Plain Layout
@@ -41520,7 +41515,7 @@ def handle_post(conversation):
 
 \begin_layout Plain Layout
 
-    payload = ObjectRepresentation({
+    payload = InternalRepresentation({
 \end_layout
 
 \begin_layout Plain Layout
@@ -41604,7 +41599,7 @@ We're supporting
 \begin_inset Quotes eld
 \end_inset
 
-application/java
+application/internal
 \begin_inset Quotes erd
 \end_inset
 
@@ -42683,7 +42678,7 @@ function handleInit(conversation) {
 
 \begin_layout Plain Layout
 
-		conversation.addMediaTypeByName('application/java')
+		conversation.addMediaTypeByName('application/internal')
 \end_layout
 
 \begin_layout Plain Layout
@@ -42737,8 +42732,8 @@ function handleGet(conversation) {
 
 \begin_layout Plain Layout
 
-	return conversation.mediaTypeName == 'application/java' ? result : Sincerity.JSON.
-to(result)
+	return conversation.mediaTypeName == 'application/internal' ? result : Sincerity.
+JSON.to(result)
 \end_layout
 
 \begin_layout Plain Layout
@@ -42802,8 +42797,8 @@ function handlePost(conversation) {
 
 \begin_layout Plain Layout
 
-		return conversation.mediaTypeName == 'application/java' ? result : Sincerity.JSO
-N.to(result)
+		return conversation.mediaTypeName == 'application/internal' ? result :
+ Sincerity.JSON.to(result)
 \end_layout
 
 \begin_layout Plain Layout
