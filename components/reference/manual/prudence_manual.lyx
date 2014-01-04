@@ -17932,8 +17932,8 @@ name "cookies"
 Cookies represent a small client-side database, which the server can use
  to retrieve or store per-client data.
  Not all clients support cookies, and even those that do (most web browsers)
- might have the feature disabled, so it's not always good idea to rely on
- cookies.
+ might have the feature disabled, so it's not always a good idea to rely
+ on cookies.
 \end_layout
 
 \begin_layout Subsubsection
@@ -17941,7 +17941,7 @@ From the Client
 \end_layout
 
 \begin_layout Standard
-Retrieve a specific cookie from those the client send you according to its
+Retrieve a specific cookie from those the client sent you according to its
  name using 
 \begin_inset CommandInset href
 LatexCommand href
@@ -18222,7 +18222,7 @@ usly track user activity.
  This works because any resource on a web page---even an image hosted by
  an advertising company---can use cookies, and can also track your client's
  IP address.
- Uses various heuristics it is possible to identify individual users and
+ Using various heuristics it is possible to identify individual users and
  track parts of their browser history.
 \end_layout
 
@@ -30467,57 +30467,6 @@ Technology
 \end_layout
 
 \begin_layout Subsubsection*
-How is REST different from RPC?
-\begin_inset CommandInset label
-LatexCommand label
-name "rest-vs-rpc"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Well, it's not 
-\emph on
-necessarily
-\emph default
- better.
- One important advantage is that it works inside the already-existing, already-d
-eployed infrastructure of the World Wide Web, meaning that you can immediately
- benefit from a wide range of optimized functionality.
- We discuss this in greater detail in 
-\bar under
-The Case for REST (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "the-cast-for-rest"
-
-\end_inset
-
-)
-\bar default
-.
-\end_layout
-
-\begin_layout Standard
-But we don't advocate REST for every project.
- See 
-\bar under
-this discussion (page 
-\begin_inset CommandInset ref
-LatexCommand pageref
-reference "do-you-really-need-rest"
-
-\end_inset
-
-)
-\bar default
- for one reason why RPC may be more appropriate.
- Choose the right tool for the job!
-\end_layout
-
-\begin_layout Subsubsection*
 How is Prudence different from Node.js?
 \begin_inset CommandInset label
 LatexCommand label
@@ -30569,7 +30518,7 @@ both
 \end_layout
 
 \begin_layout Standard
-On top of the mutli-threaded server Prudence builds RESTful application
+On top of the multi-threaded server Prudence builds a RESTful application
  environment, using 
 \begin_inset CommandInset href
 LatexCommand href
@@ -30654,7 +30603,8 @@ Node.js is great for its intended use case.
 
 \begin_layout Quote
 If you like Node.js but JavaScript is not your favorite dynamic language,
- similarly excellent asynchronous platforms are available: check out 
+ similarly excellent event-driven platforms are available for other languages:
+ check out 
 \begin_inset CommandInset href
 LatexCommand href
 name "Tornado"
@@ -30738,16 +30688,17 @@ any way
  need to wait for their requests to complete, and databases still have to
  return results before you can complete those requests.
  There's nothing in an event-driven model that changes these essential facts.
- (It's worth repeating: both Prudence and Node.js use non-blocking I/O servers:
- Node.js having an event-driven programming model has nothing to do with
- that.)
+ (It's worth repeating again: both Prudence and Node.js use non-blocking
+ I/O servers; Node.js having an event-driven programming model does not allow
+ it to magically handle more concurrent connections than other platforms
+ can.)
 \end_layout
 
 \begin_layout Standard
 You can add some parallelism by running multiple Node.js processes behind
  a load balancer, but the problems quickly multiply: each process loads
- its own version of the drivers, with its own connection thread pool, which
- can't be shared with the other Node.js processes.
+ its own version of those C++-written drivers, with its own connection thread
+ pool, which can't be shared with the other Node.js processes.
  In Prudence, by contrast, the same pool is trivially shared by all requests.
  (Prudence's threads can also share an in-process memory-based cache backend
  for the best possible caching performance at the 1st tier.)
@@ -30762,8 +30713,8 @@ readed easy.
  know.
  So, despite being a problematic web platform, it's one in which you can
  build web services quickly and with little fuss, and sometimes that's more
- important than scalability or even robustness, especially if the goal is
- to create in-house services.
+ important than scalability or even robustness (especially if the goal is
+ to create in-house services).
  But another reason for Node.js' popularity is more worrying: ignorance.
  People who should know better heard that Node.js is 
 \begin_inset Quotes eld
@@ -30864,7 +30815,8 @@ target "http://www.hazelcast.com/"
 
 .
  It's easier to connect C/C++ libraries to Node.js, but on the other hand
- it's easier to write and deploy extensions in Java/Scala/Groovy for Prudence.
+ it's easier to write and deploy extensions in Java/Scala/Groovy/Clojure
+ for Prudence.
 \end_layout
 
 \begin_layout Standard
@@ -30998,7 +30950,7 @@ target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
 \end_layout
 
 \begin_layout Paragraph
-Conslusion
+Conclusion
 \end_layout
 
 \begin_layout Standard
@@ -31008,7 +30960,58 @@ Choose the right tool for the job! Node.js is a great choice for streaming
 \end_layout
 
 \begin_layout Subsubsection*
-Why does Prudence support LESS instead SASS?
+How is REST better than RPC?
+\begin_inset CommandInset label
+LatexCommand label
+name "rest-vs-rpc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Well, it's not 
+\emph on
+necessarily
+\emph default
+ better.
+ One important advantage is that it works inside the already-existing, already-d
+eployed infrastructure of the World Wide Web, meaning that you can immediately
+ benefit from a wide range of optimized functionality.
+ We discuss this in greater detail in 
+\bar under
+The Case for REST (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "the-cast-for-rest"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
+But we don't advocate REST for every project.
+ See 
+\bar under
+this discussion (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "do-you-really-need-rest"
+
+\end_inset
+
+)
+\bar default
+ for one reason why RPC may be more appropriate.
+ Choose the right tool for the job!
+\end_layout
+
+\begin_layout Subsubsection*
+Why does Prudence support LESS instead of SASS?
 \begin_inset CommandInset label
 LatexCommand label
 name "why-less"
@@ -31215,7 +31218,15 @@ If you're not doing intensive computation, then don't worry too much about
 
 \begin_layout Subsubsection*
 I heard REST is very scalable.
- Is this true? Does this mean Prudence can support many millions of users?
+ Is this true? Does this mean Prudence is 
+\begin_inset Quotes eld
+\end_inset
+
+web scale
+\begin_inset Quotes erd
+\end_inset
+
+?
 \end_layout
 
 \begin_layout Standard
@@ -31253,8 +31264,8 @@ s than most other web platforms.
 \end_layout
 
 \begin_layout Standard
-That's not very reassuring, but it's a fact of software and hardware architectur
-e right now.
+That might not be very reassuring, but it's a fact of software and hardware
+ architecture right now.
  Achieving massive scale is challenging.
 \end_layout
 
@@ -31403,7 +31414,7 @@ target "http://www.gnu.org/software/libc/"
 .
  It is meant for special cases in which the full GPL could limit the adoption
  of a product, which would be self-defeating.
- The assumption is that there are many alternatives with less restrictions
+ The assumption is that there are many alternatives with fewer restrictions
  on distribution.
 \end_layout
 
@@ -46942,6 +46953,21 @@ target "https://github.com/tomyeh/ZUSS"
 \end_inset
 
  extension is used.
+\end_layout
+
+\begin_layout Subsection
+Other Utilities
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "CustomAuthenticatorHelper"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomAuthenticatorHelper.html"
+
+\end_inset
+
+: Makes it easy to register custom authentication schemes.
 \end_layout
 
 \begin_layout Section
