@@ -30431,6 +30431,287 @@ target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-pl
  for a guide.
 \end_layout
 
+\begin_layout Subsubsection
+Memory Leaks
+\end_layout
+
+\begin_layout Standard
+These are sometimes difficult to debug: by the time you get an OutOfMemoryError,
+ it might be impossible to connect over JMX.
+\end_layout
+
+\begin_layout Paragraph
+jmap and jhat
+\end_layout
+
+\begin_layout Standard
+You should familiarize yourself with these two powerful heap analysis tools.
+\end_layout
+
+\begin_layout Standard
+Use 
+\begin_inset CommandInset href
+LatexCommand href
+name "jmap"
+target "http://docs.oracle.com/javase/7/docs/technotes/tools/share/jmap.html"
+
+\end_inset
+
+ to get a live dump from a running JVM:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+jmap -dump:live,format=b,file=/full/path/to/dumps/prudence.bin <pid>
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you're getting connection errors, try the following:
+\end_layout
+
+\begin_layout Itemize
+In Linux, you might need to enable inter-process access for ptrace:
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Try using root access to run jmap
+\end_layout
+
+\begin_layout Itemize
+Try adding the 
+\begin_inset Quotes eld
+\end_inset
+
+-F
+\begin_inset Quotes erd
+\end_inset
+
+ switch (though it will likely only create a partial dump)
+\end_layout
+
+\begin_layout Standard
+When opening the dump using 
+\begin_inset CommandInset href
+LatexCommand href
+name "jhat"
+target "http://docs.oracle.com/javase/7/docs/technotes/tools/share/jhat.html"
+
+\end_inset
+
+, you might get an OutOfMememoryError (again!) if the file is very large.
+ Increase available memory like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+jhat -J-mx2000m prudence.bin
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Point your web browser to 
+\begin_inset CommandInset href
+LatexCommand href
+name "http://localhost:7000/"
+target "http://localhost:7000/"
+
+\end_inset
+
+ to see jhat's analysis.
+\end_layout
+
+\begin_layout Paragraph
+More Logging
+\end_layout
+
+\begin_layout Standard
+You can enforce a heap dump to file upon OutOfMemoryError using the following
+ JVM command line switches:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+JVM_SWITCHES=
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	-XX:+HeapDumpOnOutOfMemoryError 
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	-XX:HeapDumpPath=/full/path/to/logs/ 
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	sincerity start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Likewise, it's a good idea to turn on the garbage collector log:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+JVM_SWITCHES=
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	-Xloggc:/full/path/to/logs/gc.log 
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	-XX:+PrintGCDetails 
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	-XX:+PrintTenuringDistribution 
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+	sincerity start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you're using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity service plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#service-plugin"
+
+\end_inset
+
+, you can enable both of these features by creating a 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/service/jvm/memory-monitoring.conf
+\begin_inset Quotes erd
+\end_inset
+
+ file:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+# Out-of-memory heap dumps
+\end_layout
+
+\begin_layout Plain Layout
+
+-XX:+HeapDumpOnOutOfMemoryError
+\end_layout
+
+\begin_layout Plain Layout
+
+-XX:HeapDumpPath={sincerity.container.root}/logs/
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+# Garbage collection log
+\end_layout
+
+\begin_layout Plain Layout
+
+-Xloggc:{sincerity.container.root}/logs/gc.log
+\end_layout
+
+\begin_layout Plain Layout
+
+-XX:+PrintGCDetails
+\end_layout
+
+\begin_layout Plain Layout
+
+-XX:+PrintTenuringDistribution
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 FAQ
 \begin_inset CommandInset label
