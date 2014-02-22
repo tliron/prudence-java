@@ -20276,10 +20276,15 @@ reference "configuration-clients"
 )
 \bar default
 .
- The reason for this is that the client works asynchronously, via a thread
- pool that is initialized upon startup.
- Because you don't know which thread will handle your request, you can't
- set a specific timeout for it.
+ This is due to a limitation in Restlet that may be 
+\begin_inset CommandInset href
+LatexCommand href
+name "fixed in the future"
+target "https://github.com/restlet/restlet-framework-java/issues/815"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -37178,7 +37183,18 @@ Host
 \begin_inset Quotes erd
 \end_inset
 
- HTTP header used by some proxies.
+ HTTP header used by 
+\bar under
+load balancers and other proxies (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "load-balancing-host"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -45446,6 +45462,13 @@ after
 
 \begin_layout Paragraph
 Your Host
+\begin_inset CommandInset label
+LatexCommand label
+name "load-balancing-host"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -45531,6 +45554,21 @@ var protocol = hostRef.scheme // 'http'
 \end_layout
 
 \begin_layout Standard
+The same value is used for 
+\bar under
+virtual host configuration (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-hosts"
+
+\end_inset
+
+)
+\bar default
+.
+\end_layout
+
+\begin_layout Standard
 In some cases you might want the load balancer to work transparently, leaving
  the original 
 \begin_inset Quotes eld
@@ -45541,7 +45579,7 @@ Host
 \end_inset
 
  header intact.
- This is usually configurable.
+ This behavior is sometimes configurable in load balancers.
  For example, in Nginx:
 \end_layout
 
