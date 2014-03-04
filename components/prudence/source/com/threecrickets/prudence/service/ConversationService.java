@@ -102,6 +102,17 @@ public class ConversationService
 	}
 
 	/**
+	 * The application's root URI on the virtual host that routed the current
+	 * request.
+	 * 
+	 * @return The application's root
+	 */
+	public String getApplicationRoot()
+	{
+		return getRequest().getRootRef().getPath() + "/";
+	}
+
+	/**
 	 * The conversation cookies.
 	 * <p>
 	 * This value is cached locally.

@@ -1012,6 +1012,15 @@ var Prudence = {}
  */
 
 /**
+ * The application's root URI on the virtual host that routed the current request.
+ * <p>
+ * This is a shortcut to calling {@link conversation#reference}.rootRef.path + '/'.
+ * 
+ * @name conversation.applicationRoot
+ * @type {String}
+ */
+
+/**
  * This is a URI path relative to the base URI, which is usually the application root URI on the current virtual host.
  * <p>
  * Exposing relative URIs to your clients (for example, in HTML) makes your application "portable," in the sense that you

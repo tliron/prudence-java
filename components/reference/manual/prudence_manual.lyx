@@ -1005,7 +1005,7 @@ status open
 
 \begin_layout Plain Layout
 
-<% document.include('/header/') %>
+<% document.include('/header/'); %>
 \end_layout
 
 \end_inset
@@ -9944,13 +9944,13 @@ indirectly
  discover the host that routed the request using the 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.reference.baseRef API"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.reference"
+name "conversation.applicationRoot API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.applicationRoot"
 
 \end_inset
 
 .
- This will always be the application's root URI.
+ This will always be the application's root URI on that virtual host.
  For example:
 \end_layout
 
@@ -9961,7 +9961,7 @@ status open
 
 \begin_layout Plain Layout
 
-if (conversation.reference.baseRef.path == '/myapp/') {
+if (conversation.applicationRoot == '/myapp/') {
 \end_layout
 
 \begin_layout Plain Layout
@@ -12989,7 +12989,7 @@ status open
 
 \begin_layout Plain Layout
 
-<% document.include('/header/') %>
+<% document.include('/header/'); %>
 \end_layout
 
 \end_inset
@@ -13199,9 +13199,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-Fragment's don't have to include scriptlets: they can be purely textual
- reusable.
- On the other hand, they can contain sophisticated code.
+Fragments don't have to include scriptlets: they can be purely textual.
+ On the other hand, they can contain sophisticated code to generate their
+ HTML.
+ Fragments can also be nested to any depth: a fragment can include others,
+ those can include others, and so on.
 \end_layout
 
 \begin_layout Quote
@@ -13268,8 +13270,9 @@ name "template-resources-blocks-and-Inheritance"
 \end_layout
 
 \begin_layout Standard
-This feature is related to fragments, and can be understood as its inverse:
- rather than inserting a fragment into the current location using 
+This feature is very similar to fragments, but can be understood as its
+ inverse: rather than inserting a fragment into the current location using
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -13283,10 +13286,14 @@ This feature is related to fragments, and can be understood as its inverse:
 only later
 \emph default
  be inserted into a template.
+ Unlike fragments, blocks cannot be individually cached, but they can otherwise
+ provide additional flexibility in assembling your page.
+ It's a good idea to use both: blocks when you need design flexibility and
+ fragments when you need fine-grained caching.
 \end_layout
 
 \begin_layout Standard
-This all handled via special scriptlets for blocks.
+There are special scriptlets for blocks.
  As an example, let's define a block and then include the actual template:
 \end_layout
 
@@ -13302,7 +13309,7 @@ status open
 
 \begin_layout Plain Layout
 
-<h1>My Title</h1>
+	<h1>My Title</h1>
 \end_layout
 
 \begin_layout Plain Layout
@@ -13312,7 +13319,7 @@ status open
 
 \begin_layout Plain Layout
 
-<%& '/main/' %>
+<%& '/templates/main/' %>
 \end_layout
 
 \end_inset
@@ -13321,7 +13328,7 @@ status open
 \end_layout
 
 \begin_layout Standard
-The block is enclosed in 
+The block definition is enclosed in 
 \begin_inset Quotes eld
 \end_inset
 
@@ -13348,7 +13355,7 @@ Now, let's see the actual template, in
 \begin_inset Quotes eld
 \end_inset
 
-/includes/main.t.html
+/includes/templates/main.t.html
 \begin_inset Quotes erd
 \end_inset
 
@@ -13430,7 +13437,7 @@ target "http://threecrickets.com/api/javascript/?namespace=document&item=documen
 \end_layout
 
 \begin_layout Standard
-But what if you want to give the block a default value in the actual template?
+But what if you want to give the block a default value in the template?
  There are special scriptlets for that, too.
  Let's change our 
 \begin_inset Quotes eld
@@ -13527,41 +13534,91 @@ is
  defined, then it will simply be printed out.
 \end_layout
 
+\begin_layout Paragraph
+Blocks with Arguments
+\end_layout
+
 \begin_layout Standard
-Using all these special scriptlets together, you can achieve powerful template
- 
-\begin_inset Quotes eld
+You may need blocks that change their content according to external parameters.
+ Nothing magical about these: they are simply functions! For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% function header1(content) { %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<h1><%= content %></h1>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% } %>
+\end_layout
+
 \end_inset
 
-inheritance
-\begin_inset Quotes erd
+
+\end_layout
+
+\begin_layout Standard
+To use it, just call it:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<% header1('Hello'); %>
+\end_layout
+
 \end_inset
 
-: your 
-\begin_inset Quotes eld
+
+\end_layout
+
+\begin_layout Standard
+You can send block content as an argument to the function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+<%{ myArgument %>
+\end_layout
+
+\begin_layout Plain Layout
+
+<a href="/">This HTML code will be sent as an argument</a>
+\end_layout
+
+\begin_layout Plain Layout
+
+<%}%>
+\end_layout
+
+\begin_layout Plain Layout
+
+<% header1(conversation.locals.get('myArgument')); %>
+\end_layout
+
 \end_inset
 
-main.t.html
-\begin_inset Quotes erd
-\end_inset
 
- can be your 
-\begin_inset Quotes eld
-\end_inset
-
-base
-\begin_inset Quotes erd
-\end_inset
-
- template, which you can 
-\begin_inset Quotes eld
-\end_inset
-
-inherit
-\begin_inset Quotes erd
-\end_inset
-
- simple by overriding any of its blocks before including it in your page.
 \end_layout
 
 \begin_layout Subsubsection
