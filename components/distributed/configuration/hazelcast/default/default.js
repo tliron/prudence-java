@@ -7,9 +7,12 @@ document.require('/sincerity/container/')
 
 var config = new Config()
 
-config.instanceName = 'com.threecrickets.prudence.application'
-config.groupConfig.name = 'com.threecrickets.prudence.application'
+config.instanceName = 'com.threecrickets.prudence.default'
+config.groupConfig.name = 'com.threecrickets.prudence.default'
 config.groupConfig.password = 'prudence'
+
+// A comma-separated list of tags for this member
+config.memberAttributeConfig.setStringAttribute('com.threecrickets.prudence.tags', 'default')
 
 try {
 	importClass(org.slf4j.Logger)

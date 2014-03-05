@@ -527,25 +527,25 @@ var Prudence = {}
  */
 
 /**
- * Provides low-level access to the current Hazelcast "application" instance.
+ * Provides low-level access to the current Hazelcast default instance.
  * <p>
  * Useful for leveraging Hazelcast features beyond what Prudence automatically provides.
  * For example, you can define your own distributed maps, multi-maps, queues, locks, etc.
  * <p>
- * Hazelcast configuration is in "/configuration/hazelcast/prudence/default.js".
+ * Hazelcast configuration is in "/configuration/hazelcast/".
  * 
- * @name application.hazelcastApplicationInstance
+ * @name application.hazelcastDefaultInstance
  * @type <a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/HazelcastInstance.html">com.hazelcast.core.HazelcastInstance</a>
  */
 
 /**
- * Provides low-level access to the current Hazelcast "task" instance.
+ * Provides low-level access to the current Hazelcast task instance.
  * <p>
  * The instance is stored in {@link application#sharedGlobals} with a name configured by
  * 'com.threecrickets.prudence.hazelcast.taskInstanceAttributeName' in {@link application@globals}.
  * <p>
  * Unless this instance has been explicitly created, it will default to the same value
- * as {@link application#hazelcastApplicationInstance}.
+ * as {@link application#hazelcastDefaultInstance}.
  * 
  * @name application.hazelcastTaskInstance
  * @type <a href="http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/core/HazelcastInstance.html">com.hazelcast.core.HazelcastInstance</a>

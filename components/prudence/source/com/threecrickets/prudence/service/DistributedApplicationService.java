@@ -13,7 +13,9 @@ package com.threecrickets.prudence.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 
@@ -24,6 +26,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IExecutorService;
 import com.hazelcast.core.ILock;
 import com.hazelcast.core.Member;
+import com.hazelcast.core.MemberSelector;
 import com.threecrickets.prudence.DelegatedResource;
 import com.threecrickets.prudence.GeneratedTextResource;
 import com.threecrickets.prudence.SerializableApplicationTask;
@@ -43,9 +46,9 @@ public class DistributedApplicationService extends ApplicationService
 	//
 
 	/**
-	 * Hazelcast application instance name attribute for an {@link Application}.
+	 * Hazelcast default instance name attribute for an {@link Application}.
 	 */
-	public static final String HAZELCAST_APPLICATION_INSTANCE_NAME = "com.threecrickets.prudence.hazelcast.applicationInstanceName";
+	public static final String HAZELCAST_DEFAULT_INSTANCE_NAME = "com.threecrickets.prudence.hazelcast.defaultInstanceName";
 
 	/**
 	 * Hazelcast task instance attribute name attribute for an
@@ -69,6 +72,11 @@ public class DistributedApplicationService extends ApplicationService
 	 */
 	public static final String HAZELCAST_EXECUTOR_SERVICE_NAME = "com.threecrickets.prudence.hazelcast.executorServiceName";
 
+	/**
+	 * Tags attribute for a Hazelcast {@link Member}.
+	 */
+	public static final String HAZELCAST_MEMBER_TAGS_ATTRIBUTE = "com.threecrickets.prudence.tags";
+
 	//
 	// Construction
 	//
@@ -89,28 +97,27 @@ public class DistributedApplicationService extends ApplicationService
 	//
 
 	/**
-	 * The Hazelcast application instance.
+	 * The Hazelcast default instance.
 	 * <p>
 	 * The name can be configured via the
-	 * "com.threecrickets.prudence.hazelcast.applicationInstanceName"
-	 * application context attribute, and defaults to
-	 * "com.threecrickets.prudence".
+	 * "com.threecrickets.prudence.hazelcast.defaultInstanceName" application
+	 * context attribute, and defaults to "com.threecrickets.prudence".
 	 * 
-	 * @return The Hazelcast application instance
+	 * @return The Hazelcast default instance
 	 * @throws RuntimeException
-	 *         If the Hazelcast application instance has not been initialized
+	 *         If the Hazelcast default instance has not been initialized
 	 */
-	public HazelcastInstance getHazelcastApplicationInstance()
+	public HazelcastInstance getHazelcastDefaultInstance()
 	{
-		if( applicationInstance == null )
+		if( defaultInstance == null )
 		{
-			String name = getApplicationInstanceName();
-			applicationInstance = Hazelcast.getHazelcastInstanceByName( name );
-			if( applicationInstance == null )
+			String name = getDefaultInstanceName();
+			defaultInstance = Hazelcast.getHazelcastInstanceByName( name );
+			if( defaultInstance == null )
 				throw new RuntimeException( "Can't find a Hazelcast instance named \"" + name + "\"" );
 		}
 
-		return applicationInstance;
+		return defaultInstance;
 	}
 
 	/**
@@ -122,11 +129,11 @@ public class DistributedApplicationService extends ApplicationService
 	 * value defaults to "com.threecrickets.prudence.hazelcast.taskInstance".
 	 * <p>
 	 * If the instance has not been explicitly set, will default to the value of
-	 * {@link #getHazelcastApplicationInstance()}.
+	 * {@link #getHazelcastDefaultInstance()}.
 	 * 
 	 * @return The Hazelcast task instance
 	 * @throws RuntimeException
-	 *         If the Hazelcast application instance has not been initialized
+	 *         If the Hazelcast instance has not been initialized
 	 */
 	public HazelcastInstance getHazelcastTaskInstance()
 	{
@@ -141,7 +148,7 @@ public class DistributedApplicationService extends ApplicationService
 			taskInstance = (HazelcastInstance) globals.get( name );
 
 			if( taskInstance == null )
-				taskInstance = getHazelcastApplicationInstance();
+				taskInstance = getHazelcastDefaultInstance();
 		}
 
 		return taskInstance;
@@ -181,7 +188,7 @@ public class DistributedApplicationService extends ApplicationService
 	public ConcurrentMap<String, Object> getDistributedGlobals()
 	{
 		String name = getDistributedGlobalsMapName();
-		ConcurrentMap<String, Object> map = getHazelcastApplicationInstance().getMap( name );
+		ConcurrentMap<String, Object> map = getHazelcastDefaultInstance().getMap( name );
 		if( map == null )
 			throw new RuntimeException( "Cannot find a Hazelcast map named \"" + name + "\"" );
 		return map;
@@ -201,7 +208,7 @@ public class DistributedApplicationService extends ApplicationService
 	public ConcurrentMap<String, Object> getDistributedSharedGlobals()
 	{
 		String hazelcastMapName = getDistributedSharedGlobalsMapName();
-		ConcurrentMap<String, Object> map = getHazelcastApplicationInstance().getMap( hazelcastMapName );
+		ConcurrentMap<String, Object> map = getHazelcastDefaultInstance().getMap( hazelcastMapName );
 		if( map == null )
 			throw new RuntimeException( "Cannot find a Hazelcast map named \"" + hazelcastMapName + "\"" );
 		return map;
@@ -285,7 +292,7 @@ public class DistributedApplicationService extends ApplicationService
 	 */
 	public ILock getDistributedSharedLock( String name )
 	{
-		return getHazelcastApplicationInstance().getLock( name );
+		return getHazelcastDefaultInstance().getLock( name );
 	}
 
 	//
@@ -340,23 +347,22 @@ public class DistributedApplicationService extends ApplicationService
 	 * @param context
 	 *        The context made available to the task (must be serializable)
 	 * @param where
-	 *        A {@link Member}, a collection of {@link Member}, any other object
-	 *        (the member key), or null to let Hazelcast decide (all members for
-	 *        multi=true)
+	 *        A {@link Member}, a {@link MemberSelector}, an {@link Iterable} of
+	 *        {@link Member}, a string (comma-separated member tags), or null to
+	 *        let Hazelcast decide (all members for multi=true)
 	 * @param multi
 	 *        Whether the task should be executed on multiple members
 	 * @return A future (multi=false) or map of members to futures (multi=true)
 	 *         for the task
 	 * @see HazelcastInstance#getExecutorService(String)
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> Object distributedCodeTask( String applicationName, String code, Object context, Object where, boolean multi )
 	{
 		if( applicationName == null )
 			applicationName = getApplication().getName();
 
 		if( multi )
-			return multiTask( new SerializableApplicationTask<T>( applicationName, code, context ), (Iterable<Member>) where );
+			return multiTask( new SerializableApplicationTask<T>( applicationName, code, context ), where );
 		else
 			return task( new SerializableApplicationTask<T>( applicationName, code, context ), where );
 	}
@@ -364,7 +370,7 @@ public class DistributedApplicationService extends ApplicationService
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
-	private volatile HazelcastInstance applicationInstance;
+	private volatile HazelcastInstance defaultInstance;
 
 	private volatile HazelcastInstance taskInstance;
 
@@ -376,14 +382,14 @@ public class DistributedApplicationService extends ApplicationService
 
 	private volatile String executorName;
 
-	private String getApplicationInstanceName()
+	private String getDefaultInstanceName()
 	{
 		if( instanceName == null )
 		{
 			ConcurrentMap<String, Object> globals = getGlobals();
-			instanceName = (String) globals.get( HAZELCAST_APPLICATION_INSTANCE_NAME );
+			instanceName = (String) globals.get( HAZELCAST_DEFAULT_INSTANCE_NAME );
 			if( instanceName == null )
-				instanceName = "com.threecrickets.prudence.application";
+				instanceName = "com.threecrickets.prudence.default";
 		}
 		return instanceName;
 	}
@@ -425,46 +431,55 @@ public class DistributedApplicationService extends ApplicationService
 	}
 
 	/**
-	 * Submits a task on the Hazelcast task cluster.
+	 * Submits a task to the Hazelcast task cluster.
 	 * 
 	 * @param task
 	 *        The task
 	 * @param where
-	 *        A {@link Member}, any other object (the member key), or null to
-	 *        let Hazelcast decide
+	 *        A {@link Member}, a string (comma-separated member tags), or null
+	 *        to let Hazelcast decide
 	 * @return A future for the task
-	 * @see HazelcastInstance#getExecutorService(String)
 	 */
 	private <T> Future<T> task( SerializableApplicationTask<T> task, Object where )
 	{
 		IExecutorService executor = getHazelcastExecutorService();
 
-		if( where == null )
-			return executor.submit( task );
+		if( where instanceof String )
+		{
+			Member member = getTaskMember( HAZELCAST_MEMBER_TAGS_ATTRIBUTE, (String) where );
+			if( member != null )
+				return executor.submitToMember( task, member );
+			else
+				return null;
+		}
 		else if( where instanceof Member )
 			return executor.submitToMember( task, (Member) where );
 		else
-			return executor.submitToKeyOwner( task, where );
+			return executor.submit( task );
 	}
 
 	/**
-	 * Submits a task on multiple members of the Hazelcast task cluster.
+	 * Submits a task to multiple members of the Hazelcast task cluster.
 	 * 
 	 * @param task
 	 *        The task
 	 * @param where
-	 *        A collection of {@link Member}, an iterable of {@link Member}, or
-	 *        null for all members
+	 *        A {@link MemberSelector}, an {@link Iterable} of {@link Member}, a
+	 *        string (comma-separated member tags), or null for all members
 	 * @return A map of members to futures for the task
-	 * @see HazelcastInstance#getExecutorService(String)
 	 */
-	private <T> Map<Member, Future<T>> multiTask( SerializableApplicationTask<T> task, Iterable<Member> where )
+	@SuppressWarnings("unchecked")
+	private <T> Map<Member, Future<T>> multiTask( SerializableApplicationTask<T> task, Object where )
 	{
 		IExecutorService executor = getHazelcastExecutorService();
 
-		if( where instanceof Collection )
+		if( where instanceof String )
+			return executor.submitToMembers( task, new TaggedMembers( HAZELCAST_MEMBER_TAGS_ATTRIBUTE, (String) where ) );
+		else if( where instanceof MemberSelector )
+			return executor.submitToMembers( task, (MemberSelector) where );
+		else if( where instanceof Collection )
 			return executor.submitToMembers( task, (Collection<Member>) where );
-		else if( where != null )
+		else if( where instanceof Iterable )
 		{
 			ArrayList<Member> members = new ArrayList<Member>();
 			for( Member member : (Iterable<Member>) where )
@@ -473,5 +488,61 @@ public class DistributedApplicationService extends ApplicationService
 		}
 		else
 			return executor.submitToAllMembers( task );
+	}
+
+	private Member getTaskMember( String tagsAttribute, String requiredTags )
+	{
+		String[] requiredTagsArray = requiredTags.split( "," );
+		Set<String> requiredTagsSet = new HashSet<String>();
+		for( String tag : requiredTagsArray )
+			requiredTagsSet.add( tag );
+
+		for( Member member : getHazelcastTaskInstance().getCluster().getMembers() )
+		{
+			String tags = (String) member.getAttributes().get( tagsAttribute );
+			if( tags != null )
+			{
+				String[] existingsTags = tags.split( "," );
+				for( String existingTag : existingsTags )
+					if( requiredTagsSet.contains( existingTag ) )
+						return member;
+			}
+		}
+
+		return null;
+	}
+
+	private static class TaggedMembers implements MemberSelector
+	{
+		private TaggedMembers( String tagsAttribute, Set<String> requiredTags )
+		{
+			this.tagsAttribute = tagsAttribute;
+			this.requiredTags = requiredTags;
+		}
+
+		private TaggedMembers( String tagsAttribute, String tags )
+		{
+			this.tagsAttribute = tagsAttribute;
+			requiredTags = new HashSet<String>();
+			for( String tag : tags.split( "," ) )
+				requiredTags.add( tag );
+		}
+
+		public boolean select( Member member )
+		{
+			String tags = (String) member.getAttributes().get( tagsAttribute );
+			if( tags != null )
+			{
+				String[] existingsTags = tags.split( "," );
+				for( String existingTag : existingsTags )
+					if( requiredTags.contains( existingTag ) )
+						return true;
+			}
+			return false;
+		}
+
+		private final String tagsAttribute;
+
+		private final Set<String> requiredTags;
 	}
 }

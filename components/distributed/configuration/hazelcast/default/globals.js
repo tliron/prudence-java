@@ -11,7 +11,7 @@ map.name = 'com.threecrickets.prudence.distributedSharedGlobals'
 map.backupCount = 1
 config.addMapConfig(map)
 
-// Distributed globals
+// Distributed globals for each application
 
 var applicationsFile = sincerity.container.getFile('component', 'applications')
 if (applicationsFile.exists()) {

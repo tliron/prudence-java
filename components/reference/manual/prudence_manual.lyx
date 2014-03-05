@@ -32589,7 +32589,19 @@ target "http://threecrickets.com/api/javascript/?namespace=application&item=appl
 \series bold
 where
 \series default
-: When 
+: If this is a string, it is interpreted as a comma-separated list of 
+\bar under
+node tags (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tagging-nodes"
+
+\end_inset
+
+)
+\bar default
+.
+ When 
 \begin_inset Quotes eld
 \end_inset
 
@@ -32597,11 +32609,9 @@ multi
 \begin_inset Quotes erd
 \end_inset
 
- is false, a null here means the task will spawn 
-\emph on
-anywhere in the cluster
-\emph default
-, but when 
+ is false, it will select the first node that matches any of the required
+ tags.
+ When 
 \begin_inset Quotes eld
 \end_inset
 
@@ -32609,24 +32619,28 @@ multi
 \begin_inset Quotes erd
 \end_inset
 
- is true, a null here means it will spawn 
-\emph on
-everywhere
-\emph default
-: on 
+ is true, it will select 
 \emph on
 all
 \emph default
- members in the cluster; otherwise, this argument can be a cluster member
- key, a 
-\begin_inset CommandInset href
-LatexCommand href
-name "Hazelcast Member"
-target "http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html"
-
+ nodes that match 
+\emph on
+any
+\emph default
+ of the tags.
+ A null value here means to let Hazelcast decide: when 
+\begin_inset Quotes eld
 \end_inset
 
- instance, or a collection of Member instances
+multi
+\begin_inset Quotes erd
+\end_inset
+
+ is true, this would mean 
+\emph on
+all
+\emph default
+ nodes.
 \end_layout
 
 \begin_layout Itemize
@@ -32650,8 +32664,15 @@ multi
 \begin_inset Quotes erd
 \end_inset
 
- is true, the return value is a map of member instances to their appropriate
- 
+ is true, the return value is a map of 
+\begin_inset CommandInset href
+LatexCommand href
+name "Hazelcast Member"
+target "http://www.hazelcast.com/javadoc/index.html?com/hazelcast/core/Member.html"
+
+\end_inset
+
+ instances to their appropriate 
 \begin_inset CommandInset href
 LatexCommand href
 name "Future"
@@ -32698,7 +32719,7 @@ application.distributedCodeTask(
 \end_layout
 
 \begin_layout Standard
-In this example, we'll use a library to spawn a task on all nodes:
+In this example, we'll spawn a maintenance task on all nodes:
 \end_layout
 
 \begin_layout Standard
@@ -43861,39 +43882,231 @@ database nodes,
 \end_layout
 
 \begin_layout Standard
-Prudence explicitly supports this scenario by allowing you to use a separate
- Hazelcast instance for the distributed task APIs: though by default they
- will use the 
-\begin_inset Quotes eld
-\end_inset
+Prudence supports two ways to create such a heterogeneous cluster.
+\end_layout
 
-application
-\begin_inset Quotes erd
-\end_inset
-
- instance, you can explicitly override it and provide a separate 
-\begin_inset Quotes eld
-\end_inset
-
-task
-\begin_inset Quotes erd
-\end_inset
-
- instance.
- Each instance would then belong to a different cluster using Hazelcast's
- 
-\begin_inset CommandInset href
-LatexCommand href
-name "grouping feature"
-target "http://hazelcast.com/docs/latest/manual/multi_html/ch14.html#ConfigGroup"
+\begin_layout Subsubsection
+Tagging Nodes
+\begin_inset CommandInset label
+LatexCommand label
+name "tagging-nodes"
 
 \end_inset
 
-.
+
 \end_layout
 
 \begin_layout Standard
-To enable this scenario, Prudence comes with commented-out 
+You can 
+\begin_inset Quotes eld
+\end_inset
+
+tag
+\begin_inset Quotes erd
+\end_inset
+
+ each node in your cluster with one or more custom strings.
+ Many nodes may share the same tag, or you may create unique tags for some
+ nodes in order to refer to them, and only them, directly.
+\end_layout
+
+\begin_layout Standard
+To tag nodes, edit their 
+\begin_inset Quotes eld
+\end_inset
+
+/configuration/hazelcast/default/default.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+ As an example, let's give our node two tags, 
+\begin_inset Quotes eld
+\end_inset
+
+video-encoding
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+backup
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+config.memberAttributeConfig.setStringAttribute('com.threecrickets.prudence.tags',
+ 'video-encoding,backup')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can then use the 
+\bar under
+distributed task APIs (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tasks-distributed"
+
+\end_inset
+
+)
+\bar default
+ to execute a single task on any one of the 
+\begin_inset Quotes eld
+\end_inset
+
+video-encoding
+\begin_inset Quotes erd
+\end_inset
+
+ nodes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/reencode-video/,
+\end_layout
+
+\begin_layout Plain Layout
+
+	context: {filename: 'great_movie.avi', resolution: {w: 600, h: 400}},
+\end_layout
+
+\begin_layout Plain Layout
+
+	json: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	distributed: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	where: 'video-encoding'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Or, we can execute a backup operation on 
+\emph on
+all
+\emph default
+ the 
+\begin_inset Quotes eld
+\end_inset
+
+backup
+\begin_inset Quotes erd
+\end_inset
+
+ nodes:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Prudence.Tasks.task({
+\end_layout
+
+\begin_layout Plain Layout
+
+	uri: '/backup/,
+\end_layout
+
+\begin_layout Plain Layout
+
+	distributed: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	multi: true,
+\end_layout
+
+\begin_layout Plain Layout
+
+	where: 'backup'
+\end_layout
+
+\begin_layout Plain Layout
+
+})
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Quotes eld
+\end_inset
+
+where
+\begin_inset Quotes erd
+\end_inset
+
+ can also be a comma-separated list.
+\end_layout
+
+\begin_layout Subsubsection
+Separate Cluster for Tasks
+\end_layout
+
+\begin_layout Standard
+In a more complex deployment, you may want your task farm as an entirely
+ separate Hazelcast cluster.
+ For example, your task farm may be running in an entirely different data
+ center, and you do not need or want it to share state with the application
+ cluster.
+\end_layout
+
+\begin_layout Standard
+By default, Prudence executes all tasks on one Hazelcast instance, but it
+ allows you to configure a separate instance for tasks.
+ To enable this scenario, Prudence comes with commented-out 
 \bar under
 configurations (page 
 \begin_inset CommandInset ref
@@ -43912,7 +44125,8 @@ task
 \begin_inset Quotes erd
 \end_inset
 
- nodes and for the nodes that will be spawning the tasks:
+ nodes (the servers) and for the nodes that will be spawning the tasks (the
+ clients):
 \end_layout
 
 \begin_layout Itemize
@@ -44023,47 +44237,38 @@ will
 \begin_layout Standard
 Once configured, you can use the task APIs as usual on both the client and
  server nodes, but the tasks will only run on the server nodes.
- For example:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-Prudence.Tasks.task({
-\end_layout
-
-\begin_layout Plain Layout
-
-	uri: '/reencode-video/,
-\end_layout
-
-\begin_layout Plain Layout
-
-	context: {filename: 'great_movie.avi', resolution: {w: 600, h: 400}},
-\end_layout
-
-\begin_layout Plain Layout
-
-	json: true,
-\end_layout
-
-\begin_layout Plain Layout
-
-	distributed: true
-\end_layout
-
-\begin_layout Plain Layout
-
-})
-\end_layout
+ Note that you can still use 
+\bar under
+node tags (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "tagging-nodes"
 
 \end_inset
 
+)
+\bar default
+ for the server nodes by editing 
+\begin_inset Quotes eld
+\end_inset
 
+1-server.js
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For more options for partitioning clusters in Hazelcast, see its 
+\begin_inset CommandInset href
+LatexCommand href
+name "grouping feature"
+target "http://www.hazelcast.org/docs/latest/manual/html-single/hazelcast-documentation.html#partition-group-configuration"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection

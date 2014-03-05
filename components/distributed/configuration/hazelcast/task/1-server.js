@@ -6,7 +6,7 @@
  * application.distributedCodeTask APIs.
  * 
  * Without this, the APIs would still work, but would be spawned within the
- * "application" cluster.
+ * "default" cluster.
  * 
  * For the other nodes that are to spawn tasks in this cluster, enable the 
  * "2-client.js" file.
@@ -22,6 +22,9 @@ var config = new Config()
 config.instanceName = 'com.threecrickets.prudence.task'
 config.groupConfig.name = 'com.threecrickets.prudence.task'
 config.groupConfig.password = 'prudence'
+
+// A comma-separated list of tags for this member
+config.memberAttributeConfig.setStringAttribute('com.threecrickets.prudence.tags', 'default')
 
 try {
 	importClass(org.slf4j.Logger)

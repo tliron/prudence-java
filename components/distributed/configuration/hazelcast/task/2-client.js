@@ -5,7 +5,7 @@
  * application.distributedCodeTask APIs.
  * 
  * Without this, the APIs would still work, but would be spawned within the
- * "application" cluster.
+ * "default" cluster.
  * 
  * For the nodes that are to be members of the cluster, which execute the
  * tasks, enable the "1-server.js" file.
