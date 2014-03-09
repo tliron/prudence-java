@@ -43476,7 +43476,7 @@ reference "deployment"
 \end_layout
 
 \begin_layout Standard
-Many of these features in Prudence rely on the excellent 
+Many of the clustering features in Prudence rely on the excellent 
 \begin_inset CommandInset href
 LatexCommand href
 name "Hazelcast"
@@ -43486,10 +43486,12 @@ target "http://www.hazelcast.com/"
 
  library: Hazelcast allows Prudence nodes to to share state and locks and
  to run tasks remotely.
- Its zero-configuration auto-discovery feature is especially useful for
- flexible cloud deployments.
- You don't have to dig deep into Hazelcast: the core features work out-of-the-bo
-x with Prudence, and are fully explained in this chapter.
+ Its auto-discovery feature is especially useful for flexible cloud deployments.
+\end_layout
+
+\begin_layout Standard
+You don't have to dig deep into Hazelcast: the core features work out-of-the-box
+ with Prudence, and are fully explained in this chapter.
  However, if you're serious about clustering, it's a good idea to study
  Hazelcast and see what more, perhaps, it can do for you.
  Especially, you may want to tweak the 
@@ -43670,15 +43672,18 @@ com.threecrickets.prudence.distributedGlobals.[name]
 \begin_inset Quotes erd
 \end_inset
 
-.
- In particular, you might want to change the the number of backups.
-\end_layout
+, where 
+\begin_inset Quotes eld
+\end_inset
 
-\begin_layout Standard
-You can also configure which Hazelcast maps each application uses in its
- 
+name
+\begin_inset Quotes erd
+\end_inset
+
+ is the application name.
+ You can also change the name of that map in 
 \bar under
-setting.js (page 
+settings.js (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "settings-distributed"
