@@ -30809,7 +30809,7 @@ target "http://threecrickets.com/scripturian/manual/faq/"
 Technology
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 How is Prudence different from Node.js?
 \begin_inset CommandInset label
 LatexCommand label
@@ -31290,6 +31290,18 @@ target "http://webtide.intalio.com/2010/06/lies-damned-lies-and-benchmarks-2/"
 
  under high volumes, even if it might not seem so under trivial and misleading
  localized benchmarks.
+ It's also easy to 
+\bar under
+replace Jetty with other servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "replace-jetty"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Paragraph
@@ -31302,7 +31314,7 @@ Choose the right tool for the job! Node.js is a great choice for streaming
  great choice for web services and RESTful APIs.
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 How is REST better than RPC?
 \begin_inset CommandInset label
 LatexCommand label
@@ -31353,7 +31365,7 @@ reference "do-you-really-need-rest"
  Choose the right tool for the job!
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Why does Prudence support LESS instead of SASS?
 \begin_inset CommandInset label
 LatexCommand label
@@ -31414,11 +31426,137 @@ target "https://github.com/tomyeh/ZUSS"
  ZUSS Jar yourself.
 \end_layout
 
+\begin_layout Subsubsection
+How do I use other HTTP servers instead of Jetty?
+\begin_inset CommandInset label
+LatexCommand label
+name "replace-jetty"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We recommend Jetty and install it by default, but in some cases it may be
+ worth using alternatives: for example, you may want to experiment with
+ different performance characteristics for certain deployments or make comparati
+ve benchmarks.
+\end_layout
+
+\begin_layout Standard
+Fortunately, Restlet decouples its API from the server library, and comes
+ with extensions to connect to several server libraries in addition to Jetty.
+ You can install these easily with Sincerity, though note that you would
+ need to exclude the Jetty extension if you do so: Restlet does not currently
+ run if several server extensions are in the classpath at the same time.
+\end_layout
+
+\begin_layout Standard
+For example, let's use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Simple Framework"
+target "http://www.simpleframework.org/"
+
+\end_inset
+
+ instead of Jetty:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add prudence.example :
+\end_layout
+
+\begin_layout Plain Layout
+
+	add restlet.simple :
+\end_layout
+
+\begin_layout Plain Layout
+
+	exclude org.restlet.jse org.restlet.ext.jetty9 :
+\end_layout
+
+\begin_layout Plain Layout
+
+	exclude org.eclipse.jetty jetty-server :
+\end_layout
+
+\begin_layout Plain Layout
+
+	install :
+\end_layout
+
+\begin_layout Plain Layout
+
+	start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If Restlet does not find any server extension in the classpath, it will
+ default to its own 
+\begin_inset Quotes eld
+\end_inset
+
+internal
+\begin_inset Quotes erd
+\end_inset
+
+ server, which is adequate to simple deployments and for testing:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity add prudence.example :
+\end_layout
+
+\begin_layout Plain Layout
+
+	exclude org.restlet.jse org.restlet.ext.jetty9 :
+\end_layout
+
+\begin_layout Plain Layout
+
+	exclude org.eclipse.jetty jetty-server :
+\end_layout
+
+\begin_layout Plain Layout
+
+	install :
+\end_layout
+
+\begin_layout Plain Layout
+
+	start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Performance and Scalability
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 How well does Prudence perform? How well does it scale?
 \end_layout
 
@@ -31559,7 +31697,7 @@ If you're not doing intensive computation, then don't worry too much about
  
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 I heard REST is very scalable.
  Is this true? Does this mean Prudence is 
 \begin_inset Quotes eld
@@ -31616,7 +31754,7 @@ That might not be very reassuring, but it's a fact of software and hardware
 Errors
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 How to avoid the “Adapter not available for language: xml” parsing exception
  for XML files?
 \end_layout
@@ -31672,7 +31810,7 @@ The author is not a lawyer.
  The wording of the license itself supersedes anything written here.
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Does the LGPL mean I can't use Prudence unless my product is open sourced?
 \end_layout
 
@@ -31740,7 +31878,7 @@ Three Crickets, the original developers of Prudence, are not trying to force
  with all of society.
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Why the LGPL and not the GPL?
 \end_layout
 
@@ -47573,9 +47711,9 @@ flavors
 \end_inset
 
 ) per supported programming language.
- Because of this, it allowed you to use any programming language for your
- bootstrapping code, and indeed the project maintained a separate set of
- bootstrapping code for all languages.
+ Rather than standardizing on a single language for bootstrapping code,
+ and indeed the project maintained a separate set of bootstrapping code
+ for each supported language.
 \end_layout
 
 \begin_layout Standard
@@ -47862,14 +48000,6 @@ Move
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Subsection
-Upgrading the Component
-\end_layout
-
-\begin_layout Standard
-TODO
 \end_layout
 
 \begin_layout Part
@@ -48758,10 +48888,9 @@ reference "tutorial"
 \bar default
 , and feel free to skip around the documentation and try things out for
  yourself.
- You'll find it easy, fun, and powerful enough for you to create large-scale
- applications that take full advantage of the inherently scalable infrastructure
- of REST.
- Happy RESTing!
+ We're sure that you'll find it easy, fun, and powerful enough for you to
+ create large-scale applications that take full advantage of the inherently
+ scalable infrastructure of REST.
 \end_layout
 
 \begin_layout Section
