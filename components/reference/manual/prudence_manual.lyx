@@ -13652,7 +13652,7 @@ target "http://velocity.apache.org/"
 \end_inset
 
  are both supported.
- For example, here's an example using Velocity and JavaScript together:
+ Here's an example using Velocity and JavaScript together:
 \end_layout
 
 \begin_layout Standard
@@ -31229,9 +31229,7 @@ target "https://developer.mozilla.org/en-US/docs/Rhino"
 \end_inset
 
 , which can both use the JVM's excellent concurrency management.
- Nashorn is as of this writing still under development, to be released with
- JVM 8 in March 2014 (Prudence already supports it).
- It promises excellent performance, on par with Java code in some cases.
+ Nashorn promises excellent performance, on par with Java code in some cases.
  Rhino is not as fast, but still performs well and is very mature.
 \end_layout
 
