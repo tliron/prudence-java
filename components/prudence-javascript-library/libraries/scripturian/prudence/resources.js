@@ -310,6 +310,9 @@ Prudence.Resources = Prudence.Resources || function() {
 		params = Sincerity.Objects.clone(params)
 		params.logLevel = params.logLevel || 'fine'
 		params.method = params.method || 'get'
+		if (Sincerity.Objects.exists(params.uri)) {
+			params.uri = String(uri)
+		}
 		if (!Sincerity.Objects.exists(params.internal) && Sincerity.Objects.exists(params.uri) && (params.uri[0] == '/')) {
 			params.internal = true
 		}
