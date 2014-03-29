@@ -20345,6 +20345,47 @@ target "https://github.com/restlet/restlet-framework-java/issues/815"
 \end_layout
 
 \begin_layout Subsubsection
+Secure Requests
+\end_layout
+
+\begin_layout Standard
+These APIs support secure requests to 
+\begin_inset Quotes eld
+\end_inset
+
+https:
+\begin_inset Quotes erd
+\end_inset
+
+ servers.
+ Such requests rely on the JVM's built-in authorization mechanism.
+ Like most web browsers, the JVM recognizes the common Internet certificate
+ authorities.
+ This means that if you're using your own self-created keys, that don't
+ use an approved certificate, you need to specify these keys via a 
+\begin_inset Quotes eld
+\end_inset
+
+trust store
+\begin_inset Quotes erd
+\end_inset
+
+ for the JVM.
+ For an example, see 
+\bar under
+secure servers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "secure-servers"
+
+\end_inset
+
+)
+\bar default
+ in the configuration chapter.
+\end_layout
+
+\begin_layout Subsubsection
 RESTful Files
 \end_layout
 
@@ -37931,6 +37972,47 @@ When creating the keystore, you will be asked provide a password for it,
  you need to comment out the relevant line in the example above.
  (The key alias and key password would be transferred together with the
  key if you move it to a different keystore.)
+\end_layout
+
+\begin_layout Standard
+Note that if you want to make client requests to a server that uses such
+ a self-created key, you will need your client to recognize that key.
+ If this is done from the JVM, this means setting the 
+\begin_inset Quotes eld
+\end_inset
+
+javax.net.ssl.trustStore
+\begin_inset Quotes erd
+\end_inset
+
+ JVM property.
+ For example, if you're using Prudence's 
+\bar under
+request API (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "external-requests"
+
+\end_inset
+
+)
+\bar default
+, you will need to start Prudence like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+JVM_SWITCHES=-Djavax.net.ssl.trustStore=/path/prudence.jks sincerity start prudence
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
