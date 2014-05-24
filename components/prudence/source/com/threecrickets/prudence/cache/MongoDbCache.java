@@ -132,11 +132,11 @@ public class MongoDbCache implements Cache
 		this.cacheCollection = collection;
 		try
 		{
-			collection.ensureIndex( TAG_INDEX );
-			collection.ensureIndex( EXPIRATION_DATE_INDEX );
+			collection.createIndex( TAG_INDEX );
+			collection.createIndex( EXPIRATION_DATE_INDEX );
 			up();
 		}
-		catch( com.mongodb.MongoException.Network x )
+		catch( com.mongodb.MongoSocketException x )
 		{
 			down();
 		}
@@ -265,7 +265,7 @@ public class MongoDbCache implements Cache
 			cacheCollection.update( query, document, true, false );
 			up();
 		}
-		catch( com.mongodb.MongoException.Network x )
+		catch( com.mongodb.MongoSocketException x )
 		{
 			down();
 		}
@@ -350,7 +350,7 @@ public class MongoDbCache implements Cache
 			else
 				logger.fine( "Did not fetch: " + key );
 		}
-		catch( com.mongodb.MongoException.Network x )
+		catch( com.mongodb.MongoSocketException x )
 		{
 			down();
 		}
@@ -369,7 +369,7 @@ public class MongoDbCache implements Cache
 			logger.fine( "Invalidated: " + tag );
 			up();
 		}
-		catch( com.mongodb.MongoException.Network x )
+		catch( com.mongodb.MongoSocketException x )
 		{
 			down();
 		}
@@ -387,7 +387,7 @@ public class MongoDbCache implements Cache
 			cacheCollection.remove( query );
 			logger.fine( "Pruned" );
 		}
-		catch( com.mongodb.MongoException.Network x )
+		catch( com.mongodb.MongoSocketException x )
 		{
 			down();
 		}
@@ -400,7 +400,7 @@ public class MongoDbCache implements Cache
 			cacheCollection.remove( new BasicDBObject() );
 			up();
 		}
-		catch( com.mongodb.MongoException.Network x )
+		catch( com.mongodb.MongoSocketException x )
 		{
 			down();
 		}

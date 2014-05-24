@@ -115,7 +115,7 @@ public class Fallback extends Restlet
 	//
 
 	/**
-	 * The targets restlets. (Modifiable by concurrent threads.)
+	 * The target restlets. (Modifiable by concurrent threads.)
 	 * 
 	 * @return The target restlets
 	 */

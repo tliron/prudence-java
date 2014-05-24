@@ -37942,7 +37942,7 @@ The above configuration assumes the you have a Java KeyStore (JKS) file
 \begin_inset CommandInset href
 LatexCommand href
 name "“keytool” utility"
-target "http://docs.oracle.com/javase/1.5.0/docs/tooldocs/index.html#security"
+target "http://docs.oracle.com/javase/6/docs/technotes/tools/solaris/keytool.html"
 
 \end_inset
 
