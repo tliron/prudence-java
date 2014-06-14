@@ -56,12 +56,12 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-security</artifactId>
-			<version>[9.1,9.2)</version>
+			<version>[9.2,9.3)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>[9.1,9.2)</version>
+			<version>[9.2,9.3)</version>
 		</dependency>
 	</dependencies>
 

@@ -133,14 +133,15 @@
 			bootclasspath="${compile.boot}">
 
 			<link href="${documentation.jvm}" />
-			<link href="http://commons.apache.org/daemon/apidocs/" />
+			<!-- No pacakges.list
+			<link href="http://commons.apache.org/proper/commons-daemon/apidocs/" />
 			<link href="http://commons.apache.org/proper/commons-dbcp/apidocs/" />
-			<link href="http://commons.apache.org/fileupload/apidocs/" />
-			<link href="http://commons.apache.org/pool/api-1.6/" />
+			<link href="http://commons.apache.org/proper/commons-fileupload/apidocs/" />
+			<link href="http://commons.apache.org/proper/commons-pool/apidocs/" />
+			<link href="http://hazelcast.org/docs/latest/javadoc/" />
+			-->
 			<link href="http://www.sauronsoftware.it/projects/cron4j/api/" />
 			<link href="http://groboutils.sourceforge.net/docs/projects/5/api/" />
-			<link href="http://www.hazelcast.org/docs/latest/javadoc/" />
-			<!-- <link href="http://www.h2database.com/javadoc/" /> --><!-- missing package-list -->
 			<link href="http://junit.sourceforge.net/javadoc/" />
 			<!-- Jygments has no online javadocs -->
 			<link href="http://api.mongodb.org/java/current/" />
