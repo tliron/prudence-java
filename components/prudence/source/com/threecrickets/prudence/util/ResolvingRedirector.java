@@ -11,12 +11,17 @@
 
 package com.threecrickets.prudence.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.Reference;
+import org.restlet.data.Status;
 import org.restlet.engine.header.HeaderConstants;
+import org.restlet.resource.ResourceException;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Template;
 
@@ -138,7 +143,20 @@ public class ResolvingRedirector extends Redirector
 	protected void serverRedirect( Restlet next, Reference targetRef, Request request, Response response )
 	{
 		// This is essentially the original Restlet code modified to use
-		// ResolvingTemplate and allow for cleaning to be optional
+		// ResolvingTemplate and allow for cleaning to be optional.
+
+		// It also includes an important check for recursive server-side
+		// redirects.
+
+		String targetRefString = targetRef.toString();
+		if( serverRedirectHistory.contains( targetRefString ) )
+		{
+			String message = "Recursive server redirection to " + targetRef;
+			getLogger().warning( message );
+			throw new ResourceException( Status.SERVER_ERROR_INTERNAL, message );
+		}
+
+		serverRedirectHistory.add( targetRefString );
 
 		if( next == null )
 			getLogger().warning( "No next Restlet provided for server redirection to " + targetRef );
@@ -189,6 +207,8 @@ public class ResolvingRedirector extends Redirector
 	 * True if we are cleaning the headers in the request and response.
 	 */
 	private final boolean isCleaning;
+
+	private final Set<String> serverRedirectHistory = new HashSet<String>();
 
 	/**
 	 * Add description.

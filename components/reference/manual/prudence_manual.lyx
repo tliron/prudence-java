@@ -48151,14 +48151,14 @@ resource,
  However, we've learned from object-orientation that implementing arbitrary
  interfaces is a recipe for complexity: proxy generation, support for arbitrary
  types, marshaling, etc.
- All that often requires a middleware layer to handle the protocol.
- So, instead, we'll keep it simple and define a limited, unified interface
+ And then we would need middleware to do all that heavy lifting for us.
+ So, let's instead keep it simple and define a limited, unified interface
  that would be just useful enough.
 \end_layout
 
 \begin_layout Standard
-From our experience with relational databases, we've learned that a tremendous
- amount of power can be found in 
+From our experience with relational databases, we've learned that tremendous
+ power can be found in 
 \begin_inset Quotes eld
 \end_inset
 
@@ -48178,7 +48178,7 @@ Identifiers
 \end_layout
 
 \begin_layout Standard
-First, let's start with a way of uniquely identifying our resources.
+Let's start with a way of uniquely identifying our resources.
  We'll define a name-based address space where our resources live.
  Each resource is 
 \begin_inset Quotes eld
@@ -48477,8 +48477,11 @@ Create: /animal/cat/15/ -> Success!
 \end_layout
 
 \begin_layout Standard
-Of course, we can also have “/animal/cat/next” return unique IDs (such as
- GUIDs) to avoid duplications.
+Of course, we can also have “/animal/cat/next/
+\begin_inset Quotes erd
+\end_inset
+
+ return unique IDs (such as GUIDs) to avoid duplications.
  If we never create our cat, they will be wasted, though.
  The main problem with this approach is that it requires two calls per creation:
  a “read,” and then a “create.” We can handle this in one call by allowing
