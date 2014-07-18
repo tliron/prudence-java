@@ -148,6 +148,17 @@ public class ResolvingRedirector extends Redirector
 		// It also includes an important check for recursive server-side
 		// redirects.
 
+		@SuppressWarnings("unchecked")
+		Set<String> serverRedirectHistory = (Set<String>) request.getAttributes().get( "ttttt" );
+		if( serverRedirectHistory == null )
+		{
+			serverRedirectHistory = new HashSet<String>();
+			@SuppressWarnings("unchecked")
+			Set<String> existing = (Set<String>) request.getAttributes().putIfAbsent( "ttttt", serverRedirectHistory );
+			if( existing != null )
+				serverRedirectHistory = existing;
+		}
+
 		String targetRefString = targetRef.toString();
 		if( serverRedirectHistory.contains( targetRefString ) )
 		{
@@ -207,8 +218,6 @@ public class ResolvingRedirector extends Redirector
 	 * True if we are cleaning the headers in the request and response.
 	 */
 	private final boolean isCleaning;
-
-	private final Set<String> serverRedirectHistory = new HashSet<String>();
 
 	/**
 	 * Add description.
