@@ -38,6 +38,15 @@ import org.restlet.routing.Template;
 public class ResolvingRedirector extends Redirector
 {
 	//
+	// Constants
+	//
+
+	/**
+	 * Server redirect history attribute for a {@link Request}.
+	 */
+	public static final String SERVER_REDIRECT_HISTORY_ATTRIBUTE = ResolvingRedirector.class.getCanonicalName() + ".serverRedirectHistory";
+
+	//
 	// Construction
 	//
 
@@ -149,12 +158,12 @@ public class ResolvingRedirector extends Redirector
 		// redirects.
 
 		@SuppressWarnings("unchecked")
-		Set<String> serverRedirectHistory = (Set<String>) request.getAttributes().get( "ttttt" );
+		Set<String> serverRedirectHistory = (Set<String>) request.getAttributes().get( SERVER_REDIRECT_HISTORY_ATTRIBUTE );
 		if( serverRedirectHistory == null )
 		{
 			serverRedirectHistory = new HashSet<String>();
 			@SuppressWarnings("unchecked")
-			Set<String> existing = (Set<String>) request.getAttributes().putIfAbsent( "ttttt", serverRedirectHistory );
+			Set<String> existing = (Set<String>) request.getAttributes().putIfAbsent( SERVER_REDIRECT_HISTORY_ATTRIBUTE, serverRedirectHistory );
 			if( existing != null )
 				serverRedirectHistory = existing;
 		}
