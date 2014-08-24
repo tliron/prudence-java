@@ -230,6 +230,7 @@
 				<replacetokens>
 					<token key="VERSION" value="${component.version}${component.version.postfix}" />
 					<token key="SINCERITY.VERSION" value="${sincerity.version}" />
+					<token key="RESTLET.VERSION" value="${restlet.version}" />
 				</replacetokens>
 			</filterchain>
 		</copy>
