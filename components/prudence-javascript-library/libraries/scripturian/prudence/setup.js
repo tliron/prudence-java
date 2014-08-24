@@ -2480,6 +2480,67 @@ Prudence.Setup = Prudence.Setup || function() {
 	}(Public))
 
 	/**
+	 * A filter that adds <a href="http://www.w3.org/TR/cors/">Cross-Origin
+	 * Resource Sharing (CORS)</a> response headers.
+	 * 
+	 * @class
+	 * @name Prudence.Setup.Cors
+	 * @augments Prudence.Setup.Restlet
+	 * 
+	 * @param config
+	 * @param {String} [allowOrigin] The allowed origin (can be "*")
+	 * @param {String[]} [allowMethods] The allowed methods
+	 * @param {String[]} [allowHeaders] The allowed headers
+	 * @param {Number|String} [maxAge] The maximum age
+	 * @param {Object} config.next The next route configuration
+	 */
+	Public.Cors = Sincerity.Classes.define(function(Module) {
+		/** @exports Public as Prudence.Setup.Cors */
+		var Public = {}
+		
+		/** @ignore */
+		Public._inherit = Module.Restlet
+
+		/** @ignore */
+		Public._configure = ['allowOrigin', 'allowMethods', 'allowHeaders', 'maxAge', 'next']
+
+		Public.create = function(app, uri) {
+			importClass(
+				com.threecrickets.prudence.util.CorsFilter)
+			
+			var cors = new CorsFilter(app.context)
+			
+			if (Sincerity.Objects.exists(this.allowOrigin)) {
+				cors.allowOrigin = this.allowOrigin;
+			}
+			if (Sincerity.Objects.exists(this.allowMethods)) {
+				this.allowMethods = Sincerity.Objects.array(this.allowMethods)
+				cors.allowMethods = Sincerity.JVM.toArray(this.allowMethods);
+			}
+			if (Sincerity.Objects.exists(this.allowHeaders)) {
+				this.allowHeaders = Sincerity.Objects.array(this.allowHeaders)
+				cors.allowHeaders = Sincerity.JVM.toArray(this.allowHeaders);
+			}
+			if (Sincerity.Objects.exists(this.maxAge)) {
+				if (this.maxAge == 'farFuture') {
+					this.maxAge = CorsFilter.FAR_FUTURE
+				}
+				else if (Sincerity.Objects.isString(this.maxAge)) {
+					this.maxAge = Sincerity.Localization.toMilliseconds(this.maxAge) / 1000
+				}
+				cors.maxAge = this.maxAge
+			}
+
+			this.next = app.createRestlet(this.next, uri)
+			cors.next = this.next
+			
+			return cors
+		}
+		
+		return Public
+	}(Public))
+
+	/**
 	 * Simply sets a hard-coded HTTP status code, doing nothing else. 
 	 * 
 	 * @class

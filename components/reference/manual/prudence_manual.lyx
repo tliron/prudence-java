@@ -7169,6 +7169,75 @@ reference "static-resources-client-side-caching"
 \end_layout
 
 \begin_layout Paragraph
+cors
+\begin_inset CommandInset label
+LatexCommand label
+name "cors-route-type"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Use the 
+\begin_inset Quotes eld
+\end_inset
+
+cors
+\begin_inset Quotes erd
+\end_inset
+
+ type with a 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ param to create a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cross-Origin Resource Sharing (CORS)"
+target "http://www.w3.org/TR/cors/"
+
+\end_inset
+
+ filter.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+next
+\begin_inset Quotes erd
+\end_inset
+
+ is any route type configuration, allowing for nesting.
+ Handled by the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Prudence.Setup.Cors"
+target "http://threecrickets.com/api/javascript/?namespace=Prudence.Setup.Cors"
+
+\end_inset
+
+ class.
+ See the 
+\bar under
+CORS guide (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cors"
+
+\end_inset
+
+)
+\bar default
+ for a complete discussion.
+\end_layout
+
+\begin_layout Paragraph
 javaScriptUnifyMinify
 \begin_inset CommandInset label
 LatexCommand label
@@ -29931,7 +30000,7 @@ So, configuring a logger's level to
 \begin_inset Quotes eld
 \end_inset
 
-warn
+info
 \begin_inset Quotes erd
 \end_inset
 
@@ -29939,7 +30008,7 @@ warn
 \begin_inset Quotes eld
 \end_inset
 
-warning,
+info,
 \begin_inset Quotes erd
 \end_inset
 
@@ -29963,15 +30032,7 @@ info,
 \begin_inset Quotes eld
 \end_inset
 
-fine,
-\begin_inset Quotes erd
-\end_inset
-
- 
-\begin_inset Quotes eld
-\end_inset
-
-finer,
+warning
 \begin_inset Quotes erd
 \end_inset
 
@@ -29979,7 +30040,7 @@ finer,
 \begin_inset Quotes eld
 \end_inset
 
-finest.
+severe.
 \begin_inset Quotes erd
 \end_inset
 
@@ -31048,7 +31109,7 @@ target "http://expressjs.com/"
  handler hangs, the whole server will hang.
  Node.js deals with the problem by in effect offloading the thread pools
  to external libraries, written in C++.
- For example, Node's database drivers handle queries in their own connection
+ For example, Node.js's database drivers handle queries in their own connection
  thread pools, and push events to Node.js when data is available.
  Still, in your Node.js JavaScript event handlers, you have to take extra
  care not to do any time-consuming work: a delay you cause would affect
@@ -35163,6 +35224,160 @@ reference "secure-servers"
 )
 \bar default
 .
+\end_layout
+
+\begin_layout Subsubsection
+Cross-Origin Resource Sharing (CORS)
+\begin_inset CommandInset label
+LatexCommand label
+name "cors"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can add 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cross-Origin Resource Sharing (CORS)"
+target "http://www.w3.org/TR/cors/"
+
+\end_inset
+
+ headers using the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+cors
+\begin_inset Quotes erd
+\end_inset
+
+ route type (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cors-route-type"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'cors',
+\end_layout
+
+\begin_layout Plain Layout
+
+		allowOrigin: '*',
+\end_layout
+
+\begin_layout Plain Layout
+
+		allowMethods: ['GET', 'POST'],
+\end_layout
+
+\begin_layout Plain Layout
+
+		allowHeaders: ['Content-Type', 'Last-Modified', 'Expires'],
+\end_layout
+
+\begin_layout Plain Layout
+
+		maxAge: 'farFuture',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: [
+\end_layout
+
+\begin_layout Plain Layout
+
+			'manual',
+\end_layout
+
+\begin_layout Plain Layout
+
+			'templates'
+\end_layout
+
+\begin_layout Plain Layout
+
+		]
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that 
+\begin_inset Quotes eld
+\end_inset
+
+magAge
+\begin_inset Quotes erd
+\end_inset
+
+ is in seconds, and must be greater than zero.
+ You can specify it as as 
+\bar under
+either a number or a string (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "numeric-shortcuts"
+
+\end_inset
+
+)
+\bar default
+, or use 
+\begin_inset Quotes eld
+\end_inset
+
+farFuture
+\begin_inset Quotes erd
+\end_inset
+
+ as a shortcut for 10 years.
 \end_layout
 
 \begin_layout Section
