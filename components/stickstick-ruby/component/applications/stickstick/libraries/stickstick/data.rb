@@ -5,10 +5,11 @@ import java.util.concurrent.locks.ReentrantLock
 import java.sql.DriverManager
 import java.sql.SQLException
 import java.sql.Timestamp
-import org.apache.commons.pool.impl.GenericObjectPool
-import org.apache.commons.dbcp.DataSourceConnectionFactory
-import org.apache.commons.dbcp.PoolableConnectionFactory
-import org.apache.commons.dbcp.PoolingDataSource
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
+import org.apache.commons.pool2.impl.GenericObjectPool
+import org.apache.commons.dbcp2.DataSourceConnectionFactory
+import org.apache.commons.dbcp2.PoolableConnectionFactory
+import org.apache.commons.dbcp2.PoolingDataSource
 
 $connection_pool_lock = $application.globals['connection_pool_lock']
 if $connection_pool_lock.nil?
@@ -46,9 +47,15 @@ def get_url
 end
 
 def get_connection_pool
-	connection_pool = GenericObjectPool.new nil, 10
-	PoolableConnectionFactory.new DataSourceConnectionFactory.new(get_data_source), connection_pool, nil, nil, false, true
-	return PoolingDataSource.new connection_pool
+	config = GenericObjectPoolConfig.new
+	config.maxTotal = 10
+	config.maxIdle = 10
+	config.minIdle = 10
+	connection_factory = DataSourceConnectionFactory.new get_data_source
+	pooled_object_factory = PoolableConnectionFactory.new connection_factory, nil
+	pool = GenericObjectPool.new pooled_object_factory, config
+	pooled_object_factory.pool = pool
+	return PoolingDataSource.new pool
 end
 
 def get_connection fresh=false

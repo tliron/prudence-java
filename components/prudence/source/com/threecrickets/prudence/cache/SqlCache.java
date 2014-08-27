@@ -28,10 +28,12 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.DataSourceConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
-import org.apache.commons.pool.impl.GenericObjectPool;
+import org.apache.commons.dbcp2.DataSourceConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnection;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDataSource;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
 import org.restlet.data.Language;
@@ -111,9 +113,15 @@ public class SqlCache implements Cache
 		this.maxSize = maxSize;
 		this.lockSource = lockSource;
 
-		GenericObjectPool<Connection> connectionPool = new GenericObjectPool<Connection>( null, poolSize );
-		new PoolableConnectionFactory( new DataSourceConnectionFactory( dataSource ), connectionPool, null, null, false, true );
-		this.dataSource = new PoolingDataSource( connectionPool );
+		GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+		config.setMaxTotal( poolSize );
+		config.setMaxIdle( poolSize );
+		config.setMinIdle( poolSize );
+		DataSourceConnectionFactory connectionFactory = new DataSourceConnectionFactory( dataSource );
+		PoolableConnectionFactory pooledObjectFactory = new PoolableConnectionFactory( connectionFactory, null );
+		GenericObjectPool<PoolableConnection> pool = new GenericObjectPool<PoolableConnection>( pooledObjectFactory, config );
+		pooledObjectFactory.setPool( pool );
+		this.dataSource = new PoolingDataSource<PoolableConnection>( pool );
 	}
 
 	//

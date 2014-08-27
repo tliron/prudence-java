@@ -4,10 +4,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import org.apache.commons.pool.impl.GenericObjectPool;
-import org.apache.commons.dbcp.DataSourceConnectionFactory;
-import org.apache.commons.dbcp.PoolableConnectionFactory;
-import org.apache.commons.dbcp.PoolingDataSource;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.apache.commons.dbcp2.DataSourceConnectionFactory;
+import org.apache.commons.dbcp2.PoolableConnectionFactory;
+import org.apache.commons.dbcp2.PoolingDataSource;
 
 $connection_pool_lock = $application->globals['connection_pool_lock'];
 if(is_null($connection_pool_lock)) {
@@ -50,9 +51,15 @@ function get_url() {
 }
 
 function get_connection_pool() {
-	$connection_pool = new GenericObjectPool(NULL, 10);
-	new PoolableConnectionFactory(new DataSourceConnectionFactory(get_data_source()), $connection_pool, NULL, NULL, FALSE, TRUE);
-	return new PoolingDataSource($connection_pool);
+	$config = new GenericObjectPoolConfig();
+	$config->maxTotal = 10;
+	$config->maxIdle = 10;
+	$config->minIdle = 10;
+	$connection_factory = new DataSourceConnectionFactory(get_data_source());
+	$pooled_object_factory = new PoolableConnectionFactory($connection_factory, NULL);
+	$pool = new GenericObjectPool($pooled_object_factory, $config);
+	$pooled_object_factory->pool = $pool;
+	return new PoolingDataSource($pool);
 }
 
 function get_connection($fresh=false) {

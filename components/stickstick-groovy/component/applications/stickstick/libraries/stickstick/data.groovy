@@ -6,10 +6,12 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.sql.Timestamp
 import org.restlet.Application
-import org.apache.commons.pool.impl.GenericObjectPool
-import org.apache.commons.dbcp.DataSourceConnectionFactory
-import org.apache.commons.dbcp.PoolableConnectionFactory
-import org.apache.commons.dbcp.PoolingDataSource
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
+import org.apache.commons.pool2.impl.GenericObjectPool
+import org.apache.commons.dbcp2.DataSourceConnectionFactory
+import org.apache.commons.dbcp2.PoolableConnectionFactory
+import org.apache.commons.dbcp2.PoolingDataSource
+
 
 def connectionPoolLock = application.globals['connectionPoolLock']
 if(connectionPoolLock == null) {
@@ -47,9 +49,15 @@ getUrl = {
 }
 
 getConnectionPool = {
-	connectionPool = new GenericObjectPool(null, 10)
-	new PoolableConnectionFactory(new DataSourceConnectionFactory(getDataSource()), connectionPool, null, null, false, true)
-	return new PoolingDataSource(connectionPool)
+	def config = new GenericObjectPoolConfig()
+	config.maxTotal = 10
+	config.maxIdle = 10
+	config.minIdle = 10
+	def connectionFactory = new DataSourceConnectionFactory(getDataSource())
+	def pooledObjectFactory = new PoolableConnectionFactory(connectionFactory, null)
+	def pool = new GenericObjectPool(pooledObjectFactory, config)
+	pooledObjectFactory.pool = pool
+	return new PoolingDataSource(pool)
 }
 
 getConnection = { fresh=false ->

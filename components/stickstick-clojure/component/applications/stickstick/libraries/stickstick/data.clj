@@ -11,10 +11,11 @@
   'java.sql.Timestamp
   'java.sql.Clob
   'java.io.StringWriter
-  'org.apache.commons.pool.impl.GenericObjectPool
-  'org.apache.commons.dbcp.DataSourceConnectionFactory
-  'org.apache.commons.dbcp.PoolableConnectionFactory
-  'org.apache.commons.dbcp.PoolingDataSource)
+  'org.apache.commons.pool2.impl.GenericObjectPoolConfig
+  'org.apache.commons.pool2.impl.GenericObjectPool
+  'org.apache.commons.dbcp2.DataSourceConnectionFactory
+  'org.apache.commons.dbcp2.PoolableConnectionFactory
+  'org.apache.commons.dbcp2.PoolingDataSource)
 
 ; clojure.java.jdbc annoyingly prints exceptions to *err* 
 (defmacro with-connection-silent [db-spec & body]
@@ -45,9 +46,13 @@
 		data-source))
 		
 (defn create-connection-pool [application]
-  (let [connection-pool (GenericObjectPool. nil 10)]
-    (PoolableConnectionFactory. (DataSourceConnectionFactory. (get-data-source application)) connection-pool nil nil false true)
-    (PoolingDataSource. connection-pool)))
+  (let [config (GenericObjectPoolConfig.) pooled-object-factory (PoolableConnectionFactory. (DataSourceConnectionFactory. (get-data-source application)) nil)]
+    (.setMaxTotal config 10)
+    (.setMaxIdle config 10)
+    (.setMinIdle config 10)
+    (let [pool (GenericObjectPool. pooled-object-factory config)]
+      (.setPool pooled-object-factory pool)
+      (PoolingDataSource. pool))))
 
 (declare from-pool)
 (declare add-board)

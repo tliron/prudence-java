@@ -269,11 +269,12 @@ var Stickstick = Stickstick || function() {
 		java.sql.DriverManager,
 		java.sql.SQLException,
 		java.sql.Timestamp,
-		org.apache.commons.pool.impl.GenericObjectPool,
-		org.apache.commons.dbcp.DataSourceConnectionFactory,
-		org.apache.commons.dbcp.PoolableConnectionFactory,
-		org.apache.commons.dbcp.PoolingDataSource)
-	
+		org.apache.commons.pool2.impl.GenericObjectPoolConfig,
+		org.apache.commons.pool2.impl.GenericObjectPool,
+		org.apache.commons.dbcp2.DataSourceConnectionFactory,
+		org.apache.commons.dbcp2.PoolableConnectionFactory,
+		org.apache.commons.dbcp2.PoolingDataSource)
+		
 	function getDataSource() {
 		var dataSource
 		if(application.globals.get('stickstick.backend') == 'h2') {
@@ -305,9 +306,15 @@ var Stickstick = Stickstick || function() {
 	}
 		
 	function getConnectionPool() {
-		var connectionPool = new GenericObjectPool(null, 10)
-		new PoolableConnectionFactory(new DataSourceConnectionFactory(getDataSource()), connectionPool, null, null, false, true)
-		return new PoolingDataSource(connectionPool)
+		var config = new GenericObjectPoolConfig()
+		config.maxTotal = 10
+		config.maxIdle = 10
+		config.minIdle = 10
+		var connectionFactory = new DataSourceConnectionFactory(getDataSource())
+		var pooledObjectFactory = new PoolableConnectionFactory(connectionFactory, null)
+		var pool = new GenericObjectPool(pooledObjectFactory, config)
+		pooledObjectFactory.pool = pool
+		return new PoolingDataSource(pool)
 	}
 	
 	return Public
