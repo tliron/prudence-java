@@ -5,7 +5,7 @@ app.routes = {
 			type: 'cors',
 			allowOrigin: '*',
 			allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-			allowHeaders: 'content-type',
+			allowHeaders: 'Content-Type',
 			next: 'manual'
 		},
 		{
@@ -37,7 +37,7 @@ app.routes = {
 		allowOrigin: '*',
 		next: {
 			type: 'static',
-			root: 'api-docs'
+			root: 'description'
 		}
 	},
 

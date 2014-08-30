@@ -4946,6 +4946,21 @@ reference "background-tasks"
 \end_layout
 
 \begin_layout Itemize
+Prudence supports 
+\bar under
+Swagger (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "describing"
+
+\end_inset
+
+)
+\bar default
+, making it especially easy for clients to consume your RESTful API.
+\end_layout
+
+\begin_layout Itemize
 Runtime debugging of web applications is often difficult.
  Prudence has a straightforward mechanism for 
 \bar under
@@ -4975,8 +4990,8 @@ reference "clusters"
 \bar default
 ! When you need to scale horizontally, Prudence provides you with a remarkably
  seamless solution for sharing state.
- Even the background task APIs support it: you can easily farm out your
- workload anywhere within your Prudence cluster.
+ Even the background task APIs support it: you can farm out your workload
+ anywhere within your Prudence cluster.
 \end_layout
 
 \begin_layout Itemize
@@ -18389,6 +18404,131 @@ Be careful with cookies! They are a hacker's playground.
 \end_layout
 
 \begin_layout Subsection
+Custom Headers
+\begin_inset CommandInset label
+LatexCommand label
+name "custom-headers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The most commonly used request and response HTTP headers are supported by
+ Prudence's standard APIs.
+ For example: 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.disposition"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.disposition"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.maxAge"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.maxAge"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.client"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.client"
+
+\end_inset
+
+.
+ However, Prudence also let's you use other headers, including your custom
+ headers, via 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.requestHeaders"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.requestHeaders"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.responseHeaders"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.responseHeaders"
+
+\end_inset
+
+.
+ Note that you 
+\emph on
+must
+\emph default
+ use Prudence's standard APIs for headers if such exist: these APIs will
+ only work for 
+\emph on
+additional
+\emph default
+ headers.
+\end_layout
+
+\begin_layout Standard
+These APIs both return a 
+\begin_inset CommandInset href
+LatexCommand href
+name "Series"
+target "http://restlet.com/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Series.html"
+
+\end_inset
+
+ object.
+ (You usually won't need to access the elements directly, but in case you
+ do: they are 
+\begin_inset CommandInset href
+LatexCommand href
+name "Header"
+target "http://restlet.com/learn/javadocs/2.2/jse/engine/index.html?org/restlet/engine/header/Header.html"
+
+\end_inset
+
+ objects.) An example of fetching a request header:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = conversation.requestHeaders.getFirstValue('Host')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An example of setting a response header:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+conversation.responseHeaders.set('X-Pingback', 'http://mysite.org/pingback/')
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Redirection
 \begin_inset CommandInset label
 LatexCommand label
@@ -20136,7 +20276,7 @@ reference "external-requests-timeout"
 
 )
 \bar default
- and fail gracefully.
+ and fail quickly and gracefully.
 \end_layout
 
 \begin_layout Standard
@@ -30878,6 +31018,1365 @@ status open
 \begin_layout Plain Layout
 
 -XX:+PrintTenuringDistribution
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Describing APIs
+\begin_inset CommandInset label
+LatexCommand label
+name "describing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An important aspect of managing a RESTful API is documenting it.
+ This is useful for humans, but possibly even more useful for consumption
+ by clients that can use a properly-formatted description to automatically
+ generate interfaces for your APIs.
+\end_layout
+
+\begin_layout Standard
+Prudence supports for 
+\begin_inset CommandInset href
+LatexCommand href
+name "Swagger"
+target "https://helloreverb.com/developers/swagger"
+
+\end_inset
+
+ (a trademark of Reverb Technologies, Inc), an emerging standard for RESTful
+ API description with a broad ecosystem of tools and wrappers.
+ Prudence allows you to annotate your code with special comments from which
+ a Swagger-compliant description can be automatically generated.
+ Even if you do not use Swagger, adhering to this annotation standard is
+ very useful for documenting your URI-space, and course will allow you to
+ easily support Swagger in the future.
+\end_layout
+
+\begin_layout Standard
+RESTful description blocks in Prudence must be delimited with 
+\begin_inset Quotes eld
+\end_inset
+
+/***
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+*/
+\begin_inset Quotes erd
+\end_inset
+
+ (triple-asterix comments).
+ This allows the block to be ignored by the programming language, as a regular
+ comment, while differentiating it from code documentation, which is usually
+ delimited using 
+\begin_inset Quotes eld
+\end_inset
+
+/**
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+*/
+\begin_inset Quotes erd
+\end_inset
+
+ (double-asterix comments, for example see 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity's JsDoc plugin"
+target "http://threecrickets.com/sincerity/ecosystem/feature-plugins/#jsdoc-plugin"
+
+\end_inset
+
+).
+ Within these comments, Prudence will look for special annotation tags beginning
+ with 
+\begin_inset Quotes eld
+\end_inset
+
+@
+\begin_inset Quotes erd
+\end_inset
+
+, similarly to how the JavaDoc specification works.
+ At the very least, you will need a 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger
+\begin_inset Quotes erd
+\end_inset
+
+ annotation specifying the type for the description block.
+ Annotation values can extend across multiple comment lines, and some require
+ special formats, as detailed below.
+ Syntax errors will be reported by the 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+describe
+\begin_inset Quotes erd
+\end_inset
+
+ tool (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "generating-swagger"
+
+\end_inset
+
+)
+\bar default
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Most annotations match the fields in the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Swagger specification, version 1.2"
+target "https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md"
+
+\end_inset
+
+, and are explained there.
+ However, Prudence automates many values, and additionally provides sensible
+ defaults.
+\end_layout
+
+\begin_layout Subsection
+@swagger info
+\end_layout
+
+\begin_layout Standard
+Provides general information about your API.
+\end_layout
+
+\begin_layout Standard
+You can have multiple 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger info
+\begin_inset Quotes erd
+\end_inset
+
+ blocks in your application, though the parser will merge them all together.
+ It's good practice to place these blocks in your settings.js, routing.js,
+ or both.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/***
+\end_layout
+
+\begin_layout Plain Layout
+
+ * RESTful API for My Application.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @swagger info
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @apiVersion 1.0
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @basePath http://myapp.org/api
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @title My Application
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @description This API provides access to
+\end_layout
+
+\begin_layout Plain Layout
+
+ *              My Application's resources
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @license GNU Lesser General Public License 3.0
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @licenseUrl http://www.gnu.org/licenses/lgpl.html
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @contact info@threecrickets.com
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+@swaggerVersion
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@apiVersion
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+@basePath
+\begin_inset Quotes erd
+\end_inset
+
+ are used as defaults for the 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger api
+\begin_inset Quotes erd
+\end_inset
+
+ sections, which you may override there.
+\end_layout
+
+\begin_layout Standard
+Additional annotations will get default values, which you may override:
+\end_layout
+
+\begin_layout Itemize
+@swaggerVersion: 1.2
+\end_layout
+
+\begin_layout Subsection
+@swagger api
+\end_layout
+
+\begin_layout Standard
+Represents a group of APIs, often intended to mean a single RESTful resource,
+ though it may be useful to group several resources together in some cases.
+ In Swagger, all APIs within a group are described in a single JSON document.
+\end_layout
+
+\begin_layout Standard
+It's good practice to place these blocks at the top of the source code file
+ for a resource.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/***
+\end_layout
+
+\begin_layout Plain Layout
+
+ * This resource represents a person in the database.
+ Persons have unique
+\end_layout
+
+\begin_layout Plain Layout
+
+ * IDs defined by integers.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @swagger api
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @description A person
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @produces application/json text/plain
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @consumes application/json text/plain
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Values for 
+\begin_inset Quotes eld
+\end_inset
+
+@produces
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+@consumes
+\begin_inset Quotes erd
+\end_inset
+
+ may be specified in one annotation, or in several:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+@produces application/json
+\end_layout
+
+\begin_layout Plain Layout
+
+@produces text/plain
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Additional annotations will get default values, which you may override:
+\end_layout
+
+\begin_layout Itemize
+@resourcePath: if not specified, will be automatically generated according
+ to the filename in which this description block appears; Prudence will
+ generate the JSON file according to its value:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If it ends with a 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+, will be considered a directory name, and Prudence will put a 
+\begin_inset Quotes eld
+\end_inset
+
+index.json
+\begin_inset Quotes erd
+\end_inset
+
+ file in it.
+\end_layout
+
+\begin_layout Itemize
+Otherwise, a 
+\begin_inset Quotes eld
+\end_inset
+
+.json
+\begin_inset Quotes erd
+\end_inset
+
+ extension will be added to the value to create the filename
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+@swaggerVersion: from the 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger info
+\begin_inset Quotes erd
+\end_inset
+
+ block
+\end_layout
+
+\begin_layout Itemize
+@apiVersion: from the 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger info
+\begin_inset Quotes erd
+\end_inset
+
+ block
+\end_layout
+
+\begin_layout Itemize
+@basePath: from the 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger info
+\begin_inset Quotes erd
+\end_inset
+
+ block
+\end_layout
+
+\begin_layout Subsection
+@swagger operation
+\end_layout
+
+\begin_layout Standard
+Represents a single API call, a RESTful verb on a URL.
+ An operation must be associated with a 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger api
+\begin_inset Quotes erd
+\end_inset
+
+ block, though if one does not exist it will be inferred and generated for
+ you (though without 
+\begin_inset Quotes eld
+\end_inset
+
+@description
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@produces
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+@consumes
+\begin_inset Quotes erd
+\end_inset
+
+, etc.).
+\end_layout
+
+\begin_layout Standard
+It's good practice to place these blocks right before the appropriate handler
+ code.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/***
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Retrieve a person's data according to its ID.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @swagger operation
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @summary Retrieves a person
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @notes Accesses the MongoDB database
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @path /person/{personId}/
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @method GET
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @nickname getPerson
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @parameter path personId string The person's ID
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @type Person
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @responseMessage 400 Error Invalid data
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @responseMessage 404 null Not found
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\begin_layout Plain Layout
+
+function handleGet(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The link between a 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger operation
+\begin_inset Quotes erd
+\end_inset
+
+ and its 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger api
+\begin_inset Quotes erd
+\end_inset
+
+ is via the 
+\begin_inset Quotes eld
+\end_inset
+
+@resourcePath
+\begin_inset Quotes erd
+\end_inset
+
+ annotation.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+@type
+\begin_inset Quotes erd
+\end_inset
+
+ annotation matches a 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger model
+\begin_inset Quotes erd
+\end_inset
+
+ (see below).
+\end_layout
+
+\begin_layout Standard
+You may include none or several 
+\begin_inset Quotes eld
+\end_inset
+
+@parameter
+\begin_inset Quotes erd
+\end_inset
+
+ annotations, with the following attributes:
+\end_layout
+
+\begin_layout Enumerate
+The parameter type: 
+\begin_inset Quotes eld
+\end_inset
+
+path
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+query
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+body
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+header
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+form
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Name
+\end_layout
+
+\begin_layout Enumerate
+Type
+\end_layout
+
+\begin_layout Enumerate
+Optional: description
+\end_layout
+
+\begin_layout Standard
+You may include none or several 
+\begin_inset Quotes eld
+\end_inset
+
+@responseMessage
+\begin_inset Quotes erd
+\end_inset
+
+ annotations, with the following attributes:
+\end_layout
+
+\begin_layout Enumerate
+HTTP status code (an integer)
+\end_layout
+
+\begin_layout Enumerate
+Type: a 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger model
+\begin_inset Quotes erd
+\end_inset
+
+, or 
+\begin_inset Quotes eld
+\end_inset
+
+null
+\begin_inset Quotes erd
+\end_inset
+
+ to specify no content
+\end_layout
+
+\begin_layout Enumerate
+Optional: description
+\end_layout
+
+\begin_layout Standard
+Additional annotations will get default values, which you may override:
+\end_layout
+
+\begin_layout Itemize
+@resourcePath: if not specified, will use the value for the previous 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger api
+\begin_inset Quotes erd
+\end_inset
+
+ block; if there is not such block, it will be automatically generated according
+ to the filename in which this description block appears
+\end_layout
+
+\begin_layout Subsection
+@swagger model
+\end_layout
+
+\begin_layout Standard
+Represents a data model.
+ As with 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger operation
+\begin_inset Quotes erd
+\end_inset
+
+, it is associated with a 
+\begin_inset Quotes eld
+\end_inset
+
+@swagger api
+\begin_inset Quotes erd
+\end_inset
+
+ block.
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+/***
+\end_layout
+
+\begin_layout Plain Layout
+
+ * Person model.
+\end_layout
+
+\begin_layout Plain Layout
+
+ *
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @swagger model
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @id Person
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @property name string
+\end_layout
+
+\begin_layout Plain Layout
+
+ * @property lastname string
+\end_layout
+
+\begin_layout Plain Layout
+
+ */
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You may include none or several 
+\begin_inset Quotes eld
+\end_inset
+
+@parameter
+\begin_inset Quotes erd
+\end_inset
+
+ annotations, with the following attributes:
+\end_layout
+
+\begin_layout Enumerate
+Name
+\end_layout
+
+\begin_layout Enumerate
+Type
+\end_layout
+
+\begin_layout Subsection
+Generating Swagger
+\begin_inset CommandInset label
+LatexCommand label
+name "generating-swagger"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+prudence
+\begin_inset Quotes erd
+\end_inset
+
+ Sincerity command has a 
+\begin_inset Quotes eld
+\end_inset
+
+describe
+\begin_inset Quotes erd
+\end_inset
+
+ sub-command that will automatically gather annotations, parse them, and
+ generate Swagger-compliant description files:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity prudence describe myapp
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default, description files will be written to the application's 
+\begin_inset Quotes eld
+\end_inset
+
+description
+\begin_inset Quotes erd
+\end_inset
+
+ subdirectory, but you can also specify a different subdirectory name:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+sincerity prudence describe myapp swagger
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The generated documents are fully-compliant JSON, indented for human readability
+, with a 
+\begin_inset Quotes eld
+\end_inset
+
+.json
+\begin_inset Quotes erd
+\end_inset
+
+ extension.
+\end_layout
+
+\begin_layout Subsection
+Serving Swagger
+\end_layout
+
+\begin_layout Standard
+You can serve your Swagger description 
+\bar under
+statically (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "static-resources"
+
+\end_inset
+
+)
+\bar default
+ via routing.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/api-docs/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'static',
+\end_layout
+
+\begin_layout Plain Layout
+
+		root: 'description'
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However, most Swagger clients will require 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cross-Origin Resource Sharing (CORS)"
+target "http://www.w3.org/TR/cors/"
+
+\end_inset
+
+, which you can support using 
+\bar under
+Prudence's CORS filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cors"
+
+\end_inset
+
+)
+\bar default
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/api-docs/*': {
+\end_layout
+
+\begin_layout Plain Layout
+
+		type: 'cors',
+\end_layout
+
+\begin_layout Plain Layout
+
+		allowOrigin: '*',
+\end_layout
+
+\begin_layout Plain Layout
+
+		next: {
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'static',
+\end_layout
+
+\begin_layout Plain Layout
+
+			root: 'description'
+\end_layout
+
+\begin_layout Plain Layout
+
+		}
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can test your Swagger description using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Swagger UI application"
+target "https://github.com/wordnik/swagger-ui"
+
+\end_inset
+
+.
+ A demo is available 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://petstore.swagger.wordnik.com/"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Working with Swagger Clients
+\end_layout
+
+\begin_layout Standard
+Most Swagger clients will require your API to use 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cross-Origin Resource Sharing (CORS)"
+target "http://www.w3.org/TR/cors/"
+
+\end_inset
+
+, which you can support using 
+\bar under
+Prudence's CORS filter (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cors"
+
+\end_inset
+
+)
+\bar default
+.
+ For example, if you're implementing your API as 
+\bar under
+manual resources (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "manual-resources"
+
+\end_inset
+
+)
+\bar default
+, you can just wrap your entire 
+\begin_inset Quotes eld
+\end_inset
+
+manual
+\begin_inset Quotes erd
+\end_inset
+
+ route type with the filter:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.routes = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	'/*': [
+\end_layout
+
+\begin_layout Plain Layout
+
+		{
+\end_layout
+
+\begin_layout Plain Layout
+
+			type: 'cors',
+\end_layout
+
+\begin_layout Plain Layout
+
+			allowOrigin: '*',
+\end_layout
+
+\begin_layout Plain Layout
+
+			allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+\end_layout
+
+\begin_layout Plain Layout
+
+			allowHeaders: 'Content-Type',
+\end_layout
+
+\begin_layout Plain Layout
+
+			next: 'manual'
+\end_layout
+
+\begin_layout Plain Layout
+
+		},
+\end_layout
+
+\begin_layout Plain Layout
+
+		'templates',
+\end_layout
+
+\begin_layout Plain Layout
+
+		'static'
+\end_layout
+
+\begin_layout Plain Layout
+
+	]
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+An additional requirement for CORS is that your resources support the HTTP
+ 
+\begin_inset Quotes eld
+\end_inset
+
+OPTIONS
+\begin_inset Quotes erd
+\end_inset
+
+ verb.
+ This can be easily done with an empty handler:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleOptions(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	return null
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Of course, instead of using the CORS filter, your handlers can actually
+ set the appropriate CORS headers as is appropriate.
+ See 
+\bar under
+custom headers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "custom-headers"
+
+\end_inset
+
+)
+\bar default
+ for more information:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function handleOptions(conversation) {
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.responseHeaders.set('Access-Control-Allow-Origin', '*')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST,
+ PUT, DELETE')
+\end_layout
+
+\begin_layout Plain Layout
+
+	conversation.responseHeaders.set('Access-Control-Allow-Headers', 'Content-Type')
+\end_layout
+
+\begin_layout Plain Layout
+
+}
 \end_layout
 
 \end_inset
@@ -49873,305 +51372,6 @@ clearly separate URI templates by usage
 , so that mistakes cannot happen.
  More URI types means more debuggability.
  
-\end_layout
-
-\begin_layout Subsection
-Documenting Your URI-Space
-\end_layout
-
-\begin_layout Standard
-If you create a programming language API, you will surely want to document
- it in a human language.
- You will want to define the acceptable types and usages of function arguments,
- describe return values, possible raises exceptions, add implementation
- and performance notes, etc.
- Many programming languages include tools for embedding such documentation
- as comments in the source code, and generating a reference manual from
- it.
-\end_layout
-
-\begin_layout Standard
-Consider that documenting your URI-space is just as important.
- A tool to generate such documentation for you is being considered for a
- future version of Prudence (not available in 2.0).
- Until we have it, consider adopting a resource documentation standard for
- your project.
- Here's a suggestion:
-\end_layout
-
-\begin_layout Standard
-\begin_inset listings
-inline false
-status open
-
-\begin_layout Plain Layout
-
-/*
-\end_layout
-
-\begin_layout Plain Layout
-
- * This resource represents a service running on the server.
- Servers have unique
-\end_layout
-
-\begin_layout Plain Layout
-
- * IDs defined by integers.
- A service can be either active or inactive.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * Use POST to change the name or status of an existing service.
- You may
-\end_layout
-
-\begin_layout Plain Layout
-
- * not use it change the ID of an existing service.
- PUT will create a new
-\end_layout
-
-\begin_layout Plain Layout
-
- * service, and DELETE will stop and remove it.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * Implementation note: if you PUT a service with an ID that already exists,
- then
-\end_layout
-
-\begin_layout Plain Layout
-
- * it will only stop and restart the service rather than removing/recreate
- it,
-\end_layout
-
-\begin_layout Plain Layout
-
- * which would be too resource intensive.
- Use DELETE if you absolutely need the
-\end_layout
-
-\begin_layout Plain Layout
-
- * service to be removed first, or set the "clean" query param to "true"
- to
-\end_layout
-
-\begin_layout Plain Layout
-
- * force removal.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * @URI /service/{id:decimal}/
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Aspect /service/{id:decimal}/status/
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Verb GET, POST, PUT, DELETE
-\end_layout
-
-\begin_layout Plain Layout
-
- * @MediaType application/json, application/xml, text/plain = as JSON
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Query {decimal} indent If non-zero will return a human-readable indented
- version
-\end_layout
-
-\begin_layout Plain Layout
-
- *          of the representation with lines indented by the integer value
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Query {boolean} clean If "true" or "yes" or "1" wil force removal of
- an existing
-\end_layout
-
-\begin_layout Plain Layout
-
- *         service during a PUT operation on an existing service
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Representation {application/json}
-\end_layout
-
-\begin_layout Plain Layout
-
- *  {
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "id": number,
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "name": string (the service name),
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "status": string:"active"|"inactive"
-\end_layout
-
-\begin_layout Plain Layout
-
- *  }
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Payload {application/json}
-\end_layout
-
-\begin_layout Plain Layout
-
- *  {
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "name": ...
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "status": ...
-\end_layout
-
-\begin_layout Plain Layout
-
- *  }
-\end_layout
-
-\begin_layout Plain Layout
-
- */
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-/*
-\end_layout
-
-\begin_layout Plain Layout
-
- * This resource represents the status of a service.
- 
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * DELETE on this resource is identical to PUT or POST with "inactive".
-\end_layout
-
-\begin_layout Plain Layout
-
- * PUT and POST are handled identically.
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * @URI /service/{id:decimal}/status/
-\end_layout
-
-\begin_layout Plain Layout
-
- * @AspectOf /service/{id:decimal}/
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Verb GET, POST, PUT, DELETE
-\end_layout
-
-\begin_layout Plain Layout
-
- * @MediaType text/plain
-\end_layout
-
-\begin_layout Plain Layout
-
- *
-\end_layout
-
-\begin_layout Plain Layout
-
- * @Representation {text/plain}
-\end_layout
-
-\begin_layout Plain Layout
-
- *   "active"|"inactive"
-\end_layout
-
-\begin_layout Plain Layout
-
- */
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section

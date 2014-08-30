@@ -1352,7 +1352,7 @@ var Prudence = {}
  * <p>
  * Example:
  * <pre>
- * conversation.responseHeaders.add(new org.restlet.engine.header.Header('X-Pingback', 'http://mysite.org/pingback/'))
+ * conversation.responseHeaders.set('X-Pingback', 'http://mysite.org/pingback/')
  * </pre>
  * 
  * @name conversation.responseHeaders

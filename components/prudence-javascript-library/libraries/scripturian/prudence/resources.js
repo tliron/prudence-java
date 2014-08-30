@@ -30,7 +30,7 @@ var Prudence = Prudence || {}
  * @namespace
  * 
  * @author Tal Liron
- * @version 1.3
+ * @version 1.4
  */
 Prudence.Resources = Prudence.Resources || function() {
 	/** @exports Public as Prudence.Resources */
@@ -199,7 +199,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @param conversation The Prudence conversation
 	 * @param [keys] See {@link Prudence.Resources#fromAttributeMap}
 	 * @returns {Object} A dict of query parameters
-	 * @see Visit <a href="http://threecrickets.com/prudence/manual/api/#toc-Paragraph-108">the Prudence API documentation for conversation.query</a>
+	 * @see Visit <a href="http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.query">the Prudence API documentation for conversation.query</a>
 	 */
 	Public.getQuery = function(conversation, keys) {
 		return Public.fromAttributeMap(conversation.query, conversation.queryAll, keys)
@@ -214,7 +214,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * @param conversation The Prudence conversation
 	 * @param [keys] See {@link Prudence.Resources#fromAttributeMap}
 	 * @returns {Object} A dict of form parameters
-	 * @see Visit <a href="http://threecrickets.com/prudence/manual/api/#toc-Paragraph-107">the Prudence API documentation for conversation.form</a>
+	 * @see Visit <a href="http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.form">the Prudence API documentation for conversation.form</a>
 	 */
 	Public.getForm = function(conversation, keys) {
 		return Public.fromAttributeMap(conversation.form, conversation.formAll, keys)
@@ -261,7 +261,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * 
 	 * @param params
 	 * @param {String} params.uri The URI; if it begins with '/' will act as if params.internal is true
-	 * @param {String|java.io.File} [params.file] File path or file objects; if used, will be converted to a file:// URI
+	 * @param {String|<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/io/File.html">java.io.File</a>} [params.file] File path or file objects; if used, will be converted to a file:// URI
 	 * @param [params.query] The query parameters to add to the URI (see {@link Prudence.Resources#buildUri})
 	 * @param {String} [params.method='get'] The HTTP method: 'get', 'post', 'put', 'delete' or 'head'
 	 * @param {Boolean|String} [params.internal=false] True to use Prudence's document.internal API; a string here
@@ -658,7 +658,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	/**
 	 * Converts a Restlet Representation into the desired type.
 	 * 
-	 * @param representation The Restlet Representation
+	 * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} representation The Restlet Representation
 	 * @param {String} type Supported types:
 	 * <ul>
 	 * <li>'text'</li>
@@ -764,8 +764,8 @@ Prudence.Resources = Prudence.Resources || function() {
 	/**
 	 * Converts an attribute map into a dict.
 	 *
-	 * @param {java.util.Map} map The map
-	 * @param {org.restlet.util.Series} [series] The series (in order to support arrays)
+	 * @param {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">java.util.Map</a>} map The map
+	 * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;} [series] The series (in order to support arrays)
 	 * @param [keys] A dict where keys are attribute names and values are types. Supported types:
 	 *		<ul>
 	 *		<li>'string': no conversion</li>
@@ -906,7 +906,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * for a form field.
 	 * 
 	 * @param dict
-	 * @returns {org.restlet.data.Form}
+	 * @returns {<a href="http://restlet.com/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Form.html">org.restlet.data.Form</a>}
 	 */
 	Public.toForm = function(dict) {
 		var form = new org.restlet.data.Form()
@@ -928,7 +928,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * Converts a dict into a Restlet's headers format.
 	 * 
 	 * @param dict
-	 * @returns {org.restlet.util.Series}
+	 * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.2/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;}
 	 */
 	Public.toHeaders = function(dict) {
 		importClass(
@@ -939,7 +939,7 @@ Prudence.Resources = Prudence.Resources || function() {
 		for (var d in dict) {
 			var value = dict[d]
 			if (null !== value) {
-				series.add(new Header(d, String(value)))
+				series.set(d, String(value))
 			}
 		}
 		return series
@@ -948,7 +948,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	/**
 	 * Converts a dict into an HTML form payload.
 	 * 
-	 * @returns {org.restlet.representation.Representation}
+	 * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>}
 	 */
 	Public.toWebPayload = function(dict) {
 		return Public.toForm(dict).webRepresentation

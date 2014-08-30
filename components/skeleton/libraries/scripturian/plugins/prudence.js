@@ -49,8 +49,8 @@ function prudence(command) {
 		case 'create':
 			create(command)
 			break
-		case 'documentation':
-			documentation(command)
+		case 'describe':
+			describe(command)
 			break
 	}
 }
@@ -59,7 +59,7 @@ function help(command) {
 	command.sincerity.out.println('prudence help                         Show this help')
 	command.sincerity.out.println('prudence version                      Show the installed Prudence version')
 	command.sincerity.out.println('prudence create [name] [[template]]   Create a skeleton for a new Prudence application using [name] as the directory name')
-	command.sincerity.out.println('prudence documentation [name]         Generate REST API documentation for Prudence application using [name] as the directory name')
+	command.sincerity.out.println('prudence describe [name] [[dir]]      Generate REST API description for Prudence application using [name] as the directory name')
 }
 
 function version(command) {
@@ -92,19 +92,23 @@ function create(command) {
 	copy(templateDir, applicationDir, /\$\{APPLICATION\}/g, name)
 }
 
-function documentation(command) {
+function describe(command) {
 	if (command.arguments.length < 2) {
-		throw new BadArgumentsCommandException(command, 'name')
+		throw new BadArgumentsCommandException(command, 'name', '[dir=description]')
 	}
 	var name = command.arguments[1]
+	var dir = 'description'
+		if (command.arguments.length > 2) {
+			dir = command.arguments[2]
+		}
 
 	var applicationDir = new File(sincerity.container.getFile('component', 'applications', name))
 	if (!applicationDir.exists() || !applicationDir.directory) {
 		throw new CommandException(command, 'The application does not exist: ' + applicationDir)
 	}
 
-	items = []
-	gatherDocumentation(command, applicationDir, items)
+	descriptions = []
+	gatherDescriptions(command, applicationDir, descriptions)
 
 	var swaggerInfo, swaggerApis = [], swaggerResourcePath
 
@@ -119,29 +123,29 @@ function documentation(command) {
 		return source
 	}
 
-	for (var i in items) {
-		var item = items[i]
-		var source = item._source
-		delete item._source
+	for (var i in descriptions) {
+		var description = descriptions[i]
+		var source = description._source
+		delete description._source
 
 		// Parse Swagger
-		if (Sincerity.Objects.exists(item.swagger)) {
-			if (item.swagger == 'info') {
+		if (Sincerity.Objects.exists(description.swagger)) {
+			if (description.swagger == 'info') {
 				if (!Sincerity.Objects.exists(swaggerInfo)) {
 					swaggerInfo = {}
 				}
-				Sincerity.Objects.merge(swaggerInfo, item)
+				Sincerity.Objects.merge(swaggerInfo, description)
 				delete swaggerInfo.swagger
 			}
-			else if (item.swagger == 'api') {
-				if (!Sincerity.Objects.exists(item.resourcePath)) {
-					item.resourcePath = getResourcePath(source)
+			else if (description.swagger == 'api') {
+				if (!Sincerity.Objects.exists(description.resourcePath)) {
+					description.resourcePath = getResourcePath(source)
 				}
 
 				// Will be the default for following operations and models
-				swaggerResourcePath = item.resourcePath
+				swaggerResourcePath = description.resourcePath
 
-				var api = Sincerity.Objects.clone(item)
+				var api = Sincerity.Objects.clone(description)
 				delete api.swagger
 
 				if (Sincerity.Objects.exists(api.produces)) {
@@ -166,32 +170,32 @@ function documentation(command) {
 					swaggerApis.push(api)
 				}
 			}
-			else if (item.swagger == 'operation') {
-				if (!Sincerity.Objects.exists(item.resourcePath)) {
+			else if (description.swagger == 'operation') {
+				if (!Sincerity.Objects.exists(description.resourcePath)) {
 					if (!Sincerity.Objects.exists(swaggerResourcePath)) {
-						throw new CommandException(command, '@swagger operation does not specify @resourcePath: ' + Sincerity.JSON.to(item, true))
+						swaggerResourcePath = getResourcePath(source)
 					}
-					item.resourcePath = swaggerResourcePath
+					description.resourcePath = swaggerResourcePath
 				}
-				if (!Sincerity.Objects.exists(item.path)) {
-					throw new CommandException(command, '@swagger operation does not specify @path: ' + Sincerity.JSON.to(item, true))
+				if (!Sincerity.Objects.exists(description.path)) {
+					throw new CommandException(command, '@swagger operation does not specify @path: ' + Sincerity.JSON.to(description, true))
 				}
-				if (!Sincerity.Objects.exists(item.method)) {
-					throw new CommandException(command, '@swagger operation does not specify @method: ' + Sincerity.JSON.to(item, true))
+				if (!Sincerity.Objects.exists(description.method)) {
+					throw new CommandException(command, '@swagger operation does not specify @method: ' + Sincerity.JSON.to(description, true))
 				}
-				if (!Sincerity.Objects.exists(item.nickname)) {
-					throw new CommandException(command, '@swagger operation does not specify @nickname: ' + Sincerity.JSON.to(item, true))
+				if (!Sincerity.Objects.exists(description.nickname)) {
+					throw new CommandException(command, '@swagger operation does not specify @nickname: ' + Sincerity.JSON.to(description, true))
 				}
 
 				var api = null
 				for (var a in swaggerApis) {
-					if (swaggerApis[a].resourcePath == item.resourcePath) {
+					if (swaggerApis[a].resourcePath == description.resourcePath) {
 						api = swaggerApis[a]
 						break
 					}
 				}
 				if (!api) {
-					api = {resourcePath: item.resourcePath}
+					api = {resourcePath: description.resourcePath}
 					swaggerApis.push(api)
 				}
 				if (!Sincerity.Objects.exists(api.apis)) {
@@ -199,20 +203,20 @@ function documentation(command) {
 				}
 				var path = null
 				for (var a in api.apis) {
-					if (api.apis[a].path == item.path) {
+					if (api.apis[a].path == description.path) {
 						path = api.apis[a]
 						break
 					}
 				}
 				if (!path) {
-					path = {path: item.path, operations: []}
+					path = {path: description.path, operations: []}
 					api.apis.push(path)
 				}
 				if (!Sincerity.Objects.exists(path.operations)) {
 					path.operations = []
 				}
 
-				var operation = Sincerity.Objects.clone(item)
+				var operation = Sincerity.Objects.clone(description)
 				delete operation.swagger
 				delete operation.resourcePath
 				delete operation.path
@@ -225,17 +229,17 @@ function documentation(command) {
 
 						var match = parameter.match(/\s+/)
 						if (!match || (match.index <= 0)) {
-							throw new CommandException(command, '@parameter must include at least paramType, name and type: ' + Sincerity.JSON.to(item, true))
+							throw new CommandException(command, '@parameter must include at least paramType, name and type: ' + Sincerity.JSON.to(description, true))
 						}
 						var paramType = parameter.substring(0, match.index)
 						if ((paramType != 'path') && (paramType != 'query') && (paramType != 'body') && (paramType != 'header') && (paramType != 'form')) {
-							throw new CommandException(command, '@parameter type must be  "path", "query", "body", "header" or "form": ' + Sincerity.JSON.to(item, true))
+							throw new CommandException(command, '@parameter type must be  "path", "query", "body", "header" or "form": ' + Sincerity.JSON.to(description, true))
 						}
 
 						parameter = parameter.substring(match.index + match.length)
 						match = parameter.match(/\s+/)
 						if (!match) {
-							throw new CommandException(command, '@parameter must include at least paramType, name and type: ' + Sincerity.JSON.to(item, true))
+							throw new CommandException(command, '@parameter must include at least paramType, name and type: ' + Sincerity.JSON.to(description, true))
 						}
 						var name = parameter.substring(0, match.index)
 						parameter = parameter.substring(match.index + match.length)
@@ -274,14 +278,14 @@ function documentation(command) {
 
 						var match = responseMessage.match(/\s+/)
 						if (!match || (match.index <= 0)) {
-							throw new CommandException(command, '@responseMessage must include at least code, type and message: ' + Sincerity.JSON.to(item, true))
+							throw new CommandException(command, '@responseMessage must include at least code, type and message: ' + Sincerity.JSON.to(description, true))
 						}
 						var code = responseMessage.substring(0, match.index)
 
 						responseMessage = responseMessage.substring(match.index + match.length)
 						match = responseMessage.match(/\s+/)
 						if (!match) {
-							throw new CommandException(command, '@responseMessage must include at least code, type and message: ' + Sincerity.JSON.to(item, true))
+							throw new CommandException(command, '@responseMessage must include at least code, type and message: ' + Sincerity.JSON.to(description, true))
 						}
 						var responseModel = responseMessage.substring(0, match.index)
 						var message = responseMessage.substring(match.index + match.length)
@@ -298,33 +302,33 @@ function documentation(command) {
 
 				path.operations.push(operation)
 			}
-			else if (item.swagger == 'model') {
-				if (!Sincerity.Objects.exists(item.resourcePath)) {
+			else if (description.swagger == 'model') {
+				if (!Sincerity.Objects.exists(description.resourcePath)) {
 					if (!Sincerity.Objects.exists(swaggerResourcePath)) {
-						throw new CommandException(command, '@swagger model does not specify @resourcePath: ' + Sincerity.JSON.to(item, true))
+						throw new CommandException(command, '@swagger model does not specify @resourcePath: ' + Sincerity.JSON.to(description, true))
 					}
-					item.resourcePath = swaggerResourcePath
+					description.resourcePath = swaggerResourcePath
 				}
-				if (!Sincerity.Objects.exists(item.id)) {
-					throw new CommandException(command, '@swagger model does not specify @id: ' + Sincerity.JSON.to(item, true))
+				if (!Sincerity.Objects.exists(description.id)) {
+					throw new CommandException(command, '@swagger model does not specify @id: ' + Sincerity.JSON.to(description, true))
 				}
 
 				var api = null
 				for (var a in swaggerApis) {
-					if (swaggerApis[a].resourcePath == item.resourcePath) {
+					if (swaggerApis[a].resourcePath == description.resourcePath) {
 						api = swaggerApis[a]
 						break
 					}
 				}
 				if (!api) {
-					api = {resourcePath: item.resourcePath, models: {}}
+					api = {resourcePath: description.resourcePath, models: {}}
 					swaggerApis.push(api)
 				}
 				if (!Sincerity.Objects.exists(api.models)) {
 					api.models = {}
 				}
 
-				var model = Sincerity.Objects.clone(item)
+				var model = Sincerity.Objects.clone(description)
 				delete model.swagger
 				delete model.resourcePath
 
@@ -337,7 +341,7 @@ function documentation(command) {
 
 						var match = property.match(/\s+/)
 						if (!match || (match.index <= 0)) {
-							throw new CommandException(command, '@property must include at least id and type: ' + Sincerity.JSON.to(item, true))
+							throw new CommandException(command, '@property must include at least id and type: ' + Sincerity.JSON.to(description, true))
 						}
 						var id = property.substring(0, match.index)
 
@@ -352,7 +356,7 @@ function documentation(command) {
 				api.models[model.id] = model
 			}
 			else {
-				throw new CommandException(command, 'Unknown @swagger type: ' + Sincerity.JSON.to(item, true))
+				throw new CommandException(command, 'Unknown @swagger type: ' + Sincerity.JSON.to(description, true))
 			}
 		}
 	}
@@ -378,7 +382,7 @@ function documentation(command) {
 			swaggerInfo.apis.push(entry)
 		}
 
-		var apiDir = new File(applicationDir, 'api-docs')
+		var apiDir = new File(applicationDir, dir)
 		apiDir.mkdirs()
 
 		var index = new File(apiDir, 'index.json')
@@ -431,41 +435,41 @@ function documentation(command) {
 	}
 }
 
-function gatherDocumentation(command, source, items) {
+function gatherDescriptions(command, source, descriptions) {
 	if (source.directory) {
 		var sourceFiles = source.listFiles()
 		for (var f in sourceFiles) {
 			sourceFile = sourceFiles[f]
 			if (sourceFile.directory || sourceFile.path.endsWith('.js')) {
-				gatherDocumentation(command, sourceFile, items)
+				gatherDescriptions(command, sourceFile, descriptions)
 			}
 		}
 	}
 	else {
 		var content = Sincerity.Files.loadText(source, 'UTF-8')
 
-		// Gather REST documentation comments
+		// Gather REST description comments
 		var regex = /\/\*\*\*([\S\s]*?)\*\//g
 		var match = regex.exec(content)
 		var found = false
 		while (match) {
 			found = true
 			comment = match[1].replace(/\n\s+\*\s*/g, ' ') // flatten
-			var item = parseDocumentation(comment)
-			item._source = source
-			items.push(item)
+			var description = parseDescription(comment)
+			description._source = source
+			descriptions.push(description)
 			match = regex.exec(content)
 		}
 
 		if (found) {
-			command.sincerity.out.println('Found REST documentation at: ' + command.sincerity.container.getRelativePath(source))
+			command.sincerity.out.println('Found REST description at: ' + command.sincerity.container.getRelativePath(source))
 		}
 	}
 }
 
-function parseDocumentation(comment) {
-	// Parse REST documentation tags
-	var item = {}
+function parseDescription(comment) {
+	// Parse REST description tags
+	var description = {}
 	var regex = /@([\S]+)\s+(\S[\S\s]*?)(?:\s@|$)/g
 	var match = regex.exec(comment)
 	while (match) {
@@ -474,17 +478,17 @@ function parseDocumentation(comment) {
 		var value = match[2]
 		// Cleanup
 		value = Sincerity.Objects.trim(value)
-		if (Sincerity.Objects.exists(item[key])) {
-			item[key] = Sincerity.Objects.array(item[key])
-			item[key].push(value)
+		if (Sincerity.Objects.exists(description[key])) {
+			description[key] = Sincerity.Objects.array(description[key])
+			description[key].push(value)
 		}
 		else {
-			item[key] = value
+			description[key] = value
 		}
 		regex.lastIndex -= 1 // because the delimiting next "@" was included in previous match
 		match = regex.exec(comment)
 	}
-	return item
+	return description
 }
 
 function copy(source, destination, token, value) {
