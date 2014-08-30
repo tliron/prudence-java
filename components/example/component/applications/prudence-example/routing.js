@@ -1,7 +1,13 @@
 
 app.routes = {
 	'/*': [
-		'manual',
+		{
+			type: 'cors',
+			allowOrigin: '*',
+			allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+			allowHeaders: 'content-type',
+			next: 'manual'
+		},
 		{
 			type: 'filter',
 			library: '/filters/statistics/',
@@ -21,7 +27,23 @@ app.routes = {
 		}
 	],
 
+	/***
+	 * @swagger info
+	 * @apiVersion 1
+	 * @basePath http://localhost:8080/prudence-example
+	 */
+	'/api-docs/*': {
+		type: 'cors',
+		allowOrigin: '*',
+		next: {
+			type: 'static',
+			root: 'api-docs'
+		}
+	},
+
+	/*** @swagger operation @resourcePath person @path /person/{id}/ @method GET @nickname getPerson */
 	'/person/{id}/':        '@person',
+	/*** @swagger operation @resourcePath person @path /pythonperson/{id}/ @method GET @nickname getPythonPerson */
 	'/pythonperson/{id}/':  '@python:person',
 	'/rubyperson/{id}/':    '@ruby:person',
 	'/phpperson/{id}/':     '@php:person',

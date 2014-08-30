@@ -127,7 +127,10 @@ function documentation(command) {
 		// Parse Swagger
 		if (Sincerity.Objects.exists(item.swagger)) {
 			if (item.swagger == 'info') {
-				swaggerInfo = Sincerity.Objects.clone(item)
+				if (!Sincerity.Objects.exists(swaggerInfo)) {
+					swaggerInfo = {}
+				}
+				Sincerity.Objects.merge(swaggerInfo, item)
 				delete swaggerInfo.swagger
 			}
 			else if (item.swagger == 'api') {
@@ -381,7 +384,7 @@ function documentation(command) {
 		var index = new File(apiDir, 'index.json')
 		var writer = Sincerity.Files.openForTextWriting(index)
 		try {
-			command.sincerity.out.println('Writing Swagger info to: ' + command.sincerity.container.getRelativePath(index))
+			command.sincerity.out.println('Writing Swagger index to: ' + command.sincerity.container.getRelativePath(index))
 			writer.write(Sincerity.JSON.to(swaggerInfo, true))
 		}
 		finally {
@@ -442,19 +445,20 @@ function gatherDocumentation(command, source, items) {
 		var content = Sincerity.Files.loadText(source, 'UTF-8')
 
 		// Gather REST documentation comments
-		var regex = /\/\*\*\*([\s\S]*?)\*\//g
+		var regex = /\/\*\*\*([\S\s]*?)\*\//g
 		var match = regex.exec(content)
 		var found = false
 		while (match) {
 			found = true
-			var item = parseDocumentation(match[1])
+			comment = match[1].replace(/\n\s+\*\s*/g, ' ') // flatten
+			var item = parseDocumentation(comment)
 			item._source = source
 			items.push(item)
 			match = regex.exec(content)
 		}
 
 		if (found) {
-			command.sincerity.out.println('Found documentation at: ' + command.sincerity.container.getRelativePath(source))
+			command.sincerity.out.println('Found REST documentation at: ' + command.sincerity.container.getRelativePath(source))
 		}
 	}
 }
@@ -462,14 +466,13 @@ function gatherDocumentation(command, source, items) {
 function parseDocumentation(comment) {
 	// Parse REST documentation tags
 	var item = {}
-	var regex = /@([\S]+) *([^@]*)/g
+	var regex = /@([\S]+)\s+(\S[\S\s]*?)(?:\s@|$)/g
 	var match = regex.exec(comment)
 	while (match) {
 		found = true
 		var key = match[1]
 		var value = match[2]
 		// Cleanup
-		value = value.replace(/(\n|\s+\*)/g, '')
 		value = Sincerity.Objects.trim(value)
 		if (Sincerity.Objects.exists(item[key])) {
 			item[key] = Sincerity.Objects.array(item[key])
@@ -478,6 +481,7 @@ function parseDocumentation(comment) {
 		else {
 			item[key] = value
 		}
+		regex.lastIndex -= 1 // because the delimiting next "@" was included in previous match
 		match = regex.exec(comment)
 	}
 	return item

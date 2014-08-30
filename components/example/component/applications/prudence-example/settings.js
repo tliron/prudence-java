@@ -1,4 +1,14 @@
 
+/***
+ * @swagger info
+ * @title Prudence Example
+ * @description The example application
+ *              for the Prudence skeleton
+ * @license GNU Lesser General Public License 3.0
+ * @licenseUrl http://www.gnu.org/licenses/lgpl.html
+ * @contact info@threecrickets.com
+ */
+
 app.settings = {
 	description: {
 		name: 'Prudence Example',

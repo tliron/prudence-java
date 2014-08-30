@@ -2515,11 +2515,11 @@ Prudence.Setup = Prudence.Setup || function() {
 			}
 			if (Sincerity.Objects.exists(this.allowMethods)) {
 				this.allowMethods = Sincerity.Objects.array(this.allowMethods)
-				cors.allowMethods = Sincerity.JVM.toArray(this.allowMethods);
+				cors.allowMethods.addAll(this.allowMethods)
 			}
 			if (Sincerity.Objects.exists(this.allowHeaders)) {
 				this.allowHeaders = Sincerity.Objects.array(this.allowHeaders)
-				cors.allowHeaders = Sincerity.JVM.toArray(this.allowHeaders);
+				cors.allowHeaders.addAll(this.allowHeaders)
 			}
 			if (Sincerity.Objects.exists(this.maxAge)) {
 				if (this.maxAge == 'farFuture') {
