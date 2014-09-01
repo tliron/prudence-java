@@ -23595,7 +23595,7 @@ error
 \begin_inset Quotes erd
 \end_inset
 
- when the debug page is displayed (defaults to 
+ when the debug page is displayed; defaults to 
 \begin_inset Quotes eld
 \end_inset
 
@@ -23603,7 +23603,8 @@ X-Debug
 \begin_inset Quotes erd
 \end_inset
 
-); only relevant when 
+; set to null if you don't want the header to be used; only relevant when
+ 
 \begin_inset Quotes eld
 \end_inset
 

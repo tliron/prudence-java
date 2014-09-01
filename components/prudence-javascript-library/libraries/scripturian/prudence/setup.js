@@ -217,7 +217,9 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.distributed = Sincerity.Objects.ensure(this.settings.distributed, {})
 			
 			// Sensible default settings
-			this.settings.errors.debugHeader = Sincerity.Objects.ensure(this.settings.errors.debugHeader, 'X-Debug')
+			if (this.settings.errors.debugHeader !== null) {
+				this.settings.errors.debugHeader = 'X-Debug'
+			}
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Objects.ensure(this.settings.code.minimumTimeBetweenValidityChecks, 1000)
 			this.settings.code.defaultDocumentName = Sincerity.Objects.ensure(this.settings.code.defaultDocumentName, 'default')
 			this.settings.code.defaultExtension = Sincerity.Objects.ensure(this.settings.code.defaultExtension, 'js')
@@ -334,9 +336,12 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? this.settings.code.sourceViewer : null, this.settings.errors.debugHeader)
 			this.instance.statusService.context = this.context.createChildContext()
 			this.instance.statusService.debugging = true == this.settings.errors.debug
-			if (Sincerity.Objects.exists(this.settings.errors.debugHeader)) {
-				if (sincerity.verbosity >= 2) {
+			if (sincerity.verbosity >= 2) {
+				if (this.settings.errors.debugHeader !== null) {
 					println('    Debug header: "{0}"'.cast(this.settings.errors.debugHeader))
+				}
+				else {
+					println('    Debug header: null')
 				}
 			}
 			if (Sincerity.Objects.exists(this.settings.errors.homeUrl)) {
