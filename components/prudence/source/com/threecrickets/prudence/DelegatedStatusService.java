@@ -26,6 +26,7 @@ import org.restlet.service.StatusService;
 import com.threecrickets.prudence.internal.CachingUtil;
 import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.DebugRepresentation;
+import com.threecrickets.prudence.util.RestletUtil;
 
 /**
  * Allows delegating the handling of errors to specified restlets.
@@ -45,21 +46,40 @@ public class DelegatedStatusService extends StatusService
 	 */
 	public static final String PASSTHROUGH_ATTRIBUTE = DelegatedStatusService.class.getCanonicalName() + ".passThrough";
 
+	/**
+	 * The default debug header.
+	 */
+	public static final String DEFAULT_DEBUG_HEADER = "X-Debug";
+
 	//
 	// Construction
 	//
 
 	/**
-	 * Constructor.
+	 * Constructor using default debug header.
 	 * 
 	 * @param sourceCodeUri
 	 *        The source code viewer URI or null
 	 */
 	public DelegatedStatusService( String sourceCodeUri )
 	{
+		this( sourceCodeUri, DEFAULT_DEBUG_HEADER );
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param sourceCodeUri
+	 *        The source code viewer URI or null
+	 * @param debugHeader
+	 *        The debug header or null
+	 */
+	public DelegatedStatusService( String sourceCodeUri, String debugHeader )
+	{
 		super();
 		setOverwriting( true );
 		this.sourceCodeUri = sourceCodeUri;
+		this.debugHeader = debugHeader;
 	}
 
 	/**
@@ -239,6 +259,8 @@ public class DelegatedStatusService extends StatusService
 			{
 				// Use the debug representation for exceptions
 				attributes.put( PASSTHROUGH_ATTRIBUTE, true );
+				if( debugHeader != null )
+					RestletUtil.getResponseHeaders( response ).set( debugHeader, "error" );
 				return new DebugRepresentation( status, request, response, sourceCodeUri );
 			}
 		}
@@ -255,9 +277,14 @@ public class DelegatedStatusService extends StatusService
 	private final ConcurrentMap<Integer, Restlet> handlers = new ConcurrentHashMap<Integer, Restlet>();
 
 	/**
-	 * The source code URIor null.
+	 * The source code URI or null.
 	 */
 	private final String sourceCodeUri;
+
+	/**
+	 * The debug header.
+	 */
+	private final String debugHeader;
 
 	/**
 	 * Whether we are debugging.

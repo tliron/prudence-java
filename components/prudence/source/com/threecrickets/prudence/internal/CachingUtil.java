@@ -970,29 +970,24 @@ public class CachingUtil<R extends ServerResource, A extends ResourceContextualA
 			headers = newHeaders;
 		}
 
-		// Override headers set by includes
-		headers.removeAll( CACHE_HEADER );
-		headers.removeAll( CACHE_KEY_HEADER );
-		headers.removeAll( CACHE_EXPIRATION_HEADER );
-		headers.removeAll( CACHE_TAGS_HEADER );
-
 		SimpleDateFormat format = new SimpleDateFormat( CACHE_EXPIRATION_HEADER_FORMAT );
 		format.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
 
-		headers.add( new Header( CACHE_HEADER, event ) );
-		headers.add( new Header( CACHE_KEY_HEADER, cacheKey ) );
-		headers.add( new Header( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) ) );
+		// This will override headers set by includes
+		headers.set( CACHE_HEADER, event );
+		headers.set( CACHE_KEY_HEADER, cacheKey );
+		headers.set( CACHE_EXPIRATION_HEADER, format.format( cacheEntry.getExpirationDate() ) );
 
+		headers.removeAll( CACHE_TAGS_HEADER );
 		Set<String> cacheTags = getTags( executable, suffix, false );
 		if( cacheTags != null )
 		{
 			for( String cacheTag : cacheTags )
-				headers.add( new Header( CACHE_TAGS_HEADER, cacheTag ) );
+				headers.add( CACHE_TAGS_HEADER, cacheTag );
 		}
 
 		// Apply headers
-		if( headers != null )
-			resource.getResponse().getAttributes().put( HeaderConstants.ATTRIBUTE_HEADERS, headers );
+		resource.getResponse().getAttributes().put( HeaderConstants.ATTRIBUTE_HEADERS, headers );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

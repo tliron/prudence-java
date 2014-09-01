@@ -86,6 +86,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @property {Object} [settings.errors] Error handling settings
 	 * @property {Boolean} [settings.errors.debug=false] When true, enabled the special debugging HTML page in case of 500 errors
 	 *                     (usually caused by unhandled exceptions in your code)
+	 * @property {String} [settings.errors.debugHeader='X-Debug'] Set this HTTP header when there is an error
 	 * @property {String} [settings.errors.homeUrl] Shows this URL on the default error page
 	 * @property {String} [settings.errors.contactEmail] Shows this contact email on the default error page
 	 * 
@@ -216,6 +217,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.distributed = Sincerity.Objects.ensure(this.settings.distributed, {})
 			
 			// Sensible default settings
+			this.settings.errors.debugHeader = Sincerity.Objects.ensure(this.settings.errors.debugHeader, 'X-Debug')
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Objects.ensure(this.settings.code.minimumTimeBetweenValidityChecks, 1000)
 			this.settings.code.defaultDocumentName = Sincerity.Objects.ensure(this.settings.code.defaultDocumentName, 'default')
 			this.settings.code.defaultExtension = Sincerity.Objects.ensure(this.settings.code.defaultExtension, 'js')
@@ -329,9 +331,14 @@ Prudence.Setup = Prudence.Setup || function() {
 			if (sincerity.verbosity >= 2) {
 				println('  Status service:')
 			}
-			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? this.settings.code.sourceViewer : null)
+			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? this.settings.code.sourceViewer : null, this.settings.errors.debugHeader)
 			this.instance.statusService.context = this.context.createChildContext()
 			this.instance.statusService.debugging = true == this.settings.errors.debug
+			if (Sincerity.Objects.exists(this.settings.errors.debugHeader)) {
+				if (sincerity.verbosity >= 2) {
+					println('    Debug header: "{0}"'.cast(this.settings.errors.debugHeader))
+				}
+			}
 			if (Sincerity.Objects.exists(this.settings.errors.homeUrl)) {
 				if (sincerity.verbosity >= 2) {
 					println('    Home URL: "{0}"'.cast(this.settings.errors.homeUrl))
