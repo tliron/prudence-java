@@ -41569,9 +41569,8 @@ Forms, Forms, Forms
 \end_layout
 
 \begin_layout Standard
-The problem is that you need an intermediary: a middle layer; and it could
- be a big problem.
- That problem is the main reason that 
+The problem is that you need an intermediary: a middle layer.
+ For this reason, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -41580,23 +41579,14 @@ classic
 \end_inset
 
  MVC, based around a thick controller layer, isn't as popular as it used
- to be.
- In 
-\begin_inset Quotes eld
-\end_inset
-
-classic
-\begin_inset Quotes erd
-\end_inset
-
- MVC the controller does 
+ to be: the controller does 
 \emph on
-as much as possible, 
+as much as possible
 \emph default
-under the assumption of predictability, in order to automate the production
- of large, repetitive user interfaces.
- It thus handles form validation, binding of form fields to database columns,
- and even form flows.
+ in order to automate the development of user interfaces for very large
+ applications that require constant maintenance and tweaking.
+ This kind of MVC thus handles form validation, binding of form fields to
+ database columns, and even form flows.
 \end_layout
 
 \begin_layout Standard
@@ -41618,17 +41608,18 @@ business logic
 \begin_inset Quotes erd
 \end_inset
 
-: the use case for MVC really is big business for big businesses.
- At its best, MVC makes these repetitive stacks of forms easier to maintain
- in the long run.
+: the use case for MVC is big business for big businesses.
+ At its best, MVC makes hundreds of forms easier to maintain in the long
+ run.
  At its worst, programmers drown in an ocean of controller configuration
- files, fighting opaque layers of APIs that can only do what they were programme
-d to do, but not what is needed for a sensible UI.
+ files, fighting against opaque layers of APIs that can only do what they
+ were programmed to do, but not necessarily what is needed for a sensible
+ UI.
 \end_layout
 
 \begin_layout Standard
-Outside of the big business world, where automation reigns supreme, UI implement
-ations use more flexible derivatives of MVC, such as 
+Outside of the big business world, UI implementations use more flexible
+ derivatives of MVC, such as 
 \begin_inset CommandInset href
 LatexCommand href
 name "Model-View-Presenter (MVP)"
@@ -41641,13 +41632,13 @@ target "http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter"
 \begin_inset Quotes eld
 \end_inset
 
-presenter,
+presenter
 \begin_inset Quotes erd
 \end_inset
 
- far from an opaque layer, is implemented directly by the programmer in
- code, often by inheriting classes that provide the basic predictable functional
-ity.
+ is not an opaque layer, but rather is implemented directly by the programmer
+ in code, often by inheriting classes that provide the basic functionality
+ while allowing for customization.
  Depending on the variation you're using, the 
 \begin_inset Quotes eld
 \end_inset
@@ -41657,8 +41648,8 @@ business logic
 \end_inset
 
  might even be in the presenter rather than the model.
- Still, MVP, like MVC, stems from the same anxiety about mixing model and
- view.
+ Still, implementing MVP, like MVC, often comes from the same anxiety about
+ mixing model and view.
 \end_layout
 
 \begin_layout Paragraph
@@ -41783,6 +41774,11 @@ MVC
 So what are we left with in Prudence? As you'll see, Prudence supports a
  straightforward MVP architecture while still adhering to RESTful principles.
  Read on, and consider if it would benefit your project to use it.
+ You do 
+\emph on
+not 
+\emph default
+have to.
  Our recommendation is to use what works best for you and your development
  team.
 \end_layout
@@ -41796,9 +41792,9 @@ Models
 \end_layout
 
 \begin_layout Standard
-Implement this layer according to your preferences and as appropriate to
- the database technology you are using.
- For example, you may want to use object-oriented architecture.
+You should implement this layer as is appropriate to the database technology
+ and schema you are using.
+ Object-oriented architecture are common, but of course not necessary.
  The model layer as a whole should live in your 
 \begin_inset Quotes eld
 \end_inset

@@ -1768,7 +1768,7 @@ var Prudence = {}
  * @name conversation.addMediaTypeWithLanguage
  * @function
  * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/MediaType.html">org.restlet.data.MediaType</a>} mediaType
- * @type {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
+ * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/data/Language.html">org.restlet.data.Language</a>} language
  */
 
 /**
