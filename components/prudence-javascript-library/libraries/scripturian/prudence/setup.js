@@ -2523,15 +2523,15 @@ Prudence.Setup = Prudence.Setup || function() {
 			var cors = new CorsFilter(app.context)
 			
 			if (Sincerity.Objects.exists(this.allowOrigin)) {
-				cors.allowOrigin = this.allowOrigin;
+				cors.allowOrigin = this.allowOrigin
 			}
 			if (Sincerity.Objects.exists(this.allowMethods)) {
 				this.allowMethods = Sincerity.Objects.array(this.allowMethods)
-				cors.allowMethods.addAll(this.allowMethods)
+				cors.allowMethods.addAll(Sincerity.JVM.toList(this.allowMethods))
 			}
 			if (Sincerity.Objects.exists(this.allowHeaders)) {
 				this.allowHeaders = Sincerity.Objects.array(this.allowHeaders)
-				cors.allowHeaders.addAll(this.allowHeaders)
+				cors.allowHeaders.addAll(Sincerity.JVM.toList(this.allowHeaders))
 			}
 			if (Sincerity.Objects.exists(this.maxAge)) {
 				if (this.maxAge == 'farFuture') {
