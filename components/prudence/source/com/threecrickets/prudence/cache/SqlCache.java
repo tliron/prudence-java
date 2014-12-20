@@ -36,11 +36,11 @@ import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
+import org.restlet.data.Header;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Metadata;
 import org.restlet.data.Tag;
-import org.restlet.engine.header.Header;
 import org.restlet.util.Series;
 
 import com.threecrickets.prudence.util.InProcessMemoryLockSource;

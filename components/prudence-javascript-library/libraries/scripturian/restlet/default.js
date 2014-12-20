@@ -23,9 +23,9 @@ var Restlet = Restlet || function() {
 	/**
 	 * Finds a virtual host by its name.
 	 * 
-	 * @param {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/Component.html">org.restlet.Component</a>} The Restlet component
+	 * @param {<a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/Component.html">org.restlet.Component</a>} The Restlet component
 	 * @param {String} name The host name
-	 * @returns {<a href="http://restlet.org/learn/javadocs/2.2/jse/api/index.html?org/restlet/routing/VirtualHost.html">org.restlet.routing.VirtualHost</a>} The host or null if not found
+	 * @returns {<a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/routing/VirtualHost.html">org.restlet.routing.VirtualHost</a>} The host or null if not found
 	 */
 	Public.getHost = function(component, name) {
 		if (name == 'default') {

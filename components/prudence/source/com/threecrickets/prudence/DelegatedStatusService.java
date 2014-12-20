@@ -209,7 +209,7 @@ public class DelegatedStatusService extends StatusService
 	//
 
 	@Override
-	public Representation getRepresentation( Status status, Request request, Response response )
+	public Representation toRepresentation( Status status, Request request, Response response )
 	{
 		if( isEnabled() )
 		{
@@ -265,7 +265,7 @@ public class DelegatedStatusService extends StatusService
 			}
 		}
 
-		return super.getRepresentation( status, request, response );
+		return super.toRepresentation( status, request, response );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

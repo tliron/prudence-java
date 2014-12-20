@@ -22,8 +22,8 @@
 		<dependency org="com.threecrickets.jygments" name="jygments" rev="0.9+" transitive="false" />
 		<dependency org="com.mongodb" name="java-driver" rev="2.12+" transitive="false" />
 		<dependency org="com.orientechnologies" name="orientdb-core" rev="1.1+" transitive="false" />
-		<dependency org="org.restlet.jse" name="org.restlet" rev="2.2+" transitive="false" />
-		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.2+" transitive="false" />
+		<dependency org="org.restlet.jse" name="org.restlet" rev="2.3+" transitive="false" />
+		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.3+" transitive="false" />
 		<dependency org="com.threecrickets.scripturian" name="scripturian" rev="1.1+" transitive="false" />
 		<dependency org="javax.servlet" name="servlet-api" rev="2.5+" transitive="false" />
 		<dependency org="net.spy" name="spymemcached" rev="2.11+" transitive="false" />

@@ -145,7 +145,7 @@
 			<!-- Jygments has no online javadocs -->
 			<link href="http://api.mongodb.org/java/current/" />
 			<link href="http://www.orientechnologies.com/javadoc/latest/" />
-			<link href="http://www.restlet.org/documentation/2.1/jse/api/" />
+			<link href="http://www.restlet.org/documentation/2.3/jse/api/" />
 			<link href="http://threecrickets.com/api/java/scripturian/" />
 			<link href="http://docs.oracle.com/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/" />
 			<link href="http://dustin.github.com/java-memcached-client/apidocs/" />

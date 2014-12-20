@@ -14,7 +14,7 @@ package com.threecrickets.prudence.util;
 import java.util.concurrent.ConcurrentMap;
 
 import org.restlet.Response;
-import org.restlet.engine.header.Header;
+import org.restlet.data.Header;
 import org.restlet.engine.header.HeaderConstants;
 import org.restlet.util.Series;
 

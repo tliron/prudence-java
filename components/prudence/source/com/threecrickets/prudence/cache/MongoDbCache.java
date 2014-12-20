@@ -23,10 +23,10 @@ import org.bson.BSONObject;
 import org.bson.types.Binary;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
+import org.restlet.data.Header;
 import org.restlet.data.Language;
 import org.restlet.data.MediaType;
 import org.restlet.data.Tag;
-import org.restlet.engine.header.Header;
 import org.restlet.util.Series;
 
 import com.mongodb.BasicDBList;
