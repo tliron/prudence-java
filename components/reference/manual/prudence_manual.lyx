@@ -538,7 +538,8 @@ First Steps
 \begin_layout Standard
 You've played with the example applications, and now it's time to create
  your own.
- Let's make a wiki!
+ Let's make a basic CMS (Content Management System), a web site where users
+ can change the content of pages and create new ones via the web!
 \end_layout
 
 \begin_layout Standard
@@ -560,7 +561,7 @@ status open
 
 \begin_layout Plain Layout
 
-sincerity prudence create wiki
+sincerity prudence create cms
 \end_layout
 
 \end_inset
@@ -573,8 +574,8 @@ Restart Prudence, and you should be able to see your new application at
  
 \begin_inset CommandInset href
 LatexCommand href
-name "http://localhost:8080/wiki/"
-target "http://localhost:8080/wiki/"
+name "http://localhost:8080/cms/"
+target "http://localhost:8080/cms/"
 
 \end_inset
 
@@ -592,7 +593,7 @@ Let's take a look at our application.
 \begin_inset Quotes eld
 \end_inset
 
-/component/applications/wiki/
+/component/applications/cms/
 \begin_inset Quotes erd
 \end_inset
 
@@ -651,8 +652,8 @@ The
  will be mapped to 
 \begin_inset CommandInset href
 LatexCommand href
-name "http://localhost:8080/wiki/mydir/myfile.html"
-target "http://localhost:8080/wiki/mydir/myfile.html"
+name "http://localhost:8080/cms/mydir/myfile.html"
+target "http://localhost:8080/cms/mydir/myfile.html"
 
 \end_inset
 
@@ -1037,7 +1038,7 @@ index.t.html
 \begin_inset Quotes eld
 \end_inset
 
-/cache/scripturian/container/component/applications/wiki/resources/
+/cache/scripturian/container/component/applications/cms/resources/
 \begin_inset Quotes erd
 \end_inset
 
@@ -1134,7 +1135,7 @@ Hello, World
 \end_layout
 
 \begin_layout Standard
-Let's create a new page for our wiki, under our application's 
+Let's create a new page for our CMS, under our application's 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1173,7 +1174,7 @@ status open
 \begin_layout Plain Layout
 
 	<p>Hello, world.
- This page will become a wiki very soon!</p>
+ This page will become editable very soon!</p>
 \end_layout
 
 \begin_layout Plain Layout
@@ -1389,7 +1390,7 @@ reference "two-routing-paradigms"
 \end_layout
 
 \begin_layout Subsection
-Let's Make a Wiki
+Let's Make a CMS
 \end_layout
 
 \begin_layout Standard
@@ -1534,7 +1535,7 @@ else {
 \end_layout
 
 \begin_layout Standard
-Not the most exciting wiki, but it works for editing a single page.
+Not the most exciting CMS, but it works for editing a single page.
  Let's break it down:
 \end_layout
 
@@ -1752,12 +1753,12 @@ You'll see that now, indeed, any URL beginning with
 \begin_inset Quotes erd
 \end_inset
 
- will take us to our single, lonely wiki page.
+ will take us to our single, lonely CMS page.
  For example, this: 
 \begin_inset CommandInset href
 LatexCommand href
-name "http://localhost:8080/wiki/page/test/"
-target "http://localhost:8080/wiki/page/test/"
+name "http://localhost:8080/cms/page/test/"
+target "http://localhost:8080/cms/page/test/"
 
 \end_inset
 
@@ -1870,7 +1871,7 @@ And\SpecialChar \ldots{}
 \begin_inset Quotes erd
 \end_inset
 
- becomes an editable wiki page.
+ becomes an editable CMS page.
  If that page does not exist it, it will be created.
 \end_layout
 
@@ -1989,11 +1990,11 @@ reference "mvc"
 \end_layout
 
 \begin_layout Subsection
-A Persistent Wiki
+A Persistent CMS
 \end_layout
 
 \begin_layout Standard
-So far in this tutorial, we've been storing the wiki data in RAM.
+So far in this tutorial, we've been storing the CMS data in RAM.
  To store the data on disk, we have a vast array of options: you can use
  any JVM database driver directly from Prudence.
 \end_layout
@@ -2079,7 +2080,7 @@ app.globals = {
 
 \begin_layout Plain Layout
 
-		defaultDb: 'wiki'
+		defaultDb: 'cms'
 \end_layout
 
 \begin_layout Plain Layout
@@ -2238,7 +2239,10 @@ else {
 \end_layout
 
 \begin_layout Standard
-Restart Prudence, and check out your new persistent wiki.
+Restart Prudence, and check out your new persistent 
+CMS
+\lang english
+.
 \end_layout
 
 \begin_layout Standard
@@ -2308,7 +2312,10 @@ target "http://threecrickets.com/diligence/"
 \end_inset
 
 , a comprehensive web framework based on Prudence and MongoDB.
- Especially useful for wikis, Diligence features a 
+ Especially useful for 
+CMS
+\lang english
+, Diligence features a 
 \begin_inset CommandInset href
 LatexCommand href
 name "documents service"
@@ -2320,7 +2327,8 @@ target "http://threecrickets.com/diligence/manual/service/documents/"
 \end_layout
 
 \begin_layout Subsection
-A Scalable Wiki
+A Scalable 
+CMS
 \end_layout
 
 \begin_layout Subsubsection
@@ -2328,8 +2336,10 @@ Caching
 \end_layout
 
 \begin_layout Standard
-As long as we're storing our wiki content in MongoDB or in memory, page
- rendering will be very fast and light.
+As long as we're storing our 
+CMS
+\lang english
+ content in MongoDB or in memory, page rendering will be very fast and light.
  However, if we were to do more heavy lifting per page---for example, multiple
  database lookups---then performance would drop accordingly.
  By smartly caching our pages we can ensure that pages would be rendered
@@ -2650,9 +2660,11 @@ not modified
 \end_layout
 
 \begin_layout Standard
-You've just vastly improved the scalability of your wiki, allowed for a
- faster user experience, all without ever compromising on the freshness
- of user data.
+You've just vastly improved the scalability of your 
+CMS
+\lang english
+, allowed for a faster user experience, all without ever compromising on
+ the freshness of user data.
  Prudence caching is pure win.
 \end_layout
 
@@ -2685,8 +2697,10 @@ Compression
 \begin_layout Standard
 Prudence will automatically compress responses (using gzip or DEFLATE) if
  their size in bytes exceeds a certain threshold.
- Our wiki pages were likely too small, which is why you likely haven't seen
- compression.
+ Our 
+CMS
+\lang english
+ pages were likely too small, which is why you likely haven't seen compression.
  You'll usually want that threshold: there are little or no bandwidth savings
  to be gained by compressing tiny responses, so the extra CPU load required
  for compression will be wasted.
@@ -2818,7 +2832,7 @@ status open
 \begin_layout Plain Layout
 
 curl --verbose --header 'Accept-Encoding: gzip' --compressed http://localhost:80
-80/wiki/api/test/
+80/cms/api/test/
 \end_layout
 
 \end_inset
@@ -2867,11 +2881,17 @@ reference "scaling-tips"
 \end_layout
 
 \begin_layout Subsection
-Wiki API
+
+A CMS
+\lang english
+ API
 \end_layout
 
 \begin_layout Standard
-Our wiki is currently limited to web 
+Our 
+CMS
+\lang english
+ is currently limited to web 
 \emph on
 pages
 \emph default
@@ -2880,8 +2900,10 @@ pages
  API
 \emph default
 .
- This would allow all kinds of clients to access our wiki, such as dedicated
- mobile apps, desktop applications, and 
+ This would allow all kinds of clients to access our 
+CMS
+\lang english
+, such as dedicated mobile apps, desktop applications, and 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2898,9 +2920,11 @@ AJAX
 \end_inset
 
 ).
- It would also allow 3rd-party web sites and services to use our wiki as
- a service, rather than as an application (in business buzzword land this
- is called 
+ It would also allow 3rd-party web sites and services to use our 
+CMS
+\lang english
+ as a service, rather than as an application (in business buzzword land
+ this is called 
 \begin_inset CommandInset href
 LatexCommand href
 name "“SaaS”"
@@ -3074,7 +3098,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl http://localhost:8080/wiki/api/
+curl http://localhost:8080/cms/api/
 \end_layout
 
 \end_inset
@@ -3324,7 +3348,10 @@ reference "request-payloads-mime-types"
 
 \begin_layout Itemize
 Note that we're making sure to invalidate the cache when we change the data:
- this is to make sure that the wiki pages will be updated accordingly.
+ this is to make sure that the 
+CMS
+\lang english
+ pages will be updated accordingly.
 \end_layout
 
 \begin_layout Standard
@@ -3379,7 +3406,7 @@ status open
 
 \begin_layout Plain Layout
 
-curl http://localhost:8080/wiki/api/test/
+curl http://localhost:8080/cms/api/test/
 \end_layout
 
 \end_inset
@@ -3407,7 +3434,7 @@ status open
 \begin_layout Plain Layout
 
 curl --request PUT --data '{"content": "New page content!"}' http://localhost:80
-80/wiki/api/test/
+80/cms/api/test/
 \end_layout
 
 \end_inset
@@ -3434,12 +3461,12 @@ status open
 
 \begin_layout Plain Layout
 
-curl --request DELETE http://localhost:8080/wiki/api/test/
+curl --request DELETE http://localhost:8080/cms/api/test/
 \end_layout
 
 \begin_layout Plain Layout
 
-curl http://localhost:8080/wiki/api/test/
+curl http://localhost:8080/cms/api/test/
 \end_layout
 
 \end_inset
@@ -3448,8 +3475,10 @@ curl http://localhost:8080/wiki/api/test/
 \end_layout
 
 \begin_layout Standard
-While testing with cURL, you can simultaneously test the wiki pages using
- the browser, as we did earlier.
+While testing with cURL, you can simultaneously test the 
+CMS
+\lang english
+ pages using the browser, as we did earlier.
  Both the API and the pages see the exact same data, as it's stored in the
  application.globals.
 \end_layout
@@ -3507,7 +3536,7 @@ function handleInit(conversation) {
 \begin_layout Standard
 Note that the cache tag is exactly the same as we're using for template
  pages: this guarantees that the template pages will be updated even though
- the wiki is changed from here, and vice versa, even though what is being
+ the CMS is changed from here, and vice versa, even though what is being
  cached is quite different.
  Because the cache key depends on the URI, and the URIs for the pages and
  APIs are different, there will be no conflict.
@@ -3532,13 +3561,13 @@ status open
 
 \begin_layout Plain Layout
 
-curl --verbose http://localhost:8080/wiki/api/test/
+curl --verbose http://localhost:8080/cms/api/test/
 \end_layout
 
 \begin_layout Plain Layout
 
 curl --verbose --request PUT --data '{"content": "New page content!"}' http://lo
-calhost:8080/wiki/api/test/
+calhost:8080/cms/api/test/
 \end_layout
 
 \end_inset
@@ -3570,8 +3599,10 @@ Finishing Touches
 \end_layout
 
 \begin_layout Standard
-Here, we'll beef up our wiki a bit, and along the way introduce you to a
- few more Prudence features.
+Here, we'll beef up our 
+CMS
+\lang english
+ a bit, and along the way introduce you to a few more Prudence features.
 \end_layout
 
 \begin_layout Subsubsection
@@ -3601,7 +3632,10 @@ less up
 \begin_inset Quotes erd
 \end_inset
 
- our wiki pages! First, let's include the CSS in our 
+ our 
+CMS
+\lang english
+ pages! First, let's include the CSS in our 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3676,7 +3710,10 @@ relative
 \begin_inset Quotes eld
 \end_inset
 
-http://localhost:8080/wiki/page/one/two/three/
+http://localhost:8080/
+cms
+\lang english
+/page/one/two/three/
 \begin_inset Quotes erd
 \end_inset
 
@@ -3859,7 +3896,7 @@ status open
 \end_layout
 
 \begin_layout Subsubsection
-HTML Markup Languages
+Markdown
 \end_layout
 
 \begin_layout Standard
@@ -3943,8 +3980,11 @@ status open
 \end_layout
 
 \begin_layout Standard
-After restarting Prudence we would be able to use Markdown in our wiki.
- Try to edit a wiki page using this content:
+After restarting Prudence we would be able to use Markdown in our 
+CMS
+\lang english
+.
+ Try to edit a CMS page using this content:
 \end_layout
 
 \begin_layout Standard
@@ -4001,12 +4041,12 @@ And a subtitle
 \end_layout
 
 \begin_layout Subsubsection
-The Internal API
+Internal API
 \end_layout
 
 \begin_layout Standard
 You may have noticed that there's some duplication in our code: both the
- wiki pages and the wiki API use application.globals to store the content.
+ CMS pages and the CMS API use application.globals to store the content.
  In this case it's trivial code, but if we moved to database storage, for
  example, the code would surely grow and be worth encapsulating as an API.
  One way we could do this is create a reusable library, for example 
@@ -4017,7 +4057,7 @@ You may have noticed that there's some duplication in our code: both the
 \begin_inset Quotes erd
 \end_inset
 
-, which we could use both in the wiki pages and the wiki API using 
+, which we could use both in the CMS pages and the CMS API using 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4033,7 +4073,7 @@ But an interesting shortcut is suggested in the fact that
 \emph on
 we already have
 \emph default
- an encapsulated API: our wiki 
+ an encapsulated API: our CMS 
 \emph on
 web
 \emph default
@@ -4330,11 +4370,11 @@ server
 \end_layout
 
 \begin_layout Subsubsection
-PyWiki
+PyCMS
 \end_layout
 
 \begin_layout Standard
-For this tutorial, we'll show you how to implement our entire wiki in Python.
+For this tutorial, we'll show you how to implement our entire CMS in Python.
 \end_layout
 
 \begin_layout Standard
@@ -4797,12 +4837,12 @@ and
 \end_layout
 
 \begin_layout Subsubsection
-CljWiki?
+CljCMS?
 \end_layout
 
 \begin_layout Standard
-Well, we won't go on rewriting our wiki in every supported programming language\SpecialChar \ldots{}
-
+Well, to keep this tutorial short, we won't go on rewriting our CMS in every
+ supported programming language\SpecialChar \ldots{}
  but here's some proof that they 
 \emph on
 do
@@ -11007,7 +11047,7 @@ To put it another way, there's a many-to-many relationship between virtual
 Note that you can create a “nested” URI scheme for your applications.
  For example, one application might be attached at the root URI at a certain
  virtual host, “/”, while other applications might be at different URIs
- beneath the root, “/wiki/” and “/wiki/support/forum/”.
+ beneath the root, “/cms/” and “/cms/support/forum/”.
  The root application will not “steal” requests from the other applications,
  because the request is routed to the right application by the virtual host.
  The fact that the latter URI is the hierarchical descendant of the former
@@ -11020,7 +11060,7 @@ A Complete Route
 
 \begin_layout Standard
 Let's assume a client from the Internet send a request to URI “http://www.wacky.or
-g/wiki/support/forum/thread/12/.”
+g/cms/support/forum/thread/12/.”
 \end_layout
 
 \begin_layout Standard
@@ -11046,7 +11086,7 @@ Our forum application (in the
 \end_inset
 
  subdirectory) is attached to both virtual hosts, but at different URIs.
- It's at “www.wacky.org/wiki/support/forum/” and at “support.wacky.org/forum/”.
+ It's at “www.wacky.org/cms/support/forum/” and at “support.wacky.org/forum/”.
  In this case, our request is routed to the first virtual host.
  Though there are a few applications installed at this virtual host, our
  request follows the route to the forum application.
@@ -29478,7 +29518,7 @@ If your application logger name is
 \begin_inset Quotes eld
 \end_inset
 
-wiki
+cms
 \begin_inset Quotes erd
 \end_inset
 
@@ -29486,7 +29526,7 @@ wiki
 \begin_inset Quotes eld
 \end_inset
 
-prudence.wiki.email
+prudence.cms.email
 \begin_inset Quotes erd
 \end_inset
 
@@ -33935,7 +33975,7 @@ application.executeTask(
 
 \begin_layout Plain Layout
 
-	'wiki', '/tasks/hello/', null,
+	'cms', '/tasks/hello/', null,
 \end_layout
 
 \begin_layout Plain Layout
@@ -41473,7 +41513,10 @@ prudence create
 \begin_inset Quotes eld
 \end_inset
 
-sincerity prudence create wiki mytemplate
+sincerity prudence create 
+cms
+\lang english
+ mytemplate
 \begin_inset Quotes erd
 \end_inset
 
@@ -53165,11 +53208,13 @@ tter of relational databases, is non-trivial in document databases.
 \end_layout
 
 \begin_layout Standard
-Candidate applications include online retail, blogs, wikis, archives, newspapers
-, contact lists, calendars, photo galleries, dating profiles\SpecialChar \ldots{}
- The list is
- actually quite long, making document databases very attractive for many
- products.
+Candidate applications include online retail, blogs, 
+CMS
+\lang english
+, archives, newspapers, contact lists, calendars, photo galleries, dating
+ profiles\SpecialChar \ldots{}
+ The list is actually quite long, making document databases very
+ attractive for many products.
  But, it's important to always be aware of their limitations: for example,
  merely adding social networking capabilities to a dating site would require
  complex relations that might be better handled with a graph database.
