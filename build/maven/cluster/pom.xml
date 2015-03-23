@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.threecrickets.prudence</groupId>
-	<artifactId>prudence-distributed</artifactId>
+	<artifactId>prudence-cluster</artifactId>
 	<version>@VERSION@</version>
 	<packaging>pom</packaging>
 
-	<name>Prudence: Distributed</name>
-	<description>Adds distributed support using Hazelcast to the Prudence skeleton.</description>
+	<name>Prudence: Cluster</name>
+	<description>Adds cluster support using Hazelcast to the Prudence skeleton.</description>
 	<url>http://threecrickets.com/prudence/</url>
 	<inceptionYear>2009</inceptionYear>
 
