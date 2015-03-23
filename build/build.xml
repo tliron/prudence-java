@@ -304,7 +304,7 @@
 	</target>
 
 	<target name="package-manual-examples" description="Examples to accompany the manual">
-		<zip destfile="${distribution}/${component}-manual-examples-${component.version}${component.version.postfix}.zip">
+		<zip destfile="${distribution}/${component}-${component.version}${component.version.postfix}-manual-examples.zip">
 			<zipfileset dir="${component.reference}/manual-examples" />
 		</zip>
 	</target>
@@ -340,6 +340,7 @@
 		<googledrive suffix=".deb" />
 		<googledrive suffix="-osx-installer.zip" />
 		<googledrive suffix="-windows-installer.exe" />
+		<googledrive suffix="-manual-examples.zip" />
 	</target>
 	
 	<target name="deploy-googlecode" if="googlecode.password" description="Deploy to Google Code">
