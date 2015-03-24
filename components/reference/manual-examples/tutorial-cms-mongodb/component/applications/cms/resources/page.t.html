@@ -4,25 +4,30 @@
 </head>
 <body>
 <%
-document.require('/prudence/resources/')
+document.require(
+	'/prudence/resources/',
+	'/mongo-db/')
 
 var id = 'page.' + conversation.wildcard
 caching.duration = 60000
 caching.tags.add(id)
 caching.onlyGet = true
 
+var collection = new MongoDB.Collection('pages')
+
 if (conversation.request.method.name == 'POST') {
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 	var content = form.content
-	application.globals.put(id, content)
+	collection.upsert({_id: id}, {$set: {content: content}})
 	document.cache.invalidate(id)
 }
 else {
-	var content = application.globals.get(id) || 'This page is empty.'
+	var doc = collection.findOne({_id: id})
+	var content = doc ? doc.content : 'This page is empty.'
 }
 %>
 <div style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
-	<%= new org.pegdown.PegDownProcessor().markdownToHtml(content) %>
+	<%= content %>
 </div>
 <form method="post">
 	<p>Edit this page:</p>

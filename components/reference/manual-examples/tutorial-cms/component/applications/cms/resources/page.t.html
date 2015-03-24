@@ -12,7 +12,7 @@ caching.tags.add(id)
 caching.onlyGet = true
 
 if (conversation.request.method.name == 'POST') {
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 	var content = form.content
 	application.globals.put(id, content)
 	document.cache.invalidate(id)

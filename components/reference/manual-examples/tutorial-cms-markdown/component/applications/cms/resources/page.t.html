@@ -12,24 +12,17 @@ caching.tags.add(id)
 caching.onlyGet = true
 
 if (conversation.request.method.name == 'POST') {
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 	var content = form.content
-	Prudence.Resources.request({
-		uri: '/api/' + conversation.wildcard,
-		method: 'put',
-		payload: {type: 'json', value: {content: content}}
-	})
+	application.globals.put(id, content)
+	document.cache.invalidate(id)
 }
 else {
-	var data = Prudence.Resources.request({
-		uri: '/api/' + conversation.wildcard,
-		mediaType: 'application/json'
-	})
-	var content = data ? data.content : 'This page is empty.'
+	var content = application.globals.get(id) || 'This page is empty.'
 }
 %>
 <div style="border: 1px solid black; padding: 5px 5px 5px 5px"> 
-	<%= content %>
+	<%= new org.pegdown.PegDownProcessor().markdownToHtml(content) %>
 </div>
 <form method="post">
 	<p>Edit this page:</p>

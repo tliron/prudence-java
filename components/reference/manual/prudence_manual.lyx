@@ -1441,7 +1441,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 \end_layout
 
 \begin_layout Plain Layout
@@ -1817,7 +1817,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 \end_layout
 
 \begin_layout Plain Layout
@@ -2180,7 +2180,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 \end_layout
 
 \begin_layout Plain Layout
@@ -2412,7 +2412,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 \end_layout
 
 \begin_layout Plain Layout
@@ -4098,7 +4098,7 @@ if (conversation.request.method.name == 'POST') {
 
 \begin_layout Plain Layout
 
-	var form = Prudence.Resources.getForm(conversation, {content: 'text'})
+	var form = Prudence.Resources.getForm(conversation, {content: 'string'})
 \end_layout
 
 \begin_layout Plain Layout
@@ -17887,7 +17887,7 @@ var query = Prudence.Resources.getQuery(conversation, {
 
 \begin_layout Plain Layout
 
-	name: 'text',
+	name: 'string',
 \end_layout
 
 \begin_layout Plain Layout
@@ -17923,7 +17923,7 @@ var query = Prudence.Resources.getQuery(conversation, {
 
 \begin_layout Plain Layout
 
-	name: 'text[]',
+	name: 'string[]',
 \end_layout
 
 \begin_layout Plain Layout
@@ -19342,7 +19342,7 @@ var form = Prudence.Resources.getForm(conversation, {
 
 \begin_layout Plain Layout
 
-	name: 'text',
+	name: 'string',
 \end_layout
 
 \begin_layout Plain Layout
@@ -19378,7 +19378,7 @@ var form = Prudence.Resources.getForm(conversation, {
 
 \begin_layout Plain Layout
 
-	name: 'text[]',
+	name: 'string[]',
 \end_layout
 
 \begin_layout Plain Layout
