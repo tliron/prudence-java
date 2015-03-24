@@ -484,7 +484,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.hidden = []
 
 			// Inbound root (a router)
-			this.instance.inboundRoot = this.createRestlet({type: 'router', routes: this.routes}, uri)
+			this.instance.inboundRoot = this.createRoute({type: 'router', routes: this.routes}, uri).restlet
 			
 			// Outbound root
 			// (By default, Restlet's ApplicationHelper will wrap the client dispatcher with filters
@@ -501,10 +501,14 @@ Prudence.Setup = Prudence.Setup || function() {
 				}
 			}
 
-			// Internal access to DelegatedResource
+			// Internal access to DelegatedResource and GeneratedTextResource
 			if (Sincerity.Objects.exists(this.delegatedResource)) {
 				this.instance.inboundRoot.attachBase(this.delegatedResourceInternalUri, this.delegatedResource)
 				this.hidden.push(this.delegatedResourceInternalUri + '*')
+			}
+			if (Sincerity.Objects.exists(this.generatedTextResource)) {
+				this.instance.inboundRoot.attachBase(this.generatedTextResourceInternalUri, this.generatedTextResource)
+				this.hidden.push(this.generatedTextResourceInternalUri + '*')
 			}
 
 			// Errors
@@ -553,7 +557,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			// Hidden URIs
 			if (this.hidden.length > 0) {
 				if (sincerity.verbosity >= 2) {
-					println('  Hidden routes:')
+					println('  Hidden root routes:')
 				}
 				for (var h in this.hidden) {
 					var uri = this.hidden[h]
@@ -639,23 +643,39 @@ Prudence.Setup = Prudence.Setup || function() {
 			return this.instance
 		}
 		
-		Public.createRestlet = function(restlet, uri) {
+		Public.createRoute = function(restlet, uri) {
 			if (Sincerity.Objects.isArray(restlet)) {
-				return new Module.Chain({restlets: restlet}).create(this, uri)
+				return {
+					restlet: new Module.Chain({restlets: restlet}).create(this, uri)
+				}
 			}
 			else if (Sincerity.Objects.isString(restlet)) {
 				if ((restlet == 'hidden') || (restlet == '!')) {
-					return restlet
+					return {
+						hidden: true
+					}
 				}
 				else if (restlet[0] == '!') {
-					return new Module.Status({code: parseInt(restlet.substring(1))}).create(this, uri)
+					var code = parseInt(restlet.substring(1))
+					if (isNaN(code)) {
+						return this.createRoute({type: restlet}, uri)
+					}
+					else {
+						return {
+							restlet: new Module.Status({code: code}).create(this, uri)
+						}
+					}
 				}
 				else if (restlet[0] == '/') {
-					return new Module.Capture({uri: restlet}).create(this, uri)
+					return {
+						restlet: new Module.Capture({uri: restlet}).create(this, uri)
+					}
 				}
 				else if (restlet[0] == '>') {
 					restlet = restlet.substring(1)
-					return new Module.Redirect({uri: restlet}).create(this, uri)
+					return {
+						restlet: new Module.Redirect({uri: restlet}).create(this, uri)
+					}
 				}
 				else if (restlet[0] == '@') {
 					restlet = restlet.substring(1)
@@ -663,48 +683,55 @@ Prudence.Setup = Prudence.Setup || function() {
 					if (colon != -1) {
 						var dispatcher = restlet.substring(0, colon)
 						var id = restlet.substring(colon + 1)
-						return new Module.Dispatch({id: id, dispatcher: dispatcher}).create(this, uri)
+						return {
+							restlet: new Module.Dispatch({id: id, dispatcher: dispatcher}).create(this, uri)
+						}	
 					}
 					else {
-						return new Module.Dispatch({id: restlet}).create(this, uri)
+						return {
+							restlet: new Module.Dispatch({id: restlet}).create(this, uri)
+						}
 					}
 				}
 				else if (restlet[0] == '$') {
 					restlet = restlet.substring(1)
-					return new Module.Resource({'class': restlet}).create(this, uri)
+					return {
+						restlet: new Module.Resource({'class': restlet}).create(this, uri)
+					}
 				}
 				else {
-					var type = Module[Sincerity.Objects.capitalize(restlet)]
-					if (Sincerity.Objects.exists(type)) {
-						return this.createRestlet({type: restlet}, uri)
-					}
-					else {
-						throw new SincerityException('Unknown routing type: ' + restlet)
-						/*var colon = restlet.indexOf(':')
-						if (colon != -1) {
-							var dispatcher = restlet.substring(0, colon)
-							var id = restlet.substring(colon + 1)
-							return new Module.Dispatch({id: id, dispatcher: dispatcher}).create(this, uri)
-						}
-						else {
-							return new Module.Dispatch({id: restlet}).create(this, uri)
-						}*/
-					}
+					return this.createRoute({type: restlet}, uri)
 				}
 			}
 			else if (Sincerity.Objects.isString(restlet.type)) {
-				var type = Module[Sincerity.Objects.capitalize(restlet.type)]
+				var typeName = restlet.type
 				delete restlet.type
+
+				var hidden = false
+				if (typeName[0] == '!') {
+					typeName = typeName.substring(1)
+					hidden = true
+				}
+
+				var type = Module[Sincerity.Objects.capitalize(typeName)]
 				if (Sincerity.Objects.exists(type)) {
-					restlet = new type(restlet)
-					if (!Sincerity.Objects.exists(restlet.create)) {
-						return null
+					type = new type(restlet)
+					if (!Sincerity.Objects.exists(type.create)) {
+						throw new SincerityException('Invalid routing type: ' + typeName)
 					}
-					return restlet.create(this, uri)
+					return {
+						restlet: type.create(this, uri),
+						hidden: hidden
+					}
+				}
+				else {
+					throw new SincerityException('Unknown routing type: ' + typeName)
 				}
 			}
 			else {
-				return restlet.create(this, uri)
+				return {
+					restlet: restlet.create(this, uri)
+				}
 			}
 		}
 		
@@ -1147,6 +1174,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @param {String[]} [config.passThroughs] These documents, though not in the root, will still be exposed (see also {@link document#passThroughDocuments})
 	 * @param {String} [config.preExtension='t'] The pre-extension
 	 * @param {Boolean} [config.trailingSlashRequired=true] Whether trailing slashses are required
+	 * @param {String} [config.internalUri='/_templates/'] The base URI for the internal host
 	 * @param {String} [config.defaultDocumentName='index'] The default document name for directories
 	 * @param {String} [config.defaultExtension='html'] The preferred filename extension
 	 * @param {String} [config.clientCachingMode='conditional'] Supports three modes: 'conditional', 'offline', 'disabled'
@@ -1162,7 +1190,7 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'maxClientCachingDuration', 'compress', 'plugins']
+		Public._configure = ['root', 'includeRoot', 'passThroughs', 'preExtension', 'trailingSlashRequired', 'internalUri',  'defaultDocumentName', 'defaultExtension', 'clientCachingMode', 'maxClientCachingDuration', 'compress', 'plugins']
 
 		Public.create = function(app, uri) {
 			if (!Sincerity.Objects.exists(app.generatedTextResource)) {
@@ -1213,6 +1241,8 @@ Prudence.Setup = Prudence.Setup || function() {
 				this.maxClientCachingDuration = Sincerity.Localization.toMilliseconds(this.maxClientCachingDuration)
 
 				this.compress = Sincerity.Objects.ensure(this.compress, true)
+
+				app.generatedTextResourceInternalUri = Sincerity.Objects.ensure(this.internalUri, '/_templates/')
 				
 				if (sincerity.verbosity >= 2) {
 					println('    Templates:')
@@ -1295,7 +1325,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				
 				app.generatedTextResource = new Finder(app.context, Sincerity.JVM.getClass('com.threecrickets.prudence.GeneratedTextResource'))
 			}
-			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.includeRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode) || Sincerity.Objects.exists(thismaxClientCachingDuration)) {
+			else if (Sincerity.Objects.exists(this.root) || Sincerity.Objects.exists(this.includeRoot) || Sincerity.Objects.exists(this.passThroughs) || Sincerity.Objects.exists(this.preExtension) || Sincerity.Objects.exists(this.pretrailingSlashRequired) || Sincerity.Objects.exists(this.internalUri) || Sincerity.Objects.exists(this.defaultDocumentName) || Sincerity.Objects.exists(this.defaultExtension) || Sincerity.Objects.exists(this.clientCachingMode) || Sincerity.Objects.exists(thismaxClientCachingDuration)) {
 				throw new SincerityException('You can configure a Templates only once per application')
 			}
 			
@@ -1447,17 +1477,17 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * hidden URIs. It thus allows you to "cloak" an existing URI while still allowing access to the resource via
 	 * a new one. A common use case is to expose a URI template instead of a URI that is not a template. 
 	 * <p>
-	 * If the target URI template ends with a "!", it is specially interpreted to mean that the "hidden"
+	 * Prudence supports a special short-form notation for configuring this class: a configuration
+	 * string starting with a "/" will be considered as a URI for a capture. For example, '/target/'
+	 * is equivalent to {type: 'capture', uri: '/target/'}.
+	 * <p>
+	 * If the target URI template ends with a "!", it is specially interpreted to mean that the "hiddenTarget"
 	 * param is true (and the "!" is not actually include in the target). Hiding is actually
 	 * not handled by this class, but rather the {@link Prudence.Setup.Router}, but is available
 	 * here as convenient shortcut for the commonly used capture-and-hide paradigm. 
 	 * Note that you should not use the capture-and-hide trick with targets that include URI template
 	 * variables, because Prudence can only hide exact URI matches. Use explicit hiding instead
 	 * for the URIs you want hidden.
-	 * <p>
-	 * Prudence supports a special short-form notation for configuring this class: a configuration
-	 * string starting with a "/" will be considered as a URI for a capture. For example, '/target/!'
-	 * is equivalent to {type: 'capture', uri: '/target/', hidden: true}.
 	 * <p>
 	 * Note that the target URI is in the URI template format, and can use variables from the
 	 * request. Not only that, but you can also use a host of Restlet-specific special variables:
@@ -1477,7 +1507,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @param config
 	 * @param {String} config.uri The target URI template
 	 * @param {String} [config.application] The application to capture to, or null for the current application
-	 * @param {Boolean} [config.hidden=false] Whether to also hide the target URI template (defaults to true when the URI ends with '!')
+	 * @param {Boolean} [config.hiddenTarget=false] Whether to also hide the target URI template (defaults to true when the URI ends with '!')
 	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 */
 	Public.Capture = Sincerity.Classes.define(function(Module) {
@@ -1488,7 +1518,7 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['uri', 'application', 'hidden', 'locals']
+		Public._configure = ['uri', 'application', 'hiddenTarget', 'locals']
 
 		Public.create = function(app, uri) {
 			importClass(
@@ -1497,9 +1527,9 @@ Prudence.Setup = Prudence.Setup || function() {
 
 			if (this.uri.endsWith('!')) {
 				this.uri = this.uri.substring(0, this.uri.length - 1)
-				this.hidden = true
+				this.hiddenTarget = true
 			}
-			
+
 	   		var capture = Sincerity.Objects.exists(this.application) ?
 	   			new CapturingRedirector(app.context, 'riap://component/' + this.application + this.uri + '?{rq}') :
 	   			new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}')
@@ -1513,11 +1543,11 @@ Prudence.Setup = Prudence.Setup || function() {
 				
 				capture = injector
 			}
-			
-			if (true == this.hidden) {
+   
+			if (true == this.hiddenTarget) {
 				app.hidden.push(this.uri)
 			}
-   
+
 			return capture
 		}
 		
@@ -1618,37 +1648,34 @@ Prudence.Setup = Prudence.Setup || function() {
 					
 					uri = Module.cleanUri(uri)
 
-					restlet = app.createRestlet(restlet, uri)
-					if (Sincerity.Objects.exists(restlet)) {
-						if ((restlet == 'hidden') || (restlet == '!')) {
+					var route = app.createRoute(restlet, uri)
+					if (Sincerity.Objects.exists(route.restlet)) {
+						if (attachBase) {
 							if (sincerity.verbosity >= 2) {
-								println('    "{0}" hidden'.cast(uri))
+								println('    "{0}*" -> {1}'.cast(uri, route.restlet))
 							}
-							var length = uri.length
-							var last = uri[length - 1]
-							if (last == '*') {
-								uri = uri.substring(0, length - 1)
-								router.hide(uri, Template.MODE_STARTS_WITH)
-							}
-							else {
-								router.hide(uri)
-							}
-						}
-						else if (attachBase) {
-							if (sincerity.verbosity >= 2) {
-								println('    "{0}*" -> {1}'.cast(uri, restlet))
-							}
-							router.attachBase(uri, restlet)
+							router.attachBase(uri, route.restlet)
 						}
 						else {
 							if (sincerity.verbosity >= 2) {
-								println('    "{0}" -> {1}'.cast(uri, restlet))
+								println('    "{0}" -> {1}'.cast(uri, route.restlet))
 							}
-							router.attach(uri, restlet).matchingMode = Template.MODE_EQUALS
+							router.attach(uri, route.restlet).matchingMode = Template.MODE_EQUALS
 						}
 					}
-					else {
-						throw new SincerityException('Unsupported route type for route "{0}"'.cast(uri))
+					if (route.hidden) {
+						if (attachBase) {
+							if (sincerity.verbosity >= 2) {
+								println('    "{0}*" hidden'.cast(uri))
+							}
+							router.hide(uri, Template.MODE_STARTS_WITH)
+						}
+						else {
+							if (sincerity.verbosity >= 2) {
+								println('    "{0}" hidden'.cast(uri))
+							}
+							router.hide(uri)
+						}
 					}
 				}
 			}
@@ -1706,10 +1733,8 @@ Prudence.Setup = Prudence.Setup || function() {
 			
 			if (Sincerity.Objects.exists(this.restlets)) {
 				for (var i in this.restlets) {
-					var restlet = app.createRestlet(this.restlets[i], uri)
-					if (Sincerity.Objects.exists(restlet)) {
-						fallback.addTarget(restlet)					
-					}
+					var restlet = app.createRoute(this.restlets[i], uri).restlet
+					fallback.addTarget(restlet)					
 				}
 			}
 			
@@ -1930,7 +1955,7 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public.create = function(app, uri) {
 			importClass(com.threecrickets.prudence.DelegatedFilter)
 			
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var filter = new DelegatedFilter(app.context, this.next, this.library)
 			
 			return filter
@@ -1969,7 +1994,7 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public.create = function(app, uri) {
 			importClass(com.threecrickets.prudence.util.Injector)
 					
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var injector = new Injector(app.context, this.next)
 
 			// Locals
@@ -2045,7 +2070,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				target = Sincerity.Files.build(app.root, target)
 			}
 
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var filter = new JavaScriptUnifyMinifyFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks)
 
 			if (sincerity.verbosity >= 2) {
@@ -2128,7 +2153,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				target = Sincerity.Files.build(app.root, target)
 			}
 
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var filter = new CssUnifyMinifyFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks)
 
 			if (sincerity.verbosity >= 2) {
@@ -2213,7 +2238,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				target = Sincerity.Files.build(app.root, target)
 			}
 
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var filter
 			if (Sincerity.Objects.exists(this.compiler)) {
 				filter = new LessFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks, this.compiler)
@@ -2304,7 +2329,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				target = Sincerity.Files.build(app.root, target)
 			}
 
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var filter
 			if (Sincerity.Objects.exists(this.resolver)) {
 				filter = new ZussFilter(app.context, this.next, target, app.settings.code.minimumTimeBetweenValidityChecks, this.resolver)
@@ -2404,7 +2429,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				this['default'] = CacheControlFilter.FAR_FUTURE
 			}
 			
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			var filter = new CacheControlFilter(app.context, this.next, this['default'])
 			
 			if (sincerity.verbosity >= 2) {
@@ -2482,7 +2507,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			}
 			authenticator.verifier = verifier
 
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			authenticator.next = this.next
 			
 			return authenticator
@@ -2543,7 +2568,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				cors.maxAge = this.maxAge
 			}
 
-			this.next = app.createRestlet(this.next, uri)
+			this.next = app.createRoute(this.next, uri).restlet
 			cors.next = this.next
 			
 			return cors
