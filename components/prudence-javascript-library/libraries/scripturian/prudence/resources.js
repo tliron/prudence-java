@@ -658,7 +658,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	/**
 	 * Converts a Restlet Representation into the desired type.
 	 * 
-	 * @param {<a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} representation The Restlet Representation
+	 * @param {<a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>} representation The Restlet Representation
 	 * @param {String} type Supported types:
 	 * <ul>
 	 * <li>'text'</li>
@@ -765,7 +765,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * Converts an attribute map into a dict.
 	 *
 	 * @param {<a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Map.html">java.util.Map</a>} map The map
-	 * @param {<a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.3/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;} [series] The series (in order to support arrays)
+	 * @param {<a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/jse/engine/index.html?org/restlet/engine/header/Header.html">org.restlet.engine.header.Header</a>&gt;} [series] The series (in order to support arrays)
 	 * @param [keys] A dict where keys are attribute names and values are types. Supported types:
 	 *		<ul>
 	 *		<li>'string': no conversion</li>
@@ -928,7 +928,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	 * Converts a dict into a Restlet's headers format.
 	 * 
 	 * @param dict
-	 * @returns {<a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.org/learn/javadocs/2.3/jse/api/jse/engine/index.html?org/restlet/data/Header.html">org.restlet.data.Header</a>&gt;}
+	 * @returns {<a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/util/Series.html">org.restlet.util.Series</a>&lt;<a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/jse/engine/index.html?org/restlet/data/Header.html">org.restlet.data.Header</a>&gt;}
 	 */
 	Public.toHeaders = function(dict) {
 		importClass(
@@ -948,7 +948,7 @@ Prudence.Resources = Prudence.Resources || function() {
 	/**
 	 * Converts a dict into an HTML form payload.
 	 * 
-	 * @returns {<a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>}
+	 * @returns {<a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/representation/Representation.html">org.restlet.representation.Representation</a>}
 	 */
 	Public.toWebPayload = function(dict) {
 		return Public.toForm(dict).webRepresentation
