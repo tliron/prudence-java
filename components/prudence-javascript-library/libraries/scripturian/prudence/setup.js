@@ -1508,6 +1508,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @param {String} config.uri The target URI template
 	 * @param {String} [config.application] The application to capture to, or null for the current application
 	 * @param {Boolean} [config.hiddenTarget=false] Whether to also hide the target URI template (defaults to true when the URI ends with '!')
+	 * @param {Boolean} [config.appendQuery=true] Whether to append the query params to the target URI
 	 * @param {Object} [config.locals] The values to inject into conversation.locals
 	 */
 	Public.Capture = Sincerity.Classes.define(function(Module) {
@@ -1518,21 +1519,24 @@ Prudence.Setup = Prudence.Setup || function() {
 		Public._inherit = Module.Restlet
 
 		/** @ignore */
-		Public._configure = ['uri', 'application', 'hiddenTarget', 'locals']
+		Public._configure = ['uri', 'application', 'hiddenTarget', 'appendQuery', 'locals']
 
 		Public.create = function(app, uri) {
 			importClass(
 				com.threecrickets.prudence.util.Injector,
 				com.threecrickets.prudence.util.CapturingRedirector)
 
+			this.appendQuery = Sincerity.Objects.ensure(this.appendQuery, true)
+
 			if (this.uri.endsWith('!')) {
 				this.uri = this.uri.substring(0, this.uri.length - 1)
 				this.hiddenTarget = true
 			}
 
-	   		var capture = Sincerity.Objects.exists(this.application) ?
-	   			new CapturingRedirector(app.context, 'riap://component/' + this.application + this.uri + '?{rq}') :
-	   			new CapturingRedirector(app.context, 'riap://application' + this.uri + '?{rq}')
+			var prefix = Sincerity.Objects.exists(this.application) ? 'riap://component/' + this.application : 'riap://application'
+			var postfix = this.appendQuery ? (this.uri.indexOf('?') == -1 ? '?{rq}' : '&{rq}') : ''
+
+	   		var capture = new CapturingRedirector(app.context, prefix + this.uri + postfix)
 
 			if (Sincerity.Objects.exists(this.locals)) {
 				var injector = new Injector(app.context, capture)
