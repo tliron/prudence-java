@@ -8745,7 +8745,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/user/*': '/database/user/?id={rr}'
+	'/user/*': '/database/user/?id={rw}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -9914,12 +9914,12 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/style/*' : '/static/style/{rr}',
+	'/style/*' : '/static/style/{rw}',
 \end_layout
 
 \begin_layout Plain Layout
 
-	'/*': '/templates/page/?id={rr}'
+	'/*': '/templates/page/?id={rw}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -19004,7 +19004,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/images/*': '>/media/{rr}'
+	'/images/*': '>/media/{rw}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -37548,15 +37548,27 @@ ath (everything after the authority)
 \end_layout
 
 \begin_layout Itemize
+{-w}: the 
+\bar under
+w
+\bar default
+ildcard (remaining part of the path after the base URI, 
+\emph on
+not including
+\emph default
+ the query
+\end_layout
+
+\begin_layout Itemize
 {-r}: the 
 \bar under
 r
 \bar default
 emaining part of the path after the base URI, 
 \emph on
-including 
+including
 \emph default
-the query
+ the query
 \end_layout
 
 \begin_layout Itemize
@@ -37715,7 +37727,7 @@ This is a common use case for redirection, so even though it's included
 \begin_inset Quotes eld
 \end_inset
 
-{rr}
+{rw}
 \begin_inset Quotes erd
 \end_inset
 
@@ -37740,7 +37752,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/assets/*': '/files/media/{rr}'
+	'/assets/*': '/files/media/{rw}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -43706,7 +43718,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/views/*': '@st:{rr}'
+	'/views/*': '@st:{rw}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -43769,7 +43781,7 @@ reference "interpolating-the-wildcard"
 \begin_inset Quotes eld
 \end_inset
 
-{rr}
+{rw}
 \begin_inset Quotes erd
 \end_inset
 
@@ -44569,7 +44581,7 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/views/*': '@jinja:{rr}',
+	'/views/*': '@jinja:{rw}',
 \end_layout
 
 \begin_layout Plain Layout
@@ -44637,7 +44649,7 @@ reference "interpolating-the-wildcard"
 \begin_inset Quotes eld
 \end_inset
 
-{rr}
+{rw}
 \begin_inset Quotes erd
 \end_inset
 

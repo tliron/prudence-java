@@ -191,6 +191,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				com.threecrickets.prudence.service.ApplicationService,
 				com.threecrickets.prudence.util.InstanceUtil,
 				com.threecrickets.prudence.util.PrudenceScriptletPlugin,
+				com.threecrickets.prudence.util.ResolvingTemplate,
 				org.restlet.resource.Finder,
 				org.restlet.routing.Template,
 				org.restlet.routing.Redirector,
@@ -261,13 +262,13 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.globals['com.threecrickets.prudence.hazelcast.distributedSharedGlobalsMapName'] = this.settings.distributed.sharedGlobals
 			this.globals['com.threecrickets.prudence.hazelcast.taskInstanceAttributeName'] = this.settings.distributed.taskInstanceSharedGlobal
 			this.globals['com.threecrickets.prudence.hazelcast.executorServiceName'] = this.settings.distributed.executorService
-
+			
 			// Create instance
 			this.context = component.context.createChildContext()
 			this.instance = new PrudenceApplication(this.context)
 
 			this.context.attributes.put(InstanceUtil.ROOT_ATTRIBUTE, this.root)
-
+			
 			// Logger
 			this.context.logger = LoggingUtil.getRestletLogger(this.settings.logger)
 			
@@ -288,6 +289,9 @@ Prudence.Setup = Prudence.Setup || function() {
 			if (sincerity.verbosity >= 1) {
 				println('Setting up application: "{0}"'.cast(this.instance.name))
 			}
+
+			// Resolver
+			ResolvingTemplate.setCallResolverClass(this.instance, Sincerity.JVM.getClass('com.threecrickets.prudence.util.EnhancedCallResolver'))
 
 			// Media types
 			for (var extension in this.settings.mediaTypes) {

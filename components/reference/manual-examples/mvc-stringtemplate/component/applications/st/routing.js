@@ -21,7 +21,7 @@ app.routes = {
 	'/user/{name}/comments/': '/user/comments/!',
 	
 	// Views
-	'/views/*': '@st:{rr}'	
+	'/views/*': '@st:{rw}'	
 }
 
 app.hosts = {

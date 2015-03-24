@@ -49,7 +49,7 @@ public class ResolvingTemplate extends Template
 	 * 
 	 * @see #getCallResolverConstructor()
 	 */
-	public static final String CALL_RESOLVER_CONSTRUCTOR = ResolvingTemplate.class.getCanonicalName() + ".mapResolverConstructor";
+	public static final String CALL_RESOLVER_CONSTRUCTOR = ResolvingTemplate.class.getCanonicalName() + ".callResolverConstructor";
 
 	//
 	// Construction
@@ -214,7 +214,7 @@ public class ResolvingTemplate extends Template
 	}
 
 	/**
-	 * Configures the map resolver class.
+	 * Configures the call resolver class.
 	 * <p>
 	 * The class must have a constructor that accepts {@link Request} and
 	 * {@link Response} arguments.

@@ -21,7 +21,7 @@ app.routes = {
 	'/user/{name}/comments/': '/user/comments/!',
 	
 	// Views
-	'/views/*': '@jinja:{rr}',
+	'/views/*': '@jinja:{rw}',
 	'/jinja-template/{id}/': '/jinja-template/!'
 }
 
