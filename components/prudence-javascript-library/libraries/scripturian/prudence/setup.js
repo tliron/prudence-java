@@ -873,7 +873,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * Note that each application has its own extension mapping table, which can
 	 * be configured in its settings.js, under "settings.mediaTypes".
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/Directory.html">Directory</a> instance.
+	 * Implementation note: Internally handled by a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/Directory.html">Directory</a> instance.
 	 * When "compress" is set to true, inserts a <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html">CustomEncoder</a>
 	 * filter before the Directory.
 	 * 
@@ -991,7 +991,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * be thrown.
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/DelegatedResource.html">DelegatedResource</a>
-	 * via a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * via a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Setup.Manual
@@ -1162,7 +1162,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * be thrown.
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/GeneratedTextResource.html">GeneratedTextResource</a>
-	 * via a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * via a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Setup.Templates
@@ -1355,7 +1355,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * </pre>
 	 * <p>
 	 * Implementation note: Internally handled by <a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/ExecutionResource.html">ExecutionResource</a>
-	 * via a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * via a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Setup.Execute
@@ -1491,7 +1491,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * <p>
 	 * Note that the target URI is in the URI template format, and can use variables from the
 	 * request. Not only that, but you can also use a host of Restlet-specific special variables:
-	 * see the <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/util/Resolver.html">Resolver</a>
+	 * see the <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/util/Resolver.html">Resolver</a>
 	 * documentation for a complete list.
 	 * <p>
 	 * Optionally supports value injection via the "locals" param.
@@ -1854,7 +1854,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * Furthermore, clients may or may not cache the permament redirection
 	 * information.
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
+	 * Implementation note: Internally handled by a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/routing/Redirector.html">Redirector</a>
 	 * singleton instance shared by all usages in the application.
 	 * 
 	 * @class
@@ -1880,7 +1880,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * <p>
 	 * The "class" param (note that "class" is a reserved word in JavaScript and must be placed
 	 * in quotes for a dict key) must be the full classname of a JVM class that inherits
-	 * from <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>.
+	 * from <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/ServerResource.html">org.restlet.resource.ServerResource</a>.
 	 * <p>
 	 * These classes are often written in Java, but can be written in any language that can
 	 * produce JVM classes, such as Groovy, Clojure, etc. 
@@ -1889,14 +1889,14 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * beginning with '$' followed by the class name. For example, '$org.myapp.PersonResource' is equivalent
 	 * to {type: 'resource', 'class': 'org.myapp.PersonResource'}.
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
+	 * Implementation note: Internally handled by a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/Finder.html">Finder</a> instance.
 	 *
 	 * @class
 	 * @name Prudence.Setup.Resource
 	 * @augments Prudence.Setup.Restlet
 	 * 
 	 * @param config
-	 * @param {String} config.class The JVM class name (must inherit from http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/resource/ServerResource.html">ServerResource</a>)
+	 * @param {String} config.class The JVM class name (must inherit from http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/resource/ServerResource.html">ServerResource</a>)
 	 */
 	Public.Resource = Sincerity.Classes.define(function(Module) {
 		/** @exports Public as Prudence.Setup.Resource */
@@ -2475,7 +2475,7 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * Most web browsers will cache the credentials for the duration of the session (until the browser is
 	 * closed), so that the prompt (the "realm" param) would usually only appear once to the user during that time.
 	 * <p>
-	 * Implementation note: Internally handled by a <a href="http://restlet.org/learn/javadocs/2.3/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
+	 * Implementation note: Internally handled by a <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/security/ChallengeAuthenticator.html">ChallengeAuthenticator</a> instance.
 	 * 
 	 * @class
 	 * @name Prudence.Setup.BasicHttpAuthenticator
