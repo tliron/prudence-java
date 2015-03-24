@@ -36,7 +36,6 @@ import com.github.sommeri.less4j.LessCompiler;
 import com.github.sommeri.less4j.LessCompiler.CompilationResult;
 import com.github.sommeri.less4j.core.DefaultLessCompiler;
 import com.threecrickets.prudence.internal.CSSMin;
-import com.threecrickets.scripturian.internal.ScripturianUtil;
 
 /**
  * A {@link Filter} that automatically parses <a
@@ -224,18 +223,18 @@ public class LessFilter extends Filter
 		String path = reference.getRemainingPart( true, false );
 		try
 		{
-			String name = reference.getLastSegment();
-			String lessName = null;
+			// String name = reference.getLastSegment( true, false );
+			String lessPath = null;
 			boolean minify = false;
 			if( path.endsWith( CSS_MIN_EXTENSION ) )
 			{
-				lessName = name.substring( 0, name.length() - CSS_MIN_EXTENSION_LENGTH ) + LESS_EXTENSION;
+				lessPath = path.substring( 0, path.length() - CSS_MIN_EXTENSION_LENGTH ) + LESS_EXTENSION;
 				minify = true;
 			}
 			else if( path.endsWith( CSS_EXTENSION ) )
-				lessName = name.substring( 0, name.length() - CSS_EXTENSION_LENGTH ) + LESS_EXTENSION;
+				lessPath = path.substring( 0, path.length() - CSS_EXTENSION_LENGTH ) + LESS_EXTENSION;
 
-			if( lessName != null )
+			if( lessPath != null )
 			{
 				long now = System.currentTimeMillis();
 				AtomicLong lastValidityCheckAtomic = getLastValidityCheck( path );
@@ -246,12 +245,10 @@ public class LessFilter extends Filter
 					{
 						for( File sourceDirectory : sourceDirectories )
 						{
-							File lessFile = findFile( lessName, sourceDirectory );
-							if( lessFile != null )
+							File lessFile = new File( sourceDirectory, lessPath );
+							if( lessFile.exists() )
 							{
-								String relativeDirectory = ScripturianUtil.getRelativeFile( lessFile, sourceDirectory ).getParent();
-								File targetDirectory = relativeDirectory == null ? this.targetDirectory : new File( this.targetDirectory, relativeDirectory );
-								File cssFile = new File( targetDirectory, name );
+								File cssFile = new File( targetDirectory, path );
 								translate( lessFile, cssFile, minify );
 								break;
 							}
@@ -259,7 +256,7 @@ public class LessFilter extends Filter
 
 						// LESS file was not found, so don't keep the entry for
 						// it
-						this.lastValidityChecks.remove( lessName );
+						this.lastValidityChecks.remove( path );
 					}
 				}
 			}
@@ -330,27 +327,6 @@ public class LessFilter extends Filter
 		setAuthor( "Three Crickets" );
 		setName( getClass().getSimpleName() );
 		setDescription( "A filter that automatically translates LESS source files to CSS" );
-	}
-
-	private static File findFile( String name, File dir )
-	{
-		File file = new File( dir, name );
-		if( file.exists() )
-			return file;
-		File[] files = dir.listFiles();
-		if( files != null )
-		{
-			for( File subDir : files )
-			{
-				if( subDir.isDirectory() )
-				{
-					file = findFile( name, subDir );
-					if( file != null )
-						return file;
-				}
-			}
-		}
-		return null;
 	}
 
 	private AtomicLong getLastValidityCheck( String key )

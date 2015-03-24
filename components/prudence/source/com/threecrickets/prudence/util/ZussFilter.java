@@ -42,7 +42,6 @@ import org.zkoss.zuss.impl.out.BuiltinResolver;
 import org.zkoss.zuss.metainfo.ZussDefinition;
 
 import com.threecrickets.prudence.internal.CSSMin;
-import com.threecrickets.scripturian.internal.ScripturianUtil;
 
 /**
  * A {@link Filter} that automatically parses <a
@@ -230,18 +229,18 @@ public class ZussFilter extends Filter implements Locator
 		String path = reference.getRemainingPart( true, false );
 		try
 		{
-			String name = reference.getLastSegment();
-			String zussName = null;
+			// String name = reference.getLastSegment( true, false );
+			String zussPath = null;
 			boolean minify = false;
 			if( path.endsWith( CSS_MIN_EXTENSION ) )
 			{
-				zussName = name.substring( 0, name.length() - CSS_MIN_EXTENSION_LENGTH ) + ZUSS_EXTENSION;
+				zussPath = path.substring( 0, path.length() - CSS_MIN_EXTENSION_LENGTH ) + ZUSS_EXTENSION;
 				minify = true;
 			}
 			else if( path.endsWith( CSS_EXTENSION ) )
-				zussName = name.substring( 0, name.length() - CSS_EXTENSION_LENGTH ) + ZUSS_EXTENSION;
+				zussPath = path.substring( 0, path.length() - CSS_EXTENSION_LENGTH ) + ZUSS_EXTENSION;
 
-			if( zussName != null )
+			if( zussPath != null )
 			{
 				long now = System.currentTimeMillis();
 				AtomicLong lastValidityCheckAtomic = getLastValidityCheck( path );
@@ -252,12 +251,10 @@ public class ZussFilter extends Filter implements Locator
 					{
 						for( File sourceDirectory : sourceDirectories )
 						{
-							File zussFile = findFile( zussName, sourceDirectory );
-							if( zussFile != null )
+							File zussFile = new File( sourceDirectory, zussPath );
+							if( zussFile.exists() )
 							{
-								String relativeDirectory = ScripturianUtil.getRelativeFile( zussFile, sourceDirectory ).getParent();
-								File targetDirectory = relativeDirectory == null ? this.targetDirectory : new File( this.targetDirectory, relativeDirectory );
-								File cssFile = new File( targetDirectory, name );
+								File cssFile = new File( targetDirectory, path );
 								translate( zussFile, cssFile, minify );
 								break;
 							}
@@ -265,7 +262,7 @@ public class ZussFilter extends Filter implements Locator
 
 						// ZUSS file was not found, so don't keep the entry for
 						// it
-						this.lastValidityChecks.remove( zussName );
+						this.lastValidityChecks.remove( path );
 					}
 				}
 			}

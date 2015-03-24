@@ -1873,6 +1873,16 @@ And\SpecialChar \ldots{}
 
  becomes an editable CMS page.
  If that page does not exist it, it will be created.
+ Note that we're using 
+\begin_inset Quotes eld
+\end_inset
+
+page.
+\begin_inset Quotes erd
+\end_inset
+
+ as a prefix for our application globals in order to make sure they don't
+ overlap with globals used for other purposes.
 \end_layout
 
 \begin_layout Standard
@@ -2152,21 +2162,6 @@ var id = 'page.' + conversation.wildcard
 
 \begin_layout Plain Layout
 
-caching.duration = 60000
-\end_layout
-
-\begin_layout Plain Layout
-
-caching.tags.add(id)
-\end_layout
-
-\begin_layout Plain Layout
-
-caching.onlyGet = true
-\end_layout
-
-\begin_layout Plain Layout
-
 \end_layout
 
 \begin_layout Plain Layout
@@ -2196,11 +2191,6 @@ if (conversation.request.method.name == 'POST') {
 \begin_layout Plain Layout
 
 	collection.upsert({_id: id}, {$set: {content: content}})
-\end_layout
-
-\begin_layout Plain Layout
-
-	document.cache.invalidate(id)
 \end_layout
 
 \begin_layout Plain Layout
@@ -9895,17 +9885,17 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/templates/*': '!templates',
+	'/_templates/*': '!templates',
 \end_layout
 
 \begin_layout Plain Layout
 
-	'/manual/*': '!manual',
+	'/_manual/*': '!manual',
 \end_layout
 
 \begin_layout Plain Layout
 
-	'/static/*': '!static',
+	'/_static/*': '!static',
 \end_layout
 
 \begin_layout Plain Layout
@@ -9914,12 +9904,12 @@ app.routes = {
 
 \begin_layout Plain Layout
 
-	'/style/*' : '/static/style/{rw}',
+	'/style/*' : '/_static/style/{rw}',
 \end_layout
 
 \begin_layout Plain Layout
 
-	'/*': '/templates/page/?id={rw}'
+	'/*': '/_templates/page/?id={rw}'
 \end_layout
 
 \begin_layout Plain Layout
@@ -9935,6 +9925,16 @@ app.routes = {
 \begin_layout Standard
 With the above routing.js, we can then specify exactly which URIs go where,
  with nothing made public by default.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+_
+\begin_inset Quotes erd
+\end_inset
+
+ prefixes are merely a convention in this case to specify an internal-only
+ URI.
 \end_layout
 
 \begin_layout Subsection
@@ -37556,7 +37556,7 @@ ildcard (remaining part of the path after the base URI,
 \emph on
 not including
 \emph default
- the query
+ the query)
 \end_layout
 
 \begin_layout Itemize

@@ -2190,8 +2190,8 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * <a href="http://sass-lang.com/">Sass</a>, that can greatly
 	 * improve the clarity and reusability of your CSS.
 	 * <p>
-	 * By default, LESS files are expected to be found under the "/resources/style/"
-	 * subdirectory of your application, as well as the "/libraries/web/style/" subdirectory
+	 * By default, LESS files are expected to be found under the "/resources/"
+	 * subdirectory of your application, as well as the "/libraries/web/" subdirectory
 	 * of your Sincerity container. These locations can be changed via the "roots" param.
 	 * <p>
 	 * Note that the first entry in the "roots" is special: it is where the compiled/minified files
@@ -2239,7 +2239,7 @@ Prudence.Setup = Prudence.Setup || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [Sincerity.Files.build(app.root, 'resources', 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+				this.roots = [Sincerity.Files.build(app.root, 'resources'), sincerity.container.getLibrariesFile('web')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {
@@ -2281,8 +2281,8 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * <a href="http://lesscss.org/">LESS</a> and <a href="http://sass-lang.com/">Sass</a>, that can greatly
 	 * improve the clarity and reusability of your CSS.
 	 * <p>
-	 * By default, ZUSS files are expected to be found under the "/resources/style/"
-	 * subdirectory of your application, as well as the "/libraries/web/style/" subdirectory
+	 * By default, ZUSS files are expected to be found under the "/resources/"
+	 * subdirectory of your application, as well as the "/libraries/web/" subdirectory
 	 * of your Sincerity container. These locations can be changed via the "roots" param.
 	 * <p>
 	 * Note that the first entry in the "roots" is special: it is where the compiled/minified files
@@ -2330,7 +2330,7 @@ Prudence.Setup = Prudence.Setup || function() {
    
 			this.roots = Sincerity.Objects.array(this.roots)
 			if (!Sincerity.Objects.exists(this.roots) || (this.roots.length == 0)) {
-				this.roots = [Sincerity.Files.build(app.root, 'resources', 'style'), sincerity.container.getLibrariesFile('web', 'style')]
+				this.roots = [Sincerity.Files.build(app.root, 'resources'), sincerity.container.getLibrariesFile('web')]
 			}
 			var target = this.roots[0]
 			if (!(target instanceof File)) {

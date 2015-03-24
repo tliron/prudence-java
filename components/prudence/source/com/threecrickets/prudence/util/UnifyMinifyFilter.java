@@ -251,7 +251,7 @@ public abstract class UnifyMinifyFilter extends Filter
 	protected int beforeHandle( Request request, Response response )
 	{
 		Reference reference = request.getResourceRef();
-		String name = reference.getLastSegment();
+		String name = reference.getLastSegment( true, false );
 		try
 		{
 			boolean validate = false;
