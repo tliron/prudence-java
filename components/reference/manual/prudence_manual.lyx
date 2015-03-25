@@ -18729,12 +18729,12 @@ You can ask the client to delete a cookie by calling its
 \begin_inset Quotes eld
 \end_inset
 
-delete
+remove
 \begin_inset Quotes erd
 \end_inset
 
  method.
- Note that this is identical to setting maxAge=0 and calling 
+ This is identical to setting maxAge=0 and calling 
 \begin_inset Quotes eld
 \end_inset
 

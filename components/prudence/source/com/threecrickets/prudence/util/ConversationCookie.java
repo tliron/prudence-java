@@ -107,6 +107,8 @@ public class ConversationCookie extends Cookie
 	public ConversationCookie( Cookie cookie, Series<CookieSetting> cookieSettings )
 	{
 		super( cookie.getVersion(), cookie.getName(), cookie.getValue(), cookie.getPath(), cookie.getDomain() );
+		if( getPath() == null )
+			super.setPath( "/" );
 		originalCookie = cookie;
 		this.cookieSettings = cookieSettings;
 	}
@@ -380,8 +382,9 @@ public class ConversationCookie extends Cookie
 	 */
 	private CookieSetting getChanges()
 	{
-		if( !changed && checkForChange )
-			changed = getVersion() != originalCookie.getVersion() || !getValue().equals( originalCookie.getValue() ) || !getPath().equals( originalCookie.getPath() ) || !getDomain().equals( originalCookie.getDomain() );
+		if( !changed && checkForChange && ( originalCookie != null ) )
+			changed = getVersion() != originalCookie.getVersion() || !areStringsEquals( getValue(), originalCookie.getValue() ) || !areStringsEquals( getPath(), originalCookie.getPath() )
+				|| !areStringsEquals( getDomain(), originalCookie.getDomain() );
 
 		if( changed )
 		{
@@ -391,5 +394,12 @@ public class ConversationCookie extends Cookie
 		}
 
 		return null;
+	}
+
+	private static boolean areStringsEquals( String a, String b )
+	{
+		if( ( a == null ) || ( b == null ) )
+			return a == b;
+		return a.equals( b );
 	}
 }
