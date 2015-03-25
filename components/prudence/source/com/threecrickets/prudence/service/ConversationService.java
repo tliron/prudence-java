@@ -109,7 +109,11 @@ public class ConversationService
 	 */
 	public String getApplicationRoot()
 	{
-		return getReference().getBaseRef().toString();
+		Request request = getRequest();
+		Reference root = CapturingRedirector.getCapturedRootReference( request );
+		if( root == null )
+			root = request.getRootRef();
+		return root.toString();
 	}
 
 	/**
