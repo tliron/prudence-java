@@ -10414,27 +10414,17 @@ app.hosts = {
 
 \begin_layout Standard
 If you need your application to sometimes behave differently on each host,
- it's not so easy, because information about the originating host is not
- preserved by the routing mechanism.
- You 
-\emph on
-might
-\emph default
- be able to 
-\emph on
-indirectly
-\emph default
- discover the host that routed the request using the 
+ use the 
 \begin_inset CommandInset href
 LatexCommand href
-name "conversation.applicationRoot API"
-target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.applicationRoot"
+name "conversation.host API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.host"
 
 \end_inset
 
 .
- This will always be the application's root URI on that virtual host.
- For example:
+ Note that it will be null when routed from the internal host.
+ Example:
 \end_layout
 
 \begin_layout Standard
@@ -10444,7 +10434,12 @@ status open
 
 \begin_layout Plain Layout
 
-if (conversation.applicationRoot.path == '/myapp') {
+var host = conversation.host
+\end_layout
+
+\begin_layout Plain Layout
+
+if (Sincerity.Objects.exists(host) && (host.name == 'privatehost')) {
 \end_layout
 
 \begin_layout Plain Layout
