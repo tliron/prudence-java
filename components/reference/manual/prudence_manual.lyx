@@ -10414,7 +10414,9 @@ app.hosts = {
 
 \begin_layout Standard
 If you need your application to sometimes behave differently on each host,
- you 
+ it's not so easy, because information about the originating host is not
+ preserved by the routing mechanism.
+ You 
 \emph on
 might
 \emph default
@@ -10442,7 +10444,7 @@ status open
 
 \begin_layout Plain Layout
 
-if (conversation.applicationRoot == '/myapp/') {
+if (conversation.applicationRoot.path == '/myapp') {
 \end_layout
 
 \begin_layout Plain Layout

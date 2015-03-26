@@ -34,6 +34,7 @@ import org.restlet.data.Status;
 import org.restlet.engine.header.HeaderConstants;
 import org.restlet.representation.ByteArrayRepresentation;
 import org.restlet.representation.StringRepresentation;
+import org.restlet.routing.VirtualHost;
 import org.restlet.util.Series;
 
 import com.threecrickets.prudence.DelegatedStatusService;
@@ -41,6 +42,7 @@ import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.ConversationCookie;
 import com.threecrickets.prudence.util.FileParameter;
 import com.threecrickets.prudence.util.FormWithFiles;
+import com.threecrickets.prudence.util.VirtualHostInjector;
 
 /**
  * Conversation service exposed to executables.
@@ -107,13 +109,23 @@ public class ConversationService
 	 * 
 	 * @return The application's root
 	 */
-	public String getApplicationRoot()
+	public Reference getApplicationRoot()
 	{
 		Request request = getRequest();
 		Reference root = CapturingRedirector.getCapturedRootReference( request );
 		if( root == null )
 			root = request.getRootRef();
-		return root.toString();
+		return root;
+	}
+
+	/**
+	 * The virtual host that routed this request.
+	 * 
+	 * @return The virtual host
+	 */
+	public VirtualHost getHost()
+	{
+		return VirtualHostInjector.getVirtualHost( getRequest() );
 	}
 
 	/**

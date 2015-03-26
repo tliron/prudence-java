@@ -1014,10 +1014,17 @@ var Prudence = {}
 /**
  * The application's root URI on the virtual host that routed the current request.
  * <p>
- * This is a shortcut to calling {@link conversation#reference}.rootRef.path + '/'.
+ * If null, signifies that it is the internal host.
  * 
  * @name conversation.applicationRoot
- * @type {String}
+ * @type <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/data/Reference.html">org.restlet.data.Reference</a>
+ */
+
+/**
+ * The virtual host that routed the current request.
+ * 
+ * @name conversation.host
+ * @type <a href="http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/routing/VirtualHost.html">org.restlet.routing.VirtualHost</a>
  */
 
 /**

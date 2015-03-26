@@ -192,6 +192,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				com.threecrickets.prudence.util.InstanceUtil,
 				com.threecrickets.prudence.util.PrudenceScriptletPlugin,
 				com.threecrickets.prudence.util.ResolvingTemplate,
+				com.threecrickets.prudence.util.VirtualHostInjector,
 				org.restlet.resource.Finder,
 				org.restlet.routing.Template,
 				org.restlet.routing.Redirector,
@@ -316,6 +317,7 @@ Prudence.Setup = Prudence.Setup || function() {
 			}
 			for (var name in this.hosts) {
 				var host = Restlet.getHost(component, name)
+				var instance = this.instance
 				if (!Sincerity.Objects.exists(host)) {
 					throw new SincerityException('Unknown host: ' + name)
 				}
@@ -324,13 +326,17 @@ Prudence.Setup = Prudence.Setup || function() {
 					// Internal should not have a slash at the beginning
 					this.internalName = uri.substring(1)
 				}
+				else {
+					// Inject the virtual host (if not 'internal')
+					instance = new VirtualHostInjector(this.context, instance, host)					
+				}
 				if (sincerity.verbosity >= 2) {
 					println('    "{0}/" on "{1}"'.cast(uri, name))
 				}
 				if (uri != '') {
 					host.attach(uri, this.addTrailingSlashRedirector).matchingMode = Template.MODE_EQUALS
 				}
-				host.attach(uri, this.instance)
+				host.attach(uri, instance)
 			}
 
 			// Status service
