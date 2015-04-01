@@ -207,6 +207,7 @@ public class InProcessMemoryCache implements Cache
 
 		cache.clear();
 		cacheTags.clear();
+		size.set( 0L );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
