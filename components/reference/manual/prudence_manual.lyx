@@ -30755,6 +30755,104 @@ reference "daemon"
 \end_layout
 
 \begin_layout Subsubsection
+JVM Logging
+\end_layout
+
+\begin_layout Standard
+If you prefer, you can use the JVM's built-in logging instead of the Sincerity
+ plugin.
+ It is less flexible and much less scalable, but may be preferable in some
+ cases.
+ To configure it, create a configuration file, for example 
+\begin_inset Quotes eld
+\end_inset
+
+logging.properties
+\begin_inset Quotes erd
+\end_inset
+
+, and define the properties of the handlers and loggers:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+handlers = java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+\end_layout
+
+\begin_layout Plain Layout
+
+java.util.logging.FileHandler.pattern = log.%u.%g.txt
+\end_layout
+
+\begin_layout Plain Layout
+
+java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
+\end_layout
+
+\begin_layout Plain Layout
+
+java.util.logging.SimpleFormatter.format=%1$tb %1$td, %1$tY %1$tl:%1$tM:%1$tS
+ %1$Tp %2$s %4$s: %5$s%n
+\end_layout
+
+\begin_layout Plain Layout
+
+java.util.logging.ConsoleHandler.level = ALL
+\end_layout
+
+\begin_layout Plain Layout
+
+com.threecrickets.prudence.cache.level = ALL
+\end_layout
+
+\begin_layout Plain Layout
+
+.level = INFO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Then, start Prudence using a switch to point at that configuration:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+JVM_SWITCHES=-Djava.util.logging.config.file=logging.properties sincerity use
+ mycontainer : start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For more information, see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "JVM documentation"
+target "http://docs.oracle.com/javase/6/docs/technotes/guides/logging/overview.html#1.8"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
 Best Practices
 \end_layout
 
