@@ -2041,7 +2041,7 @@ Let's install the
 \begin_inset CommandInset href
 LatexCommand href
 name "MongoDB driver"
-target "http://code.google.com/p/mongodb-jvm/"
+target "https://github.com/tliron/mongodb-jvm"
 
 \end_inset
 
@@ -2282,7 +2282,7 @@ You can easily administer MongoDB by installing
 \begin_inset CommandInset href
 LatexCommand href
 name "MongoVision"
-target "http://code.google.com/p/mongo-vision/"
+target "https://github.com/tliron/mongovision"
 
 \end_inset
 
@@ -26183,7 +26183,7 @@ target "http://threecrickets.com/api/java/prudence/"
 \begin_inset CommandInset href
 LatexCommand href
 name "source code itself"
-target "http://code.google.com/p/prudence/source/browse/"
+target "https://github.com/tliron/prudence"
 
 \end_inset
 
@@ -26196,7 +26196,7 @@ The development team spends a lot of time meticulously documenting the APIs.
 \begin_inset CommandInset href
 LatexCommand href
 name "bug report"
-target "http://code.google.com/p/prudence/issues/list"
+target "https://github.com/tliron/prudence/issues"
 
 \end_inset
 
@@ -53754,7 +53754,7 @@ We've started a project
 \begin_inset CommandInset href
 LatexCommand href
 name "to better integrate Prudence JavaScript with MongoDB"
-target "http://code.google.com/p/mongodb-jvm/"
+target "https://github.com/tliron/mongodb-jvm"
 
 \end_inset
 
