@@ -39531,7 +39531,7 @@ status open
 
 \begin_layout Plain Layout
 
-var host = new VirtualHost(component.context)
+var host = new org.restlet.routing.VirtualHost(component.context)
 \end_layout
 
 \begin_layout Plain Layout
@@ -39628,6 +39628,56 @@ host.hostPort = [string]
 \end_layout
 
 \begin_layout Standard
+An example of a virtual host for a specific domain name:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var host = new org.restlet.routing.VirtualHost(component.context)
+\end_layout
+
+\begin_layout Plain Layout
+
+host.name = 'other'
+\end_layout
+
+\begin_layout Plain Layout
+
+host.resourceDomain = 'otherdomain.org'
+\end_layout
+
+\begin_layout Plain Layout
+
+component.hosts.add(host)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you do this, you will likely want to set 
+\begin_inset Quotes eld
+\end_inset
+
+resourceDomain
+\begin_inset Quotes erd
+\end_inset
+
+ for the default host to a specific domain, too.
+\end_layout
+
+\begin_layout Standard
+Some notes:
+\end_layout
+
+\begin_layout Itemize
 “*” wildcards are supported for all of these properties.
  If you do not explicitly set a property value, it will default to 
 \begin_inset Quotes eld
@@ -39638,10 +39688,6 @@ host.hostPort = [string]
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Standard
-Some notes:
 \end_layout
 
 \begin_layout Itemize
@@ -39788,15 +39834,32 @@ eat
 
  any request coming its way, denying any other virtual hosts the opportunity
  to route them.
- Thus, if you want to use more than one host, you 
-\emph on
-have to make sure that the hungry host is the last
-\emph default
- 
-\emph on
-one
-\emph default
-, so that it acts as a fallback when other hosts don't match incoming requests.
+ Thus, if you want to use more than one host, you have two options:
+\end_layout
+
+\begin_layout Enumerate
+Don't use a hungry host: delete the 
+\begin_inset Quotes eld
+\end_inset
+
+default.js
+\begin_inset Quotes erd
+\end_inset
+
+ file or comment out the 
+\begin_inset Quotes eld
+\end_inset
+
+component.hosts.add
+\begin_inset Quotes erd
+\end_inset
+
+ call in it.
+\end_layout
+
+\begin_layout Enumerate
+Make sure that the hungry host is the last one, so that it acts as a fallback
+ when other hosts don't match incoming requests.
  Because host files are executed in alphabetical order, a good way to ensure
  that the hungry host is last is to number your host filenames.
  For example:
