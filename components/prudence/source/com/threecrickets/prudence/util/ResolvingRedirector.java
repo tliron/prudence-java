@@ -144,30 +144,10 @@ public class ResolvingRedirector extends Redirector
 	@Override
 	protected void serverRedirect( Restlet next, Reference targetRef, Request request, Response response )
 	{
+		validateNotRecursiveServerRedirect( targetRef, request, response );
+
 		// This is essentially the original Restlet code modified to use
-		// ResolvingTemplate. It also includes a mechanism to help protect
-		// against recursive redirects.
-
-		@SuppressWarnings("unchecked")
-		Set<String> serverRedirectHistory = (Set<String>) request.getAttributes().get( SERVER_REDIRECT_HISTORY_ATTRIBUTE );
-		if( serverRedirectHistory == null )
-		{
-			serverRedirectHistory = new HashSet<String>();
-			@SuppressWarnings("unchecked")
-			Set<String> existing = (Set<String>) request.getAttributes().putIfAbsent( SERVER_REDIRECT_HISTORY_ATTRIBUTE, serverRedirectHistory );
-			if( existing != null )
-				serverRedirectHistory = existing;
-		}
-
-		String targetRefString = targetRef.toString();
-		if( serverRedirectHistory.contains( targetRefString ) )
-		{
-			String message = "Recursive server redirection to " + targetRef;
-			getLogger().warning( message );
-			throw new ResourceException( Status.SERVER_ERROR_INTERNAL, message );
-		}
-
-		serverRedirectHistory.add( targetRefString );
+		// ResolvingTemplate.
 
 		if( next == null )
 			getLogger().warning( "No next Restlet provided for server redirection to " + targetRef );
@@ -221,5 +201,39 @@ public class ResolvingRedirector extends Redirector
 		setAuthor( "Three Crickets" );
 		setName( getClass().getSimpleName() );
 		setDescription( "A redirector that uses ResolvingTemplate" );
+	}
+
+	/**
+	 * Throw an exception if there is a recursive server-side redirect.
+	 * 
+	 * @param targetRef
+	 *        The target reference
+	 * @param request
+	 *        The request
+	 * @param response
+	 *        The response
+	 */
+	private void validateNotRecursiveServerRedirect( Reference targetRef, Request request, Response response )
+	{
+		@SuppressWarnings("unchecked")
+		Set<String> serverRedirectHistory = (Set<String>) request.getAttributes().get( SERVER_REDIRECT_HISTORY_ATTRIBUTE );
+		if( serverRedirectHistory == null )
+		{
+			serverRedirectHistory = new HashSet<String>();
+			@SuppressWarnings("unchecked")
+			Set<String> existing = (Set<String>) request.getAttributes().putIfAbsent( SERVER_REDIRECT_HISTORY_ATTRIBUTE, serverRedirectHistory );
+			if( existing != null )
+				serverRedirectHistory = existing;
+		}
+
+		String targetRefString = targetRef.toString();
+		if( serverRedirectHistory.contains( targetRefString ) )
+		{
+			String message = "Recursive server redirection to " + targetRef;
+			getLogger().warning( message );
+			throw new ResourceException( Status.SERVER_ERROR_INTERNAL, message );
+		}
+
+		serverRedirectHistory.add( targetRefString );
 	}
 }
