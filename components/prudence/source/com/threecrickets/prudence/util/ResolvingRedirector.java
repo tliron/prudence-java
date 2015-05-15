@@ -20,18 +20,13 @@ import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
-import org.restlet.engine.header.HeaderConstants;
 import org.restlet.resource.ResourceException;
 import org.restlet.routing.Redirector;
 import org.restlet.routing.Template;
 
 /**
- * A {@link Redirector} that uses {@link ResolvingTemplate}, and also makes
- * header cleaning optional.
- * <p>
- * See <a
- * href="https://github.com/restlet/restlet-framework-java/issues/798">this
- * issue</a>.
+ * A {@link Redirector} that uses {@link ResolvingTemplate}. It also includes a
+ * mechanism to help protect against recursive redirects.
  * 
  * @author Tal Liron
  */
@@ -59,13 +54,10 @@ public class ResolvingRedirector extends Redirector
 	 *        The target URI template
 	 * @param mode
 	 *        The redirection mode
-	 * @param isCleaning
-	 *        Whether we are cleaning headers for server-side redirection
 	 */
-	public ResolvingRedirector( Context context, String targetTemplate, int mode, boolean isCleaning )
+	public ResolvingRedirector( Context context, String targetTemplate, int mode )
 	{
 		super( context, targetTemplate, mode );
-		this.isCleaning = isCleaning;
 		describe();
 	}
 
@@ -76,13 +68,10 @@ public class ResolvingRedirector extends Redirector
 	 *        The context
 	 * @param targetTemplate
 	 *        The target URI template
-	 * @param isCleaning
-	 *        Whether we are cleaning headers for server-side redirection
 	 */
-	public ResolvingRedirector( Context context, String targetTemplate, boolean isCleaning )
+	public ResolvingRedirector( Context context, String targetTemplate )
 	{
 		super( context, targetTemplate );
-		this.isCleaning = isCleaning;
 		describe();
 	}
 
@@ -145,17 +134,19 @@ public class ResolvingRedirector extends Redirector
 		rt.setLogger( getLogger() );
 
 		// Return the formatted target URI
-		return new Reference( request.getResourceRef(), rt.format( request, response ) );
+		if( new Reference( this.targetTemplate ).isRelative() )
+			// Be sure to keep the resource's base reference.
+			return new Reference( request.getResourceRef(), rt.format( request, response ) );
+
+		return new Reference( rt.format( request, response ) );
 	}
 
 	@Override
 	protected void serverRedirect( Restlet next, Reference targetRef, Request request, Response response )
 	{
 		// This is essentially the original Restlet code modified to use
-		// ResolvingTemplate and allow for cleaning to be optional.
-
-		// It also includes an important check for recursive server-side
-		// redirects.
+		// ResolvingTemplate. It also includes a mechanism to help protect
+		// against recursive redirects.
 
 		@SuppressWarnings("unchecked")
 		Set<String> serverRedirectHistory = (Set<String>) request.getAttributes().get( SERVER_REDIRECT_HISTORY_ATTRIBUTE );
@@ -192,14 +183,12 @@ public class ResolvingRedirector extends Redirector
 
 			// Update the request to cleanly go to the target URI
 			request.setResourceRef( targetRef );
-			if( isCleaning )
-				request.getAttributes().remove( HeaderConstants.ATTRIBUTE_HEADERS );
+			rewrite( request );
 			next.handle( request, response );
 
 			// Allow for response rewriting and clean the headers
 			response.setEntity( rewrite( response.getEntity() ) );
-			if( isCleaning )
-				response.getAttributes().remove( HeaderConstants.ATTRIBUTE_HEADERS );
+			rewrite( response );
 			request.setResourceRef( resourceRef );
 
 			// In case of redirection, we may have to rewrite the redirect URI
@@ -222,11 +211,6 @@ public class ResolvingRedirector extends Redirector
 
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
-
-	/**
-	 * True if we are cleaning the headers in the request and response.
-	 */
-	private final boolean isCleaning;
 
 	/**
 	 * Add description.

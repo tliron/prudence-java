@@ -1842,7 +1842,8 @@ Prudence.Setup = Prudence.Setup || function() {
 				this.mode = ResolvingRedirector.MODE_SERVER_INBOUND
 			}
 
-	   		var redirector = new ResolvingRedirector(app.context, this.uri, this.mode, false)
+	   		var redirector = new ResolvingRedirector(app.context, this.uri, this.mode)
+	   		redirector.headersCleaning = false
 
 			return redirector
 		}

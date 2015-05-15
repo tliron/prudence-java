@@ -142,7 +142,8 @@ public class CapturingRedirector extends ResolvingRedirector
 	 */
 	public CapturingRedirector( Context context, String targetTemplate, int mode )
 	{
-		super( context, targetTemplate, mode, false );
+		super( context, targetTemplate, mode );
+		setHeadersCleaning( false );
 		describe();
 	}
 
