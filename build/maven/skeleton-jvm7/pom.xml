@@ -48,10 +48,15 @@
 	</mailingLists>
 
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.restlet.jse</groupId>
 			<artifactId>org.restlet.ext.jetty9</artifactId>
 			<version>[2.3-dev1,2.4)</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.restlet.jse</groupId>
+			<artifactId>org.restlet.ext.jetty</artifactId>
+			<version>[2.3,2.4)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
