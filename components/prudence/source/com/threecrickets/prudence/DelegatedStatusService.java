@@ -179,18 +179,24 @@ public class DelegatedStatusService extends StatusService
 	 * @param statusCode
 	 *        The status code
 	 * @param application
-	 *        The internal application name
+	 *        The internal application name, or null to use current application
 	 * @param internalUriTemplate
 	 *        The internal URI template to which we will redirect
-	 * @param context
-	 *        The context
 	 */
-	public void capture( int statusCode, String application, String internalUriTemplate, Context context )
+	public void capture( int statusCode, String application, String internalUriTemplate )
 	{
+		Context context = getContext();
+		if( context == null )
+			throw new RuntimeException( "No context set for DelegatedStatusService" );
+
 		if( !internalUriTemplate.startsWith( "/" ) )
 			internalUriTemplate = "/" + internalUriTemplate;
-		String targetUriTemplate = "riap://component/" + application + internalUriTemplate;
-		setHandler( statusCode, new CapturingRedirector( context.createChildContext(), targetUriTemplate ) );
+		String targetUriTemplate;
+		if( application == null )
+			targetUriTemplate = "riap://application" + internalUriTemplate;
+		else
+			targetUriTemplate = "riap://component/" + application + internalUriTemplate;
+		setHandler( statusCode, new CapturingRedirector( context, targetUriTemplate ) );
 	}
 
 	/**
@@ -261,11 +267,32 @@ public class DelegatedStatusService extends StatusService
 				attributes.put( PASSTHROUGH_ATTRIBUTE, true );
 				if( debugHeader != null )
 					RestletUtil.getResponseHeaders( response ).set( debugHeader, "error" );
-				return new DebugRepresentation( status, request, response, sourceCodeUri );
+				return createDebugRepresentation( status, request, response );
 			}
 		}
 
 		return super.toRepresentation( status, request, response );
+	}
+
+	// //////////////////////////////////////////////////////////////////////////
+	// Protected
+
+	/**
+	 * Create a debug representation for a conversation.
+	 * <p>
+	 * Override this to install a custom implementation.
+	 * 
+	 * @param status
+	 *        The status
+	 * @param request
+	 *        The request
+	 * @param response
+	 *        The response
+	 * @return A debug representation
+	 */
+	protected Representation createDebugRepresentation( Status status, Request request, Response response )
+	{
+		return new DebugRepresentation( status, request, response, sourceCodeUri );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////

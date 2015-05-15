@@ -344,8 +344,8 @@ Prudence.Setup = Prudence.Setup || function() {
 				println('  Status service:')
 			}
 			this.instance.statusService = new DelegatedStatusService(this.settings.code.sourceViewable ? this.settings.code.sourceViewer : null, this.settings.errors.debugHeader)
-			this.instance.statusService.context = this.context.createChildContext()
-			this.instance.statusService.debugging = true == this.settings.errors.debug
+			this.instance.statusService.context = this.context
+			this.instance.statusService.debugging = (true == this.settings.errors.debug)
 			if (sincerity.verbosity >= 2) {
 				if (this.settings.errors.debugHeader !== null) {
 					println('    Debug header: "{0}"'.cast(this.settings.errors.debugHeader))
@@ -535,7 +535,7 @@ Prudence.Setup = Prudence.Setup || function() {
 					if (sincerity.verbosity >= 2) {
 						println('    {0} -> "{1}"'.cast(code, uri))
 					}
-					this.instance.statusService.capture(code, this.internalName, uri, this.context)
+					this.instance.statusService.capture(code, this.internalName, uri)
 				}
 			}
 

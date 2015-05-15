@@ -10134,23 +10134,46 @@ Warning:
 \emph on
 non
 \emph default
--static resource, you run the risk of the resource code throwing an exception.
- If that happens, it would cause a 500 status code.
- If the original error was 
+-static resource, you need to take two things into account.
+ For 404 errors, you must have the resource type handling the page be the
+ 
+\emph on
+first
+\emph default
+ handler in a chain in app.routes.
+ For example, if you are using a template resource, then you must have 
+\begin_inset Quotes eld
+\end_inset
+
+templates
+\begin_inset Quotes erd
+\end_inset
+
+ first.
+ The reason is that a chain works internally by detecting 404 errors and
+ moving on to the next one: if the first one returns a 404 again, this will
+ result in a recursion and will throw a 500 exception.
+ Second, for any non-static error resource, you want to be 
+\emph on
+very sure
+\emph default
+ that your code there does not throw an exception.
+ If that happens, it would cause a 500 status code, but if the original
+ error was 
 \emph on
 not
 \emph default
- 500, then this would confuse the client and complicate debugging.
+ 500, the result would confuse the user and complicate debugging.
  However, if the original status code 
 \emph on
 was
 \emph default
- 500, then it could be much worse: the error would trigger your error page
+ 500, then it could be much worse: the error would trigger your error resource
  to be displayed again, which might throw the exception again\SpecialChar \ldots{}
  resulting
  in a stack overflow error.
- For these reasons, it's probably a good idea to implement your error pages
- as static resources, at least for production deployments.
+ Due to these pitfalls, it's probably a good idea to implement your error
+ pages as static resources.
 \end_layout
 
 \begin_layout Standard

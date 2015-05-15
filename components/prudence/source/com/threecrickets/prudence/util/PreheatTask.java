@@ -74,7 +74,7 @@ public class PreheatTask implements Runnable
 		Collection<DocumentDescriptor<Executable>> documentDescriptors = documentSource.getDocuments();
 		PreheatTask[] preheatTasks = new PreheatTask[documentDescriptors.size()];
 		int i = 0;
-		Context context = application.getContext().createChildContext();
+		Context context = application.getContext();
 		Logger logger = getLogger( applicationLoggerName );
 		for( DocumentDescriptor<Executable> documentDescriptor : documentDescriptors )
 			preheatTasks[i++] = new PreheatTask( applicationInternalName, documentDescriptor.getDefaultName(), context, logger );
@@ -100,7 +100,7 @@ public class PreheatTask implements Runnable
 	 */
 	public PreheatTask( String applicationInternalName, String resourceUri, Application application, String applicationLoggerName )
 	{
-		this( applicationInternalName, resourceUri, application.getContext().createChildContext(), getLogger( applicationLoggerName ) );
+		this( applicationInternalName, resourceUri, application.getContext(), getLogger( applicationLoggerName ) );
 	}
 
 	/**
