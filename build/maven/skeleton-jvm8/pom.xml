@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.threecrickets.prudence</groupId>
-	<artifactId>prudence-skeleton-jvm7</artifactId>
+	<artifactId>prudence-skeleton-jvm8</artifactId>
 	<version>@VERSION@</version>
 	<packaging>pom</packaging>
 
-	<name>Prudence: Sincerity Skeleton Add-On for JVM7</name>
-	<description>Adds dependencies for JVM7 to the Prudence skeleton.</description>
+	<name>Prudence: Sincerity Skeleton Add-On for JVM8+</name>
+	<description>Adds dependencies for JVM7+ to the Prudence skeleton.</description>
 	<url>http://threecrickets.com/prudence/</url>
 	<inceptionYear>2009</inceptionYear>
 
@@ -50,18 +50,23 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.restlet.jse</groupId>
+			<artifactId>org.restlet.ext.jetty9</artifactId>
+			<version>[2.3-dev2,2.4)</version>
+		</dependency>
+		<!--<dependency>
+			<groupId>org.restlet.jse</groupId>
 			<artifactId>org.restlet.ext.jetty</artifactId>
 			<version>[2.3,2.4)</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-security</artifactId>
-			<version>[9.2,9.3)</version>
+			<version>[9.3,9.4)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>[9.2,9.3)</version>
+			<version>[9.3,9.4)</version>
 		</dependency>
 	</dependencies>
 

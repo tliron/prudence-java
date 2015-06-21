@@ -60,7 +60,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.threecrickets.prudence</groupId>
-			<artifactId>prudence-skeleton-jvm7</artifactId>
+			<artifactId>prudence-skeleton-jvm8</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

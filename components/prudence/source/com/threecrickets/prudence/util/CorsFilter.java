@@ -11,9 +11,7 @@
 
 package com.threecrickets.prudence.util;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.restlet.Context;
@@ -21,6 +19,7 @@ import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.Restlet;
 import org.restlet.data.Header;
+import org.restlet.data.Method;
 import org.restlet.routing.Filter;
 import org.restlet.util.Series;
 
@@ -40,21 +39,6 @@ public class CorsFilter extends Filter
 	 * A far future max age (10 years)
 	 */
 	public static int FAR_FUTURE = 10 * 365 * 24 * 60 * 60;
-
-	/**
-	 * The allowed origin header.
-	 */
-	public static final String ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
-
-	/**
-	 * The allowed methods header.
-	 */
-	public static final String ALLOW_METHODS_HEADER = "Access-Control-Allow-Methods";
-
-	/**
-	 * The allowed headers header.
-	 */
-	public static final String ALLOW_HEADERS_HEADER = "Access-Control-Allow-Headers";
 
 	/**
 	 * The maximum age header.
@@ -128,7 +112,7 @@ public class CorsFilter extends Filter
 	 * 
 	 * @return The allowed methods
 	 */
-	public Set<String> getAllowMethods()
+	public Set<Method> getAllowMethods()
 	{
 		return allowMethods;
 	}
@@ -186,35 +170,17 @@ public class CorsFilter extends Filter
 	{
 		Series<Header> headers = RestletUtil.getResponseHeaders( response );
 		if( allowOrigin != null )
-			headers.add( new Header( ALLOW_ORIGIN_HEADER, allowOrigin ) );
+			response.setAccessControlAllowOrigin( allowOrigin );
 		if( !allowMethods.isEmpty() )
-			headers.add( new Header( ALLOW_METHODS_HEADER, join( allowMethods ) ) );
+			response.setAccessControlAllowMethods( allowMethods );
 		if( !allowHeaders.isEmpty() )
-			headers.add( new Header( ALLOW_HEADERS_HEADER, join( allowHeaders ) ) );
+			response.setAccessControlAllowHeaders( allowHeaders );
 		if( maxAge > 0 )
 			headers.add( new Header( MAX_AGE_HEADER, Integer.toString( maxAge ) ) );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
-
-	private static final String SEPARATOR = ", ";
-
-	private static String join( Collection<String> collection )
-	{
-		StringBuilder s = new StringBuilder();
-		Iterator<String> i = collection.iterator();
-		while( true )
-		{
-			if( i.hasNext() )
-				s.append( i.next() );
-			if( i.hasNext() )
-				s.append( SEPARATOR );
-			else
-				break;
-		}
-		return s.toString();
-	}
 
 	/**
 	 * The allowed origin.
@@ -224,7 +190,7 @@ public class CorsFilter extends Filter
 	/**
 	 * The allowed methods.
 	 */
-	private Set<String> allowMethods = new HashSet<String>();
+	private Set<Method> allowMethods = new HashSet<Method>();
 
 	/**
 	 * The allowed headers.

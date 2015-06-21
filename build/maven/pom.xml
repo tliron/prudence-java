@@ -53,6 +53,7 @@
 		<module>skeleton</module>
 		<module>skeleton-jvm6</module>
 		<module>skeleton-jvm7</module>
+		<module>skeleton-jvm8</module>
 		<module>cluster</module>
 		<module>cache-h2</module>
 		<module>cache-hazelcast</module>

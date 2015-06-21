@@ -2558,7 +2558,8 @@ Prudence.Setup = Prudence.Setup || function() {
 
 		Public.create = function(app, uri) {
 			importClass(
-				com.threecrickets.prudence.util.CorsFilter)
+				com.threecrickets.prudence.util.CorsFilter,
+				org.restlet.data.Method)
 			
 			var cors = new CorsFilter(app.context)
 			
@@ -2567,7 +2568,10 @@ Prudence.Setup = Prudence.Setup || function() {
 			}
 			if (Sincerity.Objects.exists(this.allowMethods)) {
 				this.allowMethods = Sincerity.Objects.array(this.allowMethods)
-				cors.allowMethods.addAll(Sincerity.JVM.toList(this.allowMethods))
+				for (var m in this.allowMethods) {
+					var method = this.allowMethods[m]
+					cors.allowMethods.add(Method.valueOf(method))
+				}
 			}
 			if (Sincerity.Objects.exists(this.allowHeaders)) {
 				this.allowHeaders = Sincerity.Objects.array(this.allowHeaders)

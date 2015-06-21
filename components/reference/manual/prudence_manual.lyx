@@ -46384,7 +46384,7 @@ See the
 \begin_inset CommandInset href
 LatexCommand href
 name "Hazelcast documentation"
-target "http://hazelcast.com/docs/latest/manual/multi_html/ch02s07.html"
+target "http://docs.hazelcast.org/docs/latest/manual/html/lock.html"
 
 \end_inset
 
@@ -46515,7 +46515,16 @@ To tag nodes, edit their
 \begin_inset Quotes erd
 \end_inset
 
-.
+, and set the 
+\begin_inset Quotes eld
+\end_inset
+
+com.threecrickets.prudence.tags
+\begin_inset Quotes erd
+\end_inset
+
+ attribute to a comma-separated list of tags (every node can be associated
+ to one or more tags).
  As an example, let's give our node two tags, 
 \begin_inset Quotes eld
 \end_inset
@@ -46632,7 +46641,15 @@ backup
 \begin_inset Quotes erd
 \end_inset
 
- nodes:
+ nodes, by setting the 
+\begin_inset Quotes eld
+\end_inset
+
+multi
+\begin_inset Quotes erd
+\end_inset
+
+ param to true:
 \end_layout
 
 \begin_layout Standard
@@ -46860,7 +46877,7 @@ For more options for partitioning clusters in Hazelcast, see its
 \begin_inset CommandInset href
 LatexCommand href
 name "grouping feature"
-target "http://www.hazelcast.org/docs/latest/manual/html-single/hazelcast-documentation.html#partition-group-configuration"
+target "http://docs.hazelcast.org/docs/latest/manual/html/partitiongroupconfig.html"
 
 \end_inset
 
@@ -52296,7 +52313,7 @@ Ignore the buzzwords (“productivity”, “fast”), and instead make sure you
 \begin_layout Standard
 We discuss this topic some more in 
 \bar under
-“The Case for Rest” (page 
+“The Case for REST” (page 
 \begin_inset CommandInset ref
 LatexCommand pageref
 reference "the-cast-for-rest"
@@ -52620,7 +52637,7 @@ Let's take as a pre-filling example a tree data structure in which branches
  that loops through all the different iterations of the tree recursively
  and saves a view of each of them to the cache.
  The cache keys can be something like “branch1+.branch2-.branch3+”, with “+”
- signifying “-” whether the branch is visually open or closed.
+ and “-” signifying whether the branch is visually open or closed.
  You can use similar +'s and -'s for permissions, and create views per permissio
 n combinations.
  Later, when users with specific permissions request different views of
@@ -52635,7 +52652,7 @@ n combinations.
 \begin_layout Standard
 If generating thousands of views takes too long for the duration of a single
  request, another option is to generate them on a separate thread.
- Even if it takes a few minutes to generate all the many, many tree views
+ Even if it takes a few minutes to generate all the many, many tree view
  combinations, it might be OK in your application for views to be a few
  minutes out-of-date.
  Consider that the scalability benefits can be very significant: you generate
