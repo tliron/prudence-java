@@ -14,7 +14,7 @@
 # Defer this page
 #
 
-if conversation.query['defer'] == 'true':
+if conversation.query.get('defer') == 'true':
 	if conversation.defer():
 		conversation.stop()
 
@@ -65,7 +65,7 @@ for adapter in adapters:
 %>
 </td><td>
 <h3>The "id" attribute in the URL query is:</h3>
-<p><%= conversation.query['id'] or '' %></p>
+<p><%= conversation.query.get('id') or '' %></p>
 <h3>A few tests:</h3>
 <p>
 <%

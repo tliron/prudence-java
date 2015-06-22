@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bson.BSONObject;
+import org.bson.Document;
 import org.bson.types.Binary;
 import org.restlet.data.CharacterSet;
 import org.restlet.data.Encoding;
@@ -30,11 +31,10 @@ import org.restlet.data.Tag;
 import org.restlet.util.Series;
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 
 /**
  * A <a href="http://www.mongodb.org/">MongoDB</a>-backed cache.
@@ -85,12 +85,12 @@ public class MongoDbCache implements Cache
 	 * 
 	 * @param client
 	 *        The MongoDB client
-	 * @param dbName
+	 * @param databaseName
 	 *        The MongoDB database name
 	 */
-	public MongoDbCache( MongoClient client, String dbName )
+	public MongoDbCache( MongoClient client, String databaseName )
 	{
-		this( client.getDB( dbName ), "cache" );
+		this( client, databaseName, "cache" );
 	}
 
 	/**
@@ -98,42 +98,20 @@ public class MongoDbCache implements Cache
 	 * 
 	 * @param client
 	 *        The MongoDB client
-	 * @param dbName
+	 * @param databaseName
 	 *        The MongoDB database name
 	 * @param collectionName
 	 *        The name of the collection to use for the cache
 	 */
-	public MongoDbCache( MongoClient client, String dbName, String collectionName )
+	public MongoDbCache( MongoClient client, String databaseName, String collectionName )
 	{
-		this( client.getDB( dbName ), collectionName );
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param db
-	 *        The MongoDB database
-	 * @param collectionName
-	 *        The name of the collection to use for the cache
-	 */
-	public MongoDbCache( DB db, String collectionName )
-	{
-		this( db.getCollection( collectionName ) );
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param collection
-	 *        The collection to use for the cache
-	 */
-	public MongoDbCache( DBCollection collection )
-	{
-		this.cacheCollection = collection;
+		this.client = client;
+		MongoDatabase database = client.getDatabase( databaseName );
+		cacheCollection = database.getCollection( collectionName );
 		try
 		{
-			collection.createIndex( TAG_INDEX );
-			collection.createIndex( EXPIRATION_DATE_INDEX );
+			cacheCollection.createIndex( TAG_INDEX );
+			cacheCollection.createIndex( EXPIRATION_DATE_INDEX );
 			up();
 		}
 		catch( com.mongodb.MongoSocketException x )
@@ -175,11 +153,11 @@ public class MongoDbCache implements Cache
 	{
 		logger.fine( "Store: " + key );
 
-		DBObject query = new BasicDBObject();
+		Document query = new Document();
 		query.put( "_id", key );
 
-		DBObject document = new BasicDBObject();
-		DBObject set = new BasicDBObject();
+		Document document = new Document();
+		Document set = new Document();
 		document.put( "$set", set );
 
 		// Note: In binary mode, the expirationDate is also inside the binary
@@ -250,7 +228,7 @@ public class MongoDbCache implements Cache
 				BasicDBList list = new BasicDBList();
 				for( Header header : headers )
 				{
-					BasicDBObject object = new BasicDBObject();
+					Document object = new Document();
 					object.put( "name", header.getName() );
 					object.put( "value", header.getValue() );
 					list.add( object );
@@ -262,7 +240,7 @@ public class MongoDbCache implements Cache
 		// Upsert
 		try
 		{
-			cacheCollection.update( query, document, true, false );
+			cacheCollection.updateOne( query, document, new UpdateOptions().upsert( true ) );
 			up();
 		}
 		catch( com.mongodb.MongoSocketException x )
@@ -273,18 +251,18 @@ public class MongoDbCache implements Cache
 
 	public CacheEntry fetch( String key )
 	{
-		DBObject query = new BasicDBObject();
+		Document query = new Document();
 		query.put( "_id", key );
 		try
 		{
-			DBObject document = cacheCollection.findOne( query );
+			Document document = cacheCollection.find( query ).first();
 			up();
 			if( document != null )
 			{
 				Date expirationDate = (Date) document.get( "expirationDate" );
 				if( expirationDate.before( new Date() ) )
 				{
-					cacheCollection.remove( query );
+					cacheCollection.deleteOne( query );
 					logger.fine( "Stale entry: " + key );
 					return null;
 				}
@@ -360,12 +338,12 @@ public class MongoDbCache implements Cache
 
 	public void invalidate( String tag )
 	{
-		DBObject query = new BasicDBObject();
+		Document query = new Document();
 		query.put( "tags", tag );
 
 		try
 		{
-			cacheCollection.remove( query );
+			cacheCollection.deleteMany( query );
 			logger.fine( "Invalidated: " + tag );
 			up();
 		}
@@ -377,14 +355,14 @@ public class MongoDbCache implements Cache
 
 	public void prune()
 	{
-		DBObject query = new BasicDBObject();
-		DBObject lt = new BasicDBObject();
+		Document query = new Document();
+		Document lt = new Document();
 		query.put( "$lt", lt );
 		lt.put( "expirationDate", new Date() );
 
 		try
 		{
-			cacheCollection.remove( query );
+			cacheCollection.deleteMany( query );
 			logger.fine( "Pruned" );
 		}
 		catch( com.mongodb.MongoSocketException x )
@@ -397,7 +375,7 @@ public class MongoDbCache implements Cache
 	{
 		try
 		{
-			cacheCollection.remove( new BasicDBObject() );
+			cacheCollection.deleteMany( new Document() );
 			up();
 		}
 		catch( com.mongodb.MongoSocketException x )
@@ -412,12 +390,12 @@ public class MongoDbCache implements Cache
 	/**
 	 * Options for ensuring the tag index on the cache collection.
 	 */
-	private static final DBObject TAG_INDEX = new BasicDBObject();
+	private static final Document TAG_INDEX = new Document();
 
 	/**
 	 * Options for ensuring the expiration date index on the cache collection.
 	 */
-	private static final DBObject EXPIRATION_DATE_INDEX = new BasicDBObject();
+	private static final Document EXPIRATION_DATE_INDEX = new Document();
 
 	static
 	{
@@ -436,9 +414,14 @@ public class MongoDbCache implements Cache
 	private final Logger logger = Logger.getLogger( this.getClass().getCanonicalName() );
 
 	/**
+	 * The MongoDB client used for the cache.
+	 */
+	private final MongoClient client;
+
+	/**
 	 * The MongoDB collection used for the cache.
 	 */
-	private final DBCollection cacheCollection;
+	private final MongoCollection<Document> cacheCollection;
 
 	/**
 	 * Whether to store entries by serializing them into BSON binaries.
@@ -456,7 +439,7 @@ public class MongoDbCache implements Cache
 	private void up()
 	{
 		if( up.compareAndSet( false, true ) )
-			logger.info( "Up! " + cacheCollection.getDB().getMongo() );
+			logger.info( "Up! " + client );
 	}
 
 	/**
@@ -465,6 +448,6 @@ public class MongoDbCache implements Cache
 	private void down()
 	{
 		if( up.compareAndSet( true, false ) )
-			logger.severe( "Down! " + cacheCollection.getDB().getMongo() );
+			logger.severe( "Down! " + client );
 	}
 }

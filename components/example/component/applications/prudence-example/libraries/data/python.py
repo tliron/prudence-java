@@ -2,7 +2,7 @@
 # Helper to access the application globals
 
 def get_global(application, name, get_default_value):
-	value = application.globals[name]
+	value = application.globals.get(name)
 	if value == None:
 		value = get_default_value()
 

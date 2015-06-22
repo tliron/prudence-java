@@ -18,17 +18,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bson.Document;
 import org.bson.types.Binary;
 import org.restlet.Component;
 
 import com.hazelcast.core.MapStore;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
 import com.threecrickets.prudence.util.InstanceUtil;
 import com.threecrickets.prudence.util.IoUtil;
 
@@ -83,25 +81,25 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 	 * 
 	 * @return The MongoDB collection
 	 */
-	public DBCollection getCollection()
+	public MongoCollection<Document> getCollection()
 	{
 		if( collection == null )
 		{
 			Component component = InstanceUtil.getComponent();
 			if( component != null )
 			{
-				MongoClient mongo = (MongoClient) component.getContext().getAttributes().get( MONGODB_CLIENT_ATTRIBUTE );
-				if( mongo != null )
+				MongoClient client = (MongoClient) component.getContext().getAttributes().get( MONGODB_CLIENT_ATTRIBUTE );
+				if( client != null )
 				{
-					DB db = mongo.getDB( "prudence" );
-					if( db != null )
-						collection = db.getCollection( collectionName );
+					MongoDatabase database = client.getDatabase( "prudence" );
+					if( database != null )
+						collection = database.getCollection( collectionName );
 				}
 			}
 		}
 
 		if( collection == null )
-			throw new RuntimeException( "MongoDB connection must be configured in order to use HazelcastMongoDbMapStore" );
+			throw new RuntimeException( "MongoDB client must be configured in order to use HazelcastMongoDbMapStore" );
 
 		return collection;
 	}
@@ -112,12 +110,12 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 
 	public V load( K key )
 	{
-		DBCollection collection = getCollection();
-		DBObject query = new BasicDBObject();
+		MongoCollection<Document> collection = getCollection();
+		Document query = new Document();
 
 		query.put( "_id", key );
 
-		DBObject value = collection.findOne( query );
+		Document value = collection.find( query ).first();
 		if( value != null )
 		{
 			@SuppressWarnings("unchecked")
@@ -129,19 +127,16 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 
 	public Map<K, V> loadAll( Collection<K> keys )
 	{
-		DBCollection collection = getCollection();
-		DBObject query = new BasicDBObject();
-		DBObject in = new BasicDBObject();
-		BasicDBList keysList = new BasicDBList();
+		MongoCollection<Document> collection = getCollection();
+		Document query = new Document();
+		Document in = new Document();
 
 		query.put( "_id", in );
-		in.put( "$in", keysList );
-		keysList.addAll( keys );
+		in.put( "$in", keys );
 
 		HashMap<K, V> map = new HashMap<K, V>();
-		for( DBCursor cursor = collection.find( query ); cursor.hasNext(); )
+		for( Document value : collection.find( query ) )
 		{
-			DBObject value = cursor.next();
 			@SuppressWarnings("unchecked")
 			K key = (K) value.get( "_id" );
 			@SuppressWarnings("unchecked")
@@ -154,15 +149,14 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 
 	public Set<K> loadAllKeys()
 	{
-		DBCollection collection = getCollection();
-		DBObject fields = new BasicDBObject();
+		MongoCollection<Document> collection = getCollection();
+		Document projection = new Document();
 
-		fields.put( "_id", 1 );
+		projection.put( "_id", 1 );
 
 		Set<K> keys = new HashSet<K>();
-		for( DBCursor cursor = collection.find( null, fields ); cursor.hasNext(); )
+		for( Document value : collection.find().projection( projection ) )
 		{
-			DBObject value = cursor.next();
 			@SuppressWarnings("unchecked")
 			K id = (K) value.get( "_id" );
 			keys.add( id );
@@ -173,16 +167,16 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 
 	public void store( K key, V value )
 	{
-		DBCollection collection = getCollection();
-		DBObject query = new BasicDBObject();
-		DBObject update = new BasicDBObject();
-		DBObject set = new BasicDBObject();
+		MongoCollection<Document> collection = getCollection();
+		Document query = new Document();
+		Document update = new Document();
+		Document set = new Document();
 
 		query.put( "_id", key );
 		update.put( "$set", set );
 		set.put( "value", toBinary( value ) );
 
-		collection.update( query, update, true, false );
+		collection.updateOne( query, update, new UpdateOptions().upsert( true ) );
 	}
 
 	public void storeAll( Map<K, V> map )
@@ -193,26 +187,24 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 
 	public void delete( K key )
 	{
-		DBCollection collection = getCollection();
-		DBObject query = new BasicDBObject();
+		MongoCollection<Document> collection = getCollection();
+		Document query = new Document();
 
 		query.put( "_id", key );
 
-		collection.remove( query );
+		collection.deleteOne( query );
 	}
 
 	public void deleteAll( Collection<K> keys )
 	{
-		DBCollection collection = getCollection();
-		DBObject query = new BasicDBObject();
-		DBObject in = new BasicDBObject();
-		BasicDBList keysList = new BasicDBList();
+		MongoCollection<Document> collection = getCollection();
+		Document query = new Document();
+		Document in = new Document();
 
 		query.put( "_id", in );
-		in.put( "$in", keysList );
-		keysList.addAll( keys );
+		in.put( "$in", keys );
 
-		collection.remove( query );
+		collection.deleteMany( query );
 	}
 
 	// //////////////////////////////////////////////////////////////////////////
@@ -231,7 +223,7 @@ public abstract class HazelcastMongoDbMapStore<K, V> implements MapStore<K, V>
 	/**
 	 * The MongoDB collection used for the store.
 	 */
-	private volatile DBCollection collection;
+	private volatile MongoCollection<Document> collection;
 
 	/**
 	 * Serialize an object into a BSON binary.
