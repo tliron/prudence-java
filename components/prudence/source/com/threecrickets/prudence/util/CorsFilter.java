@@ -26,6 +26,13 @@ import org.restlet.util.Series;
 /**
  * A {@link Filter} that adds <a href="http://www.w3.org/TR/cors/">Cross-Origin
  * Resource Sharing (CORS)</a> response headers.
+ * <p>
+ * This class should be unnecessary once <a
+ * href="https://github.com/restlet/restlet-framework-java/issues/1109">Restlet
+ * properly supports Access-Control-Max-Age</a>.
+ * <p>
+ * <i>"Restlet" is a registered trademark of <a
+ * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */
