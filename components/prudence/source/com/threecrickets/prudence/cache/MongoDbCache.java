@@ -13,13 +13,15 @@ package com.threecrickets.prudence.cache;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bson.BSONObject;
 import org.bson.Document;
 import org.bson.types.Binary;
 import org.restlet.data.CharacterSet;
@@ -30,7 +32,6 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Tag;
 import org.restlet.util.Series;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -167,7 +168,7 @@ public class MongoDbCache implements Cache
 
 		String[] tags = entry.getTags();
 		if( ( tags != null ) && ( tags.length > 0 ) )
-			set.put( "tags", tags );
+			set.put( "tags", Arrays.asList( tags ) );
 
 		if( isBinary )
 		{
@@ -225,7 +226,7 @@ public class MongoDbCache implements Cache
 			Series<Header> headers = entry.getHeaders();
 			if( headers != null )
 			{
-				BasicDBList list = new BasicDBList();
+				ArrayList<Document> list = new ArrayList<Document>();
 				for( Header header : headers )
 				{
 					Document object = new Document();
@@ -296,9 +297,9 @@ public class MongoDbCache implements Cache
 							headers = new Series<Header>( Header.class );
 							for( Object storedHeader : (Collection<?>) storedHeaders )
 							{
-								if( storedHeader instanceof BSONObject )
+								if( storedHeader instanceof Map<?, ?> )
 								{
-									BSONObject storedHeaderBson = (BSONObject) storedHeader;
+									Map<?, ?> storedHeaderBson = (Map<?, ?>) storedHeader;
 									Object name = storedHeaderBson.get( "name" );
 									Object value = storedHeaderBson.get( "value" );
 									if( ( name != null ) && ( value != null ) )
