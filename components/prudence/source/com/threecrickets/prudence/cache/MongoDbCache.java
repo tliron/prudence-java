@@ -280,7 +280,8 @@ public class MongoDbCache implements Cache
 					else
 					{
 						String string = (String) document.get( "string" );
-						bytes = (byte[]) document.get( "bytes" );
+						Binary binary = (Binary) document.get( "bytes" );
+						bytes = binary != null ? binary.getData() : null;
 						MediaType mediaType = MediaType.valueOf( (String) document.get( "mediaType" ) );
 						Language language = Language.valueOf( (String) document.get( "language" ) );
 						Encoding encoding = Encoding.valueOf( (String) document.get( "encoding" ) );
