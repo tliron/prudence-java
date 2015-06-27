@@ -198,7 +198,13 @@
 
 	<target name="libraries" depends="classes, version" description="Create jar">
 		<mkdir dir="${cache.jars}" />
-		<jar destfile="${cache.jars}/${component.artifact}.jar" basedir="${cache.classes}" />
+		<jar destfile="${cache.jars}/${component.artifact}.jar" basedir="${cache.classes}">
+			<manifest>
+				<attribute name="Implementation-Title" value="${component.group}:${component.artifact}" />
+				<attribute name="Implementation-Version" value="${component.version}${component.version.postfix}" />
+				<attribute name="Implementation-Vendor" value="Three Crickets" />
+			</manifest>
+		</jar>
 		<jar destfile="${cache.jars}/sources.jar" basedir="${component.source}" />
 	</target>
 
