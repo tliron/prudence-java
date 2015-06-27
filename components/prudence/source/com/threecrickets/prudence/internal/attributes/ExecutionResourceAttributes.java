@@ -47,7 +47,8 @@ public class ExecutionResourceAttributes extends NonVolatileContextualAttributes
 	 * service. Defaults to "conversation".
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>conversationServiceName</code> in the application's {@link Context}.
+	 * <code>conversationServiceName</code> in the application's {@link Context}
+	 * .
 	 * 
 	 * @return The conversation service name
 	 */

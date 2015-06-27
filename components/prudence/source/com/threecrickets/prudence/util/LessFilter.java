@@ -38,9 +38,9 @@ import com.github.sommeri.less4j.core.DefaultLessCompiler;
 import com.threecrickets.prudence.internal.CSSMin;
 
 /**
- * A {@link Filter} that automatically parses <a
- * href="http://lesscss.org/">LESS</a> code and renders CSS using the <a
- * href="https://github.com/SomMeri/less4j">Less4j</a> library. Also supports
+ * A {@link Filter} that automatically parses
+ * <a href="http://lesscss.org/">LESS</a> code and renders CSS using the
+ * <a href="https://github.com/SomMeri/less4j">Less4j</a> library. Also supports
  * minifying files, if the ".min.css" extension is used. See
  * {@link CssUnifyMinifyFilter}.
  * <p>

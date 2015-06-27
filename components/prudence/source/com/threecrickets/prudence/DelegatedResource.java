@@ -97,8 +97,7 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <p>
  * Summary of settings configured via the application's {@link Context}:
  * <ul>
- * <li>
- * <code>com.threecrickets.prudence.cache:</code> {@link Cache}.</li>
+ * <li><code>com.threecrickets.prudence.cache:</code> {@link Cache}.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.applicationServiceName</code>
  * : Defaults to "application".</li>
@@ -121,19 +120,18 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.debug:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li><code>com.threecrickets.prudence.DelegatedResource.defaultName:</code>
  * {@link String}, defaults to "default".</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.documentFormatter:</code>
- * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.</li>
+ * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.
+ * </li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.documentServiceName</code>
  * : Defaults to "document".</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.documentSource:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedResource.documentSource:</code>
  * {@link DocumentSource}. <b>Required.</b></li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.encodeSizeThreshold:</code>
@@ -182,25 +180,21 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.negotiateEncoding:</code>
  * defaults to a true.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.parserManager:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedResource.parserManager:</code>
  * {@link ParserManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.prepare:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.sourceViewable:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedResource.sourceViewable:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedResource.trailingSlashRequired:</code>
  * {@link Boolean}, defaults to true.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedResource.writer:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedResource.writer:</code>
  * {@link Writer}, defaults to standard output.</li>
  * </ul>
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */

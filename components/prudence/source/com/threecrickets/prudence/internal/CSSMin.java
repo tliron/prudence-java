@@ -151,7 +151,7 @@ public class CSSMin
 		try
 		{
 			int k, j, // Number of open braces
-			n; // Current position in stream
+				n; // Current position in stream
 			char curr;
 
 			BufferedReader br = new BufferedReader( input );

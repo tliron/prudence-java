@@ -57,8 +57,7 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.applicationServiceName</code>
  * : Defaults to "application".</li>
- * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.debug:</code>
+ * <li><code>com.threecrickets.prudence.ApplicationTask.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.defaultLanguageTag:</code>
@@ -69,8 +68,7 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <code>com.threecrickets.prudence.ApplicationTask.documentServiceName</code> :
  * The name of the global variable with which to access the document service.
  * Defaults to "document".</li>
- * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.documentSource:</code>
+ * <li><code>com.threecrickets.prudence.ApplicationTask.documentSource:</code>
  * {@link DocumentSource}. <b>Required.</b></li>
  * <li><code>com.threecrickets.prudence.ApplicationTask.errorWriter:</code>
  * {@link Writer}, defaults to standard error.</li>
@@ -80,25 +78,21 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.libraryDocumentSources:</code>
  * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
- * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.languageManager:</code>
+ * <li><code>com.threecrickets.prudence.ApplicationTask.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.parserManager:</code>
+ * <li><code>com.threecrickets.prudence.ApplicationTask.parserManager:</code>
  * {@link ParserManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.prepare:</code>
+ * <li><code>com.threecrickets.prudence.ApplicationTask.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
  * <li>
  * <code>com.threecrickets.prudence.ApplicationTask.trailingSlashRequired:</code>
  * {@link Boolean}, defaults to true.</li>
- * <li>
- * <code>com.threecrickets.prudence.ApplicationTask.writer:</code>
+ * <li><code>com.threecrickets.prudence.ApplicationTask.writer:</code>
  * {@link Writer}, defaults to standard output.</li>
  * </ul>
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  * @param <T>

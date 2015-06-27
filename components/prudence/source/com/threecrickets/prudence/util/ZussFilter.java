@@ -44,8 +44,8 @@ import org.zkoss.zuss.metainfo.ZussDefinition;
 import com.threecrickets.prudence.internal.CSSMin;
 
 /**
- * A {@link Filter} that automatically parses <a
- * href="https://github.com/tomyeh/ZUSS">ZUSS</a> code and renders CSS. Also
+ * A {@link Filter} that automatically parses
+ * <a href="https://github.com/tomyeh/ZUSS">ZUSS</a> code and renders CSS. Also
  * supports minifying files, if the ".min.css" extension is used. See
  * {@link CssUnifyMinifyFilter}.
  * <p>

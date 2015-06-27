@@ -19,8 +19,8 @@ import org.restlet.data.Cookie;
 /**
  * A PHP-style $_COOKIE map.
  * <p>
- * See PHP's <a
- * href="http://www.php.net/manual/en/reserved.variables.php">predefined
+ * See PHP's
+ * <a href="http://www.php.net/manual/en/reserved.variables.php">predefined
  * variables</a>.
  * 
  * @author Tal Liron

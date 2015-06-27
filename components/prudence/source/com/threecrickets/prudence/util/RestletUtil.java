@@ -21,8 +21,8 @@ import org.restlet.util.Series;
 /**
  * Utility methods for Restlet.
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */

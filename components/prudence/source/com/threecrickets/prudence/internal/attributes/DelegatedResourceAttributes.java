@@ -186,7 +186,8 @@ public class DelegatedResourceAttributes extends ResourceContextualAttributes
 	 * executable. Defaults to "handleDelete".
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>entryPointNameForDelete</code> in the application's {@link Context}.
+	 * <code>entryPointNameForDelete</code> in the application's {@link Context}
+	 * .
 	 * 
 	 * @return The name of the <code>handleDelete()</code> entry point
 	 */

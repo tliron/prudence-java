@@ -20,12 +20,12 @@ import org.restlet.routing.Redirector;
 /**
  * A {@link Redirector} that normalizes relative paths.
  * <p>
- * This may be unnecessary in future versions of Restlet. See <a
- * href="https://github.com/restlet/restlet-framework-java/issues/238">Restlet
- * issue 238</a>.
+ * This may be unnecessary in future versions of Restlet. See
+ * <a href="https://github.com/restlet/restlet-framework-java/issues/238">
+ * Restlet issue 238</a>.
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */

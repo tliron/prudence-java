@@ -18,9 +18,9 @@ import org.restlet.data.MediaType;
 import org.restlet.service.EncoderService;
 
 /**
- * Provides a workaround for <a
- * href="https://github.com/restlet/restlet-framework-java/issues/791">Restlet
- * issue 791</a>.
+ * Provides a workaround for
+ * <a href="https://github.com/restlet/restlet-framework-java/issues/791">
+ * Restlet issue 791</a>.
  * 
  * @author Tal Liron
  */

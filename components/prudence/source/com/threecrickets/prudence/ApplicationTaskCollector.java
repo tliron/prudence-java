@@ -36,8 +36,8 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * <p>
  * Empty lines and comment lines (beginning with a "#") are ignored.
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  * @see ApplicationTask

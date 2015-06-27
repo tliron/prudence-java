@@ -43,13 +43,11 @@ public class KitchenSink extends DistributionTest
 
 	private static Runnable[] prudenceTests = new Runnable[]
 	{
-		new TestOK( "/prudence-test/" ),
-		new TestRedirected( "/prudence-test" ),
+		new TestOK( "/prudence-test/" ), new TestRedirected( "/prudence-test" ),
 		// /web/static/
 		new TestOK( "/prudence-test/style/soft-cricket.css" ),
 		// /web/dynamic/
-		new TestOK( "/prudence-test/test/rhino/?id=hello" ), new TestOK( "/prudence-test/test/quercus/?id=hello" ),
-		new TestOK( "/prudence-test/test/jython/?id=hello" ),
+		new TestOK( "/prudence-test/test/rhino/?id=hello" ), new TestOK( "/prudence-test/test/quercus/?id=hello" ), new TestOK( "/prudence-test/test/jython/?id=hello" ),
 		// new TestOK( "/prudence-test/test/jepp/?id=hello" ),
 		new TestOK( "/prudence-test/test/jruby/?id=hello" ), new TestOK( "/prudence-test/test/groovy/?id=hello" ), new TestOK( "/prudence-test/test/clojure/?id=hello" ),
 		new TestOK( "/prudence-test/test/velocity/?id=hello" ),

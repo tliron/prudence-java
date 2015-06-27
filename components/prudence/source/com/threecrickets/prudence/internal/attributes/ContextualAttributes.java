@@ -159,7 +159,8 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 	 * Defaults to zero, meaning that all uploaded files will be stored to disk.
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>fileUploadSizeThreshold</code> in the application's {@link Context}.
+	 * <code>fileUploadSizeThreshold</code> in the application's {@link Context}
+	 * .
 	 * 
 	 * @return The file upload size threshold
 	 */
@@ -197,8 +198,8 @@ public abstract class ContextualAttributes implements DocumentExecutionAttribute
 	// DocumentExecutionAttributes
 	//
 
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources ) throws ParsingException,
-		DocumentException
+	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
+		throws ParsingException, DocumentException
 	{
 		ParsingContext parsingContext = new ParsingContext();
 		parsingContext.setLanguageManager( getLanguageManager() );

@@ -219,8 +219,8 @@ public interface DocumentExecutionAttributes
 	 * @throws DocumentException
 	 *         In case of a Scripturian document retrieval error
 	 */
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources ) throws ParsingException,
-		DocumentException;
+	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
+		throws ParsingException, DocumentException;
 
 	/**
 	 * Creates an on-the-fly document, or retrieves it if it already exists.

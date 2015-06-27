@@ -18,8 +18,8 @@ import com.threecrickets.scripturian.Main;
 import com.threecrickets.scripturian.ScripturianDaemon;
 
 /**
- * Delegates to {@link Main}, using the <a
- * href="http://commons.apache.org/daemon/">Apache Commons Daemon</a>.
+ * Delegates to {@link Main}, using the
+ * <a href="http://commons.apache.org/daemon/">Apache Commons Daemon</a>.
  * 
  * @author Tal Liron
  */

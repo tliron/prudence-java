@@ -25,8 +25,8 @@ import org.restlet.util.Resolver;
  * A {@link Template} that allows control over which {@link Resolver} instances
  * it will use.
  * <p>
- * See <a
- * href="https://github.com/restlet/restlet-framework-java/issues/798">this
+ * See
+ * <a href="https://github.com/restlet/restlet-framework-java/issues/798">this
  * issue</a>.
  * 
  * @author Tal Liron

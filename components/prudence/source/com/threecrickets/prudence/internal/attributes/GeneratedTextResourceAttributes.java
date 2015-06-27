@@ -86,7 +86,8 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	 * service. Defaults to "conversation".
 	 * <p>
 	 * This setting can be configured by setting an attribute named
-	 * <code>conversationServiceName</code> in the application's {@link Context}.
+	 * <code>conversationServiceName</code> in the application's {@link Context}
+	 * .
 	 * 
 	 * @return The conversation service name
 	 */
@@ -214,8 +215,8 @@ public class GeneratedTextResourceAttributes extends ResourceContextualAttribute
 	}
 
 	@Override
-	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources ) throws ParsingException,
-		DocumentException
+	public DocumentDescriptor<Executable> createDocumentOnce( String documentName, String parserName, boolean includeMainSource, boolean includeExtraSources, boolean includeLibrarySources )
+		throws ParsingException, DocumentException
 	{
 		ParsingContext parsingContext = new ParsingContext();
 		parsingContext.setLanguageManager( getLanguageManager() );

@@ -71,7 +71,8 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * Before using this resource, make sure to configure a valid document source in
  * the application's {@link Context} as
  * <code>com.threecrickets.prudence.GeneratedTextResource.documentSource</code>.
- * This document source is exposed to scriptlets as <code>document.source</code>.
+ * This document source is exposed to scriptlets as <code>document.source</code>
+ * .
  * <p>
  * This resource supports caching into implementations of {@link Cache}. First,
  * the entire document is executed, with its output sent into a buffer. This
@@ -90,8 +91,7 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * <p>
  * Summary of settings configured via the application's {@link Context}:
  * <ul>
- * <li>
- * <code>com.threecrickets.prudence.cache:</code> {@link Cache}.</li>
+ * <li><code>com.threecrickets.prudence.cache:</code> {@link Cache}.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.applicationServiceName</code>
  * : Defaults to "application".</li>
@@ -108,8 +108,7 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
- * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.debug:</code>
+ * <li><code>com.threecrickets.prudence.GeneratedTextResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.defaultCacheKeyTemplate:</code>
@@ -128,7 +127,8 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * {@link String}, defaults to "default".</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.documentFormatter:</code>
- * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.</li>
+ * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.
+ * </li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.documentServiceName</code>
  * : Defaults to "document".</li>
@@ -165,8 +165,7 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.parserManager:</code>
  * {@link ParserManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.GeneratedTextResource.prepare:</code>
+ * <li><code>com.threecrickets.prudence.GeneratedTextResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
  * <li>
  * <code>com.threecrickets.prudence.GeneratedTextResource.sourceViewable:</code>
@@ -176,8 +175,8 @@ import com.threecrickets.scripturian.parser.ScriptletsParser;
  * {@link Boolean}, defaults to true.</li>
  * </ul>
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */

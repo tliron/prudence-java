@@ -45,14 +45,15 @@ import com.threecrickets.scripturian.exception.DocumentNotFoundException;
  * <ul>
  * <li>
  * <code>com.threecrickets.prudence.SourceCodeResource.documentFormatter:</code>
- * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.</li>
+ * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.
+ * </li>
  * <li>
  * <code>com.threecrickets.prudence.SourceCodeResource.documentSources:</code>
  * an {@link Iterable} of {@link DocumentSource}. <b>Required.</b></li>
  * </ul>
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */

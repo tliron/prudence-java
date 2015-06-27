@@ -25,8 +25,8 @@ import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.OperationTimeoutException;
 
 /**
- * A <a href="http://memcached.org/">memcached</a>-backed cache over the <a
- * href="http://code.google.com/p/spymemcached/">spymemcached</a> client
+ * A <a href="http://memcached.org/">memcached</a>-backed cache over the
+ * <a href="http://code.google.com/p/spymemcached/">spymemcached</a> client
  * library.
  * <p>
  * By default, waits for all memcached commands to complete. However, you can

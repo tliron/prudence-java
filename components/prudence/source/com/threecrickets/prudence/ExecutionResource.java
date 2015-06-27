@@ -57,16 +57,14 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <p>
  * Summary of settings configured via the application's {@link Context}:
  * <ul>
- * <li>
- * <code>com.threecrickets.prudence.cache:</code> {@link Cache}.</li>
+ * <li><code>com.threecrickets.prudence.cache:</code> {@link Cache}.</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.applicationServiceName</code>
  * : Defaults to "application".</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.conversationServiceName</code>
  * : Defaults to "conversation".</li>
- * <li>
- * <code>com.threecrickets.prudence.ExecutionResource.debug:</code>
+ * <li><code>com.threecrickets.prudence.ExecutionResource.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.defaultCharacterSet:</code>
@@ -74,17 +72,16 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.defaultLanguageTag:</code>
  * {@link String}, defaults to "javascript".</li>
- * <li>
- * <code>com.threecrickets.prudence.ExecutionResource.defaultName:</code>
+ * <li><code>com.threecrickets.prudence.ExecutionResource.defaultName:</code>
  * {@link String}, defaults to "default".</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.documentFormatter:</code>
- * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.</li>
+ * {@link DocumentFormatter}. Defaults to a {@link JygmentsDocumentFormatter}.
+ * </li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.documentServiceName</code>
  * : Defaults to "document".</li>
- * <li>
- * <code>com.threecrickets.prudence.ExecutionResource.documentSource:</code>
+ * <li><code>com.threecrickets.prudence.ExecutionResource.documentSource:</code>
  * {@link DocumentSource}. <b>Required.</b></li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.executionController:</code>
@@ -101,22 +98,19 @@ import com.threecrickets.scripturian.exception.ParsingException;
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.libraryDocumentSources:</code>
  * {@link Iterable} of {@link DocumentSource} of {@link Executable}.</li>
- * <li>
- * <code>com.threecrickets.prudence.ExecutionResource.parserManager:</code>
+ * <li><code>com.threecrickets.prudence.ExecutionResource.parserManager:</code>
  * {@link ParserManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.ExecutionResource.prepare:</code>
+ * <li><code>com.threecrickets.prudence.ExecutionResource.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
- * <li>
- * <code>com.threecrickets.prudence.ExecutionResource.sourceViewable:</code>
+ * <li><code>com.threecrickets.prudence.ExecutionResource.sourceViewable:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.ExecutionResource.trailingSlashRequired:</code>
  * {@link Boolean}, defaults to true.</li>
  * </ul>
  * <p>
- * <i>"Restlet" is a registered trademark of <a
- * href="http://www.restlet.org/about/legal">Restlet S.A.S.</a>.</i>
+ * <i>"Restlet" is a registered trademark of
+ * <a href="http://restlet.com/legal">Restlet S.A.S.</a>.</i>
  * 
  * @author Tal Liron
  */

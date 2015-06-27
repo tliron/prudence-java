@@ -44,9 +44,9 @@ import java.io.OutputStream;
 import java.io.PushbackInputStream;
 
 /**
- * This work is a translation from C to Java of <a
- * href="http://www.crockford.com/javascript/jsmin.html">jsmin.c</a> published
- * by Douglas Crockford.
+ * This work is a translation from C to Java of
+ * <a href="http://www.crockford.com/javascript/jsmin.html">jsmin.c</a>
+ * published by Douglas Crockford.
  * 
  * @author John Reilly
  */
@@ -186,8 +186,8 @@ public class JSMin
 
 			case 3:
 				theB = next();
-				if( theB == '/'
-					&& ( theA == '(' || theA == ',' || theA == '=' || theA == ':' || theA == '[' || theA == '!' || theA == '&' || theA == '|' || theA == '?' || theA == '{' || theA == '}' || theA == ';' || theA == '\n' ) )
+				if( theB == '/' && ( theA == '(' || theA == ',' || theA == '=' || theA == ':' || theA == '[' || theA == '!' || theA == '&' || theA == '|' || theA == '?' || theA == '{' || theA == '}' || theA == ';'
+					|| theA == '\n' ) )
 				{
 					out.write( theA );
 					out.write( theB );

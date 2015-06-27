@@ -27,8 +27,8 @@ import org.restlet.ext.fileupload.RestletFileUpload;
 /**
  * A PHP-style $_FILE map.
  * <p>
- * See PHP's <a
- * href="http://www.php.net/manual/en/reserved.variables.php">predefined
+ * See PHP's
+ * <a href="http://www.php.net/manual/en/reserved.variables.php">predefined
  * variables</a>.
  * 
  * @author Tal Liron

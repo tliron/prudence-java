@@ -29,8 +29,8 @@ import com.threecrickets.prudence.internal.CSSMin;
  * the CSS via one request rather than many. Compressing them makes their
  * retrieval faster.
  * <p>
- * Compression is done via <a
- * href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
+ * Compression is done via
+ * <a href="http://barryvan.github.com/CSSMin/">CSSMin</a>.
  * <p>
  * This filter can track changes to the source files, updating the result file
  * on-the-fly. This makes it easy to develop and debug a live site.

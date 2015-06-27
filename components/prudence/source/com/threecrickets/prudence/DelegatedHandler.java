@@ -72,8 +72,7 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.commonLibraryDocumentSource:</code>
  * {@link DocumentSource}.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedHandler.debug:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedHandler.debug:</code>
  * {@link Boolean}, defaults to false.</li>
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.defaultLanguageTag:</code>
@@ -100,17 +99,13 @@ import com.threecrickets.scripturian.parser.ProgramParser;
  * <li>
  * <code>com.threecrickets.prudence.DelegatedHandler.libraryDocumentSource:</code>
  * {@link DocumentSource}.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedHandler.languageManager:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedHandler.languageManager:</code>
  * {@link LanguageManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedHandler.parserManager:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedHandler.parserManager:</code>
  * {@link ParserManager}, defaults to a new instance.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedHandler.prepare:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedHandler.prepare:</code>
  * {@link Boolean}, defaults to true.</li>
- * <li>
- * <code>com.threecrickets.prudence.DelegatedHandler.writer:</code>
+ * <li><code>com.threecrickets.prudence.DelegatedHandler.writer:</code>
  * {@link Writer}, defaults to standard output.</li>
  * </ul>
  * 

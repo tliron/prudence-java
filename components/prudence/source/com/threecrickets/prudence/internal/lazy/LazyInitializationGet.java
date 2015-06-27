@@ -21,8 +21,8 @@ import org.restlet.data.Parameter;
 /**
  * A PHP-style $_GET map.
  * <p>
- * See PHP's <a
- * href="http://www.php.net/manual/en/reserved.variables.php">predefined
+ * See PHP's
+ * <a href="http://www.php.net/manual/en/reserved.variables.php">predefined
  * variables</a>.
  * 
  * @author Tal Liron

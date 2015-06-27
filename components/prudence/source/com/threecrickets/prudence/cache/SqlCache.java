@@ -47,9 +47,9 @@ import com.threecrickets.prudence.util.InProcessMemoryLockSource;
 import com.threecrickets.prudence.util.LockSource;
 
 /**
- * A SQL-backed cache. Internally uses <a
- * href="http://commons.apache.org/dbcp/">Apache Commons DBCP</a> for connection
- * pooling.
+ * A SQL-backed cache. Internally uses
+ * <a href="http://commons.apache.org/dbcp/">Apache Commons DBCP</a> for
+ * connection pooling.
  * <p>
  * This instance maintains a pool of read/write locks to guarantee atomicity of
  * storing, fetching and invalidating. It does not use SQL transactions. This
@@ -188,10 +188,8 @@ public class SqlCache implements Cache
 						statement.execute( "DROP TABLE IF EXISTS " + cacheTagsTableName );
 					}
 
-					statement
-						.execute( "CREATE TABLE IF NOT EXISTS "
-							+ cacheTableName
-							+ " (key VARCHAR(255) PRIMARY KEY, data BLOB, media_type VARCHAR(255), language VARCHAR(255), character_set VARCHAR(255), encoding VARCHAR(255), modification_date TIMESTAMP, tag VARCHAR(255), headers TEXT, expiration_date TIMESTAMP, document_modification_date TIMESTAMP)" );
+					statement.execute( "CREATE TABLE IF NOT EXISTS " + cacheTableName
+						+ " (key VARCHAR(255) PRIMARY KEY, data BLOB, media_type VARCHAR(255), language VARCHAR(255), character_set VARCHAR(255), encoding VARCHAR(255), modification_date TIMESTAMP, tag VARCHAR(255), headers TEXT, expiration_date TIMESTAMP, document_modification_date TIMESTAMP)" );
 					statement.execute( "CREATE TABLE IF NOT EXISTS " + cacheTagsTableName + " (key VARCHAR(255), tag VARCHAR(255), FOREIGN KEY(key) REFERENCES " + cacheTableName + "(key) ON DELETE CASCADE)" );
 					statement.execute( "CREATE INDEX IF NOT EXISTS " + cacheTagsTableName + "_tag_idx ON " + cacheTagsTableName + " (tag)" );
 				}

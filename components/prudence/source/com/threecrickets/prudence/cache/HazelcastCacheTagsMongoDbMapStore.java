@@ -14,8 +14,8 @@ package com.threecrickets.prudence.cache;
 import org.restlet.Component;
 
 /**
- * A Hazelcast persistence implementation over <a
- * href="http://www.mongodb.org/">MongoDB</a>.
+ * A Hazelcast persistence implementation over
+ * <a href="http://www.mongodb.org/">MongoDB</a>.
  * <p>
  * The MongoDB client must be stored as
  * "com.threecrickets.prudence.cache.HazelcastMongoDbMapStore.mongoDb" in the

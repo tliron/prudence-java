@@ -28,8 +28,8 @@ import com.threecrickets.scripturian.ExecutionController;
 import com.threecrickets.scripturian.exception.ExecutionException;
 
 /**
- * An execution controller that exposes PHP-style <a
- * href="http://www.php.net/manual/en/reserved.variables.php">predefined
+ * An execution controller that exposes PHP-style
+ * <a href="http://www.php.net/manual/en/reserved.variables.php">predefined
  * variables</a> ("superglobals") to executables.
  * 
  * @author Tal Liron

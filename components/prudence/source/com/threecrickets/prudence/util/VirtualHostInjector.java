@@ -21,8 +21,8 @@ import org.restlet.routing.VirtualHost;
 /**
  * A {@link Filter} that sets the virtual host as a request attribute.
  * <p>
- * See <a
- * href="https://github.com/restlet/restlet-framework-java/issues/1045">this
+ * See
+ * <a href="https://github.com/restlet/restlet-framework-java/issues/1045">this
  * issue</a>.
  * 
  * @author Tal Liron
