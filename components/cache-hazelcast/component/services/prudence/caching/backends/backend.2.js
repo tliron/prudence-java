@@ -4,6 +4,6 @@
 //
 
 // We must make sure Hazelcast is initialized 
-document.require('/component/services/prudence/distributed/')
+document.require('/component/services/prudence/cluster/')
 
 chainCache.caches.add(new com.threecrickets.prudence.cache.HazelcastCache())
