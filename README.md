@@ -11,12 +11,13 @@ caching to URI rewriting and virtual hosting.
 Please see the [Prudence web site] (http://threecrickets.com/prudence/) for
 comprehensive documentation.
 
+[![Download](http://threecrickets.com/media/download.png "Download")](http://threecrickets.com/prudence/download/)
+
 
 Building Prudence
 -----------------
 
-To *completely* build Prudence you need [Ant] (http://ant.apache.org/), 
-[Maven]
+To *completely* build Prudence you need [Ant] (http://ant.apache.org/), [Maven]
 (http://maven.apache.org/) and [Sincerity] (http://threecrickets.com/sincerity/).
 
 You may need to create a file named "/build/private.properties" (see below) and
@@ -32,10 +33,6 @@ The result of the build will go into the "/build/distribution/" directory.
 Temporary files used during the build process will go into "/build/cache/",
 which you are free to delete.
 
-To avoid the "bootstrap class path not set" warning during compilation
-(harmless), configure the "compile.boot" setting in "private.properties" to the
-location of an "rt.jar" file belonging to JVM version 6.
-
 If you *only* want to build the Prudence Jar, then you only need Ant (you don't
 need Maven and Sincerity). Run the "libraries" Ant target instead of the default
 one.
@@ -50,14 +47,17 @@ however to avoid git conflicts, it would be better to create your own
 "/build/private.properties" instead, in which you can override any of the
 settings. That file will be ignored by git.
 
+To avoid the "bootstrap class path not set" warning during compilation
+(harmless), configure the "compile.boot" setting in "private.properties" to the
+location of an "rt.jar" file belonging to JVM version 6.
+
 
 Building the Prudence Manual
 ----------------------------
 
 To build the manual, as part of the standard build process, you will need to
-install 
-[LyX] (http://www.lyx.org/) and [eLyXer] (http://elyxer.nongnu.org/),
-and configure their paths in "private.properties".
+install [LyX] (http://www.lyx.org/) and [eLyXer] (http://elyxer.nongnu.org/), and
+configure their paths in "private.properties".
 
 
 Packaging
