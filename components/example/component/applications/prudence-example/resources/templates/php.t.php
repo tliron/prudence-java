@@ -2,13 +2,13 @@
 <head>
 	<title>PHP Template Example</title>
 	<link rel="stylesheet" type="text/css" href="<?=php $conversation->base ?>/style/three-crickets/dark-cricket/dark-cricket.min.css" />
-	<link href="http://fonts.googleapis.com/css?family=Ubuntu|Ubuntu:italic|Ubuntu:bold|Ubuntu:bolditalic" rel="stylesheet" type="text/css" />
+	<link href="<?= $conversation->reference->scheme ?>://fonts.googleapis.com/css?family=Ubuntu|Ubuntu:italic|Ubuntu:bold|Ubuntu:bolditalic" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <div id="main"><div id="main-content">
 <h1>PHP Template Example</h1>
 <table width="100%"><tr valign="top"><td>
-<?php
+<?
 
 //
 // Defer this page
