@@ -40149,8 +40149,8 @@ server.context.parameters.set('connector.idleTimeout', '10000')
 For a complete list of available configuration parameters, see 
 \begin_inset CommandInset href
 LatexCommand href
-name "HttpServerHelper"
-target "http://threecrickets.com/api/java/restlet-jetty9/index.html?org/restlet/ext/jetty9/HttpServerHelper.html"
+name "JettyHttpServerHelper"
+target "http://threecrickets.com/api/java/restlet-jetty9/index.html?org/restlet/ext/jetty9/JettyHttpServerHelper.html"
 
 \end_inset
 
@@ -40162,18 +40162,6 @@ Make sure to check the documentation for all the parent classes
 , because they are inherited.
  Note that parameters are always set as strings, even if they are interpreted
  as other types.
-\end_layout
-
-\begin_layout Standard
-(That link was for Jetty 9; use 
-\begin_inset CommandInset href
-LatexCommand href
-name "this link"
-target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/ext/index.html?org/restlet/ext/jetty/HttpServerHelper.html"
-
-\end_inset
-
- if you are using Jetty 8 on JVM 6.)
 \end_layout
 
 \begin_layout Paragraph
@@ -40254,7 +40242,7 @@ status open
 
 \begin_layout Plain Layout
 
-var server = new Server(Protocol.HTTPS, 443)
+var server = new Server(Protocol.HTTPS, 8082)
 \end_layout
 
 \begin_layout Plain Layout
@@ -40540,7 +40528,7 @@ target "http://www.eclipse.org/jetty/"
 
 \end_inset
 
- 9 as its server engine.
+ 9.3 as its server engine.
  Jetty is mature, performant and eminently scalable, and we highly recommend
  it for production environments.
 \end_layout
@@ -40564,7 +40552,7 @@ status open
 
 \begin_layout Plain Layout
 
-sincerity exclude org.restlet.jse restlet-jetty9 :
+sincerity exclude org.restlet.jse org.restlet.ext.restlet.jetty9 :
 \end_layout
 
 \begin_layout Plain Layout
@@ -40583,16 +40571,16 @@ sincerity exclude org.restlet.jse restlet-jetty9 :
 \end_layout
 
 \begin_layout Standard
-As of Restlet 2.2, three alternatives are available:
+As of Restlet 2.3, three alternatives are available:
 \end_layout
 
 \begin_layout Paragraph
-Jetty 8
+Jetty 9.2
 \end_layout
 
 \begin_layout Standard
-This is the recommended alternative to Jetty 9 if you cannot use JVM 7 or
- above, and are limited to JVM 6.
+This is the recommended alternative to Jetty 9.3 if you cannot use JVM 8
+ or above, and are limited to JVM 7.
  To install it:
 \begin_inset listings
 inline false
@@ -40600,7 +40588,7 @@ status open
 
 \begin_layout Plain Layout
 
-sincerity add org.restlet.jse restlet-jetty : install
+sincerity add org.restlet.jse org.restlet.ext.jetty : install
 \end_layout
 
 \end_inset
@@ -40638,7 +40626,7 @@ status open
 
 \begin_layout Plain Layout
 
-sincerity add org.restlet.jse restlet-simple : install
+sincerity add org.restlet.jse org.restlet.ext.simple : install
 \end_layout
 
 \end_inset
@@ -47316,6 +47304,32 @@ Modularity has a huge cost in terms of project management complexity, which
 \begin_layout Standard
 There are many packaging standards and tools out there, but we'll mention
  a few that you are especially likely to use with Prudence.
+\end_layout
+
+\begin_layout Paragraph
+Docker
+\end_layout
+
+\begin_layout Standard
+Because everything is one directory, and the only requirement is a JVM (actually
+, just a JRE), it's trivial to package your Prudence containers in 
+\begin_inset CommandInset href
+LatexCommand href
+name "Docker"
+target "https://www.docker.com/"
+
+\end_inset
+
+.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity Manual"
+target "http://threecrickets.com/sincerity/manual/tutorial/#working-with-docker"
+
+\end_inset
+
+ for instructions.
 \end_layout
 
 \begin_layout Paragraph
