@@ -134,6 +134,9 @@ Prudence.Setup = Prudence.Setup || function() {
 	 * @property {String} [settings.distributed.taskInstanceSharedGlobal='com.threecrickets.prudence.hazelcast.taskInstance'] The name of the shared global in which the Hazelcast task instance is stored
 	 * @property {String} [settings.distributed.executorService='default'] Hazelcast executor service name
 	 * 
+	 * @property {String} [settings.routing] Routing settings
+	 * @property {String} [settings.routing.useForwardedHeaders=false] Whether to apply the X-Forwarded-Proto, X-Forwarded-Host, and X-Forwarded-Port HTTP headers to requests
+	 * 
 	 * @property {String} [settings.logger=root.name]
 	 * 
 	 * @property {Object} [globals] These values will be available as {@link application#globals} when the application
@@ -193,7 +196,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				com.threecrickets.prudence.util.PrudenceScriptletPlugin,
 				com.threecrickets.prudence.util.ResolvingTemplate,
 				com.threecrickets.prudence.util.VirtualHostInjector,
-				com.threecrickets.prudence.util.XForwardedProtoFilter,
+				com.threecrickets.prudence.util.ForwardedFilter,
 				org.restlet.resource.Finder,
 				org.restlet.routing.Template,
 				org.restlet.routing.Redirector,
@@ -218,7 +221,8 @@ Prudence.Setup = Prudence.Setup || function() {
 			this.settings.uploads = Sincerity.Objects.ensure(this.settings.code, {})
 			this.settings.mediaTypes = Sincerity.Objects.ensure(this.settings.mediaTypes, {})
 			this.settings.distributed = Sincerity.Objects.ensure(this.settings.distributed, {})
-			
+			this.settings.routing = Sincerity.Objects.ensure(this.settings.routing, {})
+
 			// Sensible default settings
 			if (this.settings.errors.debugHeader !== null) {
 				this.settings.errors.debugHeader = 'X-Debug'
@@ -253,6 +257,8 @@ Prudence.Setup = Prudence.Setup || function() {
 			if (!(this.settings.uploads.root instanceof File)) {
 				this.settings.uploads.root = Sincerity.Files.build(this.root, this.settings.uploads.root)
 			}
+
+			this.settings.routing.useForwardedHeaders = Sincerity.Objects.ensure(this.settings.routing.useForwardedHeaders, false)
 
 			this.settings.code.minimumTimeBetweenValidityChecks = Sincerity.Localization.toMilliseconds(this.settings.code.minimumTimeBetweenValidityChecks)
 			this.settings.uploads.sizeThreshold = Sincerity.Localization.toBytes(this.settings.uploads.sizeThreshold)
@@ -333,8 +339,10 @@ Prudence.Setup = Prudence.Setup || function() {
 					// Inject the virtual host
 					instance = new VirtualHostInjector(this.context, instance, host)
 					
-					// Support the X-Forwarded-Proto header
-					instance = new XForwardedProtoFilter(this.context, instance)
+					// Apply the X-Forwarded- headers
+					if (this.settings.routing.useForwardedHeaders) {
+						instance = new ForwardedFilter(this.context, instance)
+					}
 				}
 				if (sincerity.verbosity >= 2) {
 					println('    "{0}/" on "{1}"'.cast(uri, name))

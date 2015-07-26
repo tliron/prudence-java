@@ -25163,6 +25163,86 @@ reference "configuration-hazelcast"
 \end_layout
 
 \begin_layout Subsection
+app.settings.routing
+\begin_inset CommandInset label
+LatexCommand label
+name "settings-routing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Though routing is configured in routing.js, here we can configure how routing
+ is handled.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+useForwardedHeaders
+\series default
+: Whether to apply the 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-Proto
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-Host
+\begin_inset Quotes erd
+\end_inset
+
+, and 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-Port
+\begin_inset Quotes erd
+\end_inset
+
+ HTTP headers to requests.
+ Defaults to false.
+ You should only set this to true if you are behind a proxy, otherwise clients
+ could use this to manipulate the information.
+ See 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+forwarded headers
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "load-balancing-forwarded"
+
+\end_inset
+
+)
+\bar default
+.
+ When true, installs the 
+\begin_inset CommandInset href
+LatexCommand href
+name "ForwardedFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ForwardedFilter.html"
+
+\end_inset
+
+ before your application on all non-internal hosts.
+\end_layout
+
+\begin_layout Subsection
 app.settings.logger
 \begin_inset CommandInset label
 LatexCommand label
@@ -46810,7 +46890,7 @@ task
 \begin_inset CommandInset href
 LatexCommand href
 name "HazelcastClient"
-target "http://www.hazelcast.com/docs/3.1/javadoc/index.html?com/hazelcast/client/HazelcastClient.html"
+target "http://www.hazelcast.com/docs/3.5/javadoc/index.html?com/hazelcast/client/HazelcastClient.html"
 
 \end_inset
 
@@ -47551,7 +47631,7 @@ target "http://www.yadt-project.org/"
 \end_layout
 
 \begin_layout Subsection
-Load Balancing
+Load Balancing and Proxies
 \begin_inset CommandInset label
 LatexCommand label
 name "load-balancing"
@@ -47649,10 +47729,22 @@ reference "clusters"
 can
 \emph default
  use the cluster features to allow for powerful cooperation between nodes.
+ In particular, they can share a 
+\bar under
+Hazelcast cache backend (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "configuration-caching"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
-In particular, take a look at the 
+Also take a look at the 
 \bar under
 task farming (page 
 \begin_inset CommandInset ref
@@ -47818,12 +47910,7 @@ http {
 
 \begin_layout Plain Layout
 
-    listen 443;
-\end_layout
-
-\begin_layout Plain Layout
-
-    keepalive_timeout 70;
+    listen 443 ssl spdy;
 \end_layout
 
 \begin_layout Plain Layout
@@ -47843,22 +47930,36 @@ http {
 
 \begin_layout Plain Layout
 
-    ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 \end_layout
 
 \begin_layout Plain Layout
 
-    ssl_ciphers AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5;
+    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE
+-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:D
+HE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-
+SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE
+-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-
+SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AE
+S256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AE
+S256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPOR
+T:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-D
+ES-CBC3-SHA';
 \end_layout
 
 \begin_layout Plain Layout
 
-    ssl_session_cache shared:SSL:10m;
+    ssl_prefer_server_ciphers on;
 \end_layout
 
 \begin_layout Plain Layout
 
-    ssl_session_timeout 10m;
+    ssl_session_timeout 5m;
+\end_layout
+
+\begin_layout Plain Layout
+
+    ssl_session_cache shared:SSL:5m;
 \end_layout
 
 \begin_layout Plain Layout
@@ -48348,8 +48449,7 @@ The load balancer handles user requests
 instead 
 \emph default
 of your Prudence instances.
- (This is sometimes, annoyingly from the client's perspective, called a
- 
+ (This is sometimes called, from the client's perspective, a 
 \begin_inset Quotes eld
 \end_inset
 
@@ -48380,8 +48480,8 @@ name "load-balancing-host"
 \end_layout
 
 \begin_layout Standard
-One thorny issue is that the host and port you get are different from those
- the client sent.
+One thorny issue is that the host and port (and scheme, if you are proxying
+ https to http) you get are different from those the client sent.
  For example, the client might have made a request to 
 \begin_inset Quotes eld
 \end_inset
@@ -48404,12 +48504,15 @@ http://192.168.1.10:8081/myapp/
 \begin_layout Standard
 In terms of routing your URI-space, this is not a problem: Prudence always
  uses the URL in the original request.
- However, you might care about which node 
+ However, you might care about which server 
 \emph on
 you
 \emph default
  are on, for example if you need to access local services.
- Usefully, the standard HTTP/1.1 
+\end_layout
+
+\begin_layout Standard
+Usefully, the standard HTTP/1.1 
 \begin_inset Quotes eld
 \end_inset
 
@@ -48417,9 +48520,8 @@ Host
 \begin_inset Quotes erd
 \end_inset
 
- header is meant just for this use case: your load balancer will likely
- override the header sent by the client, and instead set it to the URL it
- uses to access you.
+ header can be used here: your load balancer will likely set it to be your
+ server.
  In Prudence, you can access its parsed value via the 
 \begin_inset CommandInset href
 LatexCommand href
@@ -48488,6 +48590,227 @@ Host
 
  header intact.
  This behavior is sometimes configurable in load balancers.
+\end_layout
+
+\begin_layout Standard
+For example, in Nginx:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+location / {
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_pass http://prudence;
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_set_header Host $host;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Forwarded Headers
+\begin_inset CommandInset label
+LatexCommand label
+name "load-balancing-forwarded"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One problem with the standard 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ header is that it only contains the host and port, but not the scheme.
+ If you're proxying https to http, and are setting the 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ header to work transparently, you will nevertheless lose the original scheme.
+\end_layout
+
+\begin_layout Standard
+Though the HTTP/1.1 specification does not have a solution to this problem,
+ we can use a widely supported 
+\emph on
+de facto
+\emph default
+ standard, first introduced in 
+\begin_inset CommandInset href
+LatexCommand href
+name "Squid"
+target "http://www.squid-cache.org/"
+
+\end_inset
+
+: the 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-Proto
+\begin_inset Quotes erd
+\end_inset
+
+ header.
+ Also, 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-Host
+\begin_inset Quotes erd
+\end_inset
+
+ (and/or 
+\begin_inset Quotes eld
+\end_inset
+
+X-Forwarded-Port
+\begin_inset Quotes erd
+\end_inset
+
+) can be used 
+\emph on
+instead
+\emph default
+ of 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+, allowing you to retain the 
+\begin_inset Quotes eld
+\end_inset
+
+Host
+\begin_inset Quotes erd
+\end_inset
+
+ of the proxy without overwriting it.
+\end_layout
+
+\begin_layout Standard
+You can enable support of these headers in Prudence per application by setting
+ 
+\bar under
+
+\begin_inset Quotes eld
+\end_inset
+
+app.settings.routing.useForwardedHeaders
+\begin_inset Quotes erd
+\end_inset
+
+ (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "settings-routing"
+
+\end_inset
+
+)
+\bar default
+ to true in your application's settings.js:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+app.settings = {
+\end_layout
+
+\begin_layout Plain Layout
+
+	...
+\end_layout
+
+\begin_layout Plain Layout
+
+	routing: {
+\end_layout
+
+\begin_layout Plain Layout
+
+		useForwardedHeaders: true
+\end_layout
+
+\begin_layout Plain Layout
+
+	}
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By default, Prudence does 
+\emph on
+not
+\emph default
+ enable the interpretation of these headers, because if you're 
+\emph on
+not
+\emph default
+ behind a proxy, it would allow clients to manipulate the information.
+\end_layout
+
+\begin_layout Standard
+Note that you can also use the 
+\begin_inset CommandInset href
+LatexCommand href
+name "ForwardedFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ForwardedFilter.html"
+
+\end_inset
+
+ directly for more fine-grained control over which requests will use these
+ headers.
+\end_layout
+
+\begin_layout Standard
+Your load balancer must also be configured to set these headers.
  For example, in Nginx:
 \end_layout
 
@@ -48508,7 +48831,12 @@ location / {
 
 \begin_layout Plain Layout
 
-  proxy_set_header Host $http_host;
+  proxy_set_header X-Forwarded-Proto $scheme;
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_set_header X-Forwarded-Port $server_port;
 \end_layout
 
 \begin_layout Plain Layout
@@ -48549,25 +48877,7 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \end_layout
 
 \begin_layout Standard
-The short answer is that this will likely just work in Prudence with the
- default configuration.
-\end_layout
-
-\begin_layout Standard
-The long answer is that although HTTP as of version 1.1 does not have a standard
- solution for this, a 
-\emph on
-de facto
-\emph default
- standard (which originated in 
-\begin_inset CommandInset href
-LatexCommand href
-name "Squid"
-target "http://www.squid-cache.org/"
-
-\end_inset
-
-) is widely supported, of using the 
+We can use the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -48575,17 +48885,18 @@ X-Forwarded-For
 \begin_inset Quotes erd
 \end_inset
 
- header.
- The value is a comma-separated list of all client IP addresses in order,
- so each component along the way can append itself to before forwarding
- onward.
+ header (a 
+\emph on
+de facto
+\emph default
+ standard), which is a comma-separated list of all client IP addresses in
+ order.
+ Each component along the way can append itself to before forwarding onward.
  The first IP address would thus be the original client.
 \end_layout
 
 \begin_layout Standard
-Because this is not yet truly standard, Restlet does not, by default, interpret
- the header.
- However, it does support it, and the default 
+The default 
 \bar under
 server configuration (page 
 \begin_inset CommandInset ref
@@ -48596,8 +48907,16 @@ reference "configuration-servers"
 
 )
 \bar default
- in Prudence enables it.
- You can see this in 
+ in Prudence does 
+\emph on
+not
+\emph default
+ enable the interpretation of this header, because if you're 
+\emph on
+not
+\emph default
+ behind a proxy, it would allow clients to manipulate the information.
+ To enable it, uncomment or add this line in 
 \begin_inset Quotes eld
 \end_inset
 
@@ -48624,16 +48943,36 @@ server.context.parameters.set('useForwardedForHeader', 'true')
 \end_layout
 
 \begin_layout Standard
-Without this, conversation.client.upstreamAddress would return only the last
- client IP address.
+See the relevant Restlet documentation 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/engine/index.html?org/restlet/engine/adapter/HttpServerHelper.html"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/data/ClientInfo.html"
+
+\end_inset
+
+.
+ Also note that you can use 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.client.forwardedAddresses API"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.client"
+
+\end_inset
+
+ to access the complete list.
 \end_layout
 
 \begin_layout Standard
-Remember that for this to work properly, your load balancer 
-\emph on
-must
-\emph default
- set 
+Your load balancer must also be configured to set 
 \begin_inset Quotes eld
 \end_inset
 
@@ -48642,7 +48981,37 @@ X-Forwarded-For
 \end_inset
 
 .
- When in doubt, check its documentation.
+ For example, in Nginx:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+location / {
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_pass http://prudence;
+\end_layout
+
+\begin_layout Plain Layout
+
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -49672,6 +50041,33 @@ target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/js
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
+name "CorsFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CorsFilter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that add 
+\begin_inset CommandInset href
+LatexCommand href
+name "Cross-Origin Resource Sharing (CORS)"
+target "http://www.w3.org/TR/cors/"
+
+\end_inset
+
+ response headers.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
 name "CustomEncoder"
 target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/CustomEncoder.html"
 
@@ -49695,6 +50091,26 @@ target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/js
 \end_inset
 
  before any restlet.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "ForwardedFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ForwardedFilter.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that applies the X-Forwarded-Proto, X-Forwarded-Host, and X-Forwarded-Port
+ HTTP headers to the request's references.
 \end_layout
 
 \begin_layout Itemize
@@ -49737,6 +50153,25 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 : A restlet that always sets a specific status and does nothing else.
 \end_layout
 
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "VirtualHostInjector"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/VirtualHostInjector.html"
+
+\end_inset
+
+: A 
+\begin_inset CommandInset href
+LatexCommand href
+name "Filter"
+target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/jse/api/index.html?org/restlet/routing/Filter.html"
+
+\end_inset
+
+ that sets the virtual host as a request attribute.
+\end_layout
+
 \begin_layout Subsection
 Client Data
 \end_layout
@@ -49773,7 +50208,6 @@ target "http://restlet.com/technical-resources/restlet-framework/javadocs/2.3/js
 \end_inset
 
  filter, allowing you direct control over and access to the final representation.
- 
 \end_layout
 
 \begin_layout Itemize
@@ -49839,6 +50273,26 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "InternalRepresentation"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/InternalRepresentation.html"
+
+\end_inset
+
+: A representation used to transfer internal objects.
+ Uses a custom 
+\begin_inset Quotes eld
+\end_inset
+
+application/internal
+\begin_inset Quotes erd
+\end_inset
+
+ media type.
 \end_layout
 
 \begin_layout Subsection
@@ -50157,6 +50611,42 @@ target "http://www.crockford.com/javascript/jsmin.html"
 \begin_layout Itemize
 \begin_inset CommandInset href
 LatexCommand href
+name "LessFilter"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/LessFilter.html"
+
+\end_inset
+
+: Automatically parses 
+\begin_inset CommandInset href
+LatexCommand href
+name "LESS"
+target "http://lesscss.org/"
+
+\end_inset
+
+ code and renders CSS using the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Less4j"
+target "https://github.com/SomMeri/less4j"
+
+\end_inset
+
+ library.
+ Also supports minifying files, if the 
+\begin_inset Quotes eld
+\end_inset
+
+.min.css
+\begin_inset Quotes erd
+\end_inset
+
+ extension is used.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
 name "ZussFilter"
 target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/ZussFilter.html"
 
@@ -50195,6 +50685,17 @@ target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/
 \end_inset
 
 : Makes it easy to register custom authentication schemes.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset CommandInset href
+LatexCommand href
+name "EnhancedCallResolver"
+target "http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/EnhancedCallResolver.html"
+
+\end_inset
+
+: Improves on the default Restlet CallResolver.
 \end_layout
 
 \begin_layout Section
