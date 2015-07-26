@@ -193,6 +193,7 @@ Prudence.Setup = Prudence.Setup || function() {
 				com.threecrickets.prudence.util.PrudenceScriptletPlugin,
 				com.threecrickets.prudence.util.ResolvingTemplate,
 				com.threecrickets.prudence.util.VirtualHostInjector,
+				com.threecrickets.prudence.util.XForwardedProtoFilter,
 				org.restlet.resource.Finder,
 				org.restlet.routing.Template,
 				org.restlet.routing.Redirector,
@@ -327,8 +328,13 @@ Prudence.Setup = Prudence.Setup || function() {
 					this.internalName = uri.substring(1)
 				}
 				else {
-					// Inject the virtual host (if not 'internal')
-					instance = new VirtualHostInjector(this.context, instance, host)					
+					// For non-internal...
+					
+					// Inject the virtual host
+					instance = new VirtualHostInjector(this.context, instance, host)
+					
+					// Support the X-Forwarded-Proto header
+					instance = new XForwardedProtoFilter(this.context, instance)
 				}
 				if (sincerity.verbosity >= 2) {
 					println('    "{0}/" on "{1}"'.cast(uri, name))

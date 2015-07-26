@@ -40169,7 +40169,7 @@ Load Balancing
 \end_layout
 
 \begin_layout Standard
-Are your server running behind a load balancer? See the explanation 
+Are your servers running behind a load balancer? See the explanation 
 \bar under
 here (page 
 \begin_inset CommandInset ref
@@ -40449,6 +40449,24 @@ must
 \end_layout
 
 \begin_layout Paragraph
+HTTP/2
+\end_layout
+
+\begin_layout Standard
+Jetty adds full HTTP/2 support to your secure servers, bringing an improved
+ user experience and a lighter load on the backend.
+ See the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Sincerity documentation"
+target "http://threecrickets.com/sincerity/ecosystem/skeletons/#jetty-web-extras"
+
+\end_inset
+
+ for details on how to enable it.
+\end_layout
+
+\begin_layout Paragraph
 API
 \end_layout
 
@@ -40649,8 +40667,8 @@ Restlet's Internal Server Engine
 \begin_layout Standard
 Will be used if no other connector is installed.
  While the internal engine may be adequate for testing, we found that it
- suffers from stability problems, and do not recommend it for production
- environments.
+ suffers from stability issues, and do not recommend it for production environme
+nts.
 \end_layout
 
 \begin_layout Subsection
@@ -40953,7 +40971,8 @@ target "http://docs.oracle.com/javase/6/docs/api/index.html?java/net/URLConnecti
 \end_inset
 
  class included in the JVM.
- It does not scale well, however it does support FTP connections.
+ It does not scale well, however it does the job, and even supports FTP
+ connections.
  To install it:
 \begin_inset listings
 inline false
@@ -40992,8 +41011,8 @@ Restlet's Internal Client Engine
 \begin_layout Standard
 Will be used if no other connector is installed.
  While the internal engine may be adequate for testing, we found that it
- suffers from stability problems, and do not recommend it for production
- environments.
+ suffers from stability issues, and do not recommend it for production environme
+nts.
 \end_layout
 
 \begin_layout Subsection
