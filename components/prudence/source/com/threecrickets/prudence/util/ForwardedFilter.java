@@ -101,6 +101,30 @@ public class ForwardedFilter extends Filter
 		describe();
 	}
 
+	//
+	// Attribute
+	//
+
+	/**
+	 * True if we are applying the forwarded header values to references.
+	 * 
+	 * @return Whether we are applying the forwarded header values to references
+	 */
+	public boolean isApplying()
+	{
+		return isApplying;
+	}
+
+	/**
+	 * @param isApplying
+	 *        Whether we are applying the forwarded header values to references
+	 * @see #isApplying()
+	 */
+	public void setApplying( boolean isApplying )
+	{
+		this.isApplying = isApplying;
+	}
+
 	// //////////////////////////////////////////////////////////////////////////
 	// Protected
 
@@ -111,6 +135,9 @@ public class ForwardedFilter extends Filter
 	@Override
 	protected int beforeHandle( Request request, Response response )
 	{
+		if( !isApplying() )
+			return CONTINUE;
+
 		String forwardedScheme = request.getHeaders().getFirstValue( X_FORWARDED_PROTO_HEADER );
 		String forwardedDomain = request.getHeaders().getFirstValue( X_FORWARDED_HOST_HEADER );
 		String forwardedPortString = request.getHeaders().getFirstValue( X_FORWARDED_PORT_HEADER );
@@ -130,6 +157,7 @@ public class ForwardedFilter extends Filter
 					}
 					catch( NumberFormatException x )
 					{
+						// Invalid
 					}
 					forwardedDomain = forwardedDomain.substring( 0, colon );
 				}
@@ -169,6 +197,23 @@ public class ForwardedFilter extends Filter
 	// //////////////////////////////////////////////////////////////////////////
 	// Private
 
+	/**
+	 * True if we are applying the forwarded header values to references.
+	 */
+	private volatile boolean isApplying = true;
+
+	/**
+	 * Applies forwarded values to a reference.
+	 * 
+	 * @param reference
+	 *        The reference
+	 * @param forwardedScheme
+	 *        The forwarded scheme or null
+	 * @param forwardedDomain
+	 *        The forwarded domain or null
+	 * @param forwardedPort
+	 *        The forwarded port or -1
+	 */
 	private static void apply( Reference reference, String forwardedScheme, String forwardedDomain, int forwardedPort )
 	{
 		if( forwardedScheme != null )
@@ -176,6 +221,7 @@ public class ForwardedFilter extends Filter
 		if( forwardedDomain != null )
 			reference.setHostDomain( forwardedDomain );
 		if( forwardedPort != -1 )
+			// Set explicit port only if different from default
 			if( Protocol.valueOf( reference.getScheme() ).getDefaultPort() != forwardedPort )
 				reference.setHostPort( forwardedPort );
 	}
