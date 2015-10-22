@@ -61,10 +61,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( writer == null )
 		{
-			writer = (Writer) getAttributes().get( prefix + ".writer" );
-
-			if( writer == null )
-				writer = new OutputStreamWriter( System.out );
+			Writer writer = (Writer) getAttributes().get( prefix + ".writer" );
+			this.writer = writer == null ? new OutputStreamWriter( System.out ) : writer;
 		}
 
 		return writer;
@@ -74,10 +72,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( errorWriter == null )
 		{
-			errorWriter = (Writer) getAttributes().get( prefix + ".errorWriter" );
-
-			if( errorWriter == null )
-				errorWriter = new OutputStreamWriter( System.err );
+			Writer errorWriter = (Writer) getAttributes().get( prefix + ".errorWriter" );
+			this.errorWriter = errorWriter == null ? new OutputStreamWriter( System.err ) : errorWriter;
 		}
 
 		return errorWriter;
@@ -119,10 +115,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( documentServiceName == null )
 		{
-			documentServiceName = (String) getAttributes().get( prefix + ".documentServiceName" );
-
-			if( documentServiceName == null )
-				documentServiceName = "document";
+			String documentServiceName = (String) getAttributes().get( prefix + ".documentServiceName" );
+			this.documentServiceName = documentServiceName == null ? "document" : documentServiceName;
 		}
 
 		return documentServiceName;
@@ -132,10 +126,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( applicationServiceName == null )
 		{
-			applicationServiceName = (String) getAttributes().get( prefix + ".applicationServiceName" );
-
-			if( applicationServiceName == null )
-				applicationServiceName = "application";
+			String applicationServiceName = (String) getAttributes().get( prefix + ".applicationServiceName" );
+			this.applicationServiceName = applicationServiceName == null ? "application" : applicationServiceName;
 		}
 
 		return applicationServiceName;
@@ -145,10 +137,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( sourceViewable == null )
 		{
-			sourceViewable = (Boolean) getAttributes().get( prefix + ".sourceViewable" );
-
-			if( sourceViewable == null )
-				sourceViewable = false;
+			Boolean sourceViewable = (Boolean) getAttributes().get( prefix + ".sourceViewable" );
+			this.sourceViewable = sourceViewable == null ? false : sourceViewable;
 		}
 
 		return sourceViewable;
@@ -161,7 +151,7 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		{
 			ConcurrentMap<String, Object> attributes = getAttributes();
 			String key = prefix + ".documentFormatter";
-			documentFormatter = (DocumentFormatter<Executable>) attributes.get( key );
+			DocumentFormatter<Executable> documentFormatter = (DocumentFormatter<Executable>) attributes.get( key );
 
 			if( documentFormatter == null )
 			{
@@ -171,6 +161,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 				if( existing != null )
 					documentFormatter = existing;
 			}
+
+			this.documentFormatter = documentFormatter;
 		}
 
 		return documentFormatter;
@@ -180,10 +172,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( defaultCharacterSet == null )
 		{
-			defaultCharacterSet = (CharacterSet) getAttributes().get( prefix + ".defaultCharacterSet" );
-
-			if( defaultCharacterSet == null )
-				defaultCharacterSet = CharacterSet.UTF_8;
+			CharacterSet defaultCharacterSet = (CharacterSet) getAttributes().get( prefix + ".defaultCharacterSet" );
+			this.defaultCharacterSet = defaultCharacterSet == null ? CharacterSet.UTF_8 : defaultCharacterSet;
 		}
 
 		return defaultCharacterSet;
@@ -195,7 +185,7 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		{
 			ConcurrentMap<String, Object> attributes = getAttributes();
 			String key = prefix + ".fileUploadDirectory";
-			fileUploadDirectory = (File) attributes.get( key );
+			File fileUploadDirectory = (File) attributes.get( key );
 
 			if( fileUploadDirectory == null )
 			{
@@ -206,6 +196,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 				if( existing != null )
 					fileUploadDirectory = existing;
 			}
+
+			this.fileUploadDirectory = fileUploadDirectory;
 		}
 
 		return fileUploadDirectory;
@@ -215,13 +207,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( fileUploadSizeThreshold == null )
 		{
-			Number number = (Number) getAttributes().get( prefix + ".fileUploadSizeThreshold" );
-
-			if( number != null )
-				fileUploadSizeThreshold = number.intValue();
-
-			if( fileUploadSizeThreshold == null )
-				fileUploadSizeThreshold = 0;
+			Number fileUploadSizeThreshold = (Number) getAttributes().get( prefix + ".fileUploadSizeThreshold" );
+			this.fileUploadSizeThreshold = fileUploadSizeThreshold == null ? 0 : fileUploadSizeThreshold.intValue();
 		}
 
 		return fileUploadSizeThreshold;
@@ -237,7 +224,7 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		{
 			ConcurrentMap<String, Object> attributes = getAttributes();
 			String key = prefix + ".languageManager";
-			languageManager = (LanguageManager) attributes.get( key );
+			LanguageManager languageManager = (LanguageManager) attributes.get( key );
 
 			if( languageManager == null )
 			{
@@ -247,6 +234,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 				if( existing != null )
 					languageManager = existing;
 			}
+
+			this.languageManager = languageManager;
 		}
 
 		return languageManager;
@@ -258,7 +247,7 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 		{
 			ConcurrentMap<String, Object> attributes = getAttributes();
 			String key = prefix + ".parserManager";
-			parserManager = (ParserManager) attributes.get( key );
+			ParserManager parserManager = (ParserManager) attributes.get( key );
 
 			if( parserManager == null )
 			{
@@ -268,6 +257,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 				if( existing != null )
 					parserManager = existing;
 			}
+
+			this.parserManager = parserManager;
 		}
 
 		return parserManager;
@@ -286,10 +277,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( defaultLanguageTag == null )
 		{
-			defaultLanguageTag = (String) getAttributes().get( prefix + ".defaultLanguageTag" );
-
-			if( defaultLanguageTag == null )
-				defaultLanguageTag = "javascript";
+			String defaultLanguageTag = (String) getAttributes().get( prefix + ".defaultLanguageTag" );
+			this.defaultLanguageTag = defaultLanguageTag == null ? "javascript" : defaultLanguageTag;
 		}
 
 		return defaultLanguageTag;
@@ -299,10 +288,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( prepare == null )
 		{
-			prepare = (Boolean) getAttributes().get( prefix + ".prepare" );
-
-			if( prepare == null )
-				prepare = true;
+			Boolean prepare = (Boolean) getAttributes().get( prefix + ".prepare" );
+			this.prepare = prepare == null ? true : prepare;
 		}
 
 		return prepare;
@@ -312,10 +299,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( debug == null )
 		{
-			debug = (Boolean) getAttributes().get( prefix + ".debug" );
-
-			if( debug == null )
-				debug = false;
+			Boolean debug = (Boolean) getAttributes().get( prefix + ".debug" );
+			this.debug = debug == null ? false : debug;
 		}
 
 		return debug;
@@ -333,10 +318,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( defaultName == null )
 		{
-			defaultName = (String) getAttributes().get( prefix + ".defaultName" );
-
-			if( defaultName == null )
-				defaultName = "default";
+			String defaultName = (String) getAttributes().get( prefix + ".defaultName" );
+			this.defaultName = defaultName == null ? "default" : defaultName;
 		}
 
 		return defaultName;
@@ -346,10 +329,8 @@ public abstract class VolatileContextualAttributes extends ContextualAttributes
 	{
 		if( trailingSlashRequired == null )
 		{
-			trailingSlashRequired = (Boolean) getAttributes().get( prefix + ".trailingSlashRequired" );
-
-			if( trailingSlashRequired == null )
-				trailingSlashRequired = true;
+			Boolean trailingSlashRequired = (Boolean) getAttributes().get( prefix + ".trailingSlashRequired" );
+			this.trailingSlashRequired = trailingSlashRequired == null ? true : trailingSlashRequired;
 		}
 
 		return trailingSlashRequired;
