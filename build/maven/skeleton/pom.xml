@@ -52,6 +52,7 @@
 			<groupId>com.threecrickets.sincerity.skeleton</groupId>
 			<artifactId>sincerity-restlet</artifactId>
 			<version>@SINCERITY.VERSION@</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.threecrickets.prudence</groupId>
@@ -62,6 +63,7 @@
 			<groupId>com.threecrickets.prudence</groupId>
 			<artifactId>prudence-skeleton-jvm8</artifactId>
 			<version>${project.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>it.sauronsoftware</groupId>
@@ -78,7 +80,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>2.6</version>
 				<executions>
 					<execution>
 						<id>jar</id>
