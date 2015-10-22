@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.restlet.Context;
@@ -34,7 +35,7 @@ import org.restlet.routing.Filter;
 import com.github.sommeri.less4j.Less4jException;
 import com.github.sommeri.less4j.LessCompiler;
 import com.github.sommeri.less4j.LessCompiler.CompilationResult;
-import com.github.sommeri.less4j.core.DefaultLessCompiler;
+import com.github.sommeri.less4j.core.TimeoutedLessCompiler;
 import com.threecrickets.prudence.internal.CSSMin;
 
 /**
@@ -59,7 +60,7 @@ public class LessFilter extends Filter
 	//
 
 	/**
-	 * Constructor using {@link DefaultLessCompiler}.
+	 * Constructor using a 1-second {@link TimeoutedLessCompiler}.
 	 * 
 	 * @param context
 	 *        The context
@@ -72,7 +73,7 @@ public class LessFilter extends Filter
 	 */
 	public LessFilter( Context context, Restlet next, File targetDirectory, long minimumTimeBetweenValidityChecks )
 	{
-		this( context, next, targetDirectory, minimumTimeBetweenValidityChecks, new DefaultLessCompiler() );
+		this( context, next, targetDirectory, minimumTimeBetweenValidityChecks, new TimeoutedLessCompiler( 1, TimeUnit.SECONDS ) );
 	}
 
 	/**
