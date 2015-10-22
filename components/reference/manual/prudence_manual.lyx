@@ -31672,6 +31672,67 @@ status open
 
 \end_layout
 
+\begin_layout Subsection
+Java Debugging
+\end_layout
+
+\begin_layout Standard
+This can help you debug problems within the Prudence platform itself.
+\end_layout
+
+\begin_layout Standard
+In order for this to work, you will need to have the Prudence Java source
+ code, as well as that of any dependent library you wish to debug, including
+ your language engine (Nashorn, Rhino, Groovy, etc.), and the web server
+ (Jetty).
+\end_layout
+
+\begin_layout Standard
+To enable remote debugging, you can start Prudence like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+JVM_SWITCHES='-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000'
+ sincerity start prudence
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This turns on a JDWP (Java Debug Wire Protocol) server on port 8000.
+ For more information on how to configure remote debugging, see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "JPDA (Java Platform Debugger Architecture) documentation"
+target "http://docs.oracle.com/javase/8/docs/technotes/guides/jpda/conninv.html"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Prudence will wait for a debugger client to connect before proceeding.
+ To connect with the Eclipse IDE, see 
+\begin_inset CommandInset href
+LatexCommand href
+name "the Eclipse documentation"
+target "http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.jdt.doc.user%2Fconcepts%2Fcremdbug.htm"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Section
 Describing APIs
 \begin_inset CommandInset label

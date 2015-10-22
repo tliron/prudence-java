@@ -28,6 +28,11 @@ import com.threecrickets.prudence.util.CapturingRedirector;
  * <li><code>handleBefore(conversation)</code></li>
  * <li><code>handleAfter(conversation)</code></li>
  * </ul>
+ * <p>
+ * The handleBefore entry point should return a string which an action. It can
+ * be either "continue", "skip", or "stop" for the usual filter actions.
+ * However, if the string begins with a "/", it will be treated as a redirection
+ * using {@link CapturingRedirector}.
  * 
  * @author Tal Liron
  */
