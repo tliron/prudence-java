@@ -8,8 +8,8 @@
 	<version>@VERSION@</version>
 	<packaging>pom</packaging>
 
-	<name>Prudence: Sincerity Skeleton Add-On for JVM8+</name>
-	<description>Adds dependencies for JVM7+ to the Prudence skeleton.</description>
+	<name>Prudence: Sincerity Skeleton Add-On for JVM8</name>
+	<description>Adds dependencies for JVM8 to the Prudence skeleton.</description>
 	<url>http://threecrickets.com/prudence/</url>
 	<inceptionYear>2009</inceptionYear>
 
