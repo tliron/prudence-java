@@ -18840,6 +18840,89 @@ Be careful with cookies! They are a hacker's playground.
 \end_layout
 
 \begin_layout Subsection
+Link Headers
+\begin_inset CommandInset label
+LatexCommand label
+name "link-headers"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Link headers are very useful for instructing web browsers to preload resources.
+ This can greatly improve the user experience, especially when coupled with
+ HTTP/2.
+\end_layout
+
+\begin_layout Standard
+For more information, see the 
+\begin_inset CommandInset href
+LatexCommand href
+name "W3C manual for preloading"
+target "https://w3c.github.io/preload/"
+
+\end_inset
+
+ and the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Link header spec (RFC 5988)"
+target "https://tools.ietf.org/html/rfc5988#section-5.1"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The API is very similar to that used for 
+\bar under
+cookies (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cookies"
+
+\end_inset
+
+)
+\bar default
+: you can create, remove, or change the values of already-created link headers.
+ For example:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+var link = conversation.createLinkHeader('https://example.com/other/styles.css')
+\end_layout
+
+\begin_layout Plain Layout
+
+link.parameters.put('rel', 'preload')
+\end_layout
+
+\begin_layout Plain Layout
+
+link.parameters.put('as', 'style')
+\end_layout
+
+\begin_layout Plain Layout
+
+link.save()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Custom Headers
 \begin_inset CommandInset label
 LatexCommand label
@@ -18878,6 +18961,29 @@ target "http://threecrickets.com/api/javascript/?namespace=conversation&item=con
 \end_inset
 
 .
+ 
+\bar under
+Cookies (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cookies"
+
+\end_inset
+
+)
+\bar default
+ and 
+\bar under
+link headers (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "link-headers"
+
+\end_inset
+
+)
+\bar default
+ are also supported via APIs.
  However, Prudence also let's you use other headers, including your custom
  headers, via 
 \begin_inset CommandInset href
@@ -42329,7 +42435,8 @@ Forms, Forms, Forms
 
 \begin_layout Standard
 The problem is that you need an intermediary: a middle layer.
- For this reason, 
+ And it needs to be robust.
+ Thus, 
 \begin_inset Quotes eld
 \end_inset
 
@@ -42337,15 +42444,17 @@ classic
 \begin_inset Quotes erd
 \end_inset
 
- MVC, based around a thick controller layer, isn't as popular as it used
- to be: the controller does 
+ MVC is based around a thick controller layer.
+ But it isn't as popular as it used to be: the controller does 
 \emph on
 as much as possible
 \emph default
  in order to automate the development of user interfaces for very large
  applications that require constant maintenance and tweaking.
- This kind of MVC thus handles form validation, binding of form fields to
- database columns, and even form flows.
+ This kind of MVC handles form validation, binding of form fields to database
+ columns, and even form flows.
+ There's a lot of complicated logic there, and it's even more complicated
+ to configure it.
 \end_layout
 
 \begin_layout Standard
@@ -42359,7 +42468,8 @@ enterprise
 \end_inset
 
  user interfaces.
- It's telling that the manipulation of the data model is called 
+ It's telling that in most documentation of MVC the manipulation of the
+ data model is called 
 \begin_inset Quotes eld
 \end_inset
 
@@ -42368,8 +42478,8 @@ business logic
 \end_inset
 
 : the use case for MVC is big business for big businesses.
- At its best, MVC makes hundreds of forms easier to maintain in the long
- run.
+ At its best, MVC makes the maintenance of an application with hundreds
+ of forms easier to in the long run.
  At its worst, programmers drown in an ocean of controller configuration
  files, fighting against opaque layers of APIs that can only do what they
  were programmed to do, but not necessarily what is needed for a sensible
@@ -42377,8 +42487,8 @@ business logic
 \end_layout
 
 \begin_layout Standard
-Outside of the big business world, UI implementations use more flexible
- derivatives of MVC, such as 
+Outside of the big business world, there exist more flexible derivatives
+ of MVC, such as 
 \begin_inset CommandInset href
 LatexCommand href
 name "Model-View-Presenter (MVP)"
@@ -42387,7 +42497,7 @@ target "http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter"
 \end_inset
 
 .
- The 
+ In MVP, the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -42406,8 +42516,9 @@ business logic
 \begin_inset Quotes erd
 \end_inset
 
- might even be in the presenter rather than the model.
- Still, implementing MVP, like MVC, often comes from the same anxiety about
+ might even be in the presenter rather than the model, or it might be up
+ to you.
+ Still, the choice to use MVP, like MVC, comes from the same anxiety about
  mixing model and view.
 \end_layout
 
@@ -42870,7 +42981,7 @@ drop down
 \end_inset
 
  to dynamic languages, such as JavaScript (server-side), when useful: Prudence
- allows you to easily mix and match scriplets in different languages.
+ allows you to easily mix and match scriptlets in different languages.
  If you do so, take special note of the nifty 
 \begin_inset CommandInset href
 LatexCommand href

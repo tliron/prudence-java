@@ -1449,6 +1449,43 @@ var Prudence = {}
  */
 
 /**
+ * A collection of all link headers included in the response.
+ * <p>
+ * You may prefer to use the {@link conversation#getLinkHeader} API to retrieve a specific link header you know about.
+ * To add a new link header to the collection, use {@link conversation#createLinkHeader}.
+ * <p>
+ * Optional parameters can be accessed via the "parameters" attribute (a JVM Map).
+ * <p>
+ * If you change a link header's parameters, make sure to call save() on it in order to save it to the response.
+ * Or call remove() to remove it.
+ * 
+ * @name conversation.linkHeaders
+ * @type <a href="http://docs.oracle.com/javase/6/docs/api/index.html?java/util/Collection.html">java.util.Collection</a>&lt;<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/LinkHeader.html">com.threecrickets.prudence.util.LinkHeader</a>&gt;
+ */
+
+/**
+ * Gets a link header by its reference, or returns null if it doesn't exist. See {@link conversation#linkHeaders}.
+ * 
+ * @name conversation.getLinkHeader
+ * @function
+ * @param {String} reference The reference
+ * @returns {<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/LinkHeader.html">com.threecrickets.prudence.util.LinkHeader</a>} The link header, or null if it does not exist
+ */
+
+/**
+ * Returns a new link header instance if it doesn't exist yet, or the existing link header instance if it does. The link header is added to
+ * {@link conversation#linkHeaders}.
+ * <p>
+ * For new link headers, be sure to call save() on the link header in order to send it in the response, thus asking the client to create it,
+ * or remove() if you want to cancel the creation (in which case nothing will be sent in the response).
+ *
+ * @name conversation.createLinkHeader
+ * @function
+ * @param {String} reference The reference
+ * @returns {<a href="http://threecrickets.com/api/java/prudence/index.html?com/threecrickets/prudence/util/LinkHeader.html">com.threecrickets.prudence.util.LinkHeader</a>} The link header
+ */
+
+/**
  * Provides low-level access to the underlying Restlet request instance for the current conversation.
  *
  * @name conversation.request

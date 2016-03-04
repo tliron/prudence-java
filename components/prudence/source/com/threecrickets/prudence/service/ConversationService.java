@@ -42,6 +42,7 @@ import com.threecrickets.prudence.util.CapturingRedirector;
 import com.threecrickets.prudence.util.ConversationCookie;
 import com.threecrickets.prudence.util.FileParameter;
 import com.threecrickets.prudence.util.FormWithFiles;
+import com.threecrickets.prudence.util.LinkHeader;
 import com.threecrickets.prudence.util.VirtualHostInjector;
 
 /**
@@ -158,17 +159,60 @@ public class ConversationService
 	}
 
 	/**
-	 * Returns a new conversation cookie instance if the cookie doesn't exist
-	 * yet, or the existing cookie if it does. Note that the cookie will not be
-	 * saved into the response until you call {@link ConversationCookie#save()}.
+	 * Returns a new conversation cookie instance if it doesn't exist yet, or
+	 * the existing cookie if it does. Note that the cookie will not be saved
+	 * into the response until you call {@link ConversationCookie#save()}.
 	 * 
 	 * @param name
 	 *        The cookie name
-	 * @return A new cookie or the existing cookie
+	 * @return A new cookie or the existing one
 	 */
 	public ConversationCookie createCookie( String name )
 	{
 		return ConversationCookie.createCookie( name, getResponse().getCookieSettings(), getCookies() );
+	}
+
+	/**
+	 * The link headers.
+	 * <p>
+	 * This value is cached locally.
+	 * 
+	 * @return The link headers
+	 */
+	public Collection<LinkHeader> getLinkHeaders()
+	{
+		if( linkHeaders == null )
+			linkHeaders = LinkHeader.wrapLinkHeaders( getResponseHeaders() );
+		return linkHeaders;
+	}
+
+	/**
+	 * Gets a conversation cookie by reference.
+	 * 
+	 * @param reference
+	 *        The reference
+	 * @return The link header or null
+	 */
+	public LinkHeader getLinkHeader( String reference )
+	{
+		for( LinkHeader linkHeader : getLinkHeaders() )
+			if( linkHeader.getReference().equals( reference ) )
+				return linkHeader;
+		return null;
+	}
+
+	/**
+	 * Returns a new link header instance if it doesn't exist yet, or the
+	 * existing link header if it does. Note that the link header will not be
+	 * saved into the response until you call {@link LinkHeader#save()}.
+	 * 
+	 * @param reference
+	 *        The reference
+	 * @return A new link header or the existing one
+	 */
+	public LinkHeader createLinkHeader( String reference )
+	{
+		return LinkHeader.createLinkHeader( reference, getResponseHeaders(), getLinkHeaders() );
 	}
 
 	/**
@@ -640,6 +684,11 @@ public class ConversationService
 	 * The conversation cookies.
 	 */
 	private Collection<ConversationCookie> conversationCookies;
+
+	/**
+	 * The link headers.
+	 */
+	private Collection<LinkHeader> linkHeaders;
 
 	/**
 	 * The representation's disposition.
