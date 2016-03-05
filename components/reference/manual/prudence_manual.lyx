@@ -18853,7 +18853,18 @@ name "link-headers"
 \begin_layout Standard
 Link headers are very useful for instructing web browsers to preload resources.
  This can greatly improve the user experience, especially when coupled with
- HTTP/2.
+ 
+\bar under
+HTTP/2 (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "http-2"
+
+\end_inset
+
+)
+\bar default
+.
 \end_layout
 
 \begin_layout Standard
@@ -18889,7 +18900,32 @@ reference "cookies"
 )
 \bar default
 : you can create, remove, or change the values of already-created link headers.
- For example:
+ See 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.createLinkHeader"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.createLinkHeader"
+
+\end_inset
+
+, 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.getLinkHeader"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.getLinkHeader"
+
+\end_inset
+
+, and 
+\begin_inset CommandInset href
+LatexCommand href
+name "conversation.linkHeaders"
+target "http://threecrickets.com/api/javascript/?namespace=conversation&item=conversation.linkHeaders"
+
+\end_inset
+
+.
+ Example of use:
 \end_layout
 
 \begin_layout Standard
@@ -18899,7 +18935,7 @@ status open
 
 \begin_layout Plain Layout
 
-var link = conversation.createLinkHeader('https://example.com/other/styles.css')
+var link = conversation.createLinkHeader('/styles/colorful.css')
 \end_layout
 
 \begin_layout Plain Layout
@@ -18915,6 +18951,65 @@ link.parameters.put('as', 'style')
 \begin_layout Plain Layout
 
 link.save()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note that if a parameter does not have a value, just set its value to null.
+ For example, if your resource requires 
+\bar under
+CORS access (page 
+\begin_inset CommandInset ref
+LatexCommand pageref
+reference "cors"
+
+\end_inset
+
+)
+\bar default
+, the spec requires you to add the 
+\begin_inset Quotes eld
+\end_inset
+
+crossorigin
+\begin_inset Quotes erd
+\end_inset
+
+ parameter.
+ Like so:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+link.parameters.put('crossorigin', null)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The final header would thus look something like this:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+Link: </styles/colorful.css>; rel=preload; as=style; crossorigin
 \end_layout
 
 \end_inset
@@ -40697,6 +40792,13 @@ must
 
 \begin_layout Paragraph
 HTTP/2
+\begin_inset CommandInset label
+LatexCommand label
+name "http-2"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard

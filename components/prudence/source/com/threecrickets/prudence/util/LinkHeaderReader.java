@@ -41,6 +41,13 @@ public class LinkHeaderReader extends HeaderReader<LinkHeader>
 	// Operations
 	//
 
+	/**
+	 * Reads a URI reference
+	 * 
+	 * @return The URI reference
+	 * @throws IOException
+	 *         In case of an I/O or parsing error
+	 */
 	public String readUriReference() throws IOException
 	{
 		// Read opening delimiter
@@ -69,7 +76,7 @@ public class LinkHeaderReader extends HeaderReader<LinkHeader>
 	 * Reads a link header, but just the reference, ignoring the additional
 	 * parameters.
 	 * 
-	 * @return The linke header
+	 * @return The link header
 	 * @throws IOException
 	 *         In case of an I/O or parsing error
 	 */

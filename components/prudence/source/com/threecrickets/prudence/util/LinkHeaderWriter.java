@@ -13,7 +13,6 @@ package com.threecrickets.prudence.util;
 
 import java.util.Map;
 
-import org.restlet.data.CharacterSet;
 import org.restlet.engine.header.HeaderWriter;
 
 /**
@@ -32,14 +31,14 @@ public class LinkHeaderWriter extends HeaderWriter<LinkHeader>
 	/**
 	 * Appends a link between '&lt;' and '&gt;'.
 	 * 
-	 * @param link
-	 *        The link
+	 * @param uriReference
+	 *        The URI reference
 	 * @return The writer
 	 */
-	public HeaderWriter<LinkHeader> appendLink( CharSequence link )
+	public HeaderWriter<LinkHeader> appendUriReference( CharSequence uriReference )
 	{
 		append( '<' );
-		appendUriEncoded( link, CharacterSet.UTF_8 ); // TODO: character set?
+		append( uriReference );
 		append( '>' );
 		return this;
 	}
@@ -51,13 +50,13 @@ public class LinkHeaderWriter extends HeaderWriter<LinkHeader>
 	@Override
 	public HeaderWriter<LinkHeader> append( LinkHeader linkHeader )
 	{
-		appendLink( linkHeader.getReference() );
+		appendUriReference( linkHeader.getReference() );
 
 		for( Map.Entry<String, Object> parameter : linkHeader.getParameters().entrySet() )
 		{
 			String name = parameter.getKey();
 			Object value = parameter.getValue();
-			appendValueSeparator();
+			appendParameterSeparator();
 			appendExtension( name, value != null ? value.toString() : null );
 		}
 
