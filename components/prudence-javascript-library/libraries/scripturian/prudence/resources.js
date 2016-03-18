@@ -302,7 +302,8 @@ Prudence.Resources = Prudence.Resources || function() {
 	 *		where 'headers' is a dict of HTTP responses; params.results.headers defaults to true if params.method is 'head',
 	 *		otherwise it defaults to false
 	 * @param [params.authorization] A dict in the form of {type: 'scheme name', ...}.
-	 *		For example: {type: 'oauth', rawValue: 'oauth authorization'}
+	 *		For example: {type: 'oauth', rawValue: 'oauth authorization'}. If 'type' is not supported by a specialized helper,
+	 *      then it will translate to a simple 'Authorization' header, e.g. {type: 'Bearer', rawValue: '12345'} 
 	 * @param {Number} [params.retry=0] Number of retries in case of failed requests
 	 * @param [params.logLevel='fine'] The log level to use for failed requests
 	 */
