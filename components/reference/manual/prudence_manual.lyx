@@ -18885,6 +18885,15 @@ target "https://tools.ietf.org/html/rfc5988#section-5.1"
 \end_inset
 
 .
+ Yoav Weiss wrote an 
+\begin_inset CommandInset href
+LatexCommand href
+name "article for Smashing Magazine"
+target "https://www.smashingmagazine.com/2016/02/preload-what-is-it-good-for/"
+
+\end_inset
+
+ about how preloading can help you.
 \end_layout
 
 \begin_layout Standard

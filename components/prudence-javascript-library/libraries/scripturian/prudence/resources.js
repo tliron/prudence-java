@@ -435,9 +435,14 @@ Prudence.Resources = Prudence.Resources || function() {
 				var scheme = params.authorization.type
 				if (Sincerity.Objects.isString(scheme)) {
 					// Get registered scheme
-					scheme = org.restlet.data.ChallengeScheme.valueOf(scheme)
+					var scheme = org.restlet.data.ChallengeScheme.valueOf(scheme)
 					var helper = org.restlet.engine.Engine.instance.findHelper(scheme, true, false)
-					scheme = helper.challengeScheme
+					if (Sincerity.Objects.exists(helper)) {
+						scheme = helper.challengeScheme
+					}
+					else {
+						scheme = new org.restlet.data.ChallengeScheme(params.authorization.type, params.authorization.type)
+					}
 				}
 				var challengeResponse = new org.restlet.data.ChallengeResponse(scheme)
 				delete params.authorization.type
@@ -932,10 +937,9 @@ Prudence.Resources = Prudence.Resources || function() {
 	 */
 	Public.toHeaders = function(dict) {
 		importClass(
-			org.restlet.util.Series,
-			org.restlet.data.Header)
+			org.restlet.util.Series)
 
-		var series = new Series(Header)
+		var series = new Series(Sincerity.JVM.getClass('org.restlet.data.Header'))
 		for (var d in dict) {
 			var value = dict[d]
 			if (null !== value) {
