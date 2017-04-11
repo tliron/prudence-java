@@ -1,5 +1,5 @@
 /**
- * Copyright 2009-2016 Three Crickets LLC.
+ * Copyright 2009-2017 Three Crickets LLC.
  * <p>
  * The contents of this file are subject to the terms of the LGPL version 3.0:
  * http://www.gnu.org/copyleft/lesser.html
@@ -92,6 +92,6 @@ public class NormalizingRedirector extends ResolvingRedirector
 		setOwner( "Prudence" );
 		setAuthor( "Three Crickets" );
 		setName( getClass().getSimpleName() );
-		setDescription( "A redirector that normalized relative paths" );
+		setDescription( "A redirector that normalizes relative paths" );
 	}
 }
